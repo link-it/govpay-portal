@@ -1,0 +1,193 @@
+{
+  "Header": {
+    "titolo": "Region",
+    "sottotitolo": "Sample Amministration",
+    "menu": {
+      "items": [
+        { "label": "Pay a notice", "route": "/accesso" },
+        { "label": "Debt position", "route": "/riepilogo" },
+        { "label": "Archive of payments", "route": "/archivio" }
+      ],
+      "account": {
+        "name": "",
+        "settings": [
+          { "label": "User profile", "link": "/profilo" },
+          { "label": "Log out", "route": "" }
+        ]
+      }
+    }
+  },
+  "Footer": {
+    "titolo": "Sample Amministration",
+    "recapito": {
+      "titolo": "Contact details",
+      "indirizzo": "Piazza della Vittoria, 1 00135 Roma",
+      "centralino": "Switchboard: +39 00 00000",
+      "postaCertificata": "Pec: dimostrativo@comune.regione.it",
+      "uffici": "All offices",
+      "reteDiplomatica": ""
+    },
+    "indirizzi": {
+      "organigramma": "https://www.dimostrativo.regione.it/organigramma.html",
+      "reteDiplomatica": "",
+      "comunicazioni": "https://www.dimostrativo.regione.it/telefono_posta_elettronica.html",
+      "info": "https://www.dimostrativo.regione.it/domandefrequenti/faqrichiestainfo.html",
+      "faq": "https://www.dimostrativo.regione.it/domandefrequenti",
+      "riferimenti": "https://www.dimostrativo.regione.it/riferimenti.html",
+      "rss": "https://www.dimostrativo.regione.it/feedrss.html",
+      "news": "https://www.dimostrativo.regione.it/areaintnewsletter.html",
+      "crediti": "https://www.dimostrativo.regione.it/cdr.html",
+      "noteLegali": "https://www.dimostrativo.regione.it/noteLegali.html",
+      "privacy": "https://www.dimostrativo.regione.it/privacy.html",
+      "cookie": "https://www.dimostrativo.regione.it/privacy-e-cookie.html"
+    },
+    "urp": {
+      "titolo": "Public relations",
+      "orario": "The Office is open to the public for visits from Monday to Friday from 9:00 am to 1:00 pm",
+      "contatti": {
+        "telefono": "Telephone: +39 00 0000 0000 Monday to Friday from 8.30 to 15.30",
+        "fax": "Fax: +39 00 0000 0000",
+        "pec": "PEC addresses",
+        "moduloInfo": "Modulo richiesta informazioni",
+        "faq": "FAQ"
+      }
+    },
+    "app": {
+      "titolo": "Follow us",
+      "riferimenti": "Whatsapp",
+      "rss": "RSS Feed",
+      "news": "News Alert"
+    },
+    "crediti": "Credits",
+    "noteLegali": "Legal notices",
+    "privacy": "Privacy",
+    "cookie": "Cookie policy"
+  },
+  "Accesso": {
+    "titolo": "Payment service pagoPA",
+    "descrizione": "pagoPA is an online payment system build to make payments to Public Administration simple, secure and transparent"
+  },
+  "PayCard": {
+    "titolo": "Pay with pagoPA",
+    "note": "If you received a pagoPA payment invoice, insert the notice number (Numero avviso) or scan the qrcode.",
+    "form": {
+      "avviso": "Notice number",
+      "fotocamera": "Camera",
+      "creditore": "Creditor",
+      "submit": "Submit",
+      "errors": {
+        "common": "The code entered does not correspond to any creditor in the list.",
+        "denied": "Creditor code %1 not enabled.",
+        "config": "No creditor configured.",
+        "required": "Creditor required."
+      }
+    }
+  },
+  "LoginCard": {
+    "titolo": "Log in to your account",
+    "note": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "spid": "Login with SPID",
+    "info": "More information",
+    "ask": "Don't you have SPID?",
+    "help": "Need help?"
+  },
+  "PosizioneDebitoria": {
+    "titolo": "Debt position",
+    "filter": {
+      "stato": "Status",
+      "noFilter": "All"
+    }
+  },
+  "Cart": {
+    "titolo": "Cart",
+    "importo": "Total",
+    "submit": "Proceed to payment"
+  },
+  "Archivio": {
+    "titolo": "Archive of payments",
+    "filter": {
+      "stato": "Status",
+      "noFilter": "All"
+    }
+  },
+  "Avviso": {
+    "titolo": "Payment summary",
+    "note": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "sottotitolo": "Receipt destination",
+    "dettaglio": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "importo": "Total",
+    "submit": "Proceed to payment",
+    "cancel": "Cancel",
+    "email": "Email",
+    "confermaEmail": "Confirm email",
+    "error": "Verify the information entered.",
+    "wait": "Recovery of information in progress..."
+  },
+  "Alert": {
+    "eseguito": "Payment executed",
+    "fallito": "Payment not executed",
+    "dettaglioEseguito": "The payment required for the notice %1 appears to have been successful. The payment receipt will be sent to the address provided.",
+    "dettaglioFallito": "The payment required for the %1 alert does NOT appear to have been successful.",
+    "dettaglioInCorso": {
+      "ok": "The payment process has been completed successfully. We are awaiting confirmation of payment from the pagoPA platform.",
+      "timeout": {
+        "ok": "The payment process has been completed successfully, but there has been a delay in communicating the payment claim from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
+        "errore": "The payment process was completed without the payment of the due, but there was a delay in the communication of the payment attestation from the pagoPA platform. As soon as it is made available, we will send it to your email address."
+      },
+      "errore": "The payment process has been completed without the payment of the due amount. We are awaiting confirmation of payment from the pagoPA platform"
+    },
+    "submit": "Try again"
+  },
+  "Common": {
+    "riepilogo": "Summary",
+    "anagrafica": {
+      "profilo": "User profile",
+      "email": "Email",
+      "codiceFiscale": "Tax ID"
+    },
+    "avvisoNumero": "Notice number ",
+    "itemsPerPageLabel": "Items per page",
+    "nextPageLabel": "Next",
+    "previousPageLabel": "Previous",
+    "lastPageLabel": "Last page",
+    "firstPageLabel": "First page",
+    "risultatiPendenze": "Found # items|Found # item",
+    "risultatiPagamenti": "Found # payments|Found # payment",
+    "notAvailable": "Not available",
+    "scadenza": "Deadline",
+    "data": "Date",
+    "senza_scadenza": "No Expires",
+    "avviso": "Notice",
+    "iuv": "IUV",
+    "pagamento": "Payment",
+    "pagamentoInCorso": "In progress",
+    "pagamentoFallito": "Rejected",
+    "pagamentoEseguito": "Paid",
+    "pagamentoDuplicato": "Paid",
+    "pagamentoParzialmenteEseguito": "Partially Paid",
+    "pagamentoAnnullato": "Canceled",
+    "pagamentoNonEseguito": "Not performed",
+    "pendenzaEseguita": "Paid",
+    "pendenzaDuplicata": "Paid",
+    "pendenzaParzialmenteEseguita": "Partially Paid",
+    "pendenzaNonEseguita": "To pay",
+    "pendenzaAnnullata": "Canceled",
+    "pendenzaScaduta": "Expired",
+    "verificaPendenzaEseguita": "Paid",
+    "verificaPendenzaDuplicata": "Paid",
+    "verificaPendenzaNonEseguita": "To pay",
+    "verificaPendenzaAnnullata": "Canceled",
+    "verificaPendenzaSconosciuta": "Unknown",
+    "verificaPendenzaScaduta": "Expired",
+    "compoundError": {
+      "error": "Unable to proceed with ",
+      "error2": "Payment is already done.",
+      "errorSub1": "payment because the notice is canceled.",
+      "errorSub2": "payment since the notice has expired on %1.",
+      "errorSub3": "payment; there is no further information."
+    },
+    "alertAction": "Close",
+    "ricevuta": "Receipt.pdf",
+    "archivio": "Receipts.zip"
+  }
+}

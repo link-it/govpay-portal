@@ -1,0 +1,14 @@
+{
+  "/govpay/frontend/api/pagamento/rs/public/v1/*": {
+    "target": "https://lab.link.it",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/govpay/frontend/api/pagamento/rs/spid/v1/*": {
+    "target": "https://lab.link.it",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

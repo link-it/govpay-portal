@@ -1,0 +1,10 @@
+@media (max-width: 767px) {
+  link-shopping-cart {
+    position: fixed;
+    z-index: 1;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    box-shadow: 0 -2px 2px rgba(33,33,33,.1);
+  }
+}

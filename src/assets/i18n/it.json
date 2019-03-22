@@ -1,0 +1,193 @@
+{
+  "Header": {
+    "titolo": "Regione",
+    "sottotitolo": "Comune Dimostrativo",
+    "menu": {
+      "items": [
+        { "label": "Paga un avviso", "link": "/accesso" },
+        { "label": "Posizione debitoria", "link": "/riepilogo" },
+        { "label": "Archivio dei pagamenti", "link": "/archivio" }
+      ],
+      "account": {
+        "name": "",
+        "settings": [
+          { "label": "Profilo utente", "link": "/profilo" },
+          { "label": "Esci", "link": "" }
+        ]
+      }
+    }
+  },
+  "Footer": {
+    "titolo": "Comune Dimostrativo",
+    "recapito": {
+      "titolo": "Recapiti e contatti",
+      "indirizzo": "Piazza della Vittoria, 1 00135 Roma",
+      "centralino": "Centralino: +39 00 00000",
+      "postaCertificata": "Pec: dimostrativo@comune.regione.it",
+      "uffici": "Organigramma",
+      "reteDiplomatica": ""
+    },
+    "indirizzi": {
+      "organigramma": "https://www.dimostrativo.regione.it/organigramma.html",
+      "reteDiplomatica": "",
+      "comunicazioni": "https://www.dimostrativo.regione.it/telefono_posta_elettronica.html",
+      "info": "https://www.dimostrativo.regione.it/domandefrequenti/faqrichiestainfo.html",
+      "faq": "https://www.dimostrativo.regione.it/domandefrequenti",
+      "riferimenti": "https://www.dimostrativo.regione.it/riferimenti.html",
+      "rss": "https://www.dimostrativo.regione.it/feedrss.html",
+      "news": "https://www.dimostrativo.regione.it/areaintnewsletter.html",
+      "crediti": "https://www.dimostrativo.regione.it/cdr.html",
+      "noteLegali": "https://www.dimostrativo.regione.it/noteLegali.html",
+      "privacy": "https://www.dimostrativo.regione.it/privacy.html",
+      "cookie": "https://www.dimostrativo.regione.it/privacy-e-cookie.html"
+    },
+    "urp": {
+      "titolo": "Relazioni con il pubblico",
+      "orario": "L'Ufficio è aperto al pubblico per visite dal lunedì al venerdì dalle 9:00 alle 13:00",
+      "contatti": {
+        "telefono": "Telefono: +39 00 0000 0000 dal lunedì al venerdì dalle ore 8.30 alle 15.30",
+        "fax": "Fax: +39 00 0000 0000",
+        "pec": "Indirizzi PEC",
+        "moduloInfo": "Modulo richiesta informazioni",
+        "faq": "FAQ"
+      }
+    },
+    "app": {
+      "titolo": "Seguici su",
+      "riferimenti": "Whatsapp",
+      "rss": "RSS Feed",
+      "news": "News Alert"
+    },
+    "crediti": "Crediti",
+    "noteLegali": "Note legali",
+    "privacy": "Privacy",
+    "cookie": "Cookie policy"
+  },
+  "Accesso": {
+    "titolo": "Portale di pagamento pagoPA",
+    "descrizione": "pagoPA é un sistema di pagamenti elettronici realizzato per rendere più semplice, sicuro e trasparente qualsiasi pagamento verso la Pubblica Amministrazione."
+  },
+  "PayCard": {
+    "titolo": "Paga un avviso pagoPA",
+    "note": "Se hai ricevuto un Avviso pagoPA, puoi pagarlo indicando il numero avviso oppure scansionando il qrcode.",
+    "form": {
+      "avviso": "Numero avviso",
+      "fotocamera": "Fotocamera",
+      "creditore": "Ente creditore",
+      "submit": "Procedi",
+      "errors": {
+        "common": "Il codice inserito non corrisponde ad alcun creditore in elenco.",
+        "denied": "Codice creditore %1 non abilitato.",
+        "config": "Nessun creditore configurato.",
+        "required": "Creditore obbligatorio."
+      }
+    }
+  },
+  "LoginCard": {
+    "titolo": "Accedi alla tua posizione",
+    "note": "Accedendo al portale in modalità autenticata potrai consultare la tua Posizione Debitoria e lo Storico dei Pagamenti in forma protetta e riservata.",
+    "spid": "Entra con SPID",
+    "info": "Maggiori informazioni",
+    "ask": "Non hai SPID?",
+    "help": "Serve aiuto?"
+  },
+  "PosizioneDebitoria": {
+    "titolo": "Posizione debitoria",
+    "filter": {
+      "stato": "Stato",
+      "noFilter": "Tutti"
+    }
+  },
+  "Cart": {
+    "titolo": "Carrello",
+    "importo": "Totale",
+    "submit": "Procedi al pagamento"
+  },
+  "Archivio": {
+    "titolo": "Archivio dei pagamenti",
+    "filter": {
+      "stato": "Stato",
+      "noFilter": "Tutti"
+    }
+  },
+  "Avviso": {
+    "titolo": "Riepilogo pagamento",
+    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "sottotitolo": "Recapito ricevuta",
+    "dettaglio": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "importo": "Totale",
+    "submit": "Procedi al pagamento",
+    "cancel": "Annulla",
+    "email": "Email",
+    "confermaEmail": "Conferma email",
+    "error": "Verificare le informazioni inserite.",
+    "wait": "Recupero informazioni in corso..."
+  },
+  "Alert": {
+    "eseguito": "Pagamento eseguito",
+    "fallito": "Pagamento non eseguito",
+    "dettaglioEseguito": "Il pagamento richiesto risulta essere andato a buon fine. La ricevuta del pagamento sarà recapitata all'indirizzo fornito.",
+    "dettaglioFallito": "Il pagamento richiesto risulta NON essere andato a buon fine.",
+    "dettaglioInCorso": {
+      "ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
+      "timeout": {
+        "ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail",
+        "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail"
+      },
+      "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA"
+    },
+    "submit": "Prova di nuovo"
+  },
+  "Common": {
+    "riepilogo": "Riepilogo",
+    "anagrafica": {
+      "profilo": "Profilo utente",
+      "email": "Email",
+      "codiceFiscale": "Codice fiscale"
+    },
+    "avvisoNumero": "Avviso numero ",
+    "itemsPerPageLabel": "Elementi per pagina",
+    "nextPageLabel": "Successivi",
+    "previousPageLabel": "Precedenti",
+    "lastPageLabel": "Ultima pagina",
+    "firstPageLabel": "Prima pagina",
+    "risultatiPendenze": "Trovate # pendenze|Trovata # pendenza",
+    "risultatiPagamenti": "Trovati # pagamenti|Trovato # pagamento",
+    "notAvailable": "Non disponibile",
+    "scadenza": "Scadenza",
+    "data": "Data",
+    "senza_scadenza": "Non prevista",
+    "avviso": "Avviso",
+    "iuv": "IUV",
+    "pagamento": "Pagamento",
+    "pagamentoInCorso": "In corso",
+    "pagamentoFallito": "Rifiutato",
+    "pagamentoEseguito": "Eseguito",
+    "pagamentoDuplicato": "Eseguito",
+    "pagamentoParzialmenteEseguito": "Parzialmente eseguito",
+    "pagamentoAnnullato": "Annullato",
+    "pagamentoNonEseguito": "Non eseguito",
+    "pendenzaEseguita": "Pagata",
+    "pendenzaDuplicata": "Pagata",
+    "pendenzaParzialmenteEseguita": "Parzialmente eseguita",
+    "pendenzaNonEseguita": "Da pagare",
+    "pendenzaAnnullata": "Annullata",
+    "pendenzaScaduta": "Scaduta",
+    "verificaPendenzaEseguita": "Pagata",
+    "verificaPendenzaDuplicata": "Pagata",
+    "verificaPendenzaNonEseguita": "Da pagare",
+    "verificaPendenzaAnnullata": "Annullata",
+    "verificaPendenzaSconosciuta": "Sconosciuta",
+    "verificaPendenzaScaduta": "Scaduta",
+    "compoundError": {
+      "error": "Impossibile procedere con il ",
+      "error2": "Il pagamento risulta già eseguito.",
+      "errorSub1": "pagamento poiché la pendenza risulta annullata.",
+      "errorSub2": "pagamento poiché la pendenza risulta scaduta il %1.",
+      "errorSub3": "pagamento; non risultano ulteriori informazioni."
+    },
+    "alertAction": "Chiudi",
+    "ricevuta": "Ricevuta.pdf",
+    "archivio": "Ricevute.zip"
+  }
+}

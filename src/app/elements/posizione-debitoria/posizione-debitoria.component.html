@@ -1,0 +1,25 @@
+<div class="container px-0">
+  <h1 class="m-0 p-4 fs-2 fw-700">{{ 'PosizioneDebitoria.titolo' | translate }}</h1>
+  <div class="row mx-0 align-items-start">
+    <div id="shoppingList" class="col-12 col-md-7 px-4 mb-3">
+      <p class="text-uppercase border-top rounded-0 py-3 primary-border secondary-text-color">{{_posizioniString(_elencoPosizioni.length)}}</p>
+      <mat-form-field class="w-100" *ngIf="_elencoPosizioni.length>10 || _selected">
+        <mat-select placeholder="{{ 'PosizioneDebitoria.filter.stato' | translate }}" [(value)]="_selected" (selectionChange)="_onSelectionChange($event)">
+          <mat-option>{{ 'PosizioneDebitoria.filter.noFilter' | translate }}</mat-option>
+          <mat-option *ngFor="let stato of _elencoStati" [value]="stato.key">
+            {{stato.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <link-featured-item *ngFor="let item of _elencoPosizioni" (on-icon-toggle)="_cartToggleHandler($event)" (on-icon-click)="_onIconReceipt($event)"
+                         [notify]="true" [item-info]="item" [shopping]="item.icon != 'receipt'"></link-featured-item>
+      <mat-paginator  *ngIf="false" [length]="_paginator.length" [pageSize]="_paginator.size"
+                      [pageSizeOptions]="_paginator.options" [showFirstLastButtons]="true" (page)="_pageHandler($event)">
+      </mat-paginator>
+    </div>
+    <div class="col-12 col-md-5">
+      <link-shopping-cart id="shoppingCart" [cart-list]="_cart" (on-submit)="_cartSubmit($event)"
+                         [currency-format]="_formatoValuta" [localization-data]="_cld"></link-shopping-cart>
+    </div>
+  </div>
+</div>

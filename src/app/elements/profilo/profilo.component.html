@@ -1,0 +1,19 @@
+<div class="container">
+  <h1 class="py-4">{{_name}}</h1>
+  <div class="row mb-3">
+    <div class="col-12 col-sm-8">
+      <div class="d-block border-top pt-3 primary-border">
+        <p class="flex-grow-1 m-0 mr-3 secondary-text-color text-uppercase">{{_title}}</p>
+      </div>
+    </div>
+  </div>
+  <div *ngFor="let _info of _details" class="row mb-3">
+    <div class="col-12 col-sm-4">
+      <p class="secondary-text-color lh-125">{{_info?.label}}:</p>
+    </div>
+    <div class="col-12 col-sm-8">
+      <p class="lh-125">{{_info?.value}}</p>
+    </div>
+  </div>
+</div>
+

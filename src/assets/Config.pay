@@ -1,0 +1,43 @@
+(function (global) {
+
+  function _elencoDomini() {
+    return [
+      { label: 'Comune Dimostrativo', value: '01234567890' }
+    ]
+  }
+
+  function _traduzioni() {
+    return [
+      {
+        language: 'Italiano',
+        alpha2Code: 'it',
+        alpha3Code: 'ita'
+      },
+      {
+        language: 'English',
+        alpha2Code: 'en',
+        alpha3Code: 'eng'
+      }
+    ]
+  }
+
+  // Configurazione per dev server locale :
+  // PAY_RESPONSE_URL: 'http://localhost:4200/pagamento',
+
+  global.PayConfig = {
+    REVERSE_PROXY: '',
+    AUTH_HOST: 'https://lab.link.it',
+    AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v1',
+    PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v1',
+    SPID_SERVICE_TARGET: "https://lab.link.it/portalepagamento/",
+    SPID_TEST_PROVIDER: "https://idp.spid.gov.it",
+    SPID_ACTION_FORM_URL: "https://lab.link.it/Shibboleth.sso/Login",
+    PAY_RESPONSE_URL: 'https://lab.link.it/portalepagamento/pagamento',
+    TIME_OUT_POLL: 5, //Secs.
+    POLLING_INTERVAL: 3000, //Millisecs.
+    DOMINI: _elencoDomini(),
+    LINGUE: _traduzioni()
+  };
+
+
+})(window);

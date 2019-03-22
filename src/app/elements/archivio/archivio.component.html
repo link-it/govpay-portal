@@ -1,0 +1,21 @@
+<div class="container px-0">
+  <h1 class="m-0 p-4 fs-2 fw-700">{{ 'Archivio.titolo' | translate }}</h1>
+  <div class="row mx-0 pb-5">
+    <div class="col-12 px-4">
+      <p class="text-uppercase border-top rounded-0 py-3 primary-border secondary-text-color">{{_pagamentiString(_pagamenti.length)}}</p>
+      <mat-form-field class="w-100" *ngIf="_pagamenti.length>10 || _selected">
+        <mat-select placeholder="{{ 'Archivio.filter.stato' | translate }}" [(value)]="_selected" (selectionChange)="_onSelectionChange($event)">
+          <mat-option>{{ 'Archivio.filter.noFilter' | translate }}</mat-option>
+          <mat-option *ngFor="let stato of _elencoStati" [value]="stato.key">
+            {{stato.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <link-featured-item *ngFor="let item of _pagamenti" (on-icon-click)="_onIconReceipt($event)"
+                         [notify]="true" [item-info]="item"></link-featured-item>
+      <mat-paginator *ngIf="false" [length]="_paginator.length" [pageSize]="_paginator.size"
+                     [pageSizeOptions]="_paginator.options" [showFirstLastButtons]="true" (page)="_pageHandler($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

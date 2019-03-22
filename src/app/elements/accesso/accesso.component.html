@@ -1,0 +1,24 @@
+<div class="d-block container py-4">
+  <div class="row py-4 mb-4">
+    <div class="col-12 col-sm-8 mb-3">
+      <h5 class="fs-2 fw-600 mb-3">{{ 'Accesso.titolo' | translate }}</h5>
+      <p>{{ 'Accesso.descrizione' | translate }}</p>
+    </div>
+    <div class="col-12 col-sm-4 text-sm-right">
+      <img class="flex-shrink-0" [src]="_logoPA" style="width: 106px; height: 74px">
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-12 col-sm-6 mb-5">
+      <link-pay-card (on-scan-request)="_scanHandler()" (on-submit)="_procediHandler($event)"
+                    [localization-data]="_pcld" [domini]="_selezioneDomini"></link-pay-card>
+    </div>
+    <div class="col-12 col-sm-6" *ngIf="!_isLogged">
+      <link-login-card [localization-data]="_lld"
+                       [action]="pay.SPID_ACTION_FORM_URL"
+                       [spid-test-url]="pay.SPID_TEST_PROVIDER"
+                       [response-target]="pay.SPID_SERVICE_TARGET" [notify]="true"
+                       (on-submit)="_handler($event)"></link-login-card>
+    </div>
+  </div>
+</div>

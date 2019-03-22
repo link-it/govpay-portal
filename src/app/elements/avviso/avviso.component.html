@@ -1,0 +1,29 @@
+<div class="container p-4">
+  <h1 class="m-0 fs-2 fw-700 py-4" *ngIf="!_submitted && _sessione">{{ 'Avviso.wait' | translate }}</h1>
+  <link-avviso-pagamento #ap [localization-data]="_ald" *ngIf="!_submitted && !_sessione" (on-submit)="_procedi($event)" [currency-format]="_formatoValuta"
+                        [payments]="_payments" [show-reset-button]="false" [prevent-submit]="_preventPaymentSubmit" [show-fields-form]="_showRecapito"></link-avviso-pagamento>
+  <link-alert-pagamento [localization-data]="_wld" (on-action)="_fixPayment()" *ngIf="_submitted && _sessione">
+    <h1 alert-title class="w-100 fs-2 fw-700">{{_hasPaid?_wld?.eseguito:_wld?.fallito}}</h1>
+    <div alert-body class="w-100">
+      <div class="w-100" [ngSwitch]="_paymentStatus">
+        <div class="w-100" *ngSwitchCase="STATUS_ESEGUITO">
+          <p class="py-4 fs-1 fw-400 primary-text-color" *ngIf="_numeroAvviso">{{(_wld?.dettaglioEseguito.replace('%1', _numeroAvviso)).trim()}}</p>
+        </div>
+        <div class="w-100" *ngSwitchCase="STATUS_NON_ESEGUITO">
+          <p class="py-4 fs-1 fw-400 primary-text-color" *ngIf="_numeroAvviso">{{(_wld?.dettaglioFallito.replace('%1', _numeroAvviso)).trim()}}</p>
+        </div>
+        <div class="w-100" *ngSwitchCase="STATUS_INCORSO">
+          <p class="py-4 fs-1 fw-400 primary-text-color">{{(_hasPaid?_wld?.dettaglioInCorso.ok:_wld?.dettaglioInCorso.errore).trim()}}</p>
+        </div>
+        <div class="w-100" *ngSwitchCase="STATUS_TIMEOUT">
+          <p class="py-4 fs-1 fw-400 primary-text-color" *ngIf="_hasPaid">{{_wld?.dettaglioInCorso.timeout.ok.trim()}}</p>
+          <p class="py-4 fs-1 fw-400 primary-text-color" *ngIf="!_hasPaid">{{_wld?.dettaglioInCorso.timeout.errore.trim()}}</p>
+        </div>
+      </div>
+      <div *ngIf="pay.isAuthenticated()" class="mb-4">
+        <link-featured-item *ngFor="let _ricevuta of _ricevute" (on-icon-click)="_onIconReceipt($event)"
+                            [notify]="true" [item-info]="_ricevuta"></link-featured-item>
+      </div>
+    </div>
+  </link-alert-pagamento>
+</div>
