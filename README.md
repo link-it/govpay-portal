@@ -1,4 +1,21 @@
-# Pay
+# GovPay - Portale di Pagamento
+
+Il Portale di Pagamento è una applicazione web per il cittadino che realizza i pagamenti ad iniziativa Ente previsti da pagoPA. 
+
+Di seguito le funzionalità principali del portale:
+
+* Funzioni disponibili a soggetti non autenticati:
+  * Pagamento di Avvisi pagoPA ad iniziativa Ente
+  * Autenticazione con SPID
+* Funzioni disponibili a soggetti autenticati:
+  * Consultazione della posizione debitoria
+  * Pagamento di un carrello di pendenze
+  * Download delle ricevute di pagamento
+  * Consultazione dello storico dei pagamenti
+
+La grafica del Portale di Pagamento è aderente alle [linee guida di AgID](https://designers.italia.it/guide/) per lo sviluppo di UI al cittadino
+
+Il Portale di Pagamento utilizza le API REST di [GovPay](https://github.com/link-it/govpay) per l'accesso ai dati e l'interazione con pagoPA.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.0.
 
