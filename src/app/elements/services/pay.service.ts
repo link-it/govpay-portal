@@ -15,7 +15,7 @@ declare let JSZip: any;
 })
 export class PayService implements OnInit, OnDestroy {
 
-  //URL Services
+  // URL Services
   public static ROOT_SERVICE: string = PayConfig.PUBLIC_ROOT_SERVICE;
   public static HOSTNAME: string = PayConfig.REVERSE_PROXY;
   public static SPID_HOSTNAME: string = PayConfig.AUTH_HOST;
@@ -40,7 +40,7 @@ export class PayService implements OnInit, OnDestroy {
   public static TIMEOUT: number = 30000;
 
   public static SHARED_LABELS: any;
-  public static User: any; // = { email: 'mail.user@gmail.com' };
+  public static User: any; // = { anagrafica: { anagrafica: 'User' }, email: 'mail@localhost.com' };
   public static ANONIMO: string = 'ANONIMO';
   public static Paginator: any = {
     length: 0,
@@ -62,9 +62,9 @@ export class PayService implements OnInit, OnDestroy {
     }
   };
 
-  //STATI PAGAMENTO
+  // STATI PAGAMENTO
   public static STATI_PAGAMENTO: any;
-  //STATI PENDENZE
+  // STATI PENDENZE
   public static STATI_PENDENZA: any;
   public static STATI_PENDENZA_CODE: any = {
     0: 'ESEGUITA',
@@ -73,7 +73,7 @@ export class PayService implements OnInit, OnDestroy {
     3: 'NON_ESEGUITA',
     4: 'NON_ESEGUITA'
   };
-  //STATI AVVISI PENDENZA
+  // STATI AVVISI PENDENZA
   public static STATI_VERIFICA_PENDENZA: any;
 
   /* avviso.component.ts | link-alert-pagamento */
@@ -159,17 +159,16 @@ export class PayService implements OnInit, OnDestroy {
         ANNULLATO: _common.pagamentoAnnullato,
         FALLITO: _common.pagamentoFallito,
         ESEGUITO: _common.pagamentoEseguito,
-        DUPLICATO: _common.pagamentoDuplicato,
         NON_ESEGUITO: _common.pagamentoNonEseguito,
         ESEGUITO_PARZIALE: _common.pagamentoParzialmenteEseguito
       };
       PayService.STATI_PENDENZA = {
         ESEGUITA: _common.pendenzaEseguita,
-        DUPLICATA: _common.pendenzaDuplicata,
         NON_ESEGUITA: _common.pendenzaNonEseguita,
         ESEGUITA_PARZIALE: _common.pendenzaParzialmenteEseguita,
         ANNULLATA: _common.pendenzaAnnullata,
-        SCADUTA: _common.pendenzaScaduta
+        SCADUTA: _common.pendenzaScaduta,
+        IN_RITARDO: _common.pendenzaInRitardo
       };
       PayService.STATI_VERIFICA_PENDENZA = {
         ESEGUITA: _common.verificaPendenzaEseguita,
@@ -251,9 +250,10 @@ export class PayService implements OnInit, OnDestroy {
 
   /**
    * Auth User
+   * @params {string} url
    * @returns {Promise<any>}
    */
-  sessione(): Promise<boolean> | boolean {
+  sessione(url: string = ''): Promise<boolean> | boolean {
     return this.http.get(PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_LOGGED_IN)
       .toPromise()
       .then(response => {
@@ -263,9 +263,13 @@ export class PayService implements OnInit, OnDestroy {
       })
       .catch(error => {
         this.clearUser();
-        this.router.navigateByUrl('/accesso');
         this.updateSpinner(false);
-        return false;
+        if (url.indexOf('/pagamento') != -1) {
+          return true;
+        } else {
+          this.router.navigateByUrl('/accesso');
+          return false;
+        }
       });
   }
 
@@ -420,17 +424,58 @@ export class PayService implements OnInit, OnDestroy {
       );
   }
 
-  onError(error: any) {
+  /**
+   * On error handler
+   * @param error
+   * @param {string} customMessage
+   */
+  onError(error: any, customMessage?: string) {
     let _msg = '';
+    // try {
+    //   _msg = (!error.error.dettaglio)?error.error.descrizione:error.error.descrizione + ': ' + error.error.dettaglio;
+    //   if (_msg.length > 200) {
+    //     _msg = _msg.substring(0, 200);
+    //   }
+    // } catch (e) {
+    //   _msg = error.message;
+    // }
+
     try {
-      _msg = (!error.error.dettaglio)?error.error.descrizione:error.error.descrizione + ': ' + error.error.dettaglio;
-      if (_msg.length > 200) {
-        _msg = _msg.substring(0, 200);
+      switch(error.status) {
+        case 401:
+          this.clearUser();
+          if(error.error) {
+            _msg = (!error.error.dettaglio)?error.error.descrizione:error.error.descrizione+': '+error.error.dettaglio;
+          } else {
+            _msg = 'Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.';
+          }
+          this.router.navigateByUrl('/');
+          break;
+        case 404:
+          _msg = 'Servizio non disponibile.';
+          break;
+        case 500:
+          _msg = 'Errore interno del server.';
+          break;
+        case 504:
+          _msg = (error.error)?error.error:'Gateway Timeout.';
+          break;
+        default:
+          if(error.error) {
+            _msg = (!error.error.dettaglio)?error.error.descrizione:error.error.descrizione+': '+error.error.dettaglio;
+          } else {
+            _msg = customMessage?customMessage:error.message;
+          }
+          if(_msg.length > 200) {
+            _msg = _msg.substring(0, 200);
+          }
       }
-    } catch (e) {
-      _msg = error.message;
+    } catch(e) {
+      _msg = 'Si è verificato un problema non previsto.';
     }
+
     this.alert(_msg);
+
   }
 
   /**
@@ -440,7 +485,7 @@ export class PayService implements OnInit, OnDestroy {
    * @param {boolean} _action
    * @param {boolean} _keep
    */
-  alert(_message: string, _action: boolean = true, _keep: boolean = false) {
+  alert(_message: string, _action: boolean = true, _keep: boolean = true) {
     let _config: MatSnackBarConfig = new MatSnackBarConfig();
     _config.duration = 10000;
     _config.panelClass = 'overflow-hidden';

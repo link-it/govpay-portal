@@ -1,0 +1,215 @@
+// Angular Theme
+@import '~@angular/material/theming';
+@include mat-core();
+
+$link-palette: (
+  50: #e8fafa,
+  100: #c5f2f3,
+  200: #9eeaeb,
+  300: #77e2e3,
+  400: #59dbdd,
+  500: #3cd5d7,
+  600: #36d0d3,
+  700: #2ecacd,
+  800: #27c4c7,
+  900: #1ababe,
+  A100: #f2ffff,
+  A200: #bffdff,
+  A400: #8cfcff,
+  A700: #73fcff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  )
+);
+
+$primary: mat-palette($link-palette);
+$accent: mat-palette($link-palette);
+$link-theme: mat-light-theme($primary, $accent);
+@include angular-material-theme($link-theme);
+
+$bg-primary-text-color: #212121;
+$bg-secondary-text-color: rgba(245, 245, 245, 1);
+$bg-primary-link-color: #65DCDF;
+$bg-primary-color: #0066CC;
+
+$primary-text-color: #212121;
+$primary-reverse-text-color: #ffffff;
+$secondary-text-color: rgba(33, 33, 33, 0.6);
+
+$primary-border: rgba(33, 33, 33, 0.16);
+$accent-color: #3cd5d7;
+
+html {
+  overflow-x: hidden; /*IE fix*/
+}
+
+.Roboto{
+  font-family: 'Roboto Mono', monospace;
+}
+
+.Lora {
+  font-family: 'Lora', serif;
+}
+
+.Titillium {
+  font-family: 'Titillium Web', sans-serif;
+}
+
+.fw-300 {
+  font-weight: 300;
+}
+
+.fw-400 {
+  font-weight: 400;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.fw-700 {
+  font-weight: 700;
+}
+
+.fs-75 {
+  font-size: .75rem; /* 12px */
+}
+
+.fs-875 {
+  font-size: .875rem; /* 14px */
+}
+
+.fs-1 {
+  font-size: 1rem; /* 16px */
+}
+
+.fs-125 {
+  font-size: 1.25rem; /* 20px */
+}
+
+.fs-15 {
+  font-size: 1.5rem; /* 24px */
+}
+
+.fs-2 {
+  font-size: 2rem; /* 32px */
+}
+
+.lh-100 {
+  line-height: 1;
+}
+
+.lh-125 {
+  line-height: 1.25;
+}
+
+.bg-primary-text-color {
+  background-color: $bg-primary-text-color !important;
+}
+
+.bg-secondary-text-color {
+  background-color: $bg-secondary-text-color;
+}
+
+.bg-primary-link-color {
+  background-color: $bg-primary-link-color !important;
+}
+
+.bg-primary-color {
+  background-color: $bg-primary-color !important;
+}
+
+.primary-text-color {
+  color: $primary-text-color !important;
+}
+
+.secondary-text-color {
+  color: $secondary-text-color;
+}
+
+.primary-reverse-text-color {
+  color: $primary-reverse-text-color !important;
+}
+
+.primary-border {
+  border-color: $primary-border !important;
+}
+
+.action {
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+p {
+  margin: 0;
+}
+
+.multiline-text {
+  white-space: normal;
+  line-height: 1.4;
+}
+
+/** Header **/
+/** Footer **/
+.nav-logo {
+  max-width: 75px !important;
+  max-height: 80px !important;
+}
+
+.agid, button[mat-flat-button] {
+  background-color: $bg-primary-link-color !important;
+  border-color: $bg-primary-link-color !important;
+  color: $primary-text-color !important;
+  border-radius: 0;
+  padding: .625rem 1.25rem;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+button[mat-flat-button]:hover {
+  background-color: $accent-color !important;
+  border-color: $accent-color !important;
+}
+
+button[mat-flat-button]:disabled {
+  background-color: $bg-primary-link-color !important;
+  cursor: default;
+  opacity: .6;
+}
+
+button[mat-flat-button].white-button {
+  border-color: #004A4D !important;
+  background-color: #ffffff !important;
+}
+
+/** Material **/
+.mat-form-field.mat-focused .mat-form-field-label,
+.mat-form-field.mat-focused .mat-form-field-label .mat-placeholder-required {
+  color: $secondary-text-color !important;
+}
+
+/** ZXing **/
+zxing-scanner video {
+  height: 100% !important;
+}
+
+/** Lib **/
+link-featured-item:last-of-type {
+  border: none !important;
+}

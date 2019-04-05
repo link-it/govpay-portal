@@ -1,0 +1,12 @@
+<ng-content class="w-100" select="[alert-title]"></ng-content>
+<div class="row mx-0">
+  <div class="col-12 px-0">
+    <ng-content select="[alert-body]"></ng-content>
+    <div class="d-flex flex-wrap">
+      <button mat-flat-button class="mb-3 mr-3 fw-600 fs-875" (click)="_alertAction()"
+              type="button" *ngIf="_showButton">{{_ld?.submit}}</button>
+      <button mat-flat-button class="mb-3 mr-3 fw-600 fs-875" (click)="_closeAction()"
+              type="button" *ngIf="_showCloseButton">{{_ld?.close}}</button>
+    </div>
+  </div>
+</div>

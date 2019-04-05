@@ -1,0 +1,15 @@
+<div class="d-block m-0 bg-primary-text-color">
+  <button mat-flat-button *ngIf="_hasEvaluate" class="w-100 fw-600 fs-875 py-0">{{_fl?.evaluation}}</button>
+  <div class="container">
+    <div class="navbar navbar-light flex-nowrap justify-content-start align-items-center px-0 py-3">
+      <a class="navbar-brand mr-0 d-flex flex-grow-1 flex-nowrap align-items-center text-truncate primary-reverse-text-color fw-700 fs-2"
+         [href]="_hrefFooter">
+        <img [src]="_srcLogo" *ngIf="_srcLogo" class="d-inline-block align-top mr-3 nav-logo" alt="logo">
+        <span class="multiline-text">{{_fl?.titolo}}</span>
+      </a>
+    </div>
+    <div class="d-block primary-reverse-text-color">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

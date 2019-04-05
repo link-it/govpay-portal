@@ -41,6 +41,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   protected STATUS_TIMEOUT: string = PayService.STATUS_TIMEOUT;
 
   protected _submitted: boolean = false;
+  protected _showFix: boolean = false;
   protected _sessione: boolean = true;
 
   constructor(public router: Router, public pay: PayService, private activateRoute: ActivatedRoute, private translate: TranslateService) {
@@ -227,6 +228,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       switch(PayService.STATI_PAGAMENTO[response.body.stato]) {
         case PayService.STATI_PAGAMENTO.ESEGUITO:
           this._paymentStatus = this.STATUS_ESEGUITO;
+          this._submitted = true;
           this.loadRicevute(response);
           this.pay.updateSpinner(false);
           break;
@@ -274,6 +276,12 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this._pendenze = response.body.pendenze;
+    this._showFix = false;
+    this._pendenze.forEach(p => {
+      if(PayService.STATI_PENDENZA[p.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA) {
+        this._showFix = true;
+      }
+    });
     this._numeroAvviso = (this._pendenze.length == 1)?this._pendenze[0].numeroAvviso:'';
     if(this.pay.isAuthenticated()) {
       this._updateRicevute(response.body.rpp);
@@ -308,13 +316,18 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       if (PayService.STATI_PENDENZA[_stato] !== PayService.STATI_PENDENZA.ESEGUITA && PayService.STATI_PENDENZA[_stato] !== PayService.STATI_PENDENZA.DUPLICATA) {
         _importo = _importoRpt?_importoRpt:parseFloat(this._pendenze[index].importo);
       }
+      let _showReceipt = true;
+      if(PayService.STATI_PENDENZA[_stato] == PayService.STATI_PENDENZA.NON_ESEGUITA ||
+         PayService.STATI_PENDENZA[_stato] == PayService.STATI_PENDENZA.SCADUTA) {
+        _showReceipt = false;
+      }
       return new Standard({
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
         titolo: new Dato({ label: _causale }),
         sottotitolo: new Dato({ label: Dato.concatStrings(l, ', ') }),
         importo: _importo,
         stato: PayService.STATI_PENDENZA[_stato],
-        icon: (PayService.STATI_PENDENZA[_stato] == PayService.STATI_PENDENZA.NON_ESEGUITA)?'':'receipt',
+        icon: (_showReceipt)?'receipt':'',
         rawData: _item
       });
     });

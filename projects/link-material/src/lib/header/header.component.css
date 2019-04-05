@@ -1,0 +1,28 @@
+:host {
+  position: relative;
+  display: block;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1rem;
+  z-index: 2;
+}
+
+a, a:hover {
+  color: white;
+}
+
+.trans-nav {
+  transition: padding 250ms ease-in;
+}
+
+.slim-nav {
+  padding: .25rem 0 !important;
+  transition: padding 250ms ease-in;
+}
+
+.slim-nav-logo {
+  height: 40px !important;
+}
+
+.multiline-text-slim {
+  font-size: 1.25rem;
+}

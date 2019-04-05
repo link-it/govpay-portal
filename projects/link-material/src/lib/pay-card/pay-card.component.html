@@ -1,0 +1,53 @@
+<div class="card rounded-0 border-0 bg-secondary-text-color primary-text-color fs-1 fw-400">
+  <div class="card-body p-3">
+    <button mat-icon-button class="close-icon secondary-text-color" *ngIf="_enableScanner" (click)="_closeScan()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h5 class="d-block card-title text-uppercase m-0 fw-600 fs-125 secondary-text-color {{_enableScanner?'pr-5':''}}">{{_pcl?.titolo}}</h5>
+    <p class="card-text py-4 fw-400">{{_pcl?.note}}</p>
+    <div class="d-flex flex-column align-items-center" *ngIf="_enableScanner">
+      <zxing-scanner #zxing [class.zxing-scanned]="_gotScan"
+                     [scannerEnabled]="_scannerIsRunning"
+                     (camerasFound)="camerasFoundHandler($event)"
+                     (scanSuccess)="scanSuccessHandler($event)"
+                     (scanError)="scanErrorHandler($event)"></zxing-scanner>
+      <mat-form-field class="d-block w-100" *ngIf="_availableDevices.length != 0 && _enableScanner">
+        <mat-select [placeholder]="_pcl?.payCardForm?.fotocamera" [(value)]="_desiredDevice.deviceId"
+                    (selectionChange)="onDeviceSelectChange($event)">
+          <mat-option *ngIf="!_availableDevices" value="">No Camera</mat-option>
+          <mat-option *ngFor="let device of _availableDevices" [value]="device.deviceId">
+            {{device.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="d-block" *ngIf="!_enableScanner">
+      <form [formGroup]="_fg" (ngSubmit)="_onSubmit(_fg.value)">
+        <mat-form-field class="d-block">
+          <input matInput [placeholder]="_pcl?.payCardForm?.avviso" name="avviso" [formControlName]="'avviso'" required>
+          <button matSuffix mat-icon-button type="button" (click)="_onScan($event)">
+            <mat-icon class="action">photo_camera</mat-icon>
+          </button>
+          <mat-error *ngIf="_avviso.errors && _avviso.errors['required']">
+            {{_avviso.errors['message']}}
+          </mat-error>
+        </mat-form-field>
+        <p class="mb-3 mat-error fs-75" *ngIf="_noDomain && _dominio && _dominio.errors">{{_dominio.errors['message']}}</p>
+        <mat-form-field class="d-block" *ngIf="_domini.length > 1">
+          <input matInput [placeholder]="_pcl?.payCardForm?.creditore" name="dominio" [formControl]="_dominio"
+                 [matAutocomplete]="auto" [required]="_domini.length > 1">
+          <mat-icon matSuffix>arrow_drop_down</mat-icon>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let dominio of _filtered | async" [value]="dominio.value">
+              {{dominio.label}} - ({{dominio.value}})
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="_dominio?.errors && !_noDomain">
+            {{_dominio?.errors['message']}}
+          </mat-error>
+        </mat-form-field>
+        <button mat-flat-button class="mt-3 fw-600 fs-875" [disabled]="!_fg.valid">{{_pcl?.payCardForm?.submit}}</button>
+      </form>
+    </div>
+  </div>
+</div>

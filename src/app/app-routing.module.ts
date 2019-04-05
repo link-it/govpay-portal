@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'accesso', component: AccessoComponent },
   { path: 'riepilogo', component: PosizioneDebitoriaComponent, canActivate: [ AuthGuardService ] },
   { path: 'archivio', component: ArchivioComponent, canActivate: [ AuthGuardService ] },
-  { path: 'pagamento', component: AvvisoComponent },
+  { path: 'pagamento', component: AvvisoComponent, canActivate: [ AuthGuardService ] },
   { path: 'profilo', component: ProfiloComponent, canActivate: [ AuthGuardService ] },
   { path: '**', redirectTo: '/accesso' }
 ];

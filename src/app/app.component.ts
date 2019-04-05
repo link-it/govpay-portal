@@ -18,12 +18,13 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
   protected _fld: FooterLocalization = new FooterLocalization();
   protected _footerLinks: any;
 
+  protected _slimHeader: boolean = false;
   protected _isLogged: boolean = false;
   protected _isLoading: boolean = false;
   protected _languages: Language[] = [];
   protected _language: string = '';
 
-  //Cart fixed position behavior
+  // Cart fixed position behavior
   protected _shoppingList: any;
   protected _shoppingCart: any;
   protected _timerScrollCart: any;
@@ -36,6 +37,7 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
 
   @HostListener('window:resize') onResize() {
     this._updateBodyPadding();
+    this._updateFooter();
   }
   @ViewChild('header', { read: ElementRef }) private _header: ElementRef;
   @ViewChild('footer', { read: ElementRef }) private _footer: ElementRef;
@@ -62,8 +64,7 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
 
   ngAfterViewChecked() {
     this._updateBodyPadding();
-
-    //Cart fixed position behavior
+    // Cart fixed position behavior
     this._shoppingList = document.querySelector('#shoppingList');
     this._shoppingCart = document.querySelector('#shoppingCart');
 
@@ -125,6 +126,7 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
    * @private
    */
   protected _onScroll(event) {
+    this._slimHeader = (event.currentTarget.scrollTop > 50);
     clearInterval(this._timerScrollCart);
     if(this._shoppingList && this._shoppingCart) {
       const _progress = this._shoppingList.clientHeight - this._shoppingCart.clientHeight;
@@ -138,11 +140,17 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
     if (this._header && this._globalContent) {
       const h = this._header.nativeElement.clientHeight;
       this._globalContent.nativeElement.style.top = h + 'px';
+    }
+    this._updateFooter();
+  }
+
+  protected _updateFooter() {
+    if (this._header && this._globalContent) {
+      this._footer.nativeElement.classList.remove('footer-bottom');
       if (this._footer && this._rsec) {
         const gch = this._globalContent.nativeElement.clientHeight;
         const gcsh = this._globalContent.nativeElement.scrollHeight;
         const fh = this._footer.nativeElement.clientHeight;
-        this._footer.nativeElement.classList.remove('footer-bottom');
         if(!(gcsh > gch)) {
           if (Math.abs(gch - (this._rsec.nativeElement.clientHeight)) > fh) {
             if (!this._footer.nativeElement.classList.contains('footer-bottom')) {

@@ -90,7 +90,7 @@ export class AccessoComponent implements OnInit, AfterContentChecked, OnDestroy 
           let _dataScadenzaOPagamento = (_response.dataScadenza)?moment(_response.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.senza_scadenza;
           let _meta = '';
 
-          if (PayService.STATI_PENDENZA[_response.stato] === PayService.STATI_PENDENZA.ESEGUITA || PayService.STATI_PENDENZA[_response.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
+          if (PayService.STATI_VERIFICA_PENDENZA[_response.stato] === PayService.STATI_VERIFICA_PENDENZA.ESEGUITA || PayService.STATI_VERIFICA_PENDENZA[_response.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
             const _iuvOrAvviso = (_response.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + _response.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + _response.iuvPagamento;
             _dataScadenzaOPagamento = (_response.dataPagamento)?moment(_response.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
             _meta = PayService.SHARED_LABELS.pagamento + ': ' + _dataScadenzaOPagamento + _iuvOrAvviso;

@@ -1,0 +1,7 @@
+:host {
+  position: relative;
+  display: block;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1rem;
+  box-shadow: 0 1px 2px rgba(33, 33, 33, .16);
+}

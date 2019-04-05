@@ -22,7 +22,7 @@ export class AuthGuardService implements CanActivate, OnDestroy {
     }
 
     this.pay.updateSpinner(true);
-    return this.pay.sessione();
+    return this.pay.sessione(state.url);
 
   }
 

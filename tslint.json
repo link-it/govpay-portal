@@ -7,7 +7,7 @@
     "callable-types": true,
     "class-name": true,
     "comment-format": [
-      false,
+      true,
       "check-space"
     ],
     "curly": true,
@@ -27,7 +27,22 @@
     ],
     "interface-over-type-literal": true,
     "label-position": true,
+    "max-line-length": [
+      false,
+      140
+    ],
     "member-access": false,
+    "member-ordering": [
+      false,
+      {
+        "order": [
+          "static-field",
+          "instance-field",
+          "static-method",
+          "instance-method"
+        ]
+      }
+    ],
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [
@@ -45,10 +60,12 @@
     "no-empty-interface": true,
     "no-eval": true,
     "no-inferrable-types": [
+      false,
       "ignore-params"
     ],
     "no-misused-new": true,
     "no-non-null-assertion": true,
+    "no-redundant-jsdoc": false,
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
@@ -63,8 +80,7 @@
       true,
       "check-open-brace",
       "check-catch",
-      "check-else",
-      "check-whitespace"
+      "check-else"
     ],
     "prefer-const": true,
     "quotemark": [
@@ -77,6 +93,7 @@
       "always"
     ],
     "triple-equals": [
+      false,
       "allow-null-check"
     ],
     "typedef-whitespace": [
@@ -91,12 +108,20 @@
     ],
     "unified-signatures": true,
     "variable-name": false,
+    "whitespace": [
+      false,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ],
     "no-output-on-prefix": true,
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
-    "no-input-rename": true,
-    "no-output-rename": true,
+    "no-input-rename": false,
+    "no-output-rename": false,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,

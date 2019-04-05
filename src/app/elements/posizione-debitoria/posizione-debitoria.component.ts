@@ -41,7 +41,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
 
   ngAfterViewInit() {
     this._globalContainer = document.querySelector('.global-container');
-    this.getPendenze();
+    this.getPendenze('ordinamento=smart');
   }
 
   ngOnDestroy() {
@@ -103,7 +103,8 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
   _onSelectionChange(event) {
     this._paginator.filter = (event.value)?event.value:'';
     this._paginator.index = 1;
-    this.getPendenze(this._paginator.toQuery());
+    const _q = this._paginator.toQuery() + '&ordinamento=smart';
+    this.getPendenze(_q);
   }
 
   _cartToggleHandler(event) {
@@ -142,7 +143,8 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
   _pageHandler(event) {
     this._paginator.index = event.pageIndex + 1;
     this._paginator.size = event.pageSize;
-    this.getPendenze(this._paginator.toQuery());
+    const _q = this._paginator.toQuery() + '&ordinamento=smart';
+    this.getPendenze(_q);
   }
 
   /**
@@ -170,6 +172,11 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
         _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds + _iuvOrAvviso });
       }
+      let _statoPendenza = PayService.STATI_PENDENZA[item.stato];
+      if ((PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.NON_ESEGUITA) &&
+          item.dataValidita && (moment(new Date()) > moment(item.dataValidita))) {
+        _statoPendenza = PayService.STATI_PENDENZA.IN_RITARDO;
+      }
       if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.NON_ESEGUITA) {
         const _si = new ShoppingInfo({
           // Restore previous uid(s) for cart component ref elements
@@ -178,7 +185,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
           titolo: new Dato({ label: item.causale }),
           sottotitolo: _meta,
           importo: parseFloat(item.importo),
-          stato: PayService.STATI_PENDENZA[item.stato],
+          stato: _statoPendenza,
           rawData: item
         });
         if (PayService.STATI_PENDENZA[item.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA && item.idPendenza) {
@@ -193,8 +200,8 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
           titolo: new Dato({ label: item.causale }),
           sottotitolo: _meta,
           importo: parseFloat(item.importo),
-          stato: PayService.STATI_PENDENZA[item.stato],
-          icon: 'receipt',
+          stato: _statoPendenza,
+          icon: (PayService.STATI_PENDENZA[item.stato] !== PayService.STATI_PENDENZA.SCADUTA)?'receipt':'',
           rawData: item
         });
         return _std;

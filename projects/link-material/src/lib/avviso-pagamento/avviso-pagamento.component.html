@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 px-0">
+      <h1 class="m-0 pb-4 fs-2 fw-700" [matTooltip]="_ld?.titolo">{{_ld?.titolo}}</h1>
+    </div>
+    <div class="col-12 px-0" *ngIf="_ld.note">
+      <p class="py-3 fs-1 fw-400 primary-text-color" [matTooltip]="_ld?.note">{{_ld?.note}}</p>
+    </div>
+    <div class="col-12 px-0">
+      <link-featured-item *ngFor="let _infoPayment of _payments" [item-info]="_infoPayment" [trim-icon]="true"></link-featured-item>
+      <div class="row border-top rounded-0 mx-0 mt-3 pt-4 primary-border" *ngIf="_payments.length > 1">
+        <div class="col-6">
+          <p class="card-text fw-600 fs-125">{{_ld?.importo}}</p>
+        </div>
+        <div class="col-6 text-right">
+          <p class="card-text fw-600 fs-125">{{_currencyFormat(_totale)}}</p>
+        </div>
+      </div>
+      <div class="col-12 px-0" *ngIf="!_preventSubmit">
+        <p class="text-uppercase border-top rounded-0 mt-4 py-3 primary-border secondary-text-color fs-125 fw-600">{{_ld?.sottotitolo}}</p>
+        <p class="py-3 mb-4 fs-1 fw-400 primary-text-color">{{_ld?.dettaglio}}</p>
+        <form [formGroup]="_fg" (ngSubmit)="_onFormSubmit(_fg)">
+          <div class="row mx-0 mb-4" *ngIf="_showFields">
+            <div class="col-12 col-sm-6 px-0 pr-sm-3">
+              <mat-form-field class="w-100">
+                <input matInput [placeholder]="_ld?.email" formControlName="email" name="email" required>
+              </mat-form-field>
+            </div>
+            <div class="col-12 col-sm-6 px-0 pl-sm-3">
+              <mat-form-field class="w-100">
+                <input matInput [placeholder]="_ld?.confermaEmail" formControlName="confermaEmail" name="confermaEmail" required>
+                <mat-error *ngIf="_fg.controls['confermaEmail'].errors">
+                  {{_fg.controls['confermaEmail'].errors['message']}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="d-flex">
+            <button mat-flat-button class="mr-3 fw-600 fs-875" type="submit" [disabled]="_formInvalid">{{_ld?.submit}}</button>
+            <button mat-flat-button class="fw-600 fs-875 white-button" type="reset" *ngIf="_showReset">{{_ld?.cancel}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

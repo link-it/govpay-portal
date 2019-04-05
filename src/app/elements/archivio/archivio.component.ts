@@ -118,13 +118,18 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
         item = item.rawData;
       }
       const _drp = (item.dataRichiestaPagamento)?moment(item.dataRichiestaPagamento).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.notAvailable;
+      let _showReceipt = true;
+      if(PayService.STATI_PAGAMENTO[item.stato] === PayService.STATI_PAGAMENTO.FALLITO ||
+         PayService.STATI_PAGAMENTO[item.stato] === PayService.STATI_PAGAMENTO.IN_CORSO) {
+        _showReceipt = false;
+      }
       return new Standard({
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
         titolo: new Dato({ label: item.nome }),
         sottotitolo: new Dato({ label: PayService.SHARED_LABELS.data + ': ' + _drp }),
         importo: item.importo,
         stato: PayService.STATI_PAGAMENTO[item.stato],
-        icon: (PayService.STATI_PAGAMENTO[item.stato] === PayService.STATI_PAGAMENTO.ESEGUITO)?'receipt':'',
+        icon: (_showReceipt)?'receipt':'',
         rawData: item
       });
     });

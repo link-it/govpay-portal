@@ -1,0 +1,29 @@
+:host {
+  position: relative;
+  display: block;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(33, 33, 33, .2);
+}
+
+.host-directive {
+  overflow-x: hidden !important;
+}
+
+.host-hover-directive:hover {
+  background-color: rgba(33, 33, 33, .01);
+}
+
+.featured-icon {
+  width: 20px;
+  height: 20px;
+  line-height: 1.35;
+}
+
+.featured-icon-hidden {
+  visibility: hidden !important;
+}
+
+.excluded {
+  color: #65dcdf;
+}

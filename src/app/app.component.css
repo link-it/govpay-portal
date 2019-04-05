@@ -1,5 +1,5 @@
 .spinner-group {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -12,4 +12,8 @@
   top: calc(50% - 20px);
   left: calc(50% - 20px);
   transform: translate(-50%, -50%);
+}
+
+link-footer .p-wrap p {
+  word-break: break-all;
 }

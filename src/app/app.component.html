@@ -1,5 +1,5 @@
 <link-header #header [url-logo]="_logo" [show-language-menu]="_languages.length > 1" [show-nav-menu]="_isLogged"
-            [localization-data]="_hld" (on-click-menu)="_menuHandler($event)" [language-list]="_languages"
+            [localization-data]="_hld" (on-click-menu)="_menuHandler($event)" [language-list]="_languages" [slim-header]="_slimHeader"
             (on-change-language)="_languageHandler($event)" [current-language]="_language"></link-header>
 <div #globalContent class="global-container px-0 overflow-auto Titillium" (scroll)="_onScroll($event)">
   <div #routeSection class="d-block">
@@ -7,9 +7,9 @@
   </div>
   <div #footer class="pt-3">
     <link-footer [url-logo]="_logo" [evaluate]="false" [localization-data]="_fld">
-      <div class="row mx-4 mb-4">
+      <div class="row mx-4 mb-4 p-wrap">
         <div class="col-12 col-sm-4 border-white-16 border-top pb-3 px-0">
-          <div class="text-uppercase my-3 fs-125 color-white-60">{{ 'Footer.recapito.titolo' | translate }}</div>
+          <h2 class="text-uppercase my-3 fs-125 color-white-60">{{ 'Footer.recapito.titolo' | translate }}</h2>
           <p class="mb-2 fs-875">{{ 'Footer.recapito.indirizzo' | translate }}</p>
           <p class="mb-2 fs-875">{{ 'Footer.recapito.centralino' | translate }}</p>
           <p class="mb-2 fs-875">{{ 'Footer.recapito.postaCertificata' | translate }}</p>
@@ -17,7 +17,7 @@
           <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.reteDiplomatica">{{ 'Footer.recapito.reteDiplomatica' | translate }}</a></div>
         </div>
         <div class="col-12 col-sm border-white-16 border-top pb-3 px-0 mx-sm-4">
-          <p class="text-uppercase my-3 fs-125 color-white-60">{{ 'Footer.urp.titolo' | translate }}</p>
+          <h2 class="text-uppercase my-3 fs-125 color-white-60">{{ 'Footer.urp.titolo' | translate }}</h2>
           <p class="mb-2 fs-875">{{ 'Footer.urp.orario' | translate }}</p>
           <p class="mb-2 fs-875">{{ 'Footer.urp.contatti.telefono' | translate }}</p>
           <p class="mb-2 fs-875">{{ 'Footer.urp.contatti.fax' | translate }}</p>
@@ -26,7 +26,7 @@
           <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.faq">{{ 'Footer.urp.contatti.faq' | translate }}</a></div>
         </div>
         <div class="col-12 col-sm-4 border-white-16 border-top pb-3 px-0">
-          <p class="text-uppercase my-3 fs-125 color-white-60">{{ 'Footer.app.titolo' | translate }}</p>
+          <h2 class="text-uppercase my-3 fs-125 color-white-60">{{ 'Footer.app.titolo' | translate }}</h2>
           <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.riferimenti">{{ 'Footer.app.riferimenti' | translate }}</a></div>
           <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.rss">{{ 'Footer.app.rss' | translate }}</a></div>
           <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.news">{{ 'Footer.app.news' | translate }}</a></div>
