@@ -168,7 +168,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       urlRitorno: PayService.PAY_RESPONSE_URL
     };
     if(PayService.User) {
-      _body['datiVersante'] = {
+      _body['soggettoVersante'] = {
         identificativo: PayService.User.anagrafica?PayService.User.anagrafica.identificativo:PayService.SHARED_LABELS.notAvailable,
         anagrafica: PayService.User.anagrafica?PayService.User.anagrafica.anagrafica:PayService.SHARED_LABELS.notAvailable,
         email: PayService.User.anagrafica?PayService.User.anagrafica.email:'',
@@ -176,7 +176,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       _body['autenticazioneSoggetto'] = null;
     } else {
-      _body['datiVersante'] = {
+      _body['soggettoVersante'] = {
         identificativo: PayService.ANONIMO,
         anagrafica: PayService.ANONIMO,
         email: this._recapito,
