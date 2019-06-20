@@ -107,6 +107,7 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
   protected translateDynamicObject() {
     this.translate.get('Common').subscribe((_common: any) => {
       PayService.SHARED_LABELS = _common;
+      this.pay.updateSpinner(false);
     });
     this.translate.get('Header').subscribe((_header: any) => {
       this._hld.titolo = _header.titolo;
@@ -184,6 +185,7 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
   _languageHandler(event: any) {
     this._language = event.language.alpha3Code.toUpperCase();
     this.translate.use(event.language.alpha2Code);
+    this.pay.updateSpinner(true);
     this.translateDynamicObject();
   }
 }

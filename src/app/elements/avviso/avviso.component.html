@@ -1,10 +1,10 @@
 <div class="container p-4">
-  <h1 class="m-0 fs-2 fw-700 py-4" *ngIf="!_submitted && _sessione">{{ 'Avviso.wait' | translate }}</h1>
+  <h1 class="m-0 fs-2 fw-700 py-4" *ngIf="_paymentStatus === STATUS_INCORSO || (!_submitted && _sessione)">{{ 'Avviso.wait' | translate }}</h1>
   <link-avviso-pagamento #ap [localization-data]="_ald" *ngIf="!_submitted && !_sessione" (on-submit)="_procedi($event)" [currency-format]="_formatoValuta"
                         [payments]="_payments" [show-reset-button]="false" [prevent-submit]="_preventPaymentSubmit" [show-fields-form]="_showRecapito"></link-avviso-pagamento>
   <link-alert-pagamento [localization-data]="_wld" (on-action)="_fixPayment()" [action-button]="_showFix" [close-action-button]="!pay.isAuthenticated()" (on-action-close)="_newPayment()"
                         *ngIf="_submitted && _sessione">
-    <h1 alert-title class="w-100 fs-2 fw-700">{{_hasPaid?_wld?.eseguito:_wld?.fallito}}</h1>
+    <h1 alert-title class="w-100 fs-2 fw-700" *ngIf="_paymentStatus !== STATUS_INCORSO">{{_hasPaid?_wld?.eseguito:_wld?.fallito}}</h1>
     <div alert-body class="w-100">
       <div class="w-100 py-4" [ngSwitch]="_paymentStatus">
         <div class="w-100" *ngSwitchCase="STATUS_ESEGUITO">
@@ -14,7 +14,7 @@
           <p class="fs-1 fw-400 primary-text-color" *ngIf="_numeroAvviso">{{(_wld?.dettaglioFallito.replace('%1', _numeroAvviso)).trim()}}</p>
         </div>
         <div class="w-100" *ngSwitchCase="STATUS_INCORSO">
-          <p class="fs-1 fw-400 primary-text-color">{{(_hasPaid?_wld?.dettaglioInCorso.ok:_wld?.dettaglioInCorso.errore).trim()}}</p>
+          <p class="fs-1 fw-400 primary-text-color">{{((_hasPaid===true)?(_wld?.dettaglioInCorso.ok):(_wld?.dettaglioInCorso.errore)).trim()}}</p>
         </div>
         <div class="w-100" *ngSwitchCase="STATUS_TIMEOUT">
           <p class="fs-1 fw-400 primary-text-color" *ngIf="_hasPaid">{{_wld?.dettaglioInCorso.timeout.ok.trim()}}</p>

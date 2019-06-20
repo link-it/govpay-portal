@@ -52,6 +52,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
     this.translate.get('Common').subscribe((_common: any) => {
       PayService.SHARED_LABELS = _common;
       this._elencoStati = PayService.StatiPendenza();
+      this.pay.updateSpinner(false);
     });
     this.translate.get('Cart').subscribe((_cart: any) => {
       this._cld.titolo = _cart.titolo;

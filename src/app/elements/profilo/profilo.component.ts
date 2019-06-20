@@ -35,6 +35,7 @@ export class ProfiloComponent implements OnInit, OnDestroy {
   protected translateDynamicObject() {
     this.translate.get('Common').subscribe((_common: any) => {
       PayService.SHARED_LABELS = _common;
+      this.pay.updateSpinner(false);
     });
     this.setUserProfile();
   }

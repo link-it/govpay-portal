@@ -69,7 +69,12 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!this.pay.AVVISO_PAGAMENTO.Pagamenti || this.pay.AVVISO_PAGAMENTO.Pagamenti.length == 0) {
         this._newPayment();
       } else {
-        this._showRecapito = !this.pay.isAuthenticated();
+        // Form recapito email opzionale
+        // const _hasAuth = this.pay.isAuthenticated();
+        // const _hasAuthMail = !!PayService.User.anagrafica.email;
+        // this._showRecapito = !_hasAuth || (_hasAuth && !_hasAuthMail);
+        // Form recapito email sempre visibile
+        this._showRecapito = true;
       }
     } else {
       this.pay.updateSpinner(true);
@@ -97,6 +102,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.translate.get('PayCard').subscribe((_paycard: any) => {
         PayService.SHARED_LABELS.creditore = _paycard.form.creditore;
       });
+      this.pay.updateSpinner(false);
     });
     this.translate.get('Avviso').subscribe((_avviso: any) => {
       this._ald.titolo = _avviso.titolo;
@@ -241,11 +247,14 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         case PayService.STATI_PAGAMENTO.IN_CORSO:
           if(this._pollingTimeout < PayService.TIME_OUT_POLLING) {
             this._paymentStatus = this.STATUS_INCORSO;
+            this._submitted = true;
             this.polling(sessione);
             this._pollingTimeout++;
           } else {
             this._pollingTimeout = 0;
             this._paymentStatus = this.STATUS_TIMEOUT;
+            this._submitted = true;
+            this.loadRicevute(response);
             this.pay.updateSpinner(false);
           }
           break;
@@ -271,7 +280,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   protected loadRicevute(response: any) {
     response.body.rpp.forEach(rpp => {
-      if(rpp.rt.soggettoVersante) {
+      if(rpp.rt && rpp.rt.soggettoVersante) {
         this._recapito = rpp.rt.soggettoVersante['e-mailVersante']?rpp.rt.soggettoVersante['e-mailVersante']:'';
       }
     });
@@ -283,7 +292,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this._numeroAvviso = (this._pendenze.length == 1)?this._pendenze[0].numeroAvviso:'';
-    if(this.pay.isAuthenticated()) {
+    if(this.pay.isAuthenticated() && PayService.STATI_PAGAMENTO[response.body.stato] !== PayService.STATI_PAGAMENTO.IN_CORSO) {
       this._updateRicevute(response.body.rpp);
     }
   }
