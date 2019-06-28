@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-//Restricted Routing
+// Restricted Routing
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 
-//DI Service
+// DI Service
 import { PayService } from './pay.service';
 
 @Injectable()

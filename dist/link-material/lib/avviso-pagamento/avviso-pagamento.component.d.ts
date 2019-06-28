@@ -20,4 +20,5 @@ export declare class AvvisoPagamentoComponent implements OnInit, OnChanges, Afte
     _onFormSubmit(form: any): void;
     confermaValidator(controllerName: any): ValidatorFn;
     fillContactForm(email: string): void;
+    resetForm(): void;
 }

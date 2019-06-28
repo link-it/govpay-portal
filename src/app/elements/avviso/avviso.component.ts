@@ -73,8 +73,8 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         // const _hasAuth = this.pay.isAuthenticated();
         // const _hasAuthMail = !!PayService.User.anagrafica.email;
         // this._showRecapito = !_hasAuth || (_hasAuth && !_hasAuthMail);
-        // Form recapito email sempre visibile
-        this._showRecapito = true;
+        // Form recapito email authenticated only!
+        this._showRecapito = !this.pay.isAuthenticated();
       }
     } else {
       this.pay.updateSpinner(true);

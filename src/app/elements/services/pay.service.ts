@@ -40,7 +40,7 @@ export class PayService implements OnInit, OnDestroy {
   public static TIMEOUT: number = 30000;
 
   public static SHARED_LABELS: any;
-  public static User: any; // = { anagrafica: { anagrafica: 'User' }, email: 'mail@localhost.com' };
+  public static User: any; // = { anagrafica: { anagrafica: 'User' , email: 'mail@localhost.com' } };
   public static ANONIMO: string = 'ANONIMO';
   public static Paginator: any = {
     length: 0,
