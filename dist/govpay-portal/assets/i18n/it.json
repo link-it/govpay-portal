@@ -1,7 +1,7 @@
 {
   "Header": {
-    "titolo": "Ministero degli Affari Esteri e della Cooperazione Internazionale",
-    "sottotitolo": "Farnesina pagoPA",
+    "titolo": "Regione",
+    "sottotitolo": "Comune Dimostrativo",
     "menu": {
       "items": [
         { "label": "Paga un avviso", "link": "/accesso" },
@@ -18,28 +18,28 @@
     }
   },
   "Footer": {
-    "titolo": "Ministero degli Affari Esteri e della Cooperazione Internazionale",
+    "titolo": "Comune Dimostrativo",
     "recapito": {
       "titolo": "Recapiti e contatti",
-      "indirizzo": "Ministero degli Affari Esteri e della Cooperazione Internazionale Piazzale della Farnesina, 1 00135 Roma",
-      "centralino": "Centralino: +39 06 36911",
-      "postaCertificata": "Indirizzo di posta elettronica istituzionale e certificata del MAECI ministero.affariesteri@cert.esteri.it",
-      "uffici": "Tutti gli uffici",
-      "reteDiplomatica": "Rete diplomatica"
+      "indirizzo": "Piazza della Vittoria, 1 00135 Roma",
+      "centralino": "Centralino: +39 00 00000",
+      "postaCertificata": "Pec: dimostrativo@comune.regione.it",
+      "uffici": "Organigramma",
+      "reteDiplomatica": ""
     },
     "indirizzi": {
-      "organigramma": "https://www.esteri.it/mae/it/ministero/struttura/organigramma.html",
-      "reteDiplomatica": "https://www.esteri.it/mae/it/ministero/laretediplomatica",
-      "comunicazioni": "https://www.esteri.it/mae/it/trasparenza_comunicazioni_legali/organizzazione/telefono_posta_elettronica.html",
-      "info": "https://www.esteri.it/mae/it/servizi/sportello_info/domandefrequenti/faqrichiestainfo.html",
-      "faq": "https://www.esteri.it/mae/it/servizi/sportello_info/domandefrequenti",
-      "riferimenti": "https://www.dovesiamonelmondo.it/dovemondo/index.php?id=71",
-      "rss": "https://www.esteri.it/mae/it/header_footer/feedrss.html",
-      "news": "https://www.esteri.it/mae/it/header_footer/areaintnewsletter.html",
-      "crediti": "https://www.esteri.it/mae/header_footer/cdr.html",
-      "noteLegali": "https://www.esteri.it/mae/header_footer/noteLegali.html",
-      "privacy": "https://www.esteri.it/mae/header_footer/privacy.html",
-      "cookie": "https://www.esteri.it/mae/header_footer/privacy-e-cookie.html"
+      "organigramma": "https://www.sample.it/",
+      "reteDiplomatica": "",
+      "comunicazioni": "https://www.sample.it/",
+      "info": "https://www.sample.it/",
+      "faq": "https://www.sample.it/",
+      "riferimenti": "https://www.sample.it/",
+      "rss": "https://www.sample.it/",
+      "news": "https://www.sample.it/",
+      "crediti": "https://www.sample.it/",
+      "noteLegali": "https://www.sample.it/",
+      "privacy": "https://www.sample.it/",
+      "cookie": "https://www.sample.it/"
     },
     "urp": {
       "titolo": "Relazioni con il pubblico",
@@ -69,7 +69,7 @@
   },
   "PayCard": {
     "titolo": "Paga un avviso pagoPA",
-    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "note": "Se hai ricevuto un Avviso pagoPA, puoi pagarlo indicando il numero avviso oppure scansionando il qrcode.",
     "form": {
       "avviso": "Numero avviso",
       "fotocamera": "Fotocamera",
@@ -85,7 +85,7 @@
   },
   "LoginCard": {
     "titolo": "Accedi alla tua posizione",
-    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "note": "Accedendo al portale in modalità autenticata potrai consultare la tua Posizione Debitoria e lo Storico dei Pagamenti in forma protetta e riservata.",
     "spid": "Entra con SPID",
     "info": "Maggiori informazioni",
     "ask": "Non hai SPID?",
@@ -126,17 +126,17 @@
   "Alert": {
     "eseguito": "Pagamento eseguito",
     "fallito": "Pagamento non eseguito",
-    "dettaglioEseguito": "Il pagamento richiesto per l'avviso %1 risulta essere andato a buon fine. La ricevuta del pagamento sarà recapitata all'indirizzo fornito.",
-    "dettaglioFallito": "Il pagamento richiesto per l'avviso %1 NON risulta essere andato a buon fine.",
+    "dettaglioEseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
+    "dettaglioFallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
     "dettaglioInCorso": {
       "ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
       "timeout": {
-        "ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla all'indirizzo mail fornito.",
-        "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla all'indirizzo mail fornito."
+        "ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail",
+        "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail"
       },
-      "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA"
+      "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA."
     },
-    "submit": "Risolvi i pagamenti incompleti",
+    "submit": "Prova di nuovo",
     "close": "Nuovo pagamento"
   },
   "Common": {

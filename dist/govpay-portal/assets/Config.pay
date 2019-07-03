@@ -23,14 +23,14 @@
 
   global.PayConfig = {
     REVERSE_PROXY: '',
-    AUTH_HOST: 'https://spcoop.it',
+    AUTH_HOST: 'https://www.comunedimostrativo.it',
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v1',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v1',
-    SPID_SERVICE_TARGET: 'http://localhost:4200/riepilogo',
+    SPID_SERVICE_TARGET: 'https://www.comunedimostrativo.it/riepilogo',
     SPID_TEST_PROVIDER: 'https://idp.spid.gov.it',
-    SPID_ACTION_FORM_URL: 'https://lab.link.it/Shibboleth.sso/Login',
-    SPID_LOGOUT_URL: 'https://spcoop.it/govpay/frontend/api/pagamento/rs/spid/v1/logout',
-    PAY_RESPONSE_URL: 'http://localhost:4200/pagamento',
+    SPID_ACTION_FORM_URL: 'https://www.comunedimostrativo.it/Shibboleth.sso/Login',
+    SPID_LOGOUT_URL: 'https://www.comunedimostrativo.it/govpay/frontend/api/pagamento/rs/spid/v1/logout',
+    PAY_RESPONSE_URL: 'https://www.comunedimostrativo.it/pagamento',
     TIME_OUT_POLL: 5, //Secs.
     POLLING_INTERVAL: 3000, //Millisecs.
     DOMINI: _elencoDomini(),
