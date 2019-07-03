@@ -64,7 +64,7 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
   _onFormSubmit(form) {
     if(form.valid) {
       this._onSubmit.emit({ form: form.value, empty: !this._showFields});
-      form.reset();
+      // form.reset();
     }
   }
 
@@ -85,4 +85,7 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
     this._fg.controls['confermaEmail'].setValue(email);
   }
 
+  resetForm() {
+    this._fg.reset();
+  }
 }

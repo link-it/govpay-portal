@@ -34,13 +34,13 @@ export class PayService implements OnInit, OnDestroy {
   public static URL_AVVISO: string = '/avvisi';
   public static URL_RPP: string = '/rpp';
   public static URL_LOGGED_IN: string = '/profilo';
-  public static URL_LOGOUT: string = '/logout';
+  public static URL_LOGOUT: string = PayConfig.SPID_LOGOUT_URL;
   public static URL_SESSIONE_PAGAMENTO: string = '/byIdSession/';
 
   public static TIMEOUT: number = 30000;
 
   public static SHARED_LABELS: any;
-  public static User: any; // = { anagrafica: { anagrafica: 'User' }, email: 'mail@localhost.com' };
+  public static User: any; // = { anagrafica: { anagrafica: 'User' , email: 'mail@localhost.com' } };
   public static ANONIMO: string = 'ANONIMO';
   public static Paginator: any = {
     length: 0,
@@ -183,6 +183,7 @@ export class PayService implements OnInit, OnDestroy {
       this.paginator.previousPageLabel = _common.previousPageLabel;
       this.paginator.lastPageLabel = _common.lastPageLabel;
       this.paginator.firstPageLabel = _common.firstPageLabel;
+      this.updateSpinner(false);
     });
   }
 
@@ -278,7 +279,7 @@ export class PayService implements OnInit, OnDestroy {
    * @returns {Observable<any>}
    */
   logout(): Observable<any> {
-    return this.http.get(PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_LOGOUT)
+    return this.http.get(PayService.URL_LOGOUT)
       .pipe(
         timeout(PayService.TIMEOUT),
         map((response: HttpResponse<any>) => {
@@ -521,8 +522,9 @@ export class PayService implements OnInit, OnDestroy {
    * Procedura download ricevuta
    * Get RPP detail
    * @param {string} url
+   * @param {boolean} archive
    */
-  getRPP(url: string) {
+  getRPP(url: string, archive: boolean = false) {
     this.updateSpinner(true);
     this.richiestaRPP(url).subscribe(
       (result) => {
@@ -530,9 +532,14 @@ export class PayService implements OnInit, OnDestroy {
           if (result.body) {
             if (result.body.risultati && result.body.risultati.length != 0) {
               const _data = {url: [], type: []};
-              const _risultati = result.body.risultati.filter((r) => {
-                return (r.rt && parseInt(r.rt.datiPagamento.codiceEsitoPagamento, 10) === 0);
-              });
+              let _risultati = [];
+              if(!archive) {
+                _risultati = result.body.risultati.filter((r) => {
+                  return (r.rt && parseInt(r.rt.datiPagamento.codiceEsitoPagamento, 10) === 0);
+                });
+              } else {
+                _risultati = result.body.risultati || [];
+              }
               _risultati.forEach(item => {
                 let urlRicevuta = '/' + item.rpt.dominio.identificativoDominio;
                 urlRicevuta += '/' + item.rpt.datiVersamento.identificativoUnivocoVersamento;
@@ -548,6 +555,8 @@ export class PayService implements OnInit, OnDestroy {
                   this.getReceipt(_data.url[0]);
                 }
               }
+            } else {
+              this.alert(PayService.SHARED_LABELS.warningRicevuta);
             }
           }
         } catch (e) {

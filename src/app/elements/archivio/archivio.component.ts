@@ -49,6 +49,7 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
       if(this._pagamenti && this._pagamenti.length != 0) {
         this._pagamenti = this._refreshData();
       }
+      this.pay.updateSpinner(false);
     });
   }
 
@@ -101,7 +102,7 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
    * @private
    */
   protected _onIconReceipt(event) {
-    this.pay.getRPP(event.rawData.rpp);
+    this.pay.getRPP(event.rawData.rpp, true);
   }
 
   /**
