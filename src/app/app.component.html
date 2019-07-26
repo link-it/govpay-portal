@@ -27,9 +27,17 @@
         </div>
         <div class="col-12 col-sm-4 border-white-16 border-top pb-3 px-0">
           <h2 class="text-uppercase my-3 fs-125 color-white-60">{{ 'Footer.app.titolo' | translate }}</h2>
+          <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.appIOS">{{ 'Footer.app.iOS' | translate }}</a></div>
+          <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.appAndroid">{{ 'Footer.app.android' | translate }}</a></div>
           <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.riferimenti">{{ 'Footer.app.riferimenti' | translate }}</a></div>
           <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.rss">{{ 'Footer.app.rss' | translate }}</a></div>
           <div class="w-100"><a class="mb-2 fs-875 fw-600" target="_blank" [href]="_footerLinks?.news">{{ 'Footer.app.news' | translate }}</a></div>
+          <div class="d-flex flex-wrap pt-4 social">
+            <a class="mb-3 mr-4" target="_blank" [href]="_footerLinks?.facebook"><i class="fab fa-facebook-f"></i></a>
+            <a class="mb-3 mr-4" target="_blank" [href]="_footerLinks?.twitter"><i class="fab fa-twitter"></i></a>
+            <a class="mb-3 mr-4" target="_blank" [href]="_footerLinks?.youtube"><i class="fab fa-youtube"></i></a>
+            <a class="mb-3 mr-4" target="_blank" [href]="_footerLinks?.instagram"><i class="fab fa-instagram"></i></a>
+          </div>
         </div>
       </div>
       <div class="d-flex mx-4 pb-3">

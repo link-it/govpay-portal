@@ -39,7 +39,13 @@
       "crediti": "https://www.sample.it/",
       "noteLegali": "https://www.sample.it/",
       "privacy": "https://www.sample.it/",
-      "cookie": "https://www.sample.it/"
+      "cookie": "https://www.sample.it/",
+      "appIOS": "https://www.sample.it/",
+      "appAndroid": "https://www.sample.it/",
+      "facebook": "https://www.sample.it/",
+      "twitter": "https://www.sample.it/",
+      "youtube": "https://www.sample.it/",
+      "instagram": "https://www.sample.it/"
     },
     "urp": {
       "titolo": "Relazioni con il pubblico",
@@ -56,7 +62,9 @@
       "titolo": "Farnesina app",
       "riferimenti": "Unità di crisi",
       "rss": "RSS Feed",
-      "news": "News Alert"
+      "news": "News Alert",
+      "iOS": "iOS",
+      "android": "Android"
     },
     "crediti": "Crediti",
     "noteLegali": "Note legali",

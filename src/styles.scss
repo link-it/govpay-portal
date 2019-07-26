@@ -1,4 +1,46 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'Font Awesome 5 Brands';
+  font-style: normal;
+  font-weight: 400;
+  src: url("./assets/fonts/fa-brands-400.eot");
+  src: url("./assets/fonts/fa-brands-400.eot?#iefix") format("embedded-opentype"),
+  url("./assets/fonts/fa-brands-400.woff2") format("woff2"),
+  url("./assets/fonts/fa-brands-400.woff") format("woff"),
+  url("./assets/fonts/fa-brands-400.ttf") format("truetype"),
+  url("./assets/fonts/fa-brands-400.svg#fontawesome") format("svg");
+}
+
+.fab {
+  font-family: 'Font Awesome 5 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 36px;
+}
+
+.fa-facebook-f:before {
+  content: '\f39e';
+}
+
+.fa-twitter:before {
+  content: '\f099';
+}
+
+.fa-youtube:before {
+  content: '\f167';
+}
+
+.fa-instagram:before {
+  content: '\f16d';
+}
+
+.social a {
+  color: #FFFFFF;
+}
+
+.social a:hover {
+  color: #65DCDF;
+}
 
 html, body {
   padding: 0;
