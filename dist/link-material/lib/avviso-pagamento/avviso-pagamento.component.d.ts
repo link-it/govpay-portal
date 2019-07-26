@@ -7,9 +7,11 @@ export declare class AvvisoPagamentoComponent implements OnInit, OnChanges, Afte
     _showFields: boolean;
     _showReset: boolean;
     _preventSubmit: boolean;
+    _showCloseButton: boolean;
     _payments: Standard[];
     _currencyFormat: (value: any) => any;
     _onSubmit: EventEmitter<any>;
+    _actionClose: EventEmitter<any>;
     _fg: FormGroup;
     _totale: number;
     _formInvalid: boolean;
@@ -18,6 +20,7 @@ export declare class AvvisoPagamentoComponent implements OnInit, OnChanges, Afte
     ngOnChanges(changes: SimpleChanges): void;
     ngAfterContentChecked(): void;
     _onFormSubmit(form: any): void;
+    _closeAction(): void;
     confermaValidator(controllerName: any): ValidatorFn;
     fillContactForm(email: string): void;
     resetForm(): void;

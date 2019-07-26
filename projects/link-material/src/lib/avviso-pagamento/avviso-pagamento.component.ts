@@ -16,12 +16,14 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
   @Input('show-fields-form') _showFields: boolean = true;
   @Input('show-reset-button') _showReset: boolean = true;
   @Input('prevent-submit') _preventSubmit: boolean = false;
+  @Input('close-action-button') _showCloseButton: boolean = false;
   @Input('payments') _payments: Standard[] = [];
   @Input('currency-format') _currencyFormat = function(value) {
     return value;
   };
 
   @Output('on-submit') _onSubmit: EventEmitter<any> = new EventEmitter(null);
+  @Output('on-action-close') _actionClose: EventEmitter<any> = new EventEmitter(null);
 
   _fg: FormGroup;
   _totale: number = 0;
@@ -66,6 +68,10 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
       this._onSubmit.emit({ form: form.value, empty: !this._showFields});
       // form.reset();
     }
+  }
+
+  _closeAction() {
+    this._actionClose.emit();
   }
 
   confermaValidator(controllerName: any): ValidatorFn {

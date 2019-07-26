@@ -8,6 +8,7 @@ export class AvvisoLocalization {
 
   submit: string = '';
   cancel: string = '';
+  close: string = '';
 
   email: string = '';
   confermaEmail: string = '';

@@ -114,6 +114,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       this._ald.importo = _avviso.importo;
       this._ald.submit = _avviso.submit;
       this._ald.cancel = _avviso.cancel;
+      this._ald.close = _avviso.close;
       this._ald.email = _avviso.email;
       this._ald.confermaEmail = _avviso.confermaEmail;
       this._ald.error = _avviso.error;
