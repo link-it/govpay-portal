@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentChecked, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PayService } from '../services/pay.service';
 
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs/index';
   templateUrl: './accesso.component.html',
   styleUrls: ['./accesso.component.css']
 })
-export class AccessoComponent implements OnInit, AfterContentChecked, OnDestroy {
+export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewInit, OnDestroy {
 
   protected _logoPA: string = 'assets/pagopa.png';
 
@@ -44,6 +44,18 @@ export class AccessoComponent implements OnInit, AfterContentChecked, OnDestroy 
 
   ngOnDestroy() {
     this._langSubscription.unsubscribe();
+    PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = null;
+  }
+
+  ngAfterViewInit() {
+    if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
+      if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio) {
+        this._procediHandler({
+          numeroAvviso: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero,
+          dominio: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio
+        });
+      }
+    }
   }
 
   ngAfterContentChecked() {
