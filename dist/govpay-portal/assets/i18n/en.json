@@ -129,7 +129,8 @@
     "email": "Email",
     "confermaEmail": "Confirm email",
     "error": "Verify the information entered.",
-    "wait": "Recovery of information in progress..."
+    "wait": "Recovery of information in progress...",
+    "close": "New payment"
   },
   "Alert": {
     "eseguito": "Payment executed",

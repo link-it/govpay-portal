@@ -16,6 +16,7 @@
           <p class="card-text fw-600 fs-125">{{_currencyFormat(_totale)}}</p>
         </div>
       </div>
+      <button mat-flat-button class="my-3 fw-600 fs-875" (click)="_closeAction()" type="button" *ngIf="_preventSubmit && _showCloseButton">{{_ld?.close}}</button>
       <div class="col-12 px-0" *ngIf="!_preventSubmit">
         <p class="text-uppercase border-top rounded-0 mt-4 py-3 primary-border secondary-text-color fs-125 fw-600">{{_ld?.sottotitolo}}</p>
         <p class="py-3 mb-4 fs-1 fw-400 primary-text-color">{{_ld?.dettaglio}}</p>

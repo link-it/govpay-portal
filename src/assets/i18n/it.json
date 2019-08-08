@@ -129,7 +129,8 @@
     "email": "Email",
     "confermaEmail": "Conferma email",
     "error": "Verificare le informazioni inserite.",
-    "wait": "Recupero informazioni in corso..."
+    "wait": "Recupero informazioni in corso...",
+    "close": "Nuovo pagamento"
   },
   "Alert": {
     "eseguito": "Pagamento eseguito",

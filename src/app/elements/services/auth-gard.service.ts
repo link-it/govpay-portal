@@ -21,9 +21,12 @@ export class AuthGuardService implements CanActivate, OnDestroy {
       return true;
     }
 
+    if (!PayService.User && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
+      return true;
+    }
+
     this.pay.updateSpinner(true);
     return this.pay.sessione(state.url);
-
   }
 
 }
