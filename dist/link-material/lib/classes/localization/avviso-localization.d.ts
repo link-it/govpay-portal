@@ -6,6 +6,7 @@ export declare class AvvisoLocalization {
     importo: string;
     submit: string;
     cancel: string;
+    close: string;
     email: string;
     confermaEmail: string;
     error: string;

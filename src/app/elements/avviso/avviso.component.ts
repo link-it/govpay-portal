@@ -74,7 +74,9 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         // const _hasAuthMail = !!PayService.User.anagrafica.email;
         // this._showRecapito = !_hasAuth || (_hasAuth && !_hasAuthMail);
         // Form recapito email authenticated only!
-        this._showRecapito = !this.pay.isAuthenticated();
+        // this._showRecapito = !this.pay.isAuthenticated();
+        // Form recapito sempre visibile
+        this._showRecapito = true;
       }
     } else {
       this.pay.updateSpinner(true);
@@ -112,6 +114,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       this._ald.importo = _avviso.importo;
       this._ald.submit = _avviso.submit;
       this._ald.cancel = _avviso.cancel;
+      this._ald.close = _avviso.close;
       this._ald.email = _avviso.email;
       this._ald.confermaEmail = _avviso.confermaEmail;
       this._ald.error = _avviso.error;
@@ -161,6 +164,12 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   _procedi(event) {
     if (this.pay.isAuthenticated()) {
       this._recapito = PayService.User.anagrafica?PayService.User.anagrafica.email:'';
+      // Form recapito email
+      if(event && event.form.email) {
+        if(this._recapito !== event.form.email) {
+          this._recapito = event.form.email;
+        }
+      }
     } else {
       this._recapito = event?event.form.email:'';
     }
@@ -177,7 +186,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       _body['soggettoVersante'] = {
         identificativo: PayService.User.anagrafica?PayService.User.anagrafica.identificativo:PayService.SHARED_LABELS.notAvailable,
         anagrafica: PayService.User.anagrafica?PayService.User.anagrafica.anagrafica:PayService.SHARED_LABELS.notAvailable,
-        email: PayService.User.anagrafica?PayService.User.anagrafica.email:'',
+        email: this._recapito,
         tipo: 'F'
       };
       _body['autenticazioneSoggetto'] = null;
@@ -351,7 +360,9 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
       if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA || PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
         const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
-        _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
+        if(item.dataPagamento) {
+          _ds = moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage());
+        }
         _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds + _iuvOrAvviso });
       }
       const _std = new Standard({

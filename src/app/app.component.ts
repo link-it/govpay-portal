@@ -45,6 +45,17 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
   @ViewChild('routeSection', { read: ElementRef }) private _rsec: ElementRef;
 
   constructor(public router: Router, public pay: PayService, private translate: TranslateService) {
+    if(location.search) {
+      const _params: any = {};
+      location.search.substr(1).split('&').forEach((p) => {
+        const kv = p.split('=');
+        _params[kv[0]] = kv[1];
+      });
+      if(_params && _params['numeroAvviso'] && _params['idDominio']) {
+        PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = { Numero: _params['numeroAvviso'], Dominio: _params['idDominio'] };
+      }
+    }
+
 
     this.initLanguages();
 

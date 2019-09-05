@@ -88,7 +88,10 @@ export class PayService implements OnInit, OnDestroy {
   /* - avviso.component.ts | link-alert-pagamento - */
 
   spinner: boolean = false;
-  AVVISO_PAGAMENTO: any = {Numero: '', Dominio: null, Pagamenti: []};
+  AVVISO_PAGAMENTO: any = { Numero: '', Dominio: null, Pagamenti: [] };
+
+  // Pagamento diretto via query string parameters { Numero: 'numeroAvviso', Dominio: 'idDominio' };
+  public static QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO: any;
 
   protected spinnerCount: number = 0;
   protected _langSubscription: Subscription;
@@ -164,6 +167,7 @@ export class PayService implements OnInit, OnDestroy {
       };
       PayService.STATI_PENDENZA = {
         ESEGUITA: _common.pendenzaEseguita,
+        DUPLICATA: _common.pendenzaEseguita,
         NON_ESEGUITA: _common.pendenzaNonEseguita,
         ESEGUITA_PARZIALE: _common.pendenzaParzialmenteEseguita,
         ANNULLATA: _common.pendenzaAnnullata,

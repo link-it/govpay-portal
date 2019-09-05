@@ -15,5 +15,6 @@
 }
 
 link-footer .p-wrap p {
-  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

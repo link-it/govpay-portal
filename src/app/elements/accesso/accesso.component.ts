@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentChecked, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PayService } from '../services/pay.service';
 
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs/index';
   templateUrl: './accesso.component.html',
   styleUrls: ['./accesso.component.css']
 })
-export class AccessoComponent implements OnInit, AfterContentChecked, OnDestroy {
+export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewInit, OnDestroy {
 
   protected _logoPA: string = 'assets/pagopa.png';
 
@@ -36,7 +36,7 @@ export class AccessoComponent implements OnInit, AfterContentChecked, OnDestroy 
 
   ngOnInit() {
     this.translateDynamicObject();
-    if (!PayService.IsLogged()) {
+    if (!PayService.IsLogged() && !PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
       this.pay.updateSpinner(true);
       this.pay.sessione();
     }
@@ -44,6 +44,18 @@ export class AccessoComponent implements OnInit, AfterContentChecked, OnDestroy 
 
   ngOnDestroy() {
     this._langSubscription.unsubscribe();
+    PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = null;
+  }
+
+  ngAfterViewInit() {
+    if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
+      if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio) {
+        this._procediHandler({
+          numeroAvviso: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero,
+          dominio: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio
+        });
+      }
+    }
   }
 
   ngAfterContentChecked() {
@@ -93,7 +105,9 @@ export class AccessoComponent implements OnInit, AfterContentChecked, OnDestroy 
 
           if (PayService.STATI_VERIFICA_PENDENZA[_response.stato] === PayService.STATI_VERIFICA_PENDENZA.ESEGUITA || PayService.STATI_VERIFICA_PENDENZA[_response.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
             const _iuvOrAvviso = (_response.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + _response.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + _response.iuvPagamento;
-            _dataScadenzaOPagamento = (_response.dataPagamento)?moment(_response.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
+            if(_response.dataPagamento) {
+              _dataScadenzaOPagamento = moment(_response.dataPagamento).format(this.pay.getDateFormatByLanguage());
+            }
             _meta = PayService.SHARED_LABELS.pagamento + ': ' + _dataScadenzaOPagamento + _iuvOrAvviso;
           } else {
             _meta = PayService.SHARED_LABELS.scadenza + ': ' + _dataScadenzaOPagamento + ', ' + PayService.SHARED_LABELS.avviso + ': ' + _response.numeroAvviso;
