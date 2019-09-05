@@ -93,6 +93,8 @@ export class PayService implements OnInit, OnDestroy {
   // Pagamento diretto via query string parameters { Numero: 'numeroAvviso', Dominio: 'idDominio' };
   public static QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO: any;
 
+  public static HTTP_ERROR_MESSAGES: any;
+
   protected spinnerCount: number = 0;
   protected _langSubscription: Subscription;
 
@@ -155,6 +157,9 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   protected translateDynamicObject() {
+    this.translate.get('http').subscribe((_http: any) => {
+      PayService.HTTP_ERROR_MESSAGES = _http;
+    });
     this.translate.get('Common').subscribe((_common: any) => {
       PayService.SHARED_LABELS = _common;
       PayService.STATI_PAGAMENTO = {
@@ -449,28 +454,23 @@ export class PayService implements OnInit, OnDestroy {
       switch(error.status) {
         case 401:
           this.clearUser();
-          if(error.error) {
-            _msg = (!error.error.dettaglio)?error.error.descrizione:error.error.descrizione+': '+error.error.dettaglio;
-          } else {
-            _msg = 'Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.';
-          }
+          _msg = PayService.HTTP_ERROR_MESSAGES['status_401'];
           this.router.navigateByUrl('/');
           break;
+        case 403:
+          _msg = PayService.HTTP_ERROR_MESSAGES['status_403'];
+          break;
         case 404:
-          _msg = 'Servizio non disponibile.';
+          _msg = PayService.HTTP_ERROR_MESSAGES['status_404'];
           break;
         case 500:
-          _msg = 'Errore interno del server.';
+          _msg = PayService.HTTP_ERROR_MESSAGES['status_500'];
           break;
         case 504:
-          _msg = (error.error)?error.error:'Gateway Timeout.';
+          _msg = PayService.HTTP_ERROR_MESSAGES['status_504'];
           break;
         default:
-          if(error.error) {
-            _msg = (!error.error.dettaglio)?error.error.descrizione:error.error.descrizione+': '+error.error.dettaglio;
-          } else {
-            _msg = customMessage?customMessage:error.message;
-          }
+          _msg = customMessage?customMessage:PayService.HTTP_ERROR_MESSAGES['default'];
           if(_msg.length > 200) {
             _msg = _msg.substring(0, 200);
           }

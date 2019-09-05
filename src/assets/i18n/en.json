@@ -1,7 +1,7 @@
 {
   "Header": {
-    "titolo": "Sample Region",
-    "sottotitolo": "Sample Administration",
+    "titolo": "Ministry of Foreign Affairs and International Cooperation",
+    "sottotitolo": "Farnesina pagoPA (english)",
     "menu": {
       "items": [
         { "label": "Pay a notice", "link": "/accesso" },
@@ -18,45 +18,53 @@
     }
   },
   "Footer": {
-    "titolo": "Sample Administration",
+    "titolo": "Ministry of Foreign Affairs and International Cooperation",
     "recapito": {
       "titolo": "Contact details",
-      "indirizzo": "Piazza della Vittoria, 1 00135 Roma",
-      "centralino": "Switchboard: +39 00 00000",
-      "postaCertificata": "Pec: dimostrativo@comune.regione.it",
+      "indirizzo": "Ministry of Foreign Affairs and International Cooperation Piazzale della Farnesina, 1 00135 Roma",
+      "centralino": "Switchboard: +39 06 36911",
+      "postaCertificata": "Institutional and certified e-mail address of the MAECI: ministero.affariesteri@cert.esteri.it",
       "uffici": "All offices",
-      "reteDiplomatica": ""
+      "reteDiplomatica": "Diplomatic network"
     },
     "indirizzi": {
-      "organigramma": "https://www.sample.it/",
-      "reteDiplomatica": "",
-      "comunicazioni": "https://www.sample.it/",
-      "info": "https://www.sample.it/",
-      "faq": "https://www.sample.it/",
-      "riferimenti": "https://www.sample.it/",
-      "rss": "https://www.sample.it/",
-      "news": "https://www.sample.it/",
-      "crediti": "https://www.sample.it/",
-      "noteLegali": "https://www.sample.it/",
-      "privacy": "https://www.sample.it/",
-      "cookie": "https://www.sample.it/"
+      "organigramma": "https://www.esteri.it/mae/it/ministero/struttura/organigramma.html",
+      "reteDiplomatica": "https://www.esteri.it/mae/it/ministero/laretediplomatica",
+      "comunicazioni": "https://www.esteri.it/mae/it/trasparenza_comunicazioni_legali/organizzazione/telefono_posta_elettronica.html",
+      "info": "https://www.esteri.it/mae/it/servizi/sportello_info/domandefrequenti/faqrichiestainfo.html",
+      "faq": "https://www.esteri.it/mae/it/servizi/sportello_info/domandefrequenti",
+      "riferimenti": "https://www.dovesiamonelmondo.it/dovemondo/index.php?id=71",
+      "rss": "https://www.esteri.it/mae/it/header_footer/feedrss.html",
+      "news": "https://www.esteri.it/mae/it/header_footer/areaintnewsletter.html",
+      "crediti": "https://www.esteri.it/mae/header_footer/cdr.html",
+      "noteLegali": "https://www.esteri.it/mae/header_footer/noteLegali.html",
+      "privacy": "https://www.esteri.it/mae/header_footer/privacy.html",
+      "cookie": "https://www.esteri.it/mae/header_footer/privacy-e-cookie.html",
+      "appIOS": "https://apps.apple.com/it/app/mappamondo-consolare/id1465893831",
+      "appAndroid": "https://play.google.com/store/apps/details?id=com.mae.mappamondoConsolare",
+      "facebook": "https://www.facebook.com/ItalyMFA.it",
+      "twitter": "https://twitter.com/ItalyMFA",
+      "youtube": "https://www.youtube.com/ministeroesteri?gl=IT&hl=it",
+      "instagram": "https://www.instagram.com/italymfa/"
     },
     "urp": {
       "titolo": "Public relations",
       "orario": "The Office is open to the public for visits from Monday to Friday from 9:00 am to 1:00 pm",
       "contatti": {
-        "telefono": "Telephone: +39 00 0000 0000 Monday to Friday from 8.30 to 15.30",
-        "fax": "Fax: +39 00 0000 0000",
+        "telefono": "Telephone: +39 06 3691 8899 Monday to Friday from 8.30 to 15.30",
+        "fax": "Fax: +39 06 3236210 (english)",
         "pec": "PEC addresses",
         "moduloInfo": "Information request form",
-        "faq": "FAQ"
+        "faq": "FAQ (english)"
       }
     },
     "app": {
-      "titolo": "Follow us",
-      "riferimenti": "Whatsapp",
+      "titolo": "Farnesina app (english)",
+      "riferimenti": "Crisis unit",
       "rss": "RSS Feed",
-      "news": "News Alert"
+      "news": "News Alert",
+      "iOS": "mAPPamondo (iOS)",
+      "android": "mAPPamondo (Android)"
     },
     "crediti": "Credits",
     "noteLegali": "Legal notices",
@@ -64,12 +72,12 @@
     "cookie": "Cookie policy"
   },
   "Accesso": {
-    "titolo": "Payment service pagoPA",
-    "descrizione": "pagoPA is an online payment system build to make payments to Public Administration simple, secure and transparent"
+    "titolo": "The MAECI payment service",
+    "descrizione": "English lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget augue a quam iaculis porttitor. Sed tincidunt ullamcorper ante, id tincidunt urna. Nulla nec tempor urna, in consectetur ipsum. Nam ac ornare tortor, sed imperdiet orci."
   },
   "PayCard": {
     "titolo": "Pay with pagoPA",
-    "note": "If you received a pagoPA payment invoice, insert the notice number (Numero avviso) or scan the qrcode.",
+    "note": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
     "form": {
       "avviso": "Notice number",
       "fotocamera": "Camera",
@@ -121,7 +129,8 @@
     "email": "Email",
     "confermaEmail": "Confirm email",
     "error": "Verify the information entered.",
-    "wait": "Recovery of information in progress..."
+    "wait": "Recovery of information in progress...",
+    "close": "New payment"
   },
   "Alert": {
     "eseguito": "Payment executed",
@@ -131,12 +140,12 @@
     "dettaglioInCorso": {
       "ok": "The payment process has been completed successfully. We are awaiting confirmation of payment from the pagoPA platform.",
       "timeout": {
-        "ok": "The payment process has been completed successfully, but there has been a delay in communicating the payment claim from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
-        "errore": "The payment process was completed without the payment of the due, but there was a delay in the communication of the payment attestation from the pagoPA platform. As soon as it is made available, we will send it to your email address."
+        "ok": "The payment process has been completed successfully, but there has been a delay in communicating the payment claim from the pagoPA platform. As soon as it is made available, we will send it to the email address.",
+        "errore": "The payment process was completed without the payment of the due, but there was a delay in the communication of the payment attestation from the pagoPA platform. As soon as it is made available, we will send it to the email address."
       },
       "errore": "The payment process has been completed without the payment of the due amount. We are awaiting confirmation of payment from the pagoPA platform"
     },
-    "submit": "Try again",
+    "submit": "Fix incomplete payments",
     "close": "New payment"
   },
   "Common": {
@@ -190,5 +199,13 @@
     "warningRicevuta": "No documents available",
     "ricevuta": "Receipt.pdf",
     "archivio": "Receipts.zip"
+  },
+  "http": {
+    "status_401": "Access not authorized. Try to login again.",
+    "status_403": "Access forbidden.",
+    "status_404": "Service not found.",
+    "status_500": "Internl server error.",
+    "status_504": "Gateway timeout.",
+    "default": "Service not available, please try again later."
   }
 }
