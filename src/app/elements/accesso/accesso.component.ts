@@ -105,7 +105,9 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
 
           if (PayService.STATI_VERIFICA_PENDENZA[_response.stato] === PayService.STATI_VERIFICA_PENDENZA.ESEGUITA || PayService.STATI_VERIFICA_PENDENZA[_response.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
             const _iuvOrAvviso = (_response.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + _response.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + _response.iuvPagamento;
-            _dataScadenzaOPagamento = (_response.dataPagamento)?moment(_response.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
+            if(_response.dataPagamento) {
+              _dataScadenzaOPagamento = moment(_response.dataPagamento).format(this.pay.getDateFormatByLanguage());
+            }
             _meta = PayService.SHARED_LABELS.pagamento + ': ' + _dataScadenzaOPagamento + _iuvOrAvviso;
           } else {
             _meta = PayService.SHARED_LABELS.scadenza + ': ' + _dataScadenzaOPagamento + ', ' + PayService.SHARED_LABELS.avviso + ': ' + _response.numeroAvviso;

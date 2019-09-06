@@ -164,6 +164,12 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   _procedi(event) {
     if (this.pay.isAuthenticated()) {
       this._recapito = PayService.User.anagrafica?PayService.User.anagrafica.email:'';
+      // Form recapito email
+      if(event && event.form.email) {
+        if(this._recapito !== event.form.email) {
+          this._recapito = event.form.email;
+        }
+      }
     } else {
       this._recapito = event?event.form.email:'';
     }
@@ -180,7 +186,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       _body['soggettoVersante'] = {
         identificativo: PayService.User.anagrafica?PayService.User.anagrafica.identificativo:PayService.SHARED_LABELS.notAvailable,
         anagrafica: PayService.User.anagrafica?PayService.User.anagrafica.anagrafica:PayService.SHARED_LABELS.notAvailable,
-        email: PayService.User.anagrafica?PayService.User.anagrafica.email:'',
+        email: this._recapito,
         tipo: 'F'
       };
       _body['autenticazioneSoggetto'] = null;
@@ -354,7 +360,9 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
       if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA || PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
         const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
-        _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
+        if(item.dataPagamento) {
+          _ds = moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage());
+        }
         _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds + _iuvOrAvviso });
       }
       const _std = new Standard({
