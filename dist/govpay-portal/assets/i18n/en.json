@@ -63,8 +63,8 @@
       "riferimenti": "Whatsapp",
       "rss": "RSS Feed",
       "news": "News Alert",
-      "iOS": "iOS",
-      "android": "Android"
+      "iOS": "mAPPamondo (iOS)",
+      "android": "mAPPamondo (Android)"
     },
     "crediti": "Credits",
     "noteLegali": "Legal notices",
@@ -199,5 +199,13 @@
     "warningRicevuta": "No documents available",
     "ricevuta": "Receipt.pdf",
     "archivio": "Receipts.zip"
+  },
+  "http": {
+    "status_401": "Access not authorized. Try to login again.",
+    "status_403": "Access forbidden.",
+    "status_404": "Service not found.",
+    "status_500": "Internl server error.",
+    "status_504": "Gateway timeout.",
+    "default": "Service not available, please try again later."
   }
 }

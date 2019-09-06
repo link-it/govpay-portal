@@ -63,8 +63,8 @@
       "riferimenti": "Unità di crisi",
       "rss": "RSS Feed",
       "news": "News Alert",
-      "iOS": "iOS",
-      "android": "Android"
+      "iOS": "mAPPamondo (iOS)",
+      "android": "mAPPamondo (Android)"
     },
     "crediti": "Crediti",
     "noteLegali": "Note legali",
@@ -199,5 +199,13 @@
     "warningRicevuta": "Nessun documento disponibile",
     "ricevuta": "Ricevuta.pdf",
     "archivio": "Ricevute.zip"
+  },
+  "http": {
+    "status_401": "Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
+    "status_403": "Accesso non consentito.",
+    "status_404": "Servizio non trovato.",
+    "status_500": "Errore interno del server.",
+    "status_504": "Timeout del gateway.",
+    "default": "Servizio non disponibile, si prega di riprovare più tardi."
   }
 }
