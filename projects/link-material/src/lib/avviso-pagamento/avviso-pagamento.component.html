@@ -30,8 +30,8 @@
             <div class="col-12 col-sm-6 px-0 pl-sm-3">
               <mat-form-field class="w-100">
                 <input matInput [placeholder]="_ld?.confermaEmail" formControlName="confermaEmail" name="confermaEmail" required>
-                <mat-error *ngIf="_fg.controls['confermaEmail'].errors">
-                  {{_fg.controls['confermaEmail'].errors['message']}}
+                <mat-error *ngIf="_fg.errors">
+                  {{_fg.errors['message']}}
                 </mat-error>
               </mat-form-field>
             </div>

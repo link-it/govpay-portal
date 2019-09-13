@@ -33,7 +33,7 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
     this._fg = new FormGroup({
       'email': new FormControl(''),
       'confermaEmail': new FormControl('')
-    });
+    }, this.emailMatchValidator.bind(this));
   }
 
   ngOnInit() {
@@ -53,6 +53,7 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
       } else {
         this._fg.controls['email'].setValidators([Validators.required, Validators.email]);
         this._fg.controls['confermaEmail'].setValidators([Validators.required, Validators.email, this.confermaValidator( this._fg.controls['email'])]);
+        // this._fg.controls['confermaEmail'].setValidators([Validators.required, Validators.email]);
       }
       this._fg.reset();
       this._fg.updateValueAndValidity();
@@ -74,9 +75,18 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
     this._actionClose.emit();
   }
 
+  emailMatchValidator(g: FormGroup) {
+    if(!this._showFields) {
+      return null;
+    }
+    const error: any = { message: this._ld.error };
+    const good = g.get('email').value === g.get('confermaEmail').value;
+    return good?null:error;
+  }
+
   confermaValidator(controllerName: any): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      const error: any = { message: this._ld.error};
+      const error: any = { message: this._ld.error };
       if(controllerName && control.value !== '') {
         const _ctrlValue = controllerName.value;
         return (_ctrlValue != control.value)?error:null;

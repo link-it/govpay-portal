@@ -201,11 +201,11 @@
     "archivio": "Ricevute.zip"
   },
   "http": {
-    "status_401": "Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
-    "status_403": "Accesso non consentito.",
-    "status_404": "Servizio non trovato.",
-    "status_500": "Errore interno del server.",
-    "status_504": "Timeout del gateway.",
-    "default": "Servizio non disponibile, si prega di riprovare più tardi."
+    "status_401": "[%1, %2, %3, %4] Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
+    "status_403": "[%1, %2, %3, %4] Accesso non consentito.",
+    "status_404": "[%1, %2, %3, %4] Servizio non trovato.",
+    "status_500": "[%1, %2, %3, %4] Errore interno del server.",
+    "status_504": "[%1, %2, %3, %4] Timeout del gateway.",
+    "default": "[%1, %2, %3, %4] Servizio non disponibile, si prega di riprovare più tardi."
   }
 }

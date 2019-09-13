@@ -34,6 +34,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   protected _ricevute: Standard[] = [];
   protected _pollingTimeout: number = 0;
   protected ESITO_OK: string = PayService.ESITO_OK;
+  protected ESITO_DIFFERITO: string = PayService.ESITO_DIFFERITO;
   protected ESITO_ERRORE: string = PayService.ESITO_ERRORE;
   protected STATUS_ESEGUITO: string = PayService.STATUS_ESEGUITO;
   protected STATUS_NON_ESEGUITO: string = PayService.STATUS_NON_ESEGUITO;
@@ -87,7 +88,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     setTimeout(() => {
       if(!this._sessione && this._payments.length != 0) {
-        if(PayService.User && PayService.User.anagrafica && this._showRecapito) {
+        if(this.pay.isAuthenticated() && PayService.User.anagrafica && this._showRecapito) {
           this._ap.fillContactForm(PayService.User.anagrafica.email);
         }
       }
@@ -220,7 +221,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pay.sessionePagamento(sessione, !PayService.User).subscribe(
       (result) => {
         if(result) {
-          this._hasPaid = (this._esito.toLowerCase() == this.ESITO_OK);
+          this._hasPaid = (this._esito.toLowerCase() == this.ESITO_OK || this._esito.toLowerCase() == this.ESITO_DIFFERITO);
           this.updateStatusAlert(result, sessione);
         }
       },
@@ -229,6 +230,8 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.pay.onError(error);
         if(PayService.User) {
           this.router.navigateByUrl('/riepilogo');
+        } else {
+          this._newPayment();
         }
       });
   }
@@ -296,7 +299,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     this._pendenze = response.body.pendenze;
     this._showFix = false;
     this._pendenze.forEach(p => {
-      if(PayService.STATI_PENDENZA[p.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA) {
+      if(PayService.STATI_PENDENZA[p.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA && this._paymentStatus !== this.STATUS_TIMEOUT) {
         this._showFix = true;
       }
     });
