@@ -201,11 +201,11 @@
     "archivio": "Receipts.zip"
   },
   "http": {
-    "status_401": "Access not authorized. Try to login again.",
-    "status_403": "Access forbidden.",
-    "status_404": "Service not found.",
-    "status_500": "Internl server error.",
-    "status_504": "Gateway timeout.",
-    "default": "Service not available, please try again later."
+    "status_401": "[%1, %2, %3, %4] Access not authorized. Try to login again.",
+    "status_403": "[%1, %2, %3, %4] Access forbidden.",
+    "status_404": "[%1, %2, %3, %4] Service not found.",
+    "status_500": "[%1, %2, %3, %4] Internal server error.",
+    "status_504": "[%1, %2, %3, %4] Gateway timeout.",
+    "default": "[%1, %2, %3, %4] Service not available, please try again later."
   }
 }

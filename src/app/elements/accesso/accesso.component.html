@@ -13,11 +13,11 @@
       <link-pay-card (on-scan-request)="_scanHandler()" (on-submit)="_procediHandler($event)"
                     [localization-data]="_pcld" [domini]="_selezioneDomini"></link-pay-card>
     </div>
-    <div class="col-12 col-sm-6" *ngIf="!_isLogged">
+    <div class="col-12 col-sm-6" *ngIf="!_isLogged && pay.SPID['ACCESS']">
       <link-login-card [localization-data]="_lld"
-                       [action]="pay.SPID_ACTION_FORM_URL"
-                       [spid-test-url]="pay.SPID_TEST_PROVIDER"
-                       [response-target]="pay.SPID_SERVICE_TARGET" [notify]="true"
+                       [action]="pay.SPID['ACTION_FORM_URL']"
+                       [spid-test-url]="pay.SPID['TEST_PROVIDER']"
+                       [response-target]="pay.SPID['SERVICE_TARGET']" [notify]="true"
                        (on-submit)="_handler($event)"></link-login-card>
     </div>
   </div>

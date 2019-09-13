@@ -81,7 +81,7 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
 
     setTimeout(() => {
       this._hld.menu.account.name = PayService.User?PayService.User.anagrafica.anagrafica:'';
-      this._isLogged = PayService.IsLogged();
+      this._isLogged = this.pay.isAuthenticated();
       this._isLoading = this.pay.spinner;
     });
   }

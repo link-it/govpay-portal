@@ -21,6 +21,7 @@ export declare class AvvisoPagamentoComponent implements OnInit, OnChanges, Afte
     ngAfterContentChecked(): void;
     _onFormSubmit(form: any): void;
     _closeAction(): void;
+    emailMatchValidator(g: FormGroup): any;
     confermaValidator(controllerName: any): ValidatorFn;
     fillContactForm(email: string): void;
     resetForm(): void;

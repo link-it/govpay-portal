@@ -36,7 +36,7 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
 
   ngOnInit() {
     this.translateDynamicObject();
-    if (!PayService.IsLogged() && !PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
+    if (!this.pay.isAuthenticated() && !PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
       this.pay.updateSpinner(true);
       this.pay.sessione();
     }
@@ -59,7 +59,7 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
   }
 
   ngAfterContentChecked() {
-    this._isLogged = PayService.IsLogged();
+    this._isLogged = this.pay.isAuthenticated();
   }
 
   protected translateDynamicObject() {

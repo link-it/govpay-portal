@@ -20,9 +20,7 @@ export class PayService implements OnInit, OnDestroy {
   public static HOSTNAME: string = PayConfig.REVERSE_PROXY;
   public static SPID_HOSTNAME: string = PayConfig.AUTH_HOST;
   public static SPID_ROOT_SERVICE: string = PayConfig.AUTH_ROOT_SERVICE;
-  SPID_SERVICE_TARGET: string = PayConfig.SPID_SERVICE_TARGET;
-  SPID_TEST_PROVIDER: string = PayConfig.SPID_TEST_PROVIDER;
-  SPID_ACTION_FORM_URL: string = PayConfig.SPID_ACTION_FORM_URL;
+  SPID: any = PayConfig.SPID_SETTINGS;
   public static DOMINI: any[] = PayConfig.DOMINI;
   public static LINGUE: any[] = PayConfig.LINGUE;
   public static IS_SINGLE: boolean = (PayConfig.DOMINI.length == 1);
@@ -34,7 +32,6 @@ export class PayService implements OnInit, OnDestroy {
   public static URL_AVVISO: string = '/avvisi';
   public static URL_RPP: string = '/rpp';
   public static URL_LOGGED_IN: string = '/profilo';
-  public static URL_LOGOUT: string = PayConfig.SPID_LOGOUT_URL;
   public static URL_SESSIONE_PAGAMENTO: string = '/byIdSession/';
 
   public static TIMEOUT: number = 30000;
@@ -79,6 +76,7 @@ export class PayService implements OnInit, OnDestroy {
   /* avviso.component.ts | link-alert-pagamento */
   // Esito pagamento
   public static ESITO_OK: string = 'ok';
+  public static ESITO_DIFFERITO: string = 'differito';
   public static ESITO_ERRORE: string = 'errore';
   // Stato pagamento
   public static STATUS_TIMEOUT: string = 'TIMEOUT';
@@ -112,10 +110,6 @@ export class PayService implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._langSubscription.unsubscribe();
-  }
-
-  static IsLogged(): boolean {
-    return (PayService.User !== null && PayService.User !== undefined);
   }
 
   static StatiPendenza(): any[] {
@@ -288,7 +282,8 @@ export class PayService implements OnInit, OnDestroy {
    * @returns {Observable<any>}
    */
   logout(): Observable<any> {
-    return this.http.get(PayService.URL_LOGOUT)
+    const url = this.SPID['LOGOUT_URL'] || '';
+    return this.http.get(url)
       .pipe(
         timeout(PayService.TIMEOUT),
         map((response: HttpResponse<any>) => {
@@ -441,14 +436,12 @@ export class PayService implements OnInit, OnDestroy {
    */
   onError(error: any, customMessage?: string) {
     let _msg = '';
-    // try {
-    //   _msg = (!error.error.dettaglio)?error.error.descrizione:error.error.descrizione + ': ' + error.error.dettaglio;
-    //   if (_msg.length > 200) {
-    //     _msg = _msg.substring(0, 200);
-    //   }
-    // } catch (e) {
-    //   _msg = error.message;
-    // }
+    const _replacement = [
+      (error.error.categoria || ''),
+      (error.error.codice || ''),
+      (error.error.descrizione || ''),
+      (error.error.dettaglio || '')
+    ];
 
     try {
       switch(error.status) {
@@ -471,9 +464,12 @@ export class PayService implements OnInit, OnDestroy {
           break;
         default:
           _msg = customMessage?customMessage:PayService.HTTP_ERROR_MESSAGES['default'];
-          if(_msg.length > 200) {
-            _msg = _msg.substring(0, 200);
-          }
+      }
+      _replacement.forEach((s, i) => {
+        _msg = _msg.split('%'+ (i + 1)).join(s);
+      });
+      if(_msg.length > 200) {
+        _msg = _msg.substring(0, 200);
       }
     } catch(e) {
       _msg = 'Si è verificato un problema non previsto.';
@@ -519,7 +515,7 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   isAuthenticated(): boolean {
-    return !!PayService.User;
+    return !!PayService.User && this.SPID['ACCESS'];
   }
 
   /**

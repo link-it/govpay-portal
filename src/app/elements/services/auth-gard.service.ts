@@ -17,11 +17,11 @@ export class AuthGuardService implements CanActivate, OnDestroy {
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> | boolean {
 
-    if (PayService.User) {
+    if (this.pay.isAuthenticated()) {
       return true;
     }
 
-    if (!PayService.User && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
+    if (!this.pay.isAuthenticated() && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
       return true;
     }
 

@@ -1,4 +1,4 @@
-<link-header #header [url-logo]="_logo" [show-language-menu]="_languages.length > 1" [show-nav-menu]="_isLogged"
+<link-header #header [url-logo]="_logo" [show-language-menu]="_languages.length > 1" [show-nav-menu]="_isLogged && pay.SPID['ACCESS']"
             [localization-data]="_hld" (on-click-menu)="_menuHandler($event)" [language-list]="_languages" [slim-header]="_slimHeader"
             (on-change-language)="_languageHandler($event)" [current-language]="_language"></link-header>
 <div #globalContent class="global-container px-0 overflow-auto Titillium" (scroll)="_onScroll($event)">

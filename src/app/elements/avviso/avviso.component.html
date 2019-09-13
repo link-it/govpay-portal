@@ -3,8 +3,8 @@
   <link-avviso-pagamento #ap [localization-data]="_ald" *ngIf="!_submitted && !_sessione" (on-submit)="_procedi($event)" [currency-format]="_formatoValuta"
                          [close-action-button]="!_submitted && !_sessione && !pay.isAuthenticated()" (on-action-close)="_newPayment()" [payments]="_payments"
                          [show-reset-button]="false" [prevent-submit]="_preventPaymentSubmit" [show-fields-form]="_showRecapito"></link-avviso-pagamento>
-  <link-alert-pagamento [localization-data]="_wld" (on-action)="_fixPayment()" [action-button]="_showFix" [close-action-button]="!pay.isAuthenticated()"
-                        (on-action-close)="_newPayment()" *ngIf="_submitted && _sessione">
+  <link-alert-pagamento [localization-data]="_wld" (on-action)="_fixPayment()" [action-button]="_showFix" *ngIf="_submitted && _sessione"
+                        (on-action-close)="_newPayment()" [close-action-button]="!pay.isAuthenticated() && _paymentStatus != STATUS_INCORSO">
     <h1 alert-title class="w-100 fs-2 fw-700" *ngIf="_paymentStatus !== STATUS_INCORSO">{{_hasPaid?_wld?.eseguito:_wld?.fallito}}</h1>
     <div alert-body class="w-100">
       <div class="w-100 py-4" [ngSwitch]="_paymentStatus">
