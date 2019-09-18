@@ -15,6 +15,7 @@ const MenuType = {
 })
 
 export class HeaderComponent implements OnInit, AfterViewInit {
+  @ViewChild('firstTitle', { read: ElementRef }) _firstTitle: ElementRef;
   @ViewChild('menu', { read: ElementRef }) _menuButton: ElementRef;
 
   @Input('localization-data') _hl: HeaderLocalization = new HeaderLocalization();
@@ -38,6 +39,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   @Output('on-change-language') _changeLang: EventEmitter<any> = new EventEmitter();
 
   _iconaMenu: string = 'menu';
+  _cssStyle: any;
 
   constructor() { }
 
@@ -100,5 +102,28 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       this._currentLanguage = _language.alpha3Code.toUpperCase();
       this._changeLang.emit({ language: _language });
     }
+  }
+
+  slideTitle(): any {
+    const bcr = this._firstTitle.nativeElement.getBoundingClientRect();
+    this._cssStyle = {
+      'margin-top': -bcr.height + 'px',
+      'transition': 'all 250ms ease-in'
+    };
+    this._firstTitle.nativeElement.style.marginTop = -bcr.height + 'px';
+    this._firstTitle.nativeElement.style.transition = 'all 250ms ease-in';
+
+    return this._cssStyle;
+  }
+
+  unslideTitle(): any {
+    this._cssStyle = {
+      'margin-top': 0,
+      'transition': 'all 250ms ease-in'
+    };
+    this._firstTitle.nativeElement.style.marginTop = null;
+    this._firstTitle.nativeElement.style.transition = 'all 250ms ease-in';
+
+    return this._cssStyle;
   }
 }

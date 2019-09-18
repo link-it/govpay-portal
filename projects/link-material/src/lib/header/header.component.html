@@ -1,5 +1,5 @@
 <div [class.mat-elevation-z2]="_hasShadow" class="d-block bg-primary-text-color">
-  <div class="{{_slimHeader?'d-none':'container'}}">
+  <div #firstTitle class="container px-sm-2">
     <div class="navbar navbar-light flex-nowrap align-items-center p-0">
       <div class="navbar-brand flex-nowrap flex-grow-1 text-truncate primary-reverse-text-color fw-600 fs-875">
         <a class="w-100 multiline-text" [href]="_href" target="_blank" *ngIf="_href!='#'">{{_hl?.titolo}}</a>
@@ -15,10 +15,10 @@
     </div>
   </div>
   <div class="d-block bg-primary-color">
-    <div class="container">
+    <div class="container px-sm-2">
       <div class="{{_slimHeader?'slim-nav ':'trans-nav py-md-3 '}}navbar navbar-light flex-nowrap justify-content-start align-items-center px-0">
         <div class="navbar-brand d-flex flex-grow-1 flex-nowrap align-items-center text-truncate mr-4 primary-reverse-text-color fw-700 fs-2">
-          <img [src]="_srcLogo" class="{{_slimHeader?'slim-nav-logo ':'nav-logo '}}d-inline-block align-top mr-3" alt="logo">
+          <img [src]="_srcLogo" class="{{_slimHeader?'slim-nav-logo trans-logo ':'nav-logo trans-logo '}}d-inline-block align-top mr-3" alt="logo">
           <a class="{{_slimHeader?'multiline-text-slim ':''}}w-100 multiline-text" [href]="_hrefSottotitolo" *ngIf="_hrefSottotitolo!='#'">{{_hl?.sottotitolo}}</a>
           <p class="{{_slimHeader?'multiline-text-slim ':''}}m-0 multiline-text" *ngIf="_hrefSottotitolo=='#'">{{_hl?.sottotitolo}}</p>
         </div>

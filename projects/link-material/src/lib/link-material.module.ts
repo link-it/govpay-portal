@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -40,6 +41,7 @@ import { AlertPagamentoComponent } from './alert-pagamento/alert-pagamento.compo
     BrowserModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    RouterModule,
     MatTooltipModule,
     MatButtonModule,
     MatIconModule,

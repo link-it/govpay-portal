@@ -3,6 +3,7 @@ import { OnInit } from '@angular/core';
 import { Language } from '../classes/language';
 import { HeaderLocalization } from '../classes/localization/header-localization';
 export declare class HeaderComponent implements OnInit, AfterViewInit {
+    _firstTitle: ElementRef;
     _menuButton: ElementRef;
     _hl: HeaderLocalization;
     _href: string;
@@ -18,6 +19,7 @@ export declare class HeaderComponent implements OnInit, AfterViewInit {
     _menuClick: EventEmitter<any>;
     _changeLang: EventEmitter<any>;
     _iconaMenu: string;
+    _cssStyle: any;
     constructor();
     ngOnInit(): void;
     ngAfterViewInit(): void;
@@ -28,4 +30,6 @@ export declare class HeaderComponent implements OnInit, AfterViewInit {
     _collapse(): void;
     _open(event: any): void;
     _changeLanguage(_language: Language): void;
+    slideTitle(): any;
+    unslideTitle(): any;
 }

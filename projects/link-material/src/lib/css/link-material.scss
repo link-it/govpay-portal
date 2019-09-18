@@ -213,3 +213,16 @@ zxing-scanner video {
 link-featured-item:last-of-type {
   border: none !important;
 }
+
+/** LinearMenuComponent **/
+.navbar-light .navbar-brand {
+  outline: none;
+}
+
+.active-link {
+}
+
+@media (min-width: 768px) {
+  .active-link {
+  }
+}

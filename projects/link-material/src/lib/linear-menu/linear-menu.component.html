@@ -1,7 +1,7 @@
 <div class="menu-container navbar navbar-light d-none d-md-flex flex-column align-items-start px-0
      justify-content-start flex-md-row align-items-md-center bg-primary-color flex-md-nowrap">
   <span *ngFor="let _link of _menu?.items" class="navbar-brand action primary-reverse-text-color fw-600 fs-125"
-        (click)="_onItemClick($event, _link)">{{_link.label}}</span>
+        (click)="_onItemClick($event, _link)" [routerLink]="_link.link" routerLinkActive="active-link">{{_link.label}}</span>
 
   <!-- User/Login Collapse Mobile -->
   <a class="nav-link action px-0 primary-reverse-text-color bg-primary-color fw-600 fs-125 d-flex d-md-none" data-toggle="collapse" href="#loginCollapse" role="button"

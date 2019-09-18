@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { PayService } from './elements/services/pay.service';
 import { AccountSettings, FooterLocalization, HeaderLocalization, Language } from 'link-material';
 import { TranslateService } from '@ngx-translate/core';
+import { HeaderComponent } from '../../projects/link-material/src/lib/header/header.component';
 
 @Component({
   selector: 'pay-root',
@@ -35,11 +36,9 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
     }
   };
 
-  @HostListener('window:resize') onResize() {
-    this._updateBodyPadding();
-    this._updateFooter();
-  }
+  @HostListener('window:resize') onResize() {}
   @ViewChild('header', { read: ElementRef }) private _header: ElementRef;
+  @ViewChild('header') private _headerComponent: HeaderComponent;
   @ViewChild('footer', { read: ElementRef }) private _footer: ElementRef;
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
   @ViewChild('routeSection', { read: ElementRef }) private _rsec: ElementRef;
@@ -55,7 +54,6 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
         PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = { Numero: _params['numeroAvviso'], Dominio: _params['idDominio'] };
       }
     }
-
 
     this.initLanguages();
 
@@ -138,7 +136,17 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
    * @private
    */
   protected _onScroll(event) {
-    this._slimHeader = (event.currentTarget.scrollTop > 50);
+    if (this._headerComponent && this._globalContent) {
+      const gc = this._globalContent.nativeElement;
+      if ((gc.scrollHeight - gc.clientHeight > 50) || (gc.scrollHeight - gc.clientHeight === 0 && this._slimHeader)) {
+        if (gc.scrollHeight - gc.clientHeight > 50 && gc.scrollTop > 50) {
+          gc.style.marginTop = this._headerComponent.slideTitle()['margin-top'];
+        } else if (gc.scrollTop < 50) {
+          gc.style.marginTop = this._headerComponent.unslideTitle()['margin-top'];
+        }
+        this._slimHeader = (gc.scrollTop > 50);
+      }
+    }
     clearInterval(this._timerScrollCart);
     if(this._shoppingList && this._shoppingCart) {
       const _progress = this._shoppingList.clientHeight - this._shoppingCart.clientHeight;
@@ -150,27 +158,16 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
 
   protected _updateBodyPadding() {
     if (this._header && this._globalContent) {
-      const h = this._header.nativeElement.clientHeight;
-      this._globalContent.nativeElement.style.top = h + 'px';
+      this._globalContent.nativeElement.style.top = this._header.nativeElement.clientHeight + 'px';
     }
     this._updateFooter();
   }
 
   protected _updateFooter() {
-    if (this._header && this._globalContent) {
-      this._footer.nativeElement.classList.remove('footer-bottom');
-      if (this._footer && this._rsec) {
-        const gch = this._globalContent.nativeElement.clientHeight;
-        const gcsh = this._globalContent.nativeElement.scrollHeight;
-        const fh = this._footer.nativeElement.clientHeight;
-        if(!(gcsh > gch)) {
-          if (Math.abs(gch - (this._rsec.nativeElement.clientHeight)) > fh) {
-            if (!this._footer.nativeElement.classList.contains('footer-bottom')) {
-              this._footer.nativeElement.classList.add('footer-bottom');
-            }
-          }
-        }
-      }
+    if (this._header && this._footer) {
+      const _mt = this._header.nativeElement.getBoundingClientRect().top;
+      const _mh = window.innerHeight - (this._header.nativeElement.clientHeight + _mt  + this._footer.nativeElement.clientHeight);
+      this._rsec.nativeElement.style.minHeight = _mh>0?_mh + 'px':null;
     }
   }
 
