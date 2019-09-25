@@ -1036,6 +1036,87 @@ FeaturedItemComponent.propDecorators = {
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+class FeaturedReceiptItemComponent {
+    constructor() {
+        this._info = new ShoppingInfo();
+        this._trimIcon = false;
+        this._shopping = false;
+        this._iconToggle = new EventEmitter();
+        this._iconClick = new EventEmitter();
+        this._isExcluded = false;
+        this._openCollapse = false;
+        this._touchDevice = false;
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this._touchDevice = this._isTouchDevice();
+    }
+    /**
+     * @return {?}
+     */
+    ngAfterContentChecked() {
+    }
+    /**
+     * @return {?}
+     */
+    _isTouchDevice() {
+        return 'ontouchstart' in document.documentElement;
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    _toggleIcon(event) {
+        event.stopImmediatePropagation();
+        if (this._notify && this._info.icon) {
+            this._info.swapIcon();
+            this._iconToggle.emit({ item: this._info, method: !this._isExcluded ? 'add' : 'remove' });
+            this._isExcluded = !this._isExcluded;
+        }
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    _onIconClick(event) {
+        event.stopImmediatePropagation();
+        if (this._notify && this._info.icon) {
+            this._iconClick.emit(this._info);
+        }
+    }
+    /**
+     * @return {?}
+     */
+    _itemClick() {
+        if (this._info.collapsingInfo && this._info.collapsingInfo.length != 0) {
+            this._openCollapse = !this._openCollapse;
+        }
+    }
+}
+FeaturedReceiptItemComponent.decorators = [
+    { type: Component, args: [{
+                selector: 'link-featured-receipt-item',
+                template: "<div class=\"d-block p-3 fw-400 fs-1 host-directive\" [class.host-hover-directive]=\"!_touchDevice\" (click)=\"_itemClick()\">\n  <div class=\"row\">\n    <div class=\"col-12\">\n      <div class=\"d-flex flex-row\">\n        <div class=\"d-block pr-4\">\n          <p>{{_info.titolo?.label}} {{_info.titolo?.value}}</p>\n          <p class=\"fs-875 secondary-text-color\">{{_info.sottotitolo?.label}} {{_info.sottotitolo?.value}}</p>\n        </div>\n        <div class=\"ml-auto\">\n          <!-- toggle shopping icon -->\n          <mat-icon class=\"featured-icon fs-125 secondary-text-color\"\n                    *ngIf=\"_shopping && (_info.icon || _info.icon === '')\" [class.action]=\"_info.icon\" [class.excluded]=\"_isExcluded\"\n                    (click)=\"_toggleIcon($event)\">{{_info.icon}}</mat-icon>\n          <!-- featured icon -->\n          <mat-icon [class.featured-icon-hidden]=\"_shopping && !_info.icon\" *ngIf=\"!_shopping && !_trimIcon\"\n                    class=\"featured-icon fs-125 secondary-text-color\" [class.action]=\"_info.icon\"\n                    (click)=\"_onIconClick($event)\">{{_info.icon}}</mat-icon>\n        </div>\n      </div>\n      <div class=\"row\" *ngIf=\"_info.collapsingInfo && _info.collapsingInfo.length != 0 && _openCollapse\">\n        <div class=\"col-12 py-3\">\n          <p class=\"d-block m-0\" *ngFor=\"let ci of _info.collapsingInfo\">{{ci.label}} {{ci.value}}</p>\n        </div>\n      </div>\n      <div class=\"d-block my-3\">\n        <p class=\"w-100 text-truncate text-right fw-600 fs-125 lh-125\">{{_info.valuta}}</p>\n        <p class=\"m-0 text-truncate text-right fs-875 secondary-text-color\">{{_info.stato?_info.stato:''}}</p>\n      </div>\n    </div>\n  </div>\n</div>\n",
+                styles: [":host{position:relative;display:block;font-family:'Titillium Web',sans-serif;font-size:1rem;border-bottom:1px solid rgba(33,33,33,.2)}.host-directive{overflow-x:hidden!important}.host-hover-directive:hover{background-color:rgba(33,33,33,.01)}.featured-icon{width:20px;height:20px;line-height:1.35}.featured-icon-hidden{visibility:hidden!important}.excluded{color:#65dcdf}"]
+            }] }
+];
+/** @nocollapse */
+FeaturedReceiptItemComponent.ctorParameters = () => [];
+FeaturedReceiptItemComponent.propDecorators = {
+    _info: [{ type: Input, args: ['item-info',] }],
+    _trimIcon: [{ type: Input, args: ['trim-icon',] }],
+    _shopping: [{ type: Input, args: ['shopping',] }],
+    _notify: [{ type: Input, args: ['notify',] }],
+    _iconToggle: [{ type: Output, args: ['on-icon-toggle',] }],
+    _iconClick: [{ type: Output, args: ['on-icon-click',] }]
+};
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
 class ShoppingCartComponent {
     constructor() {
         this._cl = new CartLocalization();
@@ -1541,7 +1622,7 @@ class AvvisoPagamentoComponent {
 AvvisoPagamentoComponent.decorators = [
     { type: Component, args: [{
                 selector: 'link-avviso-pagamento',
-                template: "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"col-12 px-0\">\n      <h1 class=\"m-0 pb-4 fs-2 fw-700\" [matTooltip]=\"_ld?.titolo\">{{_ld?.titolo}}</h1>\n    </div>\n    <div class=\"col-12 px-0\" *ngIf=\"_ld.note\">\n      <p class=\"py-3 fs-1 fw-400 primary-text-color\" [matTooltip]=\"_ld?.note\">{{_ld?.note}}</p>\n    </div>\n    <div class=\"col-12 px-0\">\n      <link-featured-item *ngFor=\"let _infoPayment of _payments\" [item-info]=\"_infoPayment\" [trim-icon]=\"true\"></link-featured-item>\n      <div class=\"row border-top rounded-0 mx-0 mt-3 pt-4 primary-border\" *ngIf=\"_payments.length > 1\">\n        <div class=\"col-6\">\n          <p class=\"card-text fw-600 fs-125\">{{_ld?.importo}}</p>\n        </div>\n        <div class=\"col-6 text-right\">\n          <p class=\"card-text fw-600 fs-125\">{{_currencyFormat(_totale)}}</p>\n        </div>\n      </div>\n      <button mat-flat-button class=\"my-3 fw-600 fs-875\" (click)=\"_closeAction()\" type=\"button\" *ngIf=\"_preventSubmit && _showCloseButton\">{{_ld?.close}}</button>\n      <div class=\"col-12 px-0\" *ngIf=\"!_preventSubmit\">\n        <p class=\"text-uppercase border-top rounded-0 mt-4 py-3 primary-border secondary-text-color fs-125 fw-600\">{{_ld?.sottotitolo}}</p>\n        <p class=\"py-3 mb-4 fs-1 fw-400 primary-text-color\">{{_ld?.dettaglio}}</p>\n        <form [formGroup]=\"_fg\" (ngSubmit)=\"_onFormSubmit(_fg)\">\n          <div class=\"row mx-0 mb-4\" *ngIf=\"_showFields\">\n            <div class=\"col-12 col-sm-6 px-0 pr-sm-3\">\n              <mat-form-field class=\"w-100\">\n                <input matInput [placeholder]=\"_ld?.email\" formControlName=\"email\" name=\"email\" required>\n              </mat-form-field>\n            </div>\n            <div class=\"col-12 col-sm-6 px-0 pl-sm-3\">\n              <mat-form-field class=\"w-100\">\n                <input matInput [placeholder]=\"_ld?.confermaEmail\" formControlName=\"confermaEmail\" name=\"confermaEmail\" required>\n                <mat-error *ngIf=\"_fg.errors\">\n                  {{_fg.errors['message']}}\n                </mat-error>\n              </mat-form-field>\n            </div>\n          </div>\n          <div class=\"d-flex\">\n            <button mat-flat-button class=\"mr-3 fw-600 fs-875\" type=\"submit\" [disabled]=\"_formInvalid\">{{_ld?.submit}}</button>\n            <button mat-flat-button class=\"fw-600 fs-875 white-button\" type=\"reset\" *ngIf=\"_showReset\">{{_ld?.cancel}}</button>\n          </div>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n",
+                template: "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"col-12 px-0\">\n      <h1 class=\"m-0 pb-4 fs-2 fw-700\" [matTooltip]=\"_ld?.titolo\">{{_ld?.titolo}}</h1>\n    </div>\n    <div class=\"col-12 px-0\" *ngIf=\"_ld.note\">\n      <p class=\"py-3 fs-1 fw-400 primary-text-color\" [matTooltip]=\"_ld?.note\">{{_ld?.note}}</p>\n    </div>\n    <div class=\"col-12 px-0\">\n      <!--link-featured-item *ngFor=\"let _infoPayment of _payments\" [item-info]=\"_infoPayment\" [trim-icon]=\"true\"></link-featured-item-->\n      <link-featured-receipt-item *ngFor=\"let _infoPayment of _payments\" [item-info]=\"_infoPayment\" [trim-icon]=\"true\"></link-featured-receipt-item>\n      <div class=\"row border-top rounded-0 mx-0 mt-3 pt-4 primary-border\" *ngIf=\"_payments.length > 1\">\n        <div class=\"col-6\">\n          <p class=\"card-text fw-600 fs-125\">{{_ld?.importo}}</p>\n        </div>\n        <div class=\"col-6 text-right\">\n          <p class=\"card-text fw-600 fs-125\">{{_currencyFormat(_totale)}}</p>\n        </div>\n      </div>\n      <button mat-flat-button class=\"my-3 fw-600 fs-875\" (click)=\"_closeAction()\" type=\"button\" *ngIf=\"_preventSubmit && _showCloseButton\">{{_ld?.close}}</button>\n      <div class=\"col-12 px-0\" *ngIf=\"!_preventSubmit\">\n        <p class=\"text-uppercase border-top rounded-0 mt-4 py-3 primary-border secondary-text-color fs-125 fw-600\">{{_ld?.sottotitolo}}</p>\n        <p class=\"py-3 mb-4 fs-1 fw-400 primary-text-color\">{{_ld?.dettaglio}}</p>\n        <form [formGroup]=\"_fg\" (ngSubmit)=\"_onFormSubmit(_fg)\">\n          <div class=\"row mx-0 mb-4\" *ngIf=\"_showFields\">\n            <div class=\"col-12 col-sm-6 px-0 pr-sm-3\">\n              <mat-form-field class=\"w-100\">\n                <input matInput [placeholder]=\"_ld?.email\" formControlName=\"email\" name=\"email\" required>\n              </mat-form-field>\n            </div>\n            <div class=\"col-12 col-sm-6 px-0 pl-sm-3\">\n              <mat-form-field class=\"w-100\">\n                <input matInput [placeholder]=\"_ld?.confermaEmail\" formControlName=\"confermaEmail\" name=\"confermaEmail\" required>\n                <mat-error *ngIf=\"_fg.errors\">\n                  {{_fg.errors['message']}}\n                </mat-error>\n              </mat-form-field>\n            </div>\n          </div>\n          <div class=\"d-flex\">\n            <button mat-flat-button class=\"mr-3 fw-600 fs-875\" type=\"submit\" [disabled]=\"_formInvalid\">{{_ld?.submit}}</button>\n            <button mat-flat-button class=\"fw-600 fs-875 white-button\" type=\"reset\" *ngIf=\"_showReset\">{{_ld?.cancel}}</button>\n          </div>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n",
                 styles: [":host{position:relative;display:block;font-family:'Titillium Web',sans-serif;font-size:1rem}"]
             }] }
 ];
@@ -1620,6 +1701,7 @@ LinkMaterialModule.decorators = [
                     LinearMenuComponent,
                     FooterComponent,
                     FeaturedItemComponent,
+                    FeaturedReceiptItemComponent,
                     ShoppingCartComponent,
                     PayCardComponent,
                     LoginCardComponent,
@@ -1646,6 +1728,7 @@ LinkMaterialModule.decorators = [
                     LinearMenuComponent,
                     FooterComponent,
                     FeaturedItemComponent,
+                    FeaturedReceiptItemComponent,
                     ShoppingCartComponent,
                     PayCardComponent,
                     LoginCardComponent,
@@ -1681,6 +1764,6 @@ const _bootstrap = require('bootstrap');
  * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { Dato, Dominio, Language, Menu, Account, AccountSettings, Standard, ShoppingInfo, AvvisoLocalization, AlertLocalization, CartLocalization, HeaderLocalization, FooterLocalization, LoginLocalization, PayCardLocalization, PayCardForm, PayCardFormError, LinkMaterialModule, HeaderComponent, LinearMenuComponent, FooterComponent, FeaturedItemComponent, ShoppingCartComponent, PayCardComponent, LoginCardComponent, AvvisoPagamentoComponent, AlertPagamentoComponent, SwipeDirective as ɵa };
+export { Dato, Dominio, Language, Menu, Account, AccountSettings, Standard, ShoppingInfo, AvvisoLocalization, AlertLocalization, CartLocalization, HeaderLocalization, FooterLocalization, LoginLocalization, PayCardLocalization, PayCardForm, PayCardFormError, LinkMaterialModule, HeaderComponent, LinearMenuComponent, FooterComponent, FeaturedItemComponent, FeaturedReceiptItemComponent, ShoppingCartComponent, PayCardComponent, LoginCardComponent, AvvisoPagamentoComponent, AlertPagamentoComponent, SwipeDirective as ɵa };
 
 //# sourceMappingURL=link-material.js.map

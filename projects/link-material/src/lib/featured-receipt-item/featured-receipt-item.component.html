@@ -1,0 +1,31 @@
+<div class="d-block p-3 fw-400 fs-1 host-directive" [class.host-hover-directive]="!_touchDevice" (click)="_itemClick()">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex flex-row">
+        <div class="d-block pr-4">
+          <p>{{_info.titolo?.label}} {{_info.titolo?.value}}</p>
+          <p class="fs-875 secondary-text-color">{{_info.sottotitolo?.label}} {{_info.sottotitolo?.value}}</p>
+        </div>
+        <div class="ml-auto">
+          <!-- toggle shopping icon -->
+          <mat-icon class="featured-icon fs-125 secondary-text-color"
+                    *ngIf="_shopping && (_info.icon || _info.icon === '')" [class.action]="_info.icon" [class.excluded]="_isExcluded"
+                    (click)="_toggleIcon($event)">{{_info.icon}}</mat-icon>
+          <!-- featured icon -->
+          <mat-icon [class.featured-icon-hidden]="_shopping && !_info.icon" *ngIf="!_shopping && !_trimIcon"
+                    class="featured-icon fs-125 secondary-text-color" [class.action]="_info.icon"
+                    (click)="_onIconClick($event)">{{_info.icon}}</mat-icon>
+        </div>
+      </div>
+      <div class="row" *ngIf="_info.collapsingInfo && _info.collapsingInfo.length != 0 && _openCollapse">
+        <div class="col-12 py-3">
+          <p class="d-block m-0" *ngFor="let ci of _info.collapsingInfo">{{ci.label}} {{ci.value}}</p>
+        </div>
+      </div>
+      <div class="d-block my-3">
+        <p class="w-100 text-truncate text-right fw-600 fs-125 lh-125">{{_info.valuta}}</p>
+        <p class="m-0 text-truncate text-right fs-875 secondary-text-color">{{_info.stato?_info.stato:''}}</p>
+      </div>
+    </div>
+  </div>
+</div>

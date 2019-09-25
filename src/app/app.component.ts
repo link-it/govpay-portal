@@ -137,15 +137,20 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
    */
   protected _onScroll(event) {
     if (this._headerComponent && this._globalContent) {
+      const offset = window.innerHeight/2;
       const gc = this._globalContent.nativeElement;
-      if ((gc.scrollHeight - gc.clientHeight > 50) || (gc.scrollHeight - gc.clientHeight === 0 && this._slimHeader)) {
-        if (gc.scrollHeight - gc.clientHeight > 50 && gc.scrollTop > 50) {
-          gc.style.marginTop = this._headerComponent.slideTitle()['margin-top'];
-        } else if (gc.scrollTop < 50) {
-          gc.style.marginTop = this._headerComponent.unslideTitle()['margin-top'];
+      let mt: any = 0;
+      if (gc.scrollHeight - gc.clientHeight > offset && gc.scrollTop > offset) {
+        mt = this._headerComponent.slideTitle()['margin-top'];
+        gc.style.marginTop = mt;
+      } else {
+        if (((gc.scrollHeight - gc.clientHeight == 0 || gc.scrollHeight - gc.clientHeight > offset) && gc.scrollTop < offset) ||
+            (parseInt(gc.style.marginTop, 10 ) < 0 && gc.scrollTop === 0)) {
+          mt = this._headerComponent.unslideTitle()['margin-top'];
+          gc.style.marginTop = mt;
         }
-        this._slimHeader = (gc.scrollTop > 50);
       }
+      this._slimHeader = (parseInt(gc.style.marginTop, 10 ) < 0 && gc.scrollTop != 0);
     }
     clearInterval(this._timerScrollCart);
     if(this._shoppingList && this._shoppingCart) {

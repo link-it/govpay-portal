@@ -210,7 +210,8 @@ zxing-scanner video {
 }
 
 /** Lib **/
-link-featured-item:last-of-type {
+link-featured-item:last-of-type,
+link-featured-receipt-item:last-of-type {
   border: none !important;
 }
 

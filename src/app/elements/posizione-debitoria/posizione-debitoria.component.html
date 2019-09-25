@@ -11,8 +11,10 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <link-featured-item *ngFor="let item of _elencoPosizioni" (on-icon-toggle)="_cartToggleHandler($event)" (on-icon-click)="_onIconReceipt($event)"
-                         [notify]="true" [item-info]="item" [shopping]="item.icon != 'receipt'"></link-featured-item>
+      <!--<link-featured-item *ngFor="let item of _elencoPosizioni" (on-icon-toggle)="_cartToggleHandler($event)" (on-icon-click)="_onIconReceipt($event)"-->
+                         <!--[notify]="true" [item-info]="item" [shopping]="item.icon != 'receipt'"></link-featured-item>-->
+      <link-featured-receipt-item *ngFor="let item of _elencoPosizioni" (on-icon-toggle)="_cartToggleHandler($event)" (on-icon-click)="_onIconReceipt($event)"
+                                  [notify]="true" [item-info]="item" [shopping]="item.icon != 'receipt'"></link-featured-receipt-item>
       <mat-paginator  *ngIf="false" [length]="_paginator.length" [pageSize]="_paginator.size"
                       [pageSizeOptions]="_paginator.options" [showFirstLastButtons]="true" (page)="_pageHandler($event)">
       </mat-paginator>

@@ -20,6 +20,7 @@ export * from './lib/header/header.component';
 export * from './lib/linear-menu/linear-menu.component';
 export * from './lib/footer/footer.component';
 export * from './lib/featured-item/featured-item.component';
+export * from './lib/featured-receipt-item/featured-receipt-item.component';
 export * from './lib/shopping-cart/shopping-cart.component';
 export * from './lib/pay-card/pay-card.component';
 export * from './lib/login-card/login-card.component';

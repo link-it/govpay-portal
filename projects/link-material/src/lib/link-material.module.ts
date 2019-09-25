@@ -18,6 +18,7 @@ import { HeaderComponent } from './header/header.component';
 import { LinearMenuComponent } from './linear-menu/linear-menu.component';
 import { FooterComponent } from './footer/footer.component';
 import { FeaturedItemComponent } from './featured-item/featured-item.component';
+import { FeaturedReceiptItemComponent } from './featured-receipt-item/featured-receipt-item.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { PayCardComponent } from './pay-card/pay-card.component';
 import { LoginCardComponent } from './login-card/login-card.component';
@@ -31,6 +32,7 @@ import { AlertPagamentoComponent } from './alert-pagamento/alert-pagamento.compo
     LinearMenuComponent,
     FooterComponent,
     FeaturedItemComponent,
+    FeaturedReceiptItemComponent,
     ShoppingCartComponent,
     PayCardComponent,
     LoginCardComponent,
@@ -57,6 +59,7 @@ import { AlertPagamentoComponent } from './alert-pagamento/alert-pagamento.compo
     LinearMenuComponent,
     FooterComponent,
     FeaturedItemComponent,
+    FeaturedReceiptItemComponent,
     ShoppingCartComponent,
     PayCardComponent,
     LoginCardComponent,

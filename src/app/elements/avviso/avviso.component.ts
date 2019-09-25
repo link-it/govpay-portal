@@ -372,12 +372,16 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         // Restore previous uid(s) for cart component ref elements
         uid: _tempRawUid,
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-        titolo: new Dato({ label: item.descrizione }),
+        titolo: new Dato({ label: item.causale }),
         sottotitolo: _meta,
         importo: parseFloat(item.importo),
         stato: PayService.STATI_PENDENZA[item.stato],
         rawData: item
       });
+      _std.collapsingInfo = [];
+      _std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso }));
+      _std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale }));
+
       return _std;
       });
 

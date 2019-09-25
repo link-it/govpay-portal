@@ -169,6 +169,7 @@
     "senza_scadenza": "No Expires",
     "avviso": "Notice",
     "iuv": "IUV",
+    "beneficiario": "Payee",
     "pagamento": "Payment",
     "pagamentoInCorso": "In progress",
     "pagamentoFallito": "Rejected",

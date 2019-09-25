@@ -127,7 +127,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
       if (si.localeNumberFormat !== _localeNumberFormat) {
         si = si.rawData;
       }
-      return new Standard({
+      let _std = new Standard({
         localeNumberFormat: _localeNumberFormat,
         titolo: si.titolo,
         sottotitolo: si.sottotitolo,
@@ -135,6 +135,8 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         uid: si.uid,
         rawData: si.rawData
       });
+      this._addCollapsedData(_std, si.rawData);
+      return _std;
     });
     this.pay.AVVISO_PAGAMENTO.Numero = (_cart.length == 1)?_cart[0].rawData.numeroAvviso:'';
 
@@ -167,11 +169,10 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         item = item.rawData;
       }
       let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.senza_scadenza;
-      let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
+      let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds });
       if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA) {
-        const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
         _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
-        _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds + _iuvOrAvviso });
+        _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds });
       }
       let _statoPendenza = PayService.STATI_PENDENZA[item.stato];
       if ((PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.NON_ESEGUITA) &&
@@ -189,6 +190,8 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
           stato: _statoPendenza,
           rawData: item
         });
+        _si.collapsingInfo = [];
+        this._addCollapsedData(_si, item);
         if (PayService.STATI_PENDENZA[item.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA && item.idPendenza) {
           (this._cartIds.indexOf(_si.uid) == -1)?_si.addToCart():_si.removeFromCart();
         }
@@ -205,11 +208,22 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
           icon: (PayService.STATI_PENDENZA[item.stato] !== PayService.STATI_PENDENZA.SCADUTA)?'receipt':'',
           rawData: item
         });
+        this._addCollapsedData(_std, item);
         return _std;
       }
     });
 
     return _buffer;
+  }
+
+  protected _addCollapsedData(std, item) {
+    let _iuvOrAvviso: Dato = new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
+    std.collapsingInfo = [];
+    if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA) {
+      _iuvOrAvviso = (item.numeroAvviso)?new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso }):new Dato({ label: PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento });
+    }
+    std.collapsingInfo.push(_iuvOrAvviso);
+    std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale }));
   }
 
   /**
