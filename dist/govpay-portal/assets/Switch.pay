@@ -1,8 +1,12 @@
 (function (global) {
   var config = document.querySelector('script[src="assets/Config.pay"]');
   var ref = /@=([^&]+)/.exec(location.search);
+  global.SwitchConfig = {};
   if(ref) {
     var external = document.createElement('script');
+    external.onerror = function() {
+      global.SwitchConfig = {};
+    };
     external.src = 'assets/Config@' + ref[1] + '.pay';
     config.parentNode.insertBefore(external, config.nextSibling);
     document.head.removeChild(config);
