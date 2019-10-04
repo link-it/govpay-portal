@@ -33,6 +33,7 @@
       ACTION_FORM_URL: 'https://www.comunedimostrativo2.it/Shibboleth.sso/Login',
       LOGOUT_URL: 'https://www.comunedimostrativo2.it/govpay/frontend/api/pagamento/rs/spid/v1/logout'
     },
+    LOGO_NAME: 'logo@Name.svg',
     RECAPTCHA_V2_SITE_KEY: '',
     PAY_RESPONSE_URL: 'https://www.comunedimostrativo2.it/pagamento',
     TIME_OUT_POLL: 5, //Secs.

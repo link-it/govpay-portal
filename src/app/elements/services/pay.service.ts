@@ -119,9 +119,11 @@ export class PayService implements OnInit, OnDestroy {
 
   initConfig() {
     if(SwitchConfig.SELECTOR) {
-      this.LOGO = 'assets/logo' + SwitchConfig.SELECTOR + '.svg';
       this.translate.currentLoader['prefix'] = './assets/i18n' + SwitchConfig.SELECTOR + '/';
       PayService.BY_SWITCH = SwitchConfig.BY_SWITCH;
+    }
+    if(PayConfig.LOGO_NAME) {
+      this.LOGO = 'assets/' + PayConfig.LOGO_NAME;
     }
     this.RECAPTCHA_V2_SITE_KEY = PayConfig.RECAPTCHA_V2_SITE_KEY || '';
     this.SPID = PayConfig.SPID_SETTINGS;
