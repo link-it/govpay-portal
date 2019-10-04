@@ -1,7 +1,7 @@
 {
   "Header": {
-    "titolo": "Sample Region",
-    "sottotitolo": "Sample Administration",
+    "titolo": "Sample Region 2",
+    "sottotitolo": "Sample Administration 2",
     "menu": {
       "items": [
         { "label": "Pay a notice", "link": "/accesso" },
@@ -18,7 +18,7 @@
     }
   },
   "Footer": {
-    "titolo": "Sample Administration",
+    "titolo": "Sample Administration 2",
     "recapito": {
       "titolo": "Contact details",
       "indirizzo": "Piazza della Vittoria, 1 00135 Roma",
@@ -72,7 +72,7 @@
     "cookie": "Cookie policy"
   },
   "Accesso": {
-    "titolo": "Payment service pagoPA",
+    "titolo": "Payment service pagoPA 2",
     "descrizione": "pagoPA is an online payment system build to make payments to Public Administration simple, secure and transparent"
   },
   "PayCard": {

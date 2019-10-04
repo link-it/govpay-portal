@@ -13,8 +13,6 @@ import { HeaderComponent } from '../../projects/link-material/src/lib/header/hea
 })
 export class AppComponent implements AfterViewInit, AfterViewChecked {
 
-  protected _logo: string = 'assets/logo.svg';
-
   protected _hld: HeaderLocalization = new HeaderLocalization();
   protected _fld: FooterLocalization = new FooterLocalization();
   protected _footerLinks: any;
@@ -50,8 +48,12 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
         const kv = p.split('=');
         _params[kv[0]] = kv[1];
       });
-      if(_params && _params['numeroAvviso'] && _params['idDominio']) {
-        PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = { Numero: _params['numeroAvviso'], Dominio: _params['idDominio'] };
+      if(_params && _params['numeroAvviso'] && _params['idDominio'] && _params['UUID']) {
+        PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
+           Numero: _params['numeroAvviso'],
+          Dominio: _params['idDominio'],
+             UUID: _params['UUID']
+        };
       }
     }
 
@@ -184,14 +186,14 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
         (result) => {
           this.pay.updateSpinner(false);
           this.pay.clearUser();
-          this.router.navigateByUrl('/accesso');
+          this.router.navigateByUrl('/accesso' + PayService.BY_SWITCH);
         },
         (error) => {
           this.pay.updateSpinner(false);
           this.pay.onError(error);
         });
     } else {
-      this.router.navigateByUrl(event.link);
+      this.router.navigateByUrl(event.link + PayService.BY_SWITCH);
     }
   }
 

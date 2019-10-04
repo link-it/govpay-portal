@@ -127,7 +127,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
       if (si.localeNumberFormat !== _localeNumberFormat) {
         si = si.rawData;
       }
-      let _std = new Standard({
+      const _std = new Standard({
         localeNumberFormat: _localeNumberFormat,
         titolo: si.titolo,
         sottotitolo: si.sottotitolo,
@@ -140,7 +140,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
     });
     this.pay.AVVISO_PAGAMENTO.Numero = (_cart.length == 1)?_cart[0].rawData.numeroAvviso:'';
 
-    this.router.navigateByUrl('/pagamento');
+    this.router.navigateByUrl('/pagamento' + PayService.BY_SWITCH);
   }
 
   _pageHandler(event) {
@@ -184,7 +184,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
           // Restore previous uid(s) for cart component ref elements
           uid: _tempRawUid?_tempRawUid:this.setUIDKey(item),
           localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-          titolo: new Dato({ label: item.causale }),
+          titolo: new Dato({ label: item.causale || item.descrizione}),
           sottotitolo: _meta,
           importo: parseFloat(item.importo),
           stato: _statoPendenza,
@@ -201,7 +201,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
           // Restore previous uid(s) for cart component ref elements
           uid: _tempRawUid?_tempRawUid:this.setUIDKey(item),
           localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-          titolo: new Dato({ label: item.causale }),
+          titolo: new Dato({ label: item.causale || item.descrizione }),
           sottotitolo: _meta,
           importo: parseFloat(item.importo),
           stato: _statoPendenza,
@@ -223,7 +223,9 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
       _iuvOrAvviso = (item.numeroAvviso)?new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso }):new Dato({ label: PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento });
     }
     std.collapsingInfo.push(_iuvOrAvviso);
-    std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale }));
+    if(item.dominio && item.dominio.ragioneSociale) {
+      std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale }));
+    }
   }
 
   /**

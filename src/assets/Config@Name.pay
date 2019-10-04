@@ -2,7 +2,7 @@
 
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '01234567890' }
+      { label: 'Comune Dimostrativo', value: '12345678901' }
     ]
   }
 
@@ -23,18 +23,18 @@
 
   global.PayConfig = {
     REVERSE_PROXY: '',
-    AUTH_HOST: 'https://www.comunedimostrativo.it',
+    AUTH_HOST: 'https://novares.fe.govcloud.it',
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v1',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v1',
     SPID_SETTINGS: {
       ACCESS: true,
-      SERVICE_TARGET: 'https://www.comunedimostrativo.it/riepilogo',
-      TEST_PROVIDER: 'https://idp.spid.gov.it',
-      ACTION_FORM_URL: 'https://www.comunedimostrativo.it/Shibboleth.sso/Login',
-      LOGOUT_URL: 'https://www.comunedimostrativo.it/govpay/frontend/api/pagamento/rs/spid/v1/logout'
+      SERVICE_TARGET: 'http://localhost:4200/riepilogo',
+      TEST_PROVIDER: 'https://spidtest.govcloud.it',
+      ACTION_FORM_URL: 'https://maeci.fe.govcloud.it/Shibboleth.sso/Login',
+      LOGOUT_URL: 'https://spcoop.it/govpay/frontend/api/pagamento/rs/spid/v1/logout'
     },
-    RECAPTCHA_V2_SITE_KEY: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
-    PAY_RESPONSE_URL: 'https://www.comunedimostrativo.it/pagamento',
+    RECAPTCHA_V2_SITE_KEY: '',
+    PAY_RESPONSE_URL: 'http://localhost:4200/pagamento',
     TIME_OUT_POLL: 5, //Secs.
     POLLING_INTERVAL: 3000, //Millisecs.
     DOMINI: _elencoDomini(),

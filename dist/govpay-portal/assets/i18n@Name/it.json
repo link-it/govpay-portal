@@ -1,7 +1,7 @@
 {
   "Header": {
-    "titolo": "Regione",
-    "sottotitolo": "Comune Dimostrativo",
+    "titolo": "Regione 2",
+    "sottotitolo": "Comune Dimostrativo 2",
     "menu": {
       "items": [
         { "label": "Paga un avviso", "link": "/accesso" },
@@ -18,7 +18,7 @@
     }
   },
   "Footer": {
-    "titolo": "Comune Dimostrativo",
+    "titolo": "Comune Dimostrativo 2",
     "recapito": {
       "titolo": "Recapiti e contatti",
       "indirizzo": "Piazza della Vittoria, 1 00135 Roma",
@@ -72,7 +72,7 @@
     "cookie": "Cookie policy"
   },
   "Accesso": {
-    "titolo": "Il servizio di pagamento del Comune Dimostrativo",
+    "titolo": "Il servizio di pagamento del Comune Dimostrativo 2",
     "descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget augue a quam iaculis porttitor. Sed tincidunt ullamcorper ante, id tincidunt urna. Nulla nec tempor urna, in consectetur ipsum. Nam ac ornare tortor, sed imperdiet orci."
   },
   "PayCard": {

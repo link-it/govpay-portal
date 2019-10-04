@@ -1,0 +1,14 @@
+(function (global) {
+  var config = document.querySelector('script[src="assets/Config.pay"]');
+  var ref = /@=([^&]+)/.exec(location.search);
+  if(ref) {
+    var external = document.createElement('script');
+    external.src = 'assets/Config@' + ref[1] + '.pay';
+    config.parentNode.insertBefore(external, config.nextSibling);
+    document.head.removeChild(config);
+    global.SwitchConfig = {
+      BY_SWITCH: '?' + ref[0],
+      SELECTOR: '@' + ref[1]
+    };
+  }
+})(window);

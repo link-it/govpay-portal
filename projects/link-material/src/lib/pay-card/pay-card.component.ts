@@ -1,4 +1,4 @@
-import { AfterContentChecked, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Dominio } from '../classes/dominio';
 import { startWith, map } from 'rxjs/operators';
@@ -13,11 +13,13 @@ declare let jQuery: any;
   templateUrl: './pay-card.component.html',
   styleUrls: ['./pay-card.component.css']
 })
-export class PayCardComponent implements AfterContentChecked, OnChanges {
+export class PayCardComponent implements AfterViewInit, AfterContentChecked, OnChanges {
   @ViewChild('zxing') scanner: ZXingScannerComponent;
 
   @Input('localization-data') _pcl: PayCardLocalization = new PayCardLocalization();
   @Input('domini') _domini: Dominio[] = [];
+  @Input('recaptcha-site-key') _recaptchaSiteKey: string = '';
+  @Input('recaptcha-language') _recaptchaLanguage: string = '';
 
   @Output('on-submit') _submit: EventEmitter<any> = new EventEmitter();
 
@@ -25,6 +27,9 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
   _filtered: Observable<Dominio[]>;
   _dominio: FormControl = new FormControl('', this._availableInListValidator(this._domini));
   _avviso: FormControl = new FormControl('', Validators.required);
+  _recaptcha: FormControl = new FormControl('', Validators.required);
+  _recaptchaId: string = '';
+  readonly _recaptchaScriptURL: string = 'https://www.google.com/recaptcha/api.js?render=explicit';
 
   _scannerIsRunning: boolean = false;
   _enableScanner: boolean = false;
@@ -35,7 +40,6 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
   _availableDevices: any[] = [];
 
   constructor() {
-
     this._fg = new FormGroup({});
     this._fg.addControl('dominio', this._dominio);
     this._fg.addControl('avviso', this._avviso);
@@ -47,9 +51,18 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
       );
   }
 
+  ngAfterViewInit() {
+    this._reloadRecaptcha();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
-    if(changes && changes._domini) {
-      this._dominio.setValidators(this._availableInListValidator(changes._domini.currentValue));
+    if(changes) {
+      if(changes._domini) {
+        this._dominio.setValidators(this._availableInListValidator(changes._domini.currentValue));
+      }
+      if(changes._recaptchaLanguage && changes._recaptchaLanguage.previousValue) {
+        this._reloadRecaptcha();
+      }
     }
   }
 
@@ -58,6 +71,61 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
       this._noDomain = (this._dominio.errors && this._domini.length <= 1);
       this._dominio.updateValueAndValidity({ onlySelf: true });
     }
+    if(this._fg.controls['recaptcha']) {
+      if(this._recaptchaSiteKey && window['grecaptcha'] && window['grecaptcha'].getResponse) {
+        let gvalue = '';
+        try {
+          gvalue = window['grecaptcha'].getResponse();
+        } catch(e) {
+          if(e.message.indexOf('No reCAPTCHA clients exist.') !== -1 ||
+             e.message.indexOf('reCAPTCHA client element has been removed') !== -1) {
+            window['grecaptcha'].render(this._recaptchaId, { 'sitekey': this._recaptchaSiteKey });
+          }
+        } finally {
+          this._fg.controls['recaptcha'].setValue(gvalue);
+        }
+      }
+    }
+  }
+
+  _reloadRecaptcha() {
+    this._resetRecaptcha();
+    this._initRecaptcha();
+  }
+
+  _resetRecaptcha() {
+    if(this._recaptchaSiteKey) {
+      this._pseudoRandomId();
+      const span = document.querySelector('#portalRecaptchaV2');
+      span['innerHTML'] = `<div id="${this._recaptchaId}"></div>`;
+      document.querySelectorAll('script[src*="recaptcha"]').forEach((s) => {
+        document.head.removeChild(s);
+      });
+      delete window['grecaptcha'];
+    }
+  }
+
+  _initRecaptcha() {
+    if(this._recaptchaSiteKey) {
+      if (!window['grecaptcha']) {
+        const rs = document.createElement('script');
+        let _url = this._recaptchaScriptURL;
+        if(this._recaptchaLanguage){
+          _url += '&hl=' + this._recaptchaLanguage;
+        }
+        rs.src = _url;
+        rs.async = true;
+        rs.defer = true;
+        document.head.appendChild(rs);
+      }
+      if(!this._fg.controls['recaptcha']) {
+        this._fg.addControl('recaptcha', this._recaptcha);
+      }
+    }
+  }
+
+  _pseudoRandomId() {
+    this._recaptchaId = 'gRecaptcha_' + new Date().valueOf().toString();
   }
 
   _filterEnte(value: string): Dominio[] {
@@ -108,7 +176,11 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
         if (this._domini.length == 1) {
           formValues.dominio = this._domini[0].value;
         }
-        this._submit.emit({ numeroAvviso: formValues.avviso, dominio: formValues.dominio });
+        const _event = { numeroAvviso: formValues.avviso, dominio: formValues.dominio };
+        if(this._recaptchaSiteKey) {
+         _event['recaptcha'] = formValues.recaptcha;
+        }
+        this._submit.emit(_event);
       } catch (error) {
         console.log(error);
       }

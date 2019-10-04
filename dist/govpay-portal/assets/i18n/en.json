@@ -93,7 +93,7 @@
   },
   "LoginCard": {
     "titolo": "Log in to your account",
-    "note": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
     "spid": "Login with SPID",
     "info": "More information",
     "ask": "Don't you have SPID?",
@@ -120,9 +120,9 @@
   },
   "Avviso": {
     "titolo": "Payment summary",
-    "note": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
     "sottotitolo": "Receipt destination",
-    "dettaglio": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "dettaglio": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
     "importo": "Total",
     "submit": "Proceed to payment",
     "cancel": "Cancel",
@@ -202,6 +202,13 @@
     "archivio": "Receipts.zip"
   },
   "http": {
+    "error_map": [
+      {
+        "match": "string_to_match",
+        "message": "[%1, %2, %3, %4] Error message"
+      }
+    ],
+    "status_400": "[%1, %2, %3, %4] Bad request.",
     "status_401": "[%1, %2, %3, %4] Access not authorized. Try to login again.",
     "status_403": "[%1, %2, %3, %4] Access forbidden.",
     "status_404": "[%1, %2, %3, %4] Service not found.",

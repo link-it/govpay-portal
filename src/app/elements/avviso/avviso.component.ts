@@ -154,7 +154,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   _newPayment() {
     this.pay.resetAvvisoPagamento();
-    this.router.navigateByUrl('/accesso');
+    this.router.navigateByUrl('/accesso' + PayService.BY_SWITCH);
   }
 
   /**
@@ -229,7 +229,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.pay.updateSpinner(false);
         this.pay.onError(error);
         if(PayService.User) {
-          this.router.navigateByUrl('/riepilogo');
+          this.router.navigateByUrl('/riepilogo' + PayService.BY_SWITCH);
         } else {
           this._newPayment();
         }
@@ -324,7 +324,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         _importoRpt = _item.importo;
         _item = _item.rawData;
       } else {
-        _causale = this._pendenze[index].causale;
+        _causale = (this._pendenze[index].causale || this._pendenze[index].descrizione);
         _item['rpp'] = this._pendenze[index].rpp;
       }
       const l: string[] = [];
@@ -360,19 +360,19 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       const _tempRawUid = item.uid;
       item = item.rawData;
       let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.senza_scadenza;
-      let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
+      let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds});// + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
       if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA || PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
-        const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
+        // const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
         if(item.dataPagamento) {
           _ds = moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage());
         }
-        _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds + _iuvOrAvviso });
+        _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds});// + _iuvOrAvviso });
       }
       const _std = new Standard({
         // Restore previous uid(s) for cart component ref elements
         uid: _tempRawUid,
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-        titolo: new Dato({ label: item.causale }),
+        titolo: new Dato({ label: item.causale || item.descrizione }),
         sottotitolo: _meta,
         importo: parseFloat(item.importo),
         stato: PayService.STATI_PENDENZA[item.stato],
@@ -380,8 +380,9 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       _std.collapsingInfo = [];
       _std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso }));
-      _std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale }));
-
+      if(item.dominio && item.dominio.ragioneSociale) {
+        _std.collapsingInfo.push(new Dato({label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale}));
+      }
       return _std;
       });
 
