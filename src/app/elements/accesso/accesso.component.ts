@@ -98,6 +98,7 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
     let qRobot = '';
     if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
       qRobot = '?UUID=' + PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO['UUID'];
+      PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = null;
     }
     if(!qRobot && event.recaptcha) {
       qRobot = '?gRecaptchaResponse=' + event.recaptcha;

@@ -155,7 +155,7 @@
       "email": "Email",
       "codiceFiscale": "Tax ID"
     },
-    "avvisoNumero": "Notice number ",
+    "avvisoNumero": "Notice number %1",
     "itemsPerPageLabel": "Items per page",
     "nextPageLabel": "Next",
     "previousPageLabel": "Previous",

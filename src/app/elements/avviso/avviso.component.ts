@@ -393,7 +393,10 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   protected _setupNote() {
     if (this.pay.AVVISO_PAGAMENTO.Pagamenti && this.pay.AVVISO_PAGAMENTO.Pagamenti.length == 1 && this.pay.AVVISO_PAGAMENTO.Numero) {
-      this._ald.titolo = PayService.SHARED_LABELS.avvisoNumero + this.pay.AVVISO_PAGAMENTO.Numero;
+      this._ald.titolo = PayService.SHARED_LABELS.avvisoNumero;
+      if(PayService.SHARED_LABELS.avvisoNumero.indexOf('%1') !== -1) {
+        this._ald.titolo = PayService.SHARED_LABELS.avvisoNumero.split('%1').join(this.pay.AVVISO_PAGAMENTO.Numero);
+      }
       const _raw = this.pay.AVVISO_PAGAMENTO.Pagamenti[0].rawData;
       const _stato = PayService.STATI_VERIFICA_PENDENZA[_raw.stato];
       this._preventPaymentSubmit = _stato !== PayService.STATI_VERIFICA_PENDENZA.NON_ESEGUITA;

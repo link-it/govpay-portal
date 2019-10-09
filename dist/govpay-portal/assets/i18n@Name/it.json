@@ -155,7 +155,7 @@
       "email": "Email",
       "codiceFiscale": "Codice fiscale"
     },
-    "avvisoNumero": "Avviso numero ",
+    "avvisoNumero": "Avviso numero %1",
     "itemsPerPageLabel": "Elementi per pagina",
     "nextPageLabel": "Successivi",
     "previousPageLabel": "Precedenti",

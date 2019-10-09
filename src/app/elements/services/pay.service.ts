@@ -484,7 +484,8 @@ export class PayService implements OnInit, OnDestroy {
             break;
           }
         }
-      } else {
+      }
+      if(!_msg) {
         switch(error.status) {
           case 401:
             this.clearUser();
