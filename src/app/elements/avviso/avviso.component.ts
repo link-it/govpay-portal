@@ -45,7 +45,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   protected _showFix: boolean = false;
   protected _sessione: boolean = true;
 
-  constructor(public router: Router, public pay: PayService, private activateRoute: ActivatedRoute, private translate: TranslateService) {
+  constructor(public router: Router, public pay: PayService, private activateRoute: ActivatedRoute, public translate: TranslateService) {
     this._formatoValuta = pay._currencyFormat.bind(pay);
     this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
       // console.log('Avviso language changed', event);
@@ -134,7 +134,12 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  protected _fixPayment() {
+  /**
+   * Fix pending payments
+   * @param event
+   * @private
+   */
+  protected _fixPayment(event: any) {
     this._payments = this._pendenze.map(p => {
       const _mapped = new Standard({ rawData: {} });
       _mapped.rawData.stato = p.stato;
@@ -146,9 +151,13 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     if(this._payments.length != 0) {
       this._submitted = false;
-      this._procedi({ form:
+      const _data = { form:
         { email: this._recapito }
-      });
+      };
+      if(event && event.recaptcha) {
+        _data.form['recaptcha'] = event.recaptcha;
+      }
+      this._procedi(_data);
     }
   }
 
@@ -201,9 +210,14 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
+    let qRobot = '';
+    if(!qRobot && event && event.form.recaptcha) {
+      qRobot = '?gRecaptchaResponse=' + event.form.recaptcha;
+    }
+
     if(_body.pendenze && _body.pendenze.length != 0) {
       this.pay.updateSpinner(true);
-      this.pay.pagaPendenze(_body, !this.pay.isAuthenticated()).subscribe(
+      this.pay.pagaPendenze(_body, !this.pay.isAuthenticated(), qRobot).subscribe(
         (result) => {
           if(result.body) {
             location.href = result.body.redirect;

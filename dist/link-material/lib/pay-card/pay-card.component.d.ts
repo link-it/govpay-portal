@@ -4,8 +4,10 @@ import { Dominio } from '../classes/dominio';
 import { Observable } from 'rxjs';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 import { PayCardLocalization } from '../classes/localization/pay-card-localization';
-export declare class PayCardComponent implements AfterViewInit, AfterContentChecked, OnChanges {
+import { RecaptchaComponent } from '../recaptcha/recaptcha.component';
+export declare class PayCardComponent implements AfterContentChecked, AfterViewInit, OnChanges {
     scanner: ZXingScannerComponent;
+    _linkRecaptcha: RecaptchaComponent;
     _pcl: PayCardLocalization;
     _domini: Dominio[];
     _recaptchaSiteKey: string;
@@ -16,8 +18,6 @@ export declare class PayCardComponent implements AfterViewInit, AfterContentChec
     _dominio: FormControl;
     _avviso: FormControl;
     _recaptcha: FormControl;
-    _recaptchaId: string;
-    readonly _recaptchaScriptURL: string;
     _scannerIsRunning: boolean;
     _enableScanner: boolean;
     _gotScan: boolean;
@@ -29,10 +29,6 @@ export declare class PayCardComponent implements AfterViewInit, AfterContentChec
     ngAfterViewInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngAfterContentChecked(): void;
-    _reloadRecaptcha(): void;
-    _resetRecaptcha(): void;
-    _initRecaptcha(): void;
-    _pseudoRandomId(): void;
     _filterEnte(value: string): Dominio[];
     _availableInListValidator(_dp: Dominio[]): ValidatorFn;
     _onSubmit(formValues: any): void;

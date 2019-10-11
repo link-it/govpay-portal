@@ -343,14 +343,18 @@ export class PayService implements OnInit, OnDestroy {
    * Pagamenti POST
    * @param {any} body
    * @param {boolean} open
+   * @param {string} query
    * @returns {Observable<any>}
    */
-  pagaPendenze(body: any, open: boolean = true): Observable<any> {
+  pagaPendenze(body: any, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
       url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
     }
     url += PayService.URL_PAGAMENTI;
+    if(query) {
+      url += query;
+    }
     return this.http.post(url, body, {observe: 'response'})
       .pipe(
         timeout(PayService.TIMEOUT),
@@ -408,7 +412,7 @@ export class PayService implements OnInit, OnDestroy {
    * @param {string} query
    * @returns {Observable<any>}
    */
-  richiestaAvviso(dominio: string, numeroAvviso: string, open: boolean = true, query: string = '' ): Observable<any> {
+  richiestaAvviso(dominio: string, numeroAvviso: string, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
       url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;

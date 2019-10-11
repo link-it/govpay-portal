@@ -1,8 +1,10 @@
-import { AfterContentChecked, EventEmitter, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormGroup, ValidatorFn } from '@angular/forms';
+import { AfterContentChecked, AfterViewInit, EventEmitter, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { Standard } from '../classes/standard';
 import { AvvisoLocalization } from '../classes/localization/avviso-localization';
-export declare class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContentChecked {
+import { RecaptchaComponent } from '../recaptcha/recaptcha.component';
+export declare class AvvisoPagamentoComponent implements OnInit, AfterViewInit, OnChanges, AfterContentChecked {
+    _linkRecaptcha: RecaptchaComponent;
     _ld: AvvisoLocalization;
     _showFields: boolean;
     _showReset: boolean;
@@ -10,13 +12,17 @@ export declare class AvvisoPagamentoComponent implements OnInit, OnChanges, Afte
     _showCloseButton: boolean;
     _payments: Standard[];
     _currencyFormat: (value: any) => any;
+    _recaptchaSiteKey: string;
+    _recaptchaLanguage: string;
     _onSubmit: EventEmitter<any>;
     _actionClose: EventEmitter<any>;
     _fg: FormGroup;
+    _recaptcha: FormControl;
     _totale: number;
     _formInvalid: boolean;
     constructor();
     ngOnInit(): void;
+    ngAfterViewInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngAfterContentChecked(): void;
     _onFormSubmit(form: any): void;

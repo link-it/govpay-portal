@@ -1,5 +1,5 @@
 function _init(event) {
-  console.log(event || 'init');
+  // console.log(event || 'init');
   window['SwitchConfig'] = {};
   if(event) {
     location.href = location.href.split(/[?#]/)[0];

@@ -40,6 +40,7 @@ export * from './lib/pay-card/pay-card.component';
 export * from './lib/login-card/login-card.component';
 export * from './lib/avviso-pagamento/avviso-pagamento.component';
 export * from './lib/alert-pagamento/alert-pagamento.component';
+export * from './lib/recaptcha/recaptcha.component';
 
 export { Dato };
 export { Dominio };

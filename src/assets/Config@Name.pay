@@ -23,7 +23,7 @@
 
   global.PayConfig = {
     REVERSE_PROXY: '',
-    AUTH_HOST: 'https://novares.fe.govcloud.it',
+    AUTH_HOST: 'https://www.comunedimostrativo2.it',
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v1',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v1',
     SPID_SETTINGS: {
@@ -35,7 +35,7 @@
     },
     LOGO_NAME: 'logo@Name.svg',
     RECAPTCHA_V2_SITE_KEY: '',
-    PAY_RESPONSE_URL: 'http://localhost:4200/pagamento',
+    PAY_RESPONSE_URL: 'http://localhost:4200/pagamento?@=Name',
     TIME_OUT_POLL: 5, //Secs.
     POLLING_INTERVAL: 3000, //Millisecs.
     DOMINI: _elencoDomini(),
