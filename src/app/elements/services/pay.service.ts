@@ -29,6 +29,8 @@ export class PayService implements OnInit, OnDestroy {
   public static TIME_OUT_POLLING: number = 5;
   public static POLLING_INTERVAL: number = 3000;
   public static PAY_RESPONSE_URL: string = '';
+  public static UUID_CHECK: string = '';
+
 
   // URL Services
   public static URL_PAGAMENTI: string = '/pagamenti';

@@ -49,11 +49,13 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
 
   ngAfterViewInit() {
     if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
-      if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID) {
-        this._procediHandler({
-          numeroAvviso: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero,
-          dominio: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio
-        });
+      if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio) {
+        if(!PayService.UUID_CHECK || (PayService.UUID_CHECK && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID)) {
+          this._procediHandler({
+            numeroAvviso: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero,
+            dominio: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio
+          });
+        }
       }
     }
   }

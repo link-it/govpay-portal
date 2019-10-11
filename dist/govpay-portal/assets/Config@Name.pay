@@ -34,6 +34,7 @@
       LOGOUT_URL: 'https://spcoop.it/govpay/frontend/api/pagamento/rs/spid/v1/logout'
     },
     LOGO_NAME: 'logo@Name.svg',
+    UUID_CHECK: false,
     RECAPTCHA_V2_SITE_KEY: '',
     PAY_RESPONSE_URL: 'http://localhost:4200/pagamento?@=Name',
     TIME_OUT_POLL: 5, //Secs.

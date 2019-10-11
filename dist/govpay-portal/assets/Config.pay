@@ -34,6 +34,7 @@
       LOGOUT_URL: 'https://www.comunedimostrativo.it/govpay/frontend/api/pagamento/rs/spid/v1/logout'
     },
     LOGO_NAME: '',
+    UUID_CHECK: true,
     RECAPTCHA_V2_SITE_KEY: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
     PAY_RESPONSE_URL: 'https://www.comunedimostrativo.it/pagamento',
     TIME_OUT_POLL: 5, //Secs.

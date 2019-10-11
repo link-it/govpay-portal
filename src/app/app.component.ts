@@ -48,12 +48,14 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
         const kv = p.split('=');
         _params[kv[0]] = kv[1];
       });
-      if(_params && _params['numeroAvviso'] && _params['idDominio'] && _params['UUID']) {
+      if(_params && _params['numeroAvviso'] && _params['idDominio']) {
         PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
            Numero: _params['numeroAvviso'],
           Dominio: _params['idDominio'],
-             UUID: _params['UUID']
         };
+        if(PayService.UUID_CHECK && _params['UUID']) {
+          PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
+        }
       }
     }
 
