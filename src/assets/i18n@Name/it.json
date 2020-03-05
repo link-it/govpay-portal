@@ -1,0 +1,219 @@
+{
+  "Header": {
+    "titolo": "Cooperazione Internazionale @Red",
+    "sottotitolo": "Farnesina pagoPA @Red",
+    "menu": {
+      "items": [
+        { "label": "Paga un avviso", "link": "/accesso" },
+        { "label": "Posizione debitoria", "link": "/riepilogo" },
+        { "label": "Archivio dei pagamenti", "link": "/archivio" }
+      ],
+      "account": {
+        "name": "",
+        "settings": [
+          { "label": "Profilo utente", "link": "/profilo" },
+          { "label": "Esci", "link": "" }
+        ]
+      }
+    }
+  },
+  "Footer": {
+    "titolo": "Ministero degli Affari Esteri e della Cooperazione Internazionale @Red",
+    "recapito": {
+      "titolo": "Recapiti e contatti",
+      "indirizzo": "Ministero degli Affari Esteri e della Cooperazione Internazionale Piazzale della Farnesina, 1 00135 Roma",
+      "centralino": "Centralino: +39 06 36911",
+      "postaCertificata": "Indirizzo di posta elettronica istituzionale e certificata del MAECI ministero.affariesteri@cert.esteri.it",
+      "uffici": "Tutti gli uffici",
+      "reteDiplomatica": "Rete diplomatica"
+    },
+    "indirizzi": {
+      "organigramma": "https://www.esteri.it/mae/it/ministero/struttura/organigramma.html",
+      "reteDiplomatica": "https://www.esteri.it/mae/it/ministero/laretediplomatica",
+      "comunicazioni": "https://www.esteri.it/mae/it/trasparenza_comunicazioni_legali/organizzazione/telefono_posta_elettronica.html",
+      "info": "https://www.esteri.it/mae/it/servizi/sportello_info/domandefrequenti/faqrichiestainfo.html",
+      "faq": "https://www.esteri.it/mae/it/servizi/sportello_info/domandefrequenti",
+      "riferimenti": "https://www.dovesiamonelmondo.it/dovemondo/index.php?id=71",
+      "rss": "https://www.esteri.it/mae/it/header_footer/feedrss.html",
+      "news": "https://www.esteri.it/mae/it/header_footer/areaintnewsletter.html",
+      "crediti": "https://www.esteri.it/mae/header_footer/cdr.html",
+      "noteLegali": "https://www.esteri.it/mae/header_footer/noteLegali.html",
+      "privacy": "https://www.esteri.it/mae/header_footer/privacy.html",
+      "cookie": "https://www.esteri.it/mae/header_footer/privacy-e-cookie.html",
+      "appIOS": "https://apps.apple.com/it/app/mappamondo-consolare/id1465893831",
+      "appAndroid": "https://play.google.com/store/apps/details?id=com.mae.mappamondoConsolare",
+      "facebook": "https://www.facebook.com/ItalyMFA.it",
+      "twitter": "https://twitter.com/ItalyMFA",
+      "youtube": "https://www.youtube.com/ministeroesteri?gl=IT&hl=it",
+      "instagram": "https://www.instagram.com/italymfa/"
+    },
+    "urp": {
+      "titolo": "Relazioni con il pubblico",
+      "orario": "L'Ufficio è aperto al pubblico per visite dal lunedì al venerdì dalle 9:00 alle 13:00",
+      "contatti": {
+        "telefono": "Telefono: +39 06 3691 8899 dal lunedì al venerdì dalle ore 8.30 alle 15.30",
+        "fax": "Fax: +39 06 3236210",
+        "pec": "Indirizzi PEC",
+        "moduloInfo": "Modulo richiesta informazioni",
+        "faq": "FAQ @Red"
+      }
+    },
+    "app": {
+      "titolo": "Farnesina app @Red",
+      "riferimenti": "Unità di crisi",
+      "rss": "RSS Feed",
+      "news": "News Alert",
+      "iOS": "mAPPamondo (iOS)",
+      "android": "mAPPamondo (Android)"
+    },
+    "crediti": "Crediti @Red",
+    "noteLegali": "Note legali",
+    "privacy": "Privacy",
+    "cookie": "Cookie policy"
+  },
+  "Accesso": {
+    "titolo": "Il servizio di pagamento del MAECI",
+    "descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget augue a quam iaculis porttitor. Sed tincidunt ullamcorper ante, id tincidunt urna. Nulla nec tempor urna, in consectetur ipsum. Nam ac ornare tortor, sed imperdiet orci."
+  },
+  "PayCard": {
+    "titolo": "Paga un avviso pagoPA @Red",
+    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "form": {
+      "avviso": "Numero avviso",
+      "fotocamera": "Fotocamera",
+      "creditore": "Ente creditore",
+      "submit": "Procedi",
+      "errors": {
+        "common": "Il codice inserito non corrisponde ad alcun creditore in elenco.",
+        "denied": "Codice creditore %1 non abilitato.",
+        "config": "Nessun creditore configurato.",
+        "required": "Creditore obbligatorio."
+      }
+    }
+  },
+  "LoginCard": {
+    "titolo": "Accedi alla tua posizione",
+    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "spid": "Entra con SPID",
+    "info": "Maggiori informazioni",
+    "ask": "Non hai SPID?",
+    "help": "Serve aiuto?"
+  },
+  "PosizioneDebitoria": {
+    "titolo": "Posizione debitoria",
+    "filter": {
+      "stato": "Stato",
+      "noFilter": "Tutti"
+    }
+  },
+  "Cart": {
+    "titolo": "Carrello",
+    "importo": "Totale",
+    "submit": "Procedi al pagamento"
+  },
+  "Archivio": {
+    "titolo": "Archivio dei pagamenti",
+    "filter": {
+      "stato": "Stato",
+      "noFilter": "Tutti"
+    }
+  },
+  "Avviso": {
+    "titolo": "Riepilogo pagamento",
+    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "sottotitolo": "Recapito ricevuta",
+    "dettaglio": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "importo": "Totale",
+    "submit": "Procedi al pagamento",
+    "cancel": "Annulla",
+    "email": "Email",
+    "confermaEmail": "Conferma email",
+    "error": "Verificare le informazioni inserite.",
+    "wait": "Recupero informazioni in corso...",
+    "close": "Nuovo pagamento"
+  },
+  "Alert": {
+    "eseguito": "Pagamento eseguito",
+    "fallito": "Pagamento non eseguito",
+    "dettaglioEseguito": "Il pagamento richiesto per l'avviso %1 risulta essere andato a buon fine. La ricevuta del pagamento sarà recapitata all'indirizzo fornito.",
+    "dettaglioFallito": "Il pagamento richiesto per l'avviso %1 NON risulta essere andato a buon fine.",
+    "dettaglioInCorso": {
+      "ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
+      "timeout": {
+        "ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla all'indirizzo mail fornito.",
+        "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla all'indirizzo mail fornito."
+      },
+      "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA"
+    },
+    "submit": "Risolvi i pagamenti incompleti",
+    "close": "Nuovo pagamento"
+  },
+  "Common": {
+    "riepilogo": "Riepilogo",
+    "anagrafica": {
+      "profilo": "Profilo utente",
+      "email": "Email",
+      "codiceFiscale": "Codice fiscale"
+    },
+    "avvisoNumero": "Avviso numero %1",
+    "itemsPerPageLabel": "Elementi per pagina",
+    "nextPageLabel": "Successivi",
+    "previousPageLabel": "Precedenti",
+    "lastPageLabel": "Ultima pagina",
+    "firstPageLabel": "Prima pagina",
+    "risultatiPendenze": "Trovate # pendenze|Trovata # pendenza",
+    "risultatiPagamenti": "Trovati # pagamenti|Trovato # pagamento",
+    "notAvailable": "Non disponibile",
+    "scadenza": "Scadenza",
+    "data": "Data",
+    "senza_scadenza": "Non prevista",
+    "avviso": "Avviso",
+    "iuv": "IUV",
+    "beneficiario": "Beneficiario",
+    "pagamento": "Pagamento",
+    "pagamentoInCorso": "In corso",
+    "pagamentoFallito": "Rifiutato",
+    "pagamentoEseguito": "Eseguito",
+    "pagamentoParzialmenteEseguito": "Parzialmente eseguito",
+    "pagamentoAnnullato": "Annullato",
+    "pagamentoNonEseguito": "Non eseguito",
+    "pendenzaEseguita": "Pagata",
+    "pendenzaParzialmenteEseguita": "Parzialmente eseguita",
+    "pendenzaNonEseguita": "Da pagare",
+    "pendenzaAnnullata": "Annullata",
+    "pendenzaScaduta": "Scaduta",
+    "pendenzaInRitardo": "Da pagare - In Ritardo",
+    "verificaPendenzaEseguita": "Pagata",
+    "verificaPendenzaDuplicata": "Pagata",
+    "verificaPendenzaNonEseguita": "Da pagare",
+    "verificaPendenzaAnnullata": "Annullata",
+    "verificaPendenzaSconosciuta": "Sconosciuta",
+    "verificaPendenzaScaduta": "Scaduta",
+    "compoundError": {
+      "error": "Impossibile procedere con il ",
+      "error2": "Il pagamento risulta già eseguito.",
+      "errorSub1": "pagamento poiché la pendenza risulta annullata.",
+      "errorSub2": "pagamento poiché la pendenza risulta scaduta il %1.",
+      "errorSub3": "pagamento; non risultano ulteriori informazioni."
+    },
+    "alertAction": "Chiudi",
+    "warningRicevuta": "Nessun documento disponibile",
+    "ricevuta": "Ricevuta.pdf",
+    "archivio": "Ricevute.zip"
+  },
+  "http": {
+    "error_map": [
+      {
+        "match": "stringa_di_controllo",
+        "message": "Messaggio di errore"
+      }
+    ],
+    "status_400": "[%1, %2, %3, %4] Richiesta non valida.",
+    "status_401": "[%1, %2, %3, %4] Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
+    "status_403": "[%1, %2, %3, %4] Accesso non consentito.",
+    "status_404": "[%1, %2, %3, %4] Servizio non trovato.",
+    "status_500": "[%1, %2, %3, %4] Errore interno del server.",
+    "status_504": "[%1, %2, %3, %4] Timeout del gateway.",
+    "default": "[%1, %2, %3, %4] Servizio non disponibile, si prega di riprovare più tardi."
+  }
+}

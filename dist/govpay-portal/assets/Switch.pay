@@ -1,0 +1,18 @@
+function _init(event) {
+  // console.log(event || 'init');
+  window['SwitchConfig'] = {};
+  if(event) {
+    location.href = location.href.split(/[?#]/)[0];
+  }
+}
+_init();
+const ref = /@=([^&]+)/.exec(location.search);
+if(ref) {
+  document.write('<script src="assets/Config@'+ref[1]+'.pay?cache='+(new Date().getTime())+'" onerror="_init(event)"></script>');
+  window['SwitchConfig'] = {
+    BY_SWITCH: '?' + ref[0],
+    SELECTOR: '@' + ref[1]
+  };
+} else {
+  document.write('<script src="assets/Config.pay?cache='+(new Date().getTime())+'"></script>');
+}

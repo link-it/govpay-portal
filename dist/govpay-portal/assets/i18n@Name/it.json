@@ -1,0 +1,219 @@
+{
+  "Header": {
+    "titolo": "Regione 2",
+    "sottotitolo": "Comune Dimostrativo 2",
+    "menu": {
+      "items": [
+        { "label": "Paga un avviso", "link": "/accesso" },
+        { "label": "Posizione debitoria", "link": "/riepilogo" },
+        { "label": "Archivio dei pagamenti", "link": "/archivio" }
+      ],
+      "account": {
+        "name": "",
+        "settings": [
+          { "label": "Profilo utente", "link": "/profilo" },
+          { "label": "Esci", "link": "" }
+        ]
+      }
+    }
+  },
+  "Footer": {
+    "titolo": "Comune Dimostrativo 2",
+    "recapito": {
+      "titolo": "Recapiti e contatti",
+      "indirizzo": "Piazza della Vittoria, 1 00135 Roma",
+      "centralino": "Centralino: +39 00 00000",
+      "postaCertificata": "Pec: dimostrativo@comune.regione.it",
+      "uffici": "Organigramma",
+      "reteDiplomatica": ""
+    },
+    "indirizzi": {
+      "organigramma": "https://www.sample.it/",
+      "reteDiplomatica": "",
+      "comunicazioni": "https://www.sample.it/",
+      "info": "https://www.sample.it/",
+      "faq": "https://www.sample.it/",
+      "riferimenti": "https://www.sample.it/",
+      "rss": "https://www.sample.it/",
+      "news": "https://www.sample.it/",
+      "crediti": "https://www.sample.it/",
+      "noteLegali": "https://www.sample.it/",
+      "privacy": "https://www.sample.it/",
+      "cookie": "https://www.sample.it/",
+      "appIOS": "https://www.sample.it/",
+      "appAndroid": "https://www.sample.it/",
+      "facebook": "https://www.sample.it/",
+      "twitter": "https://www.sample.it/",
+      "youtube": "https://www.sample.it/",
+      "instagram": "https://www.sample.it/"
+    },
+    "urp": {
+      "titolo": "Relazioni con il pubblico",
+      "orario": "L'Ufficio è aperto al pubblico per visite dal lunedì al venerdì dalle 9:00 alle 13:00",
+      "contatti": {
+        "telefono": "Telefono: +39 06 3691 8899 dal lunedì al venerdì dalle ore 8.30 alle 15.30",
+        "fax": "Fax: +39 06 3236210",
+        "pec": "Indirizzi PEC",
+        "moduloInfo": "Modulo richiesta informazioni",
+        "faq": "FAQ"
+      }
+    },
+    "app": {
+      "titolo": "Farnesina app",
+      "riferimenti": "Unità di crisi",
+      "rss": "RSS Feed",
+      "news": "News Alert",
+      "iOS": "mAPPamondo (iOS)",
+      "android": "mAPPamondo (Android)"
+    },
+    "crediti": "Crediti",
+    "noteLegali": "Note legali",
+    "privacy": "Privacy",
+    "cookie": "Cookie policy"
+  },
+  "Accesso": {
+    "titolo": "Il servizio di pagamento del Comune Dimostrativo 2",
+    "descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget augue a quam iaculis porttitor. Sed tincidunt ullamcorper ante, id tincidunt urna. Nulla nec tempor urna, in consectetur ipsum. Nam ac ornare tortor, sed imperdiet orci."
+  },
+  "PayCard": {
+    "titolo": "Paga un avviso pagoPA",
+    "note": "Se hai ricevuto un Avviso pagoPA, puoi pagarlo indicando il numero avviso oppure scansionando il qrcode.",
+    "form": {
+      "avviso": "Numero avviso",
+      "fotocamera": "Fotocamera",
+      "creditore": "Ente creditore",
+      "submit": "Procedi",
+      "errors": {
+        "common": "Il codice inserito non corrisponde ad alcun creditore in elenco.",
+        "denied": "Codice creditore %1 non abilitato.",
+        "config": "Nessun creditore configurato.",
+        "required": "Creditore obbligatorio."
+      }
+    }
+  },
+  "LoginCard": {
+    "titolo": "Accedi alla tua posizione",
+    "note": "Accedendo al portale in modalità autenticata potrai consultare la tua Posizione Debitoria e lo Storico dei Pagamenti in forma protetta e riservata.",
+    "spid": "Entra con SPID",
+    "info": "Maggiori informazioni",
+    "ask": "Non hai SPID?",
+    "help": "Serve aiuto?"
+  },
+  "PosizioneDebitoria": {
+    "titolo": "Posizione debitoria",
+    "filter": {
+      "stato": "Stato",
+      "noFilter": "Tutti"
+    }
+  },
+  "Cart": {
+    "titolo": "Carrello",
+    "importo": "Totale",
+    "submit": "Procedi al pagamento"
+  },
+  "Archivio": {
+    "titolo": "Archivio dei pagamenti",
+    "filter": {
+      "stato": "Stato",
+      "noFilter": "Tutti"
+    }
+  },
+  "Avviso": {
+    "titolo": "Riepilogo pagamento",
+    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "sottotitolo": "Recapito ricevuta",
+    "dettaglio": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
+    "importo": "Totale",
+    "submit": "Procedi al pagamento",
+    "cancel": "Annulla",
+    "email": "Email",
+    "confermaEmail": "Conferma email",
+    "error": "Verificare le informazioni inserite.",
+    "wait": "Recupero informazioni in corso...",
+    "close": "Nuovo pagamento"
+  },
+  "Alert": {
+    "eseguito": "Pagamento eseguito",
+    "fallito": "Pagamento non eseguito",
+    "dettaglioEseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
+    "dettaglioFallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
+    "dettaglioInCorso": {
+      "ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
+      "timeout": {
+        "ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail",
+        "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail"
+      },
+      "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA."
+    },
+    "submit": "Prova di nuovo",
+    "close": "Nuovo pagamento"
+  },
+  "Common": {
+    "riepilogo": "Riepilogo",
+    "anagrafica": {
+      "profilo": "Profilo utente",
+      "email": "Email",
+      "codiceFiscale": "Codice fiscale"
+    },
+    "avvisoNumero": "Avviso numero %1",
+    "itemsPerPageLabel": "Elementi per pagina",
+    "nextPageLabel": "Successivi",
+    "previousPageLabel": "Precedenti",
+    "lastPageLabel": "Ultima pagina",
+    "firstPageLabel": "Prima pagina",
+    "risultatiPendenze": "Trovate # pendenze|Trovata # pendenza",
+    "risultatiPagamenti": "Trovati # pagamenti|Trovato # pagamento",
+    "notAvailable": "Non disponibile",
+    "scadenza": "Scadenza",
+    "data": "Data",
+    "senza_scadenza": "Non prevista",
+    "avviso": "Avviso",
+    "iuv": "IUV",
+    "beneficiario": "Beneficiario",
+    "pagamento": "Pagamento",
+    "pagamentoInCorso": "In corso",
+    "pagamentoFallito": "Rifiutato",
+    "pagamentoEseguito": "Eseguito",
+    "pagamentoParzialmenteEseguito": "Parzialmente eseguito",
+    "pagamentoAnnullato": "Annullato",
+    "pagamentoNonEseguito": "Non eseguito",
+    "pendenzaEseguita": "Pagata",
+    "pendenzaParzialmenteEseguita": "Parzialmente eseguita",
+    "pendenzaNonEseguita": "Da pagare",
+    "pendenzaAnnullata": "Annullata",
+    "pendenzaScaduta": "Scaduta",
+    "pendenzaInRitardo": "Da pagare - In Ritardo",
+    "verificaPendenzaEseguita": "Pagata",
+    "verificaPendenzaDuplicata": "Pagata",
+    "verificaPendenzaNonEseguita": "Da pagare",
+    "verificaPendenzaAnnullata": "Annullata",
+    "verificaPendenzaSconosciuta": "Sconosciuta",
+    "verificaPendenzaScaduta": "Scaduta",
+    "compoundError": {
+      "error": "Impossibile procedere con il ",
+      "error2": "Il pagamento risulta già eseguito.",
+      "errorSub1": "pagamento poiché la pendenza risulta annullata.",
+      "errorSub2": "pagamento poiché la pendenza risulta scaduta il %1.",
+      "errorSub3": "pagamento; non risultano ulteriori informazioni."
+    },
+    "alertAction": "Chiudi",
+    "warningRicevuta": "Nessun documento disponibile",
+    "ricevuta": "Ricevuta.pdf",
+    "archivio": "Ricevute.zip"
+  },
+  "http": {
+    "error_map": [
+      {
+        "match": "stringa_di_controllo",
+        "message": "[%1, %2, %3, %4] Messaggio di errore"
+      }
+    ],
+    "status_400": "[%1, %2, %3, %4] Richiesta non valida.",
+    "status_401": "[%1, %2, %3, %4] Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
+    "status_403": "[%1, %2, %3, %4] Accesso non consentito.",
+    "status_404": "[%1, %2, %3, %4] Servizio non trovato.",
+    "status_500": "[%1, %2, %3, %4] Errore interno del server.",
+    "status_504": "[%1, %2, %3, %4] Timeout del gateway.",
+    "default": "[%1, %2, %3, %4] Servizio non disponibile, si prega di riprovare più tardi."
+  }
+}

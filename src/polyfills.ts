@@ -81,3 +81,22 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+/**
+* in IE/Edge developer tools, the addEventListener will also be wrapped by zone.js
+* with the following flag, it will bypass `zone.js` patch for IE/Edge
+if (document['documentMode'] || /Edge/.test(navigator.userAgent)) {
+  console.log(document['documentMode'], /Edge/.test(navigator.userAgent));
+  (window as any).__Zone_enable_cross_context_check = true;
+}
+*/
+
+if (window['NodeList'] && !NodeList.prototype.forEach) {
+  console.log('Prototype forEach');
+  NodeList.prototype.forEach = function (callback, thisArg) {
+    thisArg = thisArg || window;
+    for (let i = 0; i < this.length; i++) {
+      callback.call(thisArg, this[i], i, this);
+    }
+  };
+}

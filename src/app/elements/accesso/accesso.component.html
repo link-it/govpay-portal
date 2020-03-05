@@ -11,7 +11,8 @@
   <div class="row mb-4">
     <div class="col-12 col-sm-6 mb-5">
       <link-pay-card (on-scan-request)="_scanHandler()" (on-submit)="_procediHandler($event)"
-                    [localization-data]="_pcld" [domini]="_selezioneDomini"></link-pay-card>
+                     [localization-data]="_pcld" [domini]="_selezioneDomini" [recaptcha-language]="translate.currentLang"
+                     [recaptcha-site-key]="pay.RECAPTCHA_V2_SITE_KEY"></link-pay-card>
     </div>
     <div class="col-12 col-sm-6" *ngIf="!_isLogged && pay.SPID['ACCESS']">
       <link-login-card [localization-data]="_lld"

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { MatPaginatorIntl, MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
-declare let PayConfig;
+declare let PayConfig, SwitchConfig;
 declare let saveAs;
 declare let JSZip: any;
 
@@ -15,18 +15,24 @@ declare let JSZip: any;
 })
 export class PayService implements OnInit, OnDestroy {
 
+  RECAPTCHA_V2_SITE_KEY: any;
+  SPID: any;
+  LOGO: string = 'assets/logo.svg';
+  public static BY_SWITCH: string = '';
+  public static ROOT_SERVICE: string = '';
+  public static HOSTNAME: string = '';
+  public static SPID_HOSTNAME: string = '';
+  public static SPID_ROOT_SERVICE: string = '';
+  public static DOMINI: any[] = [];
+  public static LINGUE: any[] = [];
+  public static IS_SINGLE: boolean = true;
+  public static TIME_OUT_POLLING: number = 5;
+  public static POLLING_INTERVAL: number = 3000;
+  public static PAY_RESPONSE_URL: string = '';
+  public static UUID_CHECK: string = '';
+
+
   // URL Services
-  public static ROOT_SERVICE: string = PayConfig.PUBLIC_ROOT_SERVICE;
-  public static HOSTNAME: string = PayConfig.REVERSE_PROXY;
-  public static SPID_HOSTNAME: string = PayConfig.AUTH_HOST;
-  public static SPID_ROOT_SERVICE: string = PayConfig.AUTH_ROOT_SERVICE;
-  SPID: any = PayConfig.SPID_SETTINGS;
-  public static DOMINI: any[] = PayConfig.DOMINI;
-  public static LINGUE: any[] = PayConfig.LINGUE;
-  public static IS_SINGLE: boolean = (PayConfig.DOMINI.length == 1);
-  public static TIME_OUT_POLLING = PayConfig.TIME_OUT_POLL;
-  public static POLLING_INTERVAL = PayConfig.POLLING_INTERVAL;
-  public static PAY_RESPONSE_URL: any[] = PayConfig.PAY_RESPONSE_URL;
   public static URL_PAGAMENTI: string = '/pagamenti';
   public static URL_PENDENZE: string = '/pendenze';
   public static URL_AVVISO: string = '/avvisi';
@@ -88,7 +94,7 @@ export class PayService implements OnInit, OnDestroy {
   spinner: boolean = false;
   AVVISO_PAGAMENTO: any = { Numero: '', Dominio: null, Pagamenti: [] };
 
-  // Pagamento diretto via query string parameters { Numero: 'numeroAvviso', Dominio: 'idDominio' };
+  // Pagamento diretto via query string parameters { Numero: 'numeroAvviso', Dominio: 'idDominio', UUID: 'String' };
   public static QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO: any;
 
   public static HTTP_ERROR_MESSAGES: any;
@@ -98,6 +104,7 @@ export class PayService implements OnInit, OnDestroy {
 
   constructor(private message: MatSnackBar, private http: HttpClient, private router: Router,
               private paginator: MatPaginatorIntl, private translate: TranslateService) {
+    this.initConfig();
     this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
       // console.log('Common language changed', event);
       this.translateDynamicObject();
@@ -110,6 +117,29 @@ export class PayService implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._langSubscription.unsubscribe();
+  }
+
+  initConfig() {
+    if(SwitchConfig.SELECTOR) {
+      this.translate.currentLoader['prefix'] = './assets/i18n' + SwitchConfig.SELECTOR + '/';
+      PayService.BY_SWITCH = SwitchConfig.BY_SWITCH;
+    }
+    if(PayConfig.LOGO_NAME) {
+      this.LOGO = 'assets/' + PayConfig.LOGO_NAME;
+    }
+    this.RECAPTCHA_V2_SITE_KEY = PayConfig.RECAPTCHA_V2_SITE_KEY || '';
+    this.SPID = PayConfig.SPID_SETTINGS;
+    PayService.ROOT_SERVICE = PayConfig.PUBLIC_ROOT_SERVICE;
+    PayService.HOSTNAME = PayConfig.REVERSE_PROXY;
+    PayService.SPID_HOSTNAME = PayConfig.AUTH_HOST;
+    PayService.SPID_ROOT_SERVICE = PayConfig.AUTH_ROOT_SERVICE;
+    PayService.DOMINI = PayConfig.DOMINI;
+    PayService.LINGUE = PayConfig.LINGUE;
+    PayService.IS_SINGLE = (PayConfig.DOMINI.length == 1);
+    PayService.TIME_OUT_POLLING = PayConfig.TIME_OUT_POLL;
+    PayService.POLLING_INTERVAL = PayConfig.POLLING_INTERVAL;
+    PayService.PAY_RESPONSE_URL = PayConfig.PAY_RESPONSE_URL;
+    document.body.className = '';
   }
 
   static StatiPendenza(): any[] {
@@ -271,7 +301,7 @@ export class PayService implements OnInit, OnDestroy {
         if (url.indexOf('/pagamento') != -1) {
           return true;
         } else {
-          this.router.navigateByUrl('/accesso');
+          this.router.navigateByUrl('/accesso' + PayService.BY_SWITCH);
           return false;
         }
       });
@@ -315,14 +345,18 @@ export class PayService implements OnInit, OnDestroy {
    * Pagamenti POST
    * @param {any} body
    * @param {boolean} open
+   * @param {string} query
    * @returns {Observable<any>}
    */
-  pagaPendenze(body: any, open: boolean = true): Observable<any> {
+  pagaPendenze(body: any, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
       url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
     }
     url += PayService.URL_PAGAMENTI;
+    if(query) {
+      url += query;
+    }
     return this.http.post(url, body, {observe: 'response'})
       .pipe(
         timeout(PayService.TIMEOUT),
@@ -377,14 +411,18 @@ export class PayService implements OnInit, OnDestroy {
    * @param {string} dominio
    * @param {string} numeroAvviso
    * @param {boolean} open
+   * @param {string} query
    * @returns {Observable<any>}
    */
-  richiestaAvviso(dominio: string, numeroAvviso: string, open: boolean = true): Observable<any> {
+  richiestaAvviso(dominio: string, numeroAvviso: string, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
       url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
     }
     url += PayService.URL_AVVISO + '/' + dominio + '/' + numeroAvviso;
+    if(query) {
+      url += query;
+    }
     return this.http.get(url, {observe: 'response'})
       .pipe(
         timeout(PayService.TIMEOUT),
@@ -442,28 +480,42 @@ export class PayService implements OnInit, OnDestroy {
       (error.error.descrizione || ''),
       (error.error.dettaglio || '')
     ];
-
     try {
-      switch(error.status) {
-        case 401:
-          this.clearUser();
-          _msg = PayService.HTTP_ERROR_MESSAGES['status_401'];
-          this.router.navigateByUrl('/');
-          break;
-        case 403:
-          _msg = PayService.HTTP_ERROR_MESSAGES['status_403'];
-          break;
-        case 404:
-          _msg = PayService.HTTP_ERROR_MESSAGES['status_404'];
-          break;
-        case 500:
-          _msg = PayService.HTTP_ERROR_MESSAGES['status_500'];
-          break;
-        case 504:
-          _msg = PayService.HTTP_ERROR_MESSAGES['status_504'];
-          break;
-        default:
-          _msg = customMessage?customMessage:PayService.HTTP_ERROR_MESSAGES['default'];
+      const _errorMaps = PayService.HTTP_ERROR_MESSAGES['error_map'];
+      if(_errorMaps) {
+        for(let ke = 0; ke < _errorMaps.length; ke++) {
+          const _e = _errorMaps[ke];
+          if (error.error.descrizione.indexOf(_e.match) !== -1 || error.error.dettaglio.indexOf(_e.match) !== -1) {
+            _msg = _e.message;
+            break;
+          }
+        }
+      }
+      if(!_msg) {
+        switch(error.status) {
+          case 401:
+            this.clearUser();
+            _msg = PayService.HTTP_ERROR_MESSAGES['status_401'];
+            this.router.navigateByUrl('/' + PayService.BY_SWITCH);
+            break;
+          case 400:
+            _msg = PayService.HTTP_ERROR_MESSAGES['status_400'];
+            break;
+          case 403:
+            _msg = PayService.HTTP_ERROR_MESSAGES['status_403'];
+            break;
+          case 404:
+            _msg = PayService.HTTP_ERROR_MESSAGES['status_404'];
+            break;
+          case 500:
+            _msg = PayService.HTTP_ERROR_MESSAGES['status_500'];
+            break;
+          case 504:
+            _msg = PayService.HTTP_ERROR_MESSAGES['status_504'];
+            break;
+          default:
+            _msg = customMessage?customMessage:PayService.HTTP_ERROR_MESSAGES['default'];
+        }
       }
       _replacement.forEach((s, i) => {
         _msg = _msg.split('%'+ (i + 1)).join(s);

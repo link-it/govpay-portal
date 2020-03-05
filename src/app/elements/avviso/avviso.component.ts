@@ -45,7 +45,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   protected _showFix: boolean = false;
   protected _sessione: boolean = true;
 
-  constructor(public router: Router, public pay: PayService, private activateRoute: ActivatedRoute, private translate: TranslateService) {
+  constructor(public router: Router, public pay: PayService, private activateRoute: ActivatedRoute, public translate: TranslateService) {
     this._formatoValuta = pay._currencyFormat.bind(pay);
     this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
       // console.log('Avviso language changed', event);
@@ -134,7 +134,12 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  protected _fixPayment() {
+  /**
+   * Fix pending payments
+   * @param event
+   * @private
+   */
+  protected _fixPayment(event: any) {
     this._payments = this._pendenze.map(p => {
       const _mapped = new Standard({ rawData: {} });
       _mapped.rawData.stato = p.stato;
@@ -146,15 +151,19 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     if(this._payments.length != 0) {
       this._submitted = false;
-      this._procedi({ form:
+      const _data = { form:
         { email: this._recapito }
-      });
+      };
+      if(event && event.recaptcha) {
+        _data.form['recaptcha'] = event.recaptcha;
+      }
+      this._procedi(_data);
     }
   }
 
   _newPayment() {
     this.pay.resetAvvisoPagamento();
-    this.router.navigateByUrl('/accesso');
+    this.router.navigateByUrl('/accesso' + PayService.BY_SWITCH);
   }
 
   /**
@@ -201,9 +210,14 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
+    let qRobot = '';
+    if(!qRobot && event && event.form.recaptcha) {
+      qRobot = '?gRecaptchaResponse=' + event.form.recaptcha;
+    }
+
     if(_body.pendenze && _body.pendenze.length != 0) {
       this.pay.updateSpinner(true);
-      this.pay.pagaPendenze(_body, !this.pay.isAuthenticated()).subscribe(
+      this.pay.pagaPendenze(_body, !this.pay.isAuthenticated(), qRobot).subscribe(
         (result) => {
           if(result.body) {
             location.href = result.body.redirect;
@@ -229,7 +243,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.pay.updateSpinner(false);
         this.pay.onError(error);
         if(PayService.User) {
-          this.router.navigateByUrl('/riepilogo');
+          this.router.navigateByUrl('/riepilogo' + PayService.BY_SWITCH);
         } else {
           this._newPayment();
         }
@@ -324,7 +338,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         _importoRpt = _item.importo;
         _item = _item.rawData;
       } else {
-        _causale = this._pendenze[index].causale;
+        _causale = (this._pendenze[index].causale || this._pendenze[index].descrizione);
         _item['rpp'] = this._pendenze[index].rpp;
       }
       const l: string[] = [];
@@ -360,19 +374,19 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       const _tempRawUid = item.uid;
       item = item.rawData;
       let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.senza_scadenza;
-      let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
+      let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds});// + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
       if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA || PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
-        const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
+        // const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
         if(item.dataPagamento) {
           _ds = moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage());
         }
-        _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds + _iuvOrAvviso });
+        _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds});// + _iuvOrAvviso });
       }
       const _std = new Standard({
         // Restore previous uid(s) for cart component ref elements
         uid: _tempRawUid,
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-        titolo: new Dato({ label: item.causale }),
+        titolo: new Dato({ label: item.causale || item.descrizione }),
         sottotitolo: _meta,
         importo: parseFloat(item.importo),
         stato: PayService.STATI_PENDENZA[item.stato],
@@ -380,8 +394,9 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       _std.collapsingInfo = [];
       _std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso }));
-      _std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale }));
-
+      if(item.dominio && item.dominio.ragioneSociale) {
+        _std.collapsingInfo.push(new Dato({label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale}));
+      }
       return _std;
       });
 
@@ -392,7 +407,10 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   protected _setupNote() {
     if (this.pay.AVVISO_PAGAMENTO.Pagamenti && this.pay.AVVISO_PAGAMENTO.Pagamenti.length == 1 && this.pay.AVVISO_PAGAMENTO.Numero) {
-      this._ald.titolo = PayService.SHARED_LABELS.avvisoNumero + this.pay.AVVISO_PAGAMENTO.Numero;
+      this._ald.titolo = PayService.SHARED_LABELS.avvisoNumero;
+      if(PayService.SHARED_LABELS.avvisoNumero.indexOf('%1') !== -1) {
+        this._ald.titolo = PayService.SHARED_LABELS.avvisoNumero.split('%1').join(this.pay.AVVISO_PAGAMENTO.Numero);
+      }
       const _raw = this.pay.AVVISO_PAGAMENTO.Pagamenti[0].rawData;
       const _stato = PayService.STATI_VERIFICA_PENDENZA[_raw.stato];
       this._preventPaymentSubmit = _stato !== PayService.STATI_VERIFICA_PENDENZA.NON_ESEGUITA;

@@ -155,7 +155,7 @@
       "email": "Email",
       "codiceFiscale": "Codice fiscale"
     },
-    "avvisoNumero": "Avviso numero ",
+    "avvisoNumero": "Avviso numero %1",
     "itemsPerPageLabel": "Elementi per pagina",
     "nextPageLabel": "Successivi",
     "previousPageLabel": "Precedenti",
@@ -202,6 +202,13 @@
     "archivio": "Ricevute.zip"
   },
   "http": {
+    "error_map": [
+      {
+        "match": "stringa_di_controllo",
+        "message": "[%1, %2, %3, %4] Messaggio di errore"
+      }
+    ],
+    "status_400": "[%1, %2, %3, %4] Richiesta non valida.",
     "status_401": "[%1, %2, %3, %4] Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
     "status_403": "[%1, %2, %3, %4] Accesso non consentito.",
     "status_404": "[%1, %2, %3, %4] Servizio non trovato.",

@@ -1,7 +1,8 @@
-import { AfterContentChecked, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Standard } from '../classes/standard';
 import { AvvisoLocalization } from '../classes/localization/avviso-localization';
+import { RecaptchaComponent } from '../recaptcha/recaptcha.component';
 
 
 @Component({
@@ -9,7 +10,8 @@ import { AvvisoLocalization } from '../classes/localization/avviso-localization'
   templateUrl: './avviso-pagamento.component.html',
   styleUrls: ['./avviso-pagamento.component.css']
 })
-export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContentChecked {
+export class AvvisoPagamentoComponent implements OnInit, AfterViewInit, OnChanges, AfterContentChecked {
+  @ViewChild('linkRecaptcha') _linkRecaptcha: RecaptchaComponent;
 
   @Input('localization-data') _ld: AvvisoLocalization = new AvvisoLocalization();
 
@@ -21,13 +23,17 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
   @Input('currency-format') _currencyFormat = function(value) {
     return value;
   };
+  @Input('recaptcha-site-key') _recaptchaSiteKey: string = '';
+  @Input('recaptcha-language') _recaptchaLanguage: string = '';
 
   @Output('on-submit') _onSubmit: EventEmitter<any> = new EventEmitter(null);
   @Output('on-action-close') _actionClose: EventEmitter<any> = new EventEmitter(null);
 
   _fg: FormGroup;
+  _recaptcha: FormControl = new FormControl('', Validators.required);
   _totale: number = 0;
   _formInvalid: boolean = true;
+
 
   constructor() {
     this._fg = new FormGroup({
@@ -37,6 +43,12 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    if(this._recaptchaSiteKey && !this._fg.controls['recaptcha']) {
+      this._fg.addControl('recaptcha', this._recaptcha);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -62,6 +74,9 @@ export class AvvisoPagamentoComponent implements OnInit, OnChanges, AfterContent
 
   ngAfterContentChecked() {
     this._formInvalid = !this._fg.valid;
+    if(this._linkRecaptcha && this._fg.controls['recaptcha']) {
+      this._fg.controls['recaptcha'].setValue(this._linkRecaptcha.recaptchaResponse());
+    }
   }
 
   _onFormSubmit(form) {

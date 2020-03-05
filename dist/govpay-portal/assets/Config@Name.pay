@@ -1,0 +1,47 @@
+(function (global) {
+
+  function _elencoDomini() {
+    return [
+      { label: 'Comune Dimostrativo', value: '12345678901' }
+    ]
+  }
+
+  function _traduzioni() {
+    return [
+      {
+        language: 'Italiano',
+        alpha2Code: 'it',
+        alpha3Code: 'ita'
+      },
+      {
+        language: 'English',
+        alpha2Code: 'en',
+        alpha3Code: 'eng'
+      }
+    ]
+  }
+
+  global.PayConfig = {
+    REVERSE_PROXY: '',
+    AUTH_HOST: 'https://www.comunedimostrativo2.it',
+    AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v1',
+    PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v1',
+    SPID_SETTINGS: {
+      ACCESS: true,
+      SERVICE_TARGET: 'http://localhost:4200/riepilogo',
+      TEST_PROVIDER: 'https://spidtest.govcloud.it',
+      ACTION_FORM_URL: 'https://maeci.fe.govcloud.it/Shibboleth.sso/Login',
+      LOGOUT_URL: 'https://spcoop.it/govpay/frontend/api/pagamento/rs/spid/v1/logout'
+    },
+    LOGO_NAME: 'logo@Name.svg',
+    UUID_CHECK: false,
+    RECAPTCHA_V2_SITE_KEY: '',
+    PAY_RESPONSE_URL: 'http://localhost:4200/pagamento?@=Name',
+    TIME_OUT_POLL: 5, //Secs.
+    POLLING_INTERVAL: 3000, //Millisecs.
+    DOMINI: _elencoDomini(),
+    LINGUE: _traduzioni()
+  };
+
+
+})(window);

@@ -1377,9 +1377,12 @@
             var _this = this;
             this._pcl = new PayCardLocalization();
             this._domini = [];
+            this._recaptchaSiteKey = '';
+            this._recaptchaLanguage = '';
             this._submit = new core.EventEmitter();
             this._dominio = new forms.FormControl('', this._availableInListValidator(this._domini));
             this._avviso = new forms.FormControl('', forms.Validators.required);
+            this._recaptcha = new forms.FormControl('', forms.Validators.required);
             this._scannerIsRunning = false;
             this._enableScanner = false;
             this._gotScan = false;
@@ -1396,6 +1399,17 @@
          */function (value) { return value ? _this._filterEnte(value) : _this._domini.slice(); })));
         }
         /**
+         * @return {?}
+         */
+        PayCardComponent.prototype.ngAfterViewInit = /**
+         * @return {?}
+         */
+            function () {
+                if (this._recaptchaSiteKey && !this._fg.controls['recaptcha']) {
+                    this._fg.addControl('recaptcha', this._recaptcha);
+                }
+            };
+        /**
          * @param {?} changes
          * @return {?}
          */
@@ -1404,8 +1418,10 @@
          * @return {?}
          */
             function (changes) {
-                if (changes && changes._domini) {
-                    this._dominio.setValidators(this._availableInListValidator(changes._domini.currentValue));
+                if (changes) {
+                    if (changes._domini) {
+                        this._dominio.setValidators(this._availableInListValidator(changes._domini.currentValue));
+                    }
                 }
             };
         /**
@@ -1418,6 +1434,9 @@
                 if (this._dominio && this._domini) {
                     this._noDomain = (this._dominio.errors && this._domini.length <= 1);
                     this._dominio.updateValueAndValidity({ onlySelf: true });
+                }
+                if (this._linkRecaptcha && this._fg.controls['recaptcha']) {
+                    this._fg.controls['recaptcha'].setValue(this._linkRecaptcha.recaptchaResponse());
                 }
             };
         /**
@@ -1504,7 +1523,12 @@
                         if (this._domini.length == 1) {
                             formValues.dominio = this._domini[0].value;
                         }
-                        this._submit.emit({ numeroAvviso: formValues.avviso, dominio: formValues.dominio });
+                        /** @type {?} */
+                        var _event = { numeroAvviso: formValues.avviso, dominio: formValues.dominio };
+                        if (this._recaptchaSiteKey) {
+                            _event['recaptcha'] = formValues.recaptcha;
+                        }
+                        this._submit.emit(_event);
                     }
                     catch (error) {
                         console.log(error);
@@ -1614,7 +1638,7 @@
         PayCardComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'link-pay-card',
-                        template: "<div class=\"card rounded-0 border-0 bg-secondary-text-color primary-text-color fs-1 fw-400\">\n  <div class=\"card-body p-3\">\n    <button mat-icon-button class=\"close-icon secondary-text-color\" *ngIf=\"_enableScanner\" (click)=\"_closeScan()\">\n      <mat-icon>close</mat-icon>\n    </button>\n    <h5 class=\"d-block card-title text-uppercase m-0 fw-600 fs-125 secondary-text-color {{_enableScanner?'pr-5':''}}\">{{_pcl?.titolo}}</h5>\n    <p class=\"card-text py-4 fw-400\">{{_pcl?.note}}</p>\n    <div class=\"d-flex flex-column align-items-center\" *ngIf=\"_enableScanner\">\n      <zxing-scanner #zxing [class.zxing-scanned]=\"_gotScan\"\n                     [scannerEnabled]=\"_scannerIsRunning\"\n                     (camerasFound)=\"camerasFoundHandler($event)\"\n                     (scanSuccess)=\"scanSuccessHandler($event)\"\n                     (scanError)=\"scanErrorHandler($event)\"></zxing-scanner>\n      <mat-form-field class=\"d-block w-100\" *ngIf=\"_availableDevices.length != 0 && _enableScanner\">\n        <mat-select [placeholder]=\"_pcl?.payCardForm?.fotocamera\" [(value)]=\"_desiredDevice.deviceId\"\n                    (selectionChange)=\"onDeviceSelectChange($event)\">\n          <mat-option *ngIf=\"!_availableDevices\" value=\"\">No Camera</mat-option>\n          <mat-option *ngFor=\"let device of _availableDevices\" [value]=\"device.deviceId\">\n            {{device.label}}\n          </mat-option>\n        </mat-select>\n      </mat-form-field>\n    </div>\n    <div class=\"d-block\" *ngIf=\"!_enableScanner\">\n      <form [formGroup]=\"_fg\" (ngSubmit)=\"_onSubmit(_fg.value)\">\n        <mat-form-field class=\"d-block\">\n          <input matInput [placeholder]=\"_pcl?.payCardForm?.avviso\" name=\"avviso\" [formControlName]=\"'avviso'\" required>\n          <button matSuffix mat-icon-button type=\"button\" (click)=\"_onScan($event)\">\n            <mat-icon class=\"action\">photo_camera</mat-icon>\n          </button>\n          <mat-error *ngIf=\"_avviso.errors && _avviso.errors['required']\">\n            {{_avviso.errors['message']}}\n          </mat-error>\n        </mat-form-field>\n        <p class=\"mb-3 mat-error fs-75\" *ngIf=\"_noDomain && _dominio && _dominio.errors\">{{_dominio.errors['message']}}</p>\n        <mat-form-field class=\"d-block\" *ngIf=\"_domini.length > 1\">\n          <input matInput [placeholder]=\"_pcl?.payCardForm?.creditore\" name=\"dominio\" [formControl]=\"_dominio\"\n                 [matAutocomplete]=\"auto\" [required]=\"_domini.length > 1\">\n          <mat-icon matSuffix>arrow_drop_down</mat-icon>\n          <mat-autocomplete #auto=\"matAutocomplete\">\n            <mat-option *ngFor=\"let dominio of _filtered | async\" [value]=\"dominio.value\">\n              {{dominio.label}} - ({{dominio.value}})\n            </mat-option>\n          </mat-autocomplete>\n          <mat-error *ngIf=\"_dominio?.errors && !_noDomain\">\n            {{_dominio?.errors['message']}}\n          </mat-error>\n        </mat-form-field>\n        <button mat-flat-button class=\"mt-3 fw-600 fs-875\" [disabled]=\"!_fg.valid\">{{_pcl?.payCardForm?.submit}}</button>\n      </form>\n    </div>\n  </div>\n</div>\n",
+                        template: "<div class=\"card rounded-0 border-0 bg-secondary-text-color primary-text-color fs-1 fw-400\">\n  <div class=\"card-body p-3\">\n    <button mat-icon-button class=\"close-icon secondary-text-color\" *ngIf=\"_enableScanner\" (click)=\"_closeScan()\">\n      <mat-icon>close</mat-icon>\n    </button>\n    <h5 class=\"d-block card-title text-uppercase m-0 fw-600 fs-125 secondary-text-color {{_enableScanner?'pr-5':''}}\">{{_pcl?.titolo}}</h5>\n    <p class=\"card-text py-4 fw-400\">{{_pcl?.note}}</p>\n    <div class=\"d-flex flex-column align-items-center\" *ngIf=\"_enableScanner\">\n      <zxing-scanner #zxing [class.zxing-scanned]=\"_gotScan\"\n                     [scannerEnabled]=\"_scannerIsRunning\"\n                     (camerasFound)=\"camerasFoundHandler($event)\"\n                     (scanSuccess)=\"scanSuccessHandler($event)\"\n                     (scanError)=\"scanErrorHandler($event)\"></zxing-scanner>\n      <mat-form-field class=\"d-block w-100\" *ngIf=\"_availableDevices.length != 0 && _enableScanner\">\n        <mat-select [placeholder]=\"_pcl?.payCardForm?.fotocamera\" [(value)]=\"_desiredDevice.deviceId\"\n                    (selectionChange)=\"onDeviceSelectChange($event)\">\n          <mat-option *ngIf=\"!_availableDevices\" value=\"\">No Camera</mat-option>\n          <mat-option *ngFor=\"let device of _availableDevices\" [value]=\"device.deviceId\">\n            {{device.label}}\n          </mat-option>\n        </mat-select>\n      </mat-form-field>\n    </div>\n    <div class=\"d-block\" *ngIf=\"!_enableScanner\">\n      <form [formGroup]=\"_fg\" (ngSubmit)=\"_onSubmit(_fg.value)\">\n        <mat-form-field class=\"d-block\">\n          <input matInput [placeholder]=\"_pcl?.payCardForm?.avviso\" name=\"avviso\" [formControlName]=\"'avviso'\" required>\n          <button matSuffix mat-icon-button type=\"button\" (click)=\"_onScan($event)\">\n            <mat-icon class=\"action\">photo_camera</mat-icon>\n          </button>\n          <mat-error *ngIf=\"_avviso.errors && _avviso.errors['required']\">\n            {{_avviso.errors['message']}}\n          </mat-error>\n        </mat-form-field>\n        <p class=\"mb-3 mat-error fs-75\" *ngIf=\"_noDomain && _dominio && _dominio.errors\">{{_dominio.errors['message']}}</p>\n        <mat-form-field class=\"d-block\" *ngIf=\"_domini.length > 1\">\n          <input matInput [placeholder]=\"_pcl?.payCardForm?.creditore\" name=\"dominio\" [formControl]=\"_dominio\"\n                 [matAutocomplete]=\"auto\" [required]=\"_domini.length > 1\">\n          <mat-icon matSuffix>arrow_drop_down</mat-icon>\n          <mat-autocomplete #auto=\"matAutocomplete\">\n            <mat-option *ngFor=\"let dominio of _filtered | async\" [value]=\"dominio.value\">\n              {{dominio.label}} - ({{dominio.value}})\n            </mat-option>\n          </mat-autocomplete>\n          <mat-error *ngIf=\"_dominio?.errors && !_noDomain\">\n            {{_dominio?.errors['message']}}\n          </mat-error>\n        </mat-form-field>\n        <link-recaptcha #linkRecaptcha [recaptcha-language]=\"_recaptchaLanguage\" [recaptcha-site-key]=\"_recaptchaSiteKey\"></link-recaptcha>\n        <button mat-flat-button class=\"mt-3 fw-600 fs-875\" [disabled]=\"!_fg.valid\">{{_pcl?.payCardForm?.submit}}</button>\n      </form>\n    </div>\n  </div>\n</div>\n",
                         styles: [":host{position:relative;display:block;font-family:'Titillium Web',sans-serif;font-size:1rem;box-shadow:0 1px 2px rgba(33,33,33,.16)}.close-icon{position:absolute;top:.5rem;right:.5rem}zxing-scanner{max-width:196px;height:196px;margin-bottom:2rem;overflow:hidden;border:1px solid #ccc}.zxing-scanned{border:1px solid rgba(0,204,0,1)}"]
                     }] }
         ];
@@ -1622,8 +1646,11 @@
         PayCardComponent.ctorParameters = function () { return []; };
         PayCardComponent.propDecorators = {
             scanner: [{ type: core.ViewChild, args: ['zxing',] }],
+            _linkRecaptcha: [{ type: core.ViewChild, args: ['linkRecaptcha',] }],
             _pcl: [{ type: core.Input, args: ['localization-data',] }],
             _domini: [{ type: core.Input, args: ['domini',] }],
+            _recaptchaSiteKey: [{ type: core.Input, args: ['recaptcha-site-key',] }],
+            _recaptchaLanguage: [{ type: core.Input, args: ['recaptcha-language',] }],
             _submit: [{ type: core.Output, args: ['on-submit',] }]
         };
         return PayCardComponent;
@@ -1745,8 +1772,11 @@
              */function (value) {
                 return value;
             });
+            this._recaptchaSiteKey = '';
+            this._recaptchaLanguage = '';
             this._onSubmit = new core.EventEmitter(null);
             this._actionClose = new core.EventEmitter(null);
+            this._recaptcha = new forms.FormControl('', forms.Validators.required);
             this._totale = 0;
             this._formInvalid = true;
             this._fg = new forms.FormGroup({
@@ -1761,6 +1791,17 @@
          * @return {?}
          */
             function () {
+            };
+        /**
+         * @return {?}
+         */
+        AvvisoPagamentoComponent.prototype.ngAfterViewInit = /**
+         * @return {?}
+         */
+            function () {
+                if (this._recaptchaSiteKey && !this._fg.controls['recaptcha']) {
+                    this._fg.addControl('recaptcha', this._recaptcha);
+                }
             };
         /**
          * @param {?} changes
@@ -1803,6 +1844,9 @@
          */
             function () {
                 this._formInvalid = !this._fg.valid;
+                if (this._linkRecaptcha && this._fg.controls['recaptcha']) {
+                    this._fg.controls['recaptcha'].setValue(this._linkRecaptcha.recaptchaResponse());
+                }
             };
         /**
          * @param {?} form
@@ -1893,13 +1937,14 @@
         AvvisoPagamentoComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'link-avviso-pagamento',
-                        template: "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"col-12 px-0\">\n      <h1 class=\"m-0 pb-4 fs-2 fw-700\" [matTooltip]=\"_ld?.titolo\">{{_ld?.titolo}}</h1>\n    </div>\n    <div class=\"col-12 px-0\" *ngIf=\"_ld.note\">\n      <p class=\"py-3 fs-1 fw-400 primary-text-color\" [matTooltip]=\"_ld?.note\">{{_ld?.note}}</p>\n    </div>\n    <div class=\"col-12 px-0\">\n      <!--link-featured-item *ngFor=\"let _infoPayment of _payments\" [item-info]=\"_infoPayment\" [trim-icon]=\"true\"></link-featured-item-->\n      <link-featured-receipt-item *ngFor=\"let _infoPayment of _payments\" [item-info]=\"_infoPayment\" [trim-icon]=\"true\"></link-featured-receipt-item>\n      <div class=\"row border-top rounded-0 mx-0 mt-3 pt-4 primary-border\" *ngIf=\"_payments.length > 1\">\n        <div class=\"col-6\">\n          <p class=\"card-text fw-600 fs-125\">{{_ld?.importo}}</p>\n        </div>\n        <div class=\"col-6 text-right\">\n          <p class=\"card-text fw-600 fs-125\">{{_currencyFormat(_totale)}}</p>\n        </div>\n      </div>\n      <button mat-flat-button class=\"my-3 fw-600 fs-875\" (click)=\"_closeAction()\" type=\"button\" *ngIf=\"_preventSubmit && _showCloseButton\">{{_ld?.close}}</button>\n      <div class=\"col-12 px-0\" *ngIf=\"!_preventSubmit\">\n        <p class=\"text-uppercase border-top rounded-0 mt-4 py-3 primary-border secondary-text-color fs-125 fw-600\">{{_ld?.sottotitolo}}</p>\n        <p class=\"py-3 mb-4 fs-1 fw-400 primary-text-color\">{{_ld?.dettaglio}}</p>\n        <form [formGroup]=\"_fg\" (ngSubmit)=\"_onFormSubmit(_fg)\">\n          <div class=\"row mx-0 mb-4\" *ngIf=\"_showFields\">\n            <div class=\"col-12 col-sm-6 px-0 pr-sm-3\">\n              <mat-form-field class=\"w-100\">\n                <input matInput [placeholder]=\"_ld?.email\" formControlName=\"email\" name=\"email\" required>\n              </mat-form-field>\n            </div>\n            <div class=\"col-12 col-sm-6 px-0 pl-sm-3\">\n              <mat-form-field class=\"w-100\">\n                <input matInput [placeholder]=\"_ld?.confermaEmail\" formControlName=\"confermaEmail\" name=\"confermaEmail\" required>\n                <mat-error *ngIf=\"_fg.errors\">\n                  {{_fg.errors['message']}}\n                </mat-error>\n              </mat-form-field>\n            </div>\n          </div>\n          <div class=\"d-flex\">\n            <button mat-flat-button class=\"mr-3 fw-600 fs-875\" type=\"submit\" [disabled]=\"_formInvalid\">{{_ld?.submit}}</button>\n            <button mat-flat-button class=\"fw-600 fs-875 white-button\" type=\"reset\" *ngIf=\"_showReset\">{{_ld?.cancel}}</button>\n          </div>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n",
+                        template: "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"col-12 px-0\">\n      <h1 class=\"m-0 pb-4 fs-2 fw-700\" [matTooltip]=\"_ld?.titolo\">{{_ld?.titolo}}</h1>\n    </div>\n    <div class=\"col-12 px-0\" *ngIf=\"_ld.note\">\n      <p class=\"py-3 fs-1 fw-400 primary-text-color\" [matTooltip]=\"_ld?.note\">{{_ld?.note}}</p>\n    </div>\n    <div class=\"col-12 px-0\">\n      <!--link-featured-item *ngFor=\"let _infoPayment of _payments\" [item-info]=\"_infoPayment\" [trim-icon]=\"true\"></link-featured-item-->\n      <link-featured-receipt-item *ngFor=\"let _infoPayment of _payments\" [item-info]=\"_infoPayment\" [trim-icon]=\"true\"></link-featured-receipt-item>\n      <div class=\"row border-top rounded-0 mx-0 mt-3 pt-4 primary-border\" *ngIf=\"_payments.length > 1\">\n        <div class=\"col-6\">\n          <p class=\"card-text fw-600 fs-125\">{{_ld?.importo}}</p>\n        </div>\n        <div class=\"col-6 text-right\">\n          <p class=\"card-text fw-600 fs-125\">{{_currencyFormat(_totale)}}</p>\n        </div>\n      </div>\n      <button mat-flat-button class=\"my-3 fw-600 fs-875\" (click)=\"_closeAction()\" type=\"button\" *ngIf=\"_preventSubmit && _showCloseButton\">{{_ld?.close}}</button>\n      <div class=\"col-12 px-0\" *ngIf=\"!_preventSubmit\">\n        <p class=\"text-uppercase border-top rounded-0 mt-4 py-3 primary-border secondary-text-color fs-125 fw-600\">{{_ld?.sottotitolo}}</p>\n        <p class=\"py-3 mb-4 fs-1 fw-400 primary-text-color\">{{_ld?.dettaglio}}</p>\n        <form [formGroup]=\"_fg\" (ngSubmit)=\"_onFormSubmit(_fg)\">\n          <div class=\"row mx-0 mb-4\" *ngIf=\"_showFields\">\n            <div class=\"col-12 col-sm-6 px-0 pr-sm-3\">\n              <mat-form-field class=\"w-100\">\n                <input matInput [placeholder]=\"_ld?.email\" formControlName=\"email\" name=\"email\" required>\n              </mat-form-field>\n            </div>\n            <div class=\"col-12 col-sm-6 px-0 pl-sm-3\">\n              <mat-form-field class=\"w-100\">\n                <input matInput [placeholder]=\"_ld?.confermaEmail\" formControlName=\"confermaEmail\" name=\"confermaEmail\" required>\n                <mat-error *ngIf=\"_fg.errors\">\n                  {{_fg.errors['message']}}\n                </mat-error>\n              </mat-form-field>\n            </div>\n          </div>\n          <link-recaptcha class=\"mb-4\" #linkRecaptcha [recaptcha-language]=\"_recaptchaLanguage\" [recaptcha-site-key]=\"_recaptchaSiteKey\"></link-recaptcha>\n          <div class=\"d-flex\">\n            <button mat-flat-button class=\"mr-3 fw-600 fs-875\" type=\"submit\" [disabled]=\"_formInvalid\">{{_ld?.submit}}</button>\n            <button mat-flat-button class=\"fw-600 fs-875 white-button\" type=\"reset\" *ngIf=\"_showReset\">{{_ld?.cancel}}</button>\n          </div>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n",
                         styles: [":host{position:relative;display:block;font-family:'Titillium Web',sans-serif;font-size:1rem}"]
                     }] }
         ];
         /** @nocollapse */
         AvvisoPagamentoComponent.ctorParameters = function () { return []; };
         AvvisoPagamentoComponent.propDecorators = {
+            _linkRecaptcha: [{ type: core.ViewChild, args: ['linkRecaptcha',] }],
             _ld: [{ type: core.Input, args: ['localization-data',] }],
             _showFields: [{ type: core.Input, args: ['show-fields-form',] }],
             _showReset: [{ type: core.Input, args: ['show-reset-button',] }],
@@ -1907,6 +1952,8 @@
             _showCloseButton: [{ type: core.Input, args: ['close-action-button',] }],
             _payments: [{ type: core.Input, args: ['payments',] }],
             _currencyFormat: [{ type: core.Input, args: ['currency-format',] }],
+            _recaptchaSiteKey: [{ type: core.Input, args: ['recaptcha-site-key',] }],
+            _recaptchaLanguage: [{ type: core.Input, args: ['recaptcha-language',] }],
             _onSubmit: [{ type: core.Output, args: ['on-submit',] }],
             _actionClose: [{ type: core.Output, args: ['on-action-close',] }]
         };
@@ -1922,8 +1969,11 @@
             this._ld = new AlertLocalization();
             this._showButton = true;
             this._showCloseButton = false;
+            this._recaptchaSiteKey = '';
+            this._recaptchaLanguage = '';
             this._action = new core.EventEmitter(null);
             this._actionClose = new core.EventEmitter(null);
+            this._enableByRecaptcha = false;
         }
         /**
          * @return {?}
@@ -1936,11 +1986,27 @@
         /**
          * @return {?}
          */
+        AlertPagamentoComponent.prototype.ngAfterContentChecked = /**
+         * @return {?}
+         */
+            function () {
+                if (this._linkRecaptcha) {
+                    this._enableByRecaptcha = !!(!this._recaptchaSiteKey || (this._recaptchaSiteKey && this._linkRecaptcha.recaptchaResponse()));
+                }
+            };
+        /**
+         * @return {?}
+         */
         AlertPagamentoComponent.prototype._alertAction = /**
          * @return {?}
          */
             function () {
-                this._action.emit();
+                /** @type {?} */
+                var _recaptcha = null;
+                if (this._recaptchaSiteKey && this._linkRecaptcha) {
+                    _recaptcha = this._linkRecaptcha.recaptchaResponse();
+                }
+                this._action.emit({ recaptcha: _recaptcha });
             };
         /**
          * @return {?}
@@ -1954,20 +2020,165 @@
         AlertPagamentoComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'link-alert-pagamento',
-                        template: "<ng-content class=\"w-100\" select=\"[alert-title]\"></ng-content>\n<div class=\"row mx-0\">\n  <div class=\"col-12 px-0\">\n    <ng-content select=\"[alert-body]\"></ng-content>\n    <div class=\"d-flex flex-wrap\">\n      <button mat-flat-button class=\"mb-3 mr-3 fw-600 fs-875\" (click)=\"_alertAction()\"\n              type=\"button\" *ngIf=\"_showButton\">{{_ld?.submit}}</button>\n      <button mat-flat-button class=\"mb-3 mr-3 fw-600 fs-875\" (click)=\"_closeAction()\"\n              type=\"button\" *ngIf=\"_showCloseButton\">{{_ld?.close}}</button>\n    </div>\n  </div>\n</div>\n",
+                        template: "<ng-content class=\"w-100\" select=\"[alert-title]\"></ng-content>\n<div class=\"row mx-0\">\n  <div class=\"col-12 px-0\">\n    <ng-content select=\"[alert-body]\"></ng-content>\n    <link-recaptcha class=\"mb-4\" #linkRecaptcha [recaptcha-language]=\"_recaptchaLanguage\" [recaptcha-site-key]=\"_recaptchaSiteKey\"></link-recaptcha>\n    <div class=\"d-flex flex-wrap\">\n      <button mat-flat-button class=\"mb-3 mr-3 fw-600 fs-875\" (click)=\"_alertAction()\"\n              type=\"button\" *ngIf=\"_showButton\" [disabled]=\"!_enableByRecaptcha\">{{_ld?.submit}}</button>\n      <button mat-flat-button class=\"mb-3 mr-3 fw-600 fs-875\" (click)=\"_closeAction()\"\n              type=\"button\" *ngIf=\"_showCloseButton\">{{_ld?.close}}</button>\n    </div>\n  </div>\n</div>\n",
                         styles: [":host{position:relative;display:block;font-family:'Titillium Web',sans-serif;font-size:1rem}"]
                     }] }
         ];
         /** @nocollapse */
         AlertPagamentoComponent.ctorParameters = function () { return []; };
         AlertPagamentoComponent.propDecorators = {
+            _linkRecaptcha: [{ type: core.ViewChild, args: ['linkRecaptcha',] }],
             _ld: [{ type: core.Input, args: ['localization-data',] }],
             _showButton: [{ type: core.Input, args: ['action-button',] }],
             _showCloseButton: [{ type: core.Input, args: ['close-action-button',] }],
+            _recaptchaSiteKey: [{ type: core.Input, args: ['recaptcha-site-key',] }],
+            _recaptchaLanguage: [{ type: core.Input, args: ['recaptcha-language',] }],
             _action: [{ type: core.Output, args: ['on-action',] }],
             _actionClose: [{ type: core.Output, args: ['on-action-close',] }]
         };
         return AlertPagamentoComponent;
+    }());
+
+    /**
+     * @fileoverview added by tsickle
+     * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
+    var RecaptchaComponent = /** @class */ (function () {
+        function RecaptchaComponent() {
+            this._recaptchaSiteKey = '';
+            this._recaptchaLanguage = '';
+            this._recaptchaId = '';
+            this._recaptchaScriptURL = 'https://www.google.com/recaptcha/api.js?render=explicit';
+        }
+        /**
+         * @return {?}
+         */
+        RecaptchaComponent.prototype.ngOnInit = /**
+         * @return {?}
+         */
+            function () {
+            };
+        /**
+         * @param {?} changes
+         * @return {?}
+         */
+        RecaptchaComponent.prototype.ngOnChanges = /**
+         * @param {?} changes
+         * @return {?}
+         */
+            function (changes) {
+                if (changes._recaptchaLanguage && changes._recaptchaLanguage.previousValue) {
+                    this._reloadRecaptcha();
+                }
+            };
+        /**
+         * @return {?}
+         */
+        RecaptchaComponent.prototype.ngAfterViewInit = /**
+         * @return {?}
+         */
+            function () {
+                this._reloadRecaptcha();
+            };
+        /**
+         * @return {?}
+         */
+        RecaptchaComponent.prototype.recaptchaResponse = /**
+         * @return {?}
+         */
+            function () {
+                if (this._recaptchaSiteKey && window['grecaptcha'] && window['grecaptcha'].getResponse) {
+                    /** @type {?} */
+                    var gvalue = '';
+                    try {
+                        gvalue = window['grecaptcha'].getResponse();
+                    }
+                    catch (e) {
+                        if (e.message.indexOf('No reCAPTCHA clients exist.') !== -1 ||
+                            e.message.indexOf('reCAPTCHA client element has been removed') !== -1) {
+                            window['grecaptcha'].render(this._recaptchaId, { 'sitekey': this._recaptchaSiteKey });
+                        }
+                    }
+                    return gvalue || '';
+                }
+            };
+        /**
+         * @return {?}
+         */
+        RecaptchaComponent.prototype._reloadRecaptcha = /**
+         * @return {?}
+         */
+            function () {
+                this._resetRecaptcha();
+                this._initRecaptcha();
+            };
+        /**
+         * @return {?}
+         */
+        RecaptchaComponent.prototype._resetRecaptcha = /**
+         * @return {?}
+         */
+            function () {
+                if (this._recaptchaSiteKey) {
+                    this._pseudoRandomId();
+                    /** @type {?} */
+                    var span = document.querySelector('#portalRecaptchaV2');
+                    span['innerHTML'] = "<div id=\"" + this._recaptchaId + "\"></div>";
+                    document.querySelectorAll('script[src*="recaptcha"]').forEach(( /**
+                     * @param {?} s
+                     * @return {?}
+                     */function (s) {
+                        document.head.removeChild(s);
+                    }));
+                    delete window['grecaptcha'];
+                }
+            };
+        /**
+         * @return {?}
+         */
+        RecaptchaComponent.prototype._initRecaptcha = /**
+         * @return {?}
+         */
+            function () {
+                if (this._recaptchaSiteKey) {
+                    if (!window['grecaptcha']) {
+                        /** @type {?} */
+                        var rs = document.createElement('script');
+                        /** @type {?} */
+                        var _url = this._recaptchaScriptURL;
+                        if (this._recaptchaLanguage) {
+                            _url += '&hl=' + this._recaptchaLanguage;
+                        }
+                        rs.src = _url;
+                        rs.async = true;
+                        rs.defer = true;
+                        document.head.appendChild(rs);
+                    }
+                }
+            };
+        /**
+         * @return {?}
+         */
+        RecaptchaComponent.prototype._pseudoRandomId = /**
+         * @return {?}
+         */
+            function () {
+                this._recaptchaId = 'gRecaptcha_' + new Date().valueOf().toString();
+            };
+        RecaptchaComponent.decorators = [
+            { type: core.Component, args: [{
+                        selector: 'link-recaptcha',
+                        template: "<span id=\"portalRecaptchaV2\"></span>\n",
+                        styles: [":host{display:block}"]
+                    }] }
+        ];
+        /** @nocollapse */
+        RecaptchaComponent.ctorParameters = function () { return []; };
+        RecaptchaComponent.propDecorators = {
+            _recaptchaSiteKey: [{ type: core.Input, args: ['recaptcha-site-key',] }],
+            _recaptchaLanguage: [{ type: core.Input, args: ['recaptcha-language',] }]
+        };
+        return RecaptchaComponent;
     }());
 
     /**
@@ -1990,7 +2201,8 @@
                             PayCardComponent,
                             LoginCardComponent,
                             AvvisoPagamentoComponent,
-                            AlertPagamentoComponent
+                            AlertPagamentoComponent,
+                            RecaptchaComponent
                         ],
                         imports: [
                             platformBrowser.BrowserModule,
@@ -2078,6 +2290,7 @@
     exports.LoginCardComponent = LoginCardComponent;
     exports.AvvisoPagamentoComponent = AvvisoPagamentoComponent;
     exports.AlertPagamentoComponent = AlertPagamentoComponent;
+    exports.RecaptchaComponent = RecaptchaComponent;
     exports.ɵa = SwipeDirective;
 
     Object.defineProperty(exports, '__esModule', { value: true });

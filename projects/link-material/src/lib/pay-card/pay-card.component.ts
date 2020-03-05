@@ -1,10 +1,11 @@
-import { AfterContentChecked, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Dominio } from '../classes/dominio';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 import { PayCardLocalization } from '../classes/localization/pay-card-localization';
+import { RecaptchaComponent } from '../recaptcha/recaptcha.component';
 
 declare let jQuery: any;
 
@@ -13,11 +14,14 @@ declare let jQuery: any;
   templateUrl: './pay-card.component.html',
   styleUrls: ['./pay-card.component.css']
 })
-export class PayCardComponent implements AfterContentChecked, OnChanges {
+export class PayCardComponent implements AfterContentChecked, AfterViewInit, OnChanges {
   @ViewChild('zxing') scanner: ZXingScannerComponent;
+  @ViewChild('linkRecaptcha') _linkRecaptcha: RecaptchaComponent;
 
   @Input('localization-data') _pcl: PayCardLocalization = new PayCardLocalization();
   @Input('domini') _domini: Dominio[] = [];
+  @Input('recaptcha-site-key') _recaptchaSiteKey: string = '';
+  @Input('recaptcha-language') _recaptchaLanguage: string = '';
 
   @Output('on-submit') _submit: EventEmitter<any> = new EventEmitter();
 
@@ -25,6 +29,7 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
   _filtered: Observable<Dominio[]>;
   _dominio: FormControl = new FormControl('', this._availableInListValidator(this._domini));
   _avviso: FormControl = new FormControl('', Validators.required);
+  _recaptcha: FormControl = new FormControl('', Validators.required);
 
   _scannerIsRunning: boolean = false;
   _enableScanner: boolean = false;
@@ -35,7 +40,6 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
   _availableDevices: any[] = [];
 
   constructor() {
-
     this._fg = new FormGroup({});
     this._fg.addControl('dominio', this._dominio);
     this._fg.addControl('avviso', this._avviso);
@@ -47,9 +51,17 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
       );
   }
 
+  ngAfterViewInit() {
+    if(this._recaptchaSiteKey && !this._fg.controls['recaptcha']) {
+      this._fg.addControl('recaptcha', this._recaptcha);
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges) {
-    if(changes && changes._domini) {
-      this._dominio.setValidators(this._availableInListValidator(changes._domini.currentValue));
+    if(changes) {
+      if(changes._domini) {
+        this._dominio.setValidators(this._availableInListValidator(changes._domini.currentValue));
+      }
     }
   }
 
@@ -57,6 +69,9 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
     if(this._dominio && this._domini) {
       this._noDomain = (this._dominio.errors && this._domini.length <= 1);
       this._dominio.updateValueAndValidity({ onlySelf: true });
+    }
+    if(this._linkRecaptcha && this._fg.controls['recaptcha']) {
+      this._fg.controls['recaptcha'].setValue(this._linkRecaptcha.recaptchaResponse());
     }
   }
 
@@ -108,7 +123,11 @@ export class PayCardComponent implements AfterContentChecked, OnChanges {
         if (this._domini.length == 1) {
           formValues.dominio = this._domini[0].value;
         }
-        this._submit.emit({ numeroAvviso: formValues.avviso, dominio: formValues.dominio });
+        const _event = { numeroAvviso: formValues.avviso, dominio: formValues.dominio };
+        if(this._recaptchaSiteKey) {
+         _event['recaptcha'] = formValues.recaptcha;
+        }
+        this._submit.emit(_event);
       } catch (error) {
         console.log(error);
       }

@@ -24,7 +24,7 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
   protected _pcld: PayCardLocalization = new PayCardLocalization();
   protected _lld: LoginLocalization = new LoginLocalization();
 
-  constructor(public router: Router, public pay: PayService, private translate: TranslateService) {
+  constructor(public router: Router, public pay: PayService, protected translate: TranslateService) {
     this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
       // console.log('Accesso language changed', event);
       this.translateDynamicObject();
@@ -50,10 +50,12 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
   ngAfterViewInit() {
     if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
       if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio) {
-        this._procediHandler({
-          numeroAvviso: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero,
-          dominio: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio
-        });
+        if(!PayService.UUID_CHECK || (PayService.UUID_CHECK && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID)) {
+          this._procediHandler({
+            numeroAvviso: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero,
+            dominio: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Dominio
+          });
+        }
       }
     }
   }
@@ -95,8 +97,17 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
     this.pay.AVVISO_PAGAMENTO.Numero = event.numeroAvviso;
     this.pay.AVVISO_PAGAMENTO.Dominio = event.dominio;
 
+    let qRobot = '';
+    if(PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
+      qRobot = '?UUID=' + PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO['UUID'];
+      PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = null;
+    }
+    if(!qRobot && event.recaptcha) {
+      qRobot = '?gRecaptchaResponse=' + event.recaptcha;
+    }
+
     this.pay.updateSpinner(true);
-    this.pay.richiestaAvviso(this.pay.AVVISO_PAGAMENTO.Dominio, this.pay.AVVISO_PAGAMENTO.Numero).subscribe(
+    this.pay.richiestaAvviso(this.pay.AVVISO_PAGAMENTO.Dominio, this.pay.AVVISO_PAGAMENTO.Numero, true, qRobot).subscribe(
       (result) => {
         if(result.body) {
           const _response = result.body;
@@ -123,7 +134,7 @@ export class AccessoComponent implements OnInit, AfterContentChecked, AfterViewI
               rawData: _response
             })
           ];
-          this.router.navigateByUrl('/pagamento');
+          this.router.navigateByUrl('/pagamento' + PayService.BY_SWITCH);
         }
         this.pay.updateSpinner(false);
       },

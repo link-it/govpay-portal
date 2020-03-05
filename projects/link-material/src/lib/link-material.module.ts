@@ -24,6 +24,7 @@ import { PayCardComponent } from './pay-card/pay-card.component';
 import { LoginCardComponent } from './login-card/login-card.component';
 import { AvvisoPagamentoComponent } from './avviso-pagamento/avviso-pagamento.component';
 import { AlertPagamentoComponent } from './alert-pagamento/alert-pagamento.component';
+import { RecaptchaComponent } from './recaptcha/recaptcha.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { AlertPagamentoComponent } from './alert-pagamento/alert-pagamento.compo
     PayCardComponent,
     LoginCardComponent,
     AvvisoPagamentoComponent,
-    AlertPagamentoComponent
+    AlertPagamentoComponent,
+    RecaptchaComponent
   ],
   imports: [
     BrowserModule,

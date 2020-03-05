@@ -46,6 +46,7 @@
             {{_dominio?.errors['message']}}
           </mat-error>
         </mat-form-field>
+        <link-recaptcha #linkRecaptcha [recaptcha-language]="_recaptchaLanguage" [recaptcha-site-key]="_recaptchaSiteKey"></link-recaptcha>
         <button mat-flat-button class="mt-3 fw-600 fs-875" [disabled]="!_fg.valid">{{_pcl?.payCardForm?.submit}}</button>
       </form>
     </div>
