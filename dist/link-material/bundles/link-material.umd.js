@@ -1969,6 +1969,7 @@
             this._ld = new AlertLocalization();
             this._showButton = true;
             this._showCloseButton = false;
+            this._disableRecaptcha = false;
             this._recaptchaSiteKey = '';
             this._recaptchaLanguage = '';
             this._action = new core.EventEmitter(null);
@@ -1991,7 +1992,7 @@
          */
             function () {
                 if (this._linkRecaptcha) {
-                    this._enableByRecaptcha = !!(!this._recaptchaSiteKey || (this._recaptchaSiteKey && this._linkRecaptcha.recaptchaResponse()));
+                    this._enableByRecaptcha = this._disableRecaptcha || !!(!this._recaptchaSiteKey || (this._recaptchaSiteKey && this._linkRecaptcha.recaptchaResponse()));
                 }
             };
         /**
@@ -2020,7 +2021,7 @@
         AlertPagamentoComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'link-alert-pagamento',
-                        template: "<ng-content class=\"w-100\" select=\"[alert-title]\"></ng-content>\n<div class=\"row mx-0\">\n  <div class=\"col-12 px-0\">\n    <ng-content select=\"[alert-body]\"></ng-content>\n    <link-recaptcha class=\"mb-4\" #linkRecaptcha [recaptcha-language]=\"_recaptchaLanguage\" [recaptcha-site-key]=\"_recaptchaSiteKey\"></link-recaptcha>\n    <div class=\"d-flex flex-wrap\">\n      <button mat-flat-button class=\"mb-3 mr-3 fw-600 fs-875\" (click)=\"_alertAction()\"\n              type=\"button\" *ngIf=\"_showButton\" [disabled]=\"!_enableByRecaptcha\">{{_ld?.submit}}</button>\n      <button mat-flat-button class=\"mb-3 mr-3 fw-600 fs-875\" (click)=\"_closeAction()\"\n              type=\"button\" *ngIf=\"_showCloseButton\">{{_ld?.close}}</button>\n    </div>\n  </div>\n</div>\n",
+                        template: "<ng-content class=\"w-100\" select=\"[alert-title]\"></ng-content>\n<div class=\"row mx-0\">\n  <div class=\"col-12 px-0\">\n    <ng-content select=\"[alert-body]\"></ng-content>\n    <link-recaptcha class=\"mb-4\" #linkRecaptcha [recaptcha-language]=\"_recaptchaLanguage\" [recaptcha-site-key]=\"_recaptchaSiteKey\"\n                    [disable-recaptcha]=\"_disableRecaptcha\"></link-recaptcha>\n    <div class=\"d-flex flex-wrap\">\n      <button mat-flat-button class=\"mb-3 mr-3 fw-600 fs-875\" (click)=\"_alertAction()\"\n              type=\"button\" *ngIf=\"_showButton\" [disabled]=\"!_enableByRecaptcha\">{{_ld?.submit}}</button>\n      <button mat-flat-button class=\"mb-3 mr-3 fw-600 fs-875\" (click)=\"_closeAction()\"\n              type=\"button\" *ngIf=\"_showCloseButton\">{{_ld?.close}}</button>\n    </div>\n  </div>\n</div>\n",
                         styles: [":host{position:relative;display:block;font-family:'Titillium Web',sans-serif;font-size:1rem}"]
                     }] }
         ];
@@ -2031,6 +2032,7 @@
             _ld: [{ type: core.Input, args: ['localization-data',] }],
             _showButton: [{ type: core.Input, args: ['action-button',] }],
             _showCloseButton: [{ type: core.Input, args: ['close-action-button',] }],
+            _disableRecaptcha: [{ type: core.Input, args: ['disable-recaptcha',] }],
             _recaptchaSiteKey: [{ type: core.Input, args: ['recaptcha-site-key',] }],
             _recaptchaLanguage: [{ type: core.Input, args: ['recaptcha-language',] }],
             _action: [{ type: core.Output, args: ['on-action',] }],
@@ -2045,6 +2047,7 @@
      */
     var RecaptchaComponent = /** @class */ (function () {
         function RecaptchaComponent() {
+            this._disableRecaptcha = false;
             this._recaptchaSiteKey = '';
             this._recaptchaLanguage = '';
             this._recaptchaId = '';
@@ -2087,20 +2090,23 @@
          * @return {?}
          */
             function () {
-                if (this._recaptchaSiteKey && window['grecaptcha'] && window['grecaptcha'].getResponse) {
+                if (!this._disableRecaptcha && this._recaptchaSiteKey && window['grecaptcha']) {
                     /** @type {?} */
                     var gvalue = '';
-                    try {
-                        gvalue = window['grecaptcha'].getResponse();
-                    }
-                    catch (e) {
-                        if (e.message.indexOf('No reCAPTCHA clients exist.') !== -1 ||
-                            e.message.indexOf('reCAPTCHA client element has been removed') !== -1) {
-                            window['grecaptcha'].render(this._recaptchaId, { 'sitekey': this._recaptchaSiteKey });
+                    if (window['grecaptcha'].getResponse) {
+                        try {
+                            gvalue = window['grecaptcha'].getResponse();
+                        }
+                        catch (e) {
+                            if (e.message.indexOf('No reCAPTCHA clients exist.') !== -1 ||
+                                e.message.indexOf('reCAPTCHA client element has been removed') !== -1) {
+                                window['grecaptcha'].render(this._recaptchaId, { 'sitekey': this._recaptchaSiteKey });
+                            }
                         }
                     }
-                    return gvalue || '';
+                    return gvalue || null;
                 }
+                return null;
             };
         /**
          * @return {?}
@@ -2119,7 +2125,7 @@
          * @return {?}
          */
             function () {
-                if (this._recaptchaSiteKey) {
+                if (!this._disableRecaptcha && this._recaptchaSiteKey) {
                     this._pseudoRandomId();
                     /** @type {?} */
                     var span = document.querySelector('#portalRecaptchaV2');
@@ -2140,7 +2146,7 @@
          * @return {?}
          */
             function () {
-                if (this._recaptchaSiteKey) {
+                if (!this._disableRecaptcha && this._recaptchaSiteKey) {
                     if (!window['grecaptcha']) {
                         /** @type {?} */
                         var rs = document.createElement('script');
@@ -2169,12 +2175,13 @@
             { type: core.Component, args: [{
                         selector: 'link-recaptcha',
                         template: "<span id=\"portalRecaptchaV2\"></span>\n",
-                        styles: [":host{display:block}"]
+                        styles: [":host{display:none}@media (min-width:280px){:host{display:block;-webkit-transform:scale(.68);transform:scale(.68);-webkit-transform-origin:0;transform-origin:0}}@media (min-width:380px) and (max-width:575px){:host{-webkit-transform:initial;transform:initial;-webkit-transform-origin:initial;transform-origin:initial}}@media (min-width:576px) and (max-width:767px){:host{-webkit-transform:scale(.68);transform:scale(.68);-webkit-transform-origin:0;transform-origin:0}}@media (min-width:768px){:host{-webkit-transform:scale(.98);transform:scale(.98);-webkit-transform-origin:0;transform-origin:0}}@media (min-width:992px){:host{-webkit-transform:initial;transform:initial;-webkit-transform-origin:initial;transform-origin:initial}}"]
                     }] }
         ];
         /** @nocollapse */
         RecaptchaComponent.ctorParameters = function () { return []; };
         RecaptchaComponent.propDecorators = {
+            _disableRecaptcha: [{ type: core.Input, args: ['disable-recaptcha',] }],
             _recaptchaSiteKey: [{ type: core.Input, args: ['recaptcha-site-key',] }],
             _recaptchaLanguage: [{ type: core.Input, args: ['recaptcha-language',] }]
         };

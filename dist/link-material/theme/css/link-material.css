@@ -7308,6 +7308,9 @@ textarea.cdk-textarea-autosize-measuring {
   .mat-pseudo-checkbox::after {
     color: #fafafa; }
 
+.mat-pseudo-checkbox-disabled {
+  color: #b0b0b0; }
+
 .mat-pseudo-checkbox-checked,
 .mat-pseudo-checkbox-indeterminate,
 .mat-accent .mat-pseudo-checkbox-checked,

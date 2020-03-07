@@ -17,6 +17,7 @@ export class AlertPagamentoComponent implements OnInit, AfterContentChecked {
   @Input('action-button') _showButton: boolean = true;
   @Input('close-action-button') _showCloseButton: boolean = false;
 
+  @Input('disable-recaptcha') _disableRecaptcha: boolean = false;
   @Input('recaptcha-site-key') _recaptchaSiteKey: string = '';
   @Input('recaptcha-language') _recaptchaLanguage: string = '';
 
@@ -32,7 +33,7 @@ export class AlertPagamentoComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked() {
     if(this._linkRecaptcha) {
-      this._enableByRecaptcha = !!(!this._recaptchaSiteKey || (this._recaptchaSiteKey && this._linkRecaptcha.recaptchaResponse()));
+      this._enableByRecaptcha = this._disableRecaptcha || !!(!this._recaptchaSiteKey || (this._recaptchaSiteKey && this._linkRecaptcha.recaptchaResponse()));
     }
   }
 

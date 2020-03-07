@@ -6,6 +6,7 @@ export declare class AlertPagamentoComponent implements OnInit, AfterContentChec
     _ld: AlertLocalization;
     _showButton: boolean;
     _showCloseButton: boolean;
+    _disableRecaptcha: boolean;
     _recaptchaSiteKey: string;
     _recaptchaLanguage: string;
     _action: EventEmitter<any>;

@@ -34,7 +34,9 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
     }
   };
 
-  @HostListener('window:resize') onResize() {}
+  @HostListener('window:resize') onResize() {
+    this._updateBodyPadding();
+  }
   @ViewChild('header', { read: ElementRef }) private _header: ElementRef;
   @ViewChild('header') private _headerComponent: HeaderComponent;
   @ViewChild('footer', { read: ElementRef }) private _footer: ElementRef;
@@ -70,22 +72,23 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
         this._globalContent.nativeElement.scrollTop = 0;
       }
     });
+
+    setInterval(() => {
+      // Cart fixed position behavior
+      this._shoppingList = document.querySelector('#shoppingList');
+      this._shoppingCart = document.querySelector('#shoppingCart');
+
+      this._hld.menu.account.name = PayService.User?PayService.User.anagrafica.anagrafica:'';
+      this._isLogged = this.pay.isAuthenticated();
+      this._isLoading = this.pay.spinner;
+      this._updateBodyPadding();
+    }, 250);
   }
 
   ngAfterViewInit() {
   }
 
   ngAfterViewChecked() {
-    this._updateBodyPadding();
-    // Cart fixed position behavior
-    this._shoppingList = document.querySelector('#shoppingList');
-    this._shoppingCart = document.querySelector('#shoppingCart');
-
-    setTimeout(() => {
-      this._hld.menu.account.name = PayService.User?PayService.User.anagrafica.anagrafica:'';
-      this._isLogged = this.pay.isAuthenticated();
-      this._isLoading = this.pay.spinner;
-    });
   }
 
   protected initLanguages() {
@@ -168,15 +171,11 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
   protected _updateBodyPadding() {
     if (this._header && this._globalContent) {
       this._globalContent.nativeElement.style.top = this._header.nativeElement.clientHeight + 'px';
-    }
-    this._updateFooter();
-  }
-
-  protected _updateFooter() {
-    if (this._header && this._footer) {
-      const _mt = this._header.nativeElement.getBoundingClientRect().top;
-      const _mh = window.innerHeight - (this._header.nativeElement.clientHeight + _mt  + this._footer.nativeElement.clientHeight);
-      this._rsec.nativeElement.style.minHeight = _mh>0?_mh + 'px':null;
+      if (this._footer) {
+        const _mt = this._header.nativeElement.getBoundingClientRect().top;
+        const _mh = window.innerHeight - (this._header.nativeElement.clientHeight + _mt + this._footer.nativeElement.clientHeight);
+        this._rsec.nativeElement.style.minHeight = _mh > 0?_mh + 'px':null;
+      }
     }
   }
 

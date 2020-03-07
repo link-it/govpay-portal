@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'link-recaptcha',
@@ -7,6 +7,7 @@ import { AfterContentChecked, AfterViewInit, Component, Input, OnChanges, OnInit
 })
 export class RecaptchaComponent implements OnInit, AfterViewInit, OnChanges {
 
+  @Input('disable-recaptcha') _disableRecaptcha: boolean = false;
   @Input('recaptcha-site-key') _recaptchaSiteKey: string = '';
   @Input('recaptcha-language') _recaptchaLanguage: string = '';
   _recaptchaId: string = '';
@@ -28,20 +29,22 @@ export class RecaptchaComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   recaptchaResponse() {
-    if(this._recaptchaSiteKey && window['grecaptcha'] && window['grecaptcha'].getResponse) {
+    if(!this._disableRecaptcha && this._recaptchaSiteKey && window['grecaptcha']) {
       let gvalue = '';
-      try {
-        gvalue = window['grecaptcha'].getResponse();
-      } catch(e) {
-        if(e.message.indexOf('No reCAPTCHA clients exist.') !== -1 ||
-          e.message.indexOf('reCAPTCHA client element has been removed') !== -1) {
-          window['grecaptcha'].render(this._recaptchaId, { 'sitekey': this._recaptchaSiteKey });
+      if(window['grecaptcha'].getResponse) {
+        try {
+          gvalue = window['grecaptcha'].getResponse();
+        } catch(e) {
+          if(e.message.indexOf('No reCAPTCHA clients exist.') !== -1 ||
+            e.message.indexOf('reCAPTCHA client element has been removed') !== -1) {
+            window['grecaptcha'].render(this._recaptchaId, { 'sitekey': this._recaptchaSiteKey });
+          }
         }
       }
-      return gvalue || '';
+      return gvalue || null;
     }
+    return null;
   }
-
 
   _reloadRecaptcha() {
     this._resetRecaptcha();
@@ -49,7 +52,7 @@ export class RecaptchaComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   _resetRecaptcha() {
-    if(this._recaptchaSiteKey) {
+    if(!this._disableRecaptcha && this._recaptchaSiteKey) {
       this._pseudoRandomId();
       const span = document.querySelector('#portalRecaptchaV2');
       span['innerHTML'] = `<div id="${this._recaptchaId}"></div>`;
@@ -61,7 +64,7 @@ export class RecaptchaComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   _initRecaptcha() {
-    if(this._recaptchaSiteKey) {
+    if(!this._disableRecaptcha && this._recaptchaSiteKey) {
       if (!window['grecaptcha']) {
         const rs = document.createElement('script');
         let _url = this._recaptchaScriptURL;

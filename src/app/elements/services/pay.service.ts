@@ -139,6 +139,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.TIME_OUT_POLLING = PayConfig.TIME_OUT_POLL;
     PayService.POLLING_INTERVAL = PayConfig.POLLING_INTERVAL;
     PayService.PAY_RESPONSE_URL = PayConfig.PAY_RESPONSE_URL;
+    PayService.UUID_CHECK = PayConfig.UUID_CHECK;
     document.body.className = '';
   }
 
