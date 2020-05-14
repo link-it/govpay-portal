@@ -1,0 +1,9 @@
+<div [ngClass]="_buttonClass">
+  <button mat-flat-button [type]="_type" [color]="_buttonColor" [ngClass]="_buttonClass" (click)="_click($event)" [disabled]="_disabled">
+    <span class="d-flex align-items-center">
+      <i class="material-icons mr-3" *ngIf="_icon && !_iconSrc">{{ _icon }}</i>
+      <img class="src-icon mr-3" *ngIf="!_icon && _iconSrc" [src]="_iconSrc">
+      <ng-content></ng-content>
+    </span>
+  </button>
+</div>

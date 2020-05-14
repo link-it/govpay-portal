@@ -1,0 +1,17 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+.action {
+  cursor: pointer;
+}
+
+.multiline-text {
+  white-space: normal;
+}
+
+.dropdown-menu {
+  border-radius: 0;
+  border: none;
+}

@@ -1,0 +1,26 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+.close-icon {
+  position: absolute;
+  top: 0;
+  right: calc(50% - 98px);
+}
+
+zxing-scanner {
+  max-width: 196px;
+  height: 196px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+.zxing-scanned {
+  border: 1px solid rgba(0, 204, 0, 1);
+}
+
+p.mat-error {
+  font-size: .75rem;
+}

@@ -13,8 +13,3 @@
   left: calc(50% - 20px);
   transform: translate(-50%, -50%);
 }
-
-link-footer .p-wrap p {
-  text-overflow: ellipsis;
-  overflow: hidden;
-}

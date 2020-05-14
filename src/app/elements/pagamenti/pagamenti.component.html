@@ -1,0 +1,43 @@
+<div class="container py-5">
+  <div class="row mb-5">
+    <div class="col-12">
+      <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Pagamenti.Bollettino.Titolo"></pay-title-deco>
+    </div>
+  </div>
+  <div class="row pb-5 mb-md-5">
+    <div class="col-12 col-md-2"></div>
+    <div class="col-12 col-md-8">
+      <pay-card [avviso-placeholder]="Pay.I18n.json.Pagamenti.Bollettino.Form.Avviso" [camera-select]="Pay.I18n.json.Pagamenti.Bollettino.Form.Fotocamera"
+                [submit]="Pay.I18n.json.Pagamenti.Bollettino.Submit" [creditore-placeholder]="Pay.I18n.json.Pagamenti.Bollettino.Form.Creditore"
+                [common-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Common" [denied-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Denied"
+                [config-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Config" [required-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Required"
+                [creditori]="_creditoriConfigurati" (on-submit)="_checkBollettino($event)"></pay-card>
+    </div>
+    <div class="col-12 col-md-2"></div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-12">
+      <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Pagamenti.Servizi.Titolo"></pay-title-deco>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-12 col-md-2"></div>
+    <div class="col-12 col-md-8">
+      <mat-form-field class="w-100">
+        <input #filtro matInput [placeholder]="Pay.I18n.json.Pagamenti.Servizi.Filtro" (keydown)="_keyDown($event)" autocomplete="off">
+        <mat-icon [ngClass]="filtro.value?'action':''" matSuffix (click)="__matFilterIcon(filtro)">{{ filtro.value?'close':'filter_list' }}</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="col-12 col-md-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="servizi-container">
+        <div class="grid-sizer"></div>
+        <pay-quadro-servizio class="grid-item" quadro-class="quadro-servizio" *ngFor="let qs of _servizi" [titolo]="qs.detail[Pay.ALPHA_3_CODE]['name']"
+                             [gruppo]="qs.detail[Pay.ALPHA_3_CODE]['group']" [meta]="qs.detail[Pay.ALPHA_3_CODE]['short_description']"
+                             (click)="_onQuadroClick(qs)"></pay-quadro-servizio>
+      </div>
+    </div>
+  </div>
+</div>

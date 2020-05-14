@@ -1,48 +1,91 @@
-/* You can add global styles to this file, and also import other style files */
-@font-face {
-  font-family: 'Font Awesome 5 Brands';
-  font-style: normal;
-  font-weight: 400;
-  src: url("./assets/fonts/fa-brands-400.eot");
-  src: url("./assets/fonts/fa-brands-400.eot?#iefix") format("embedded-opentype"),
-  url("./assets/fonts/fa-brands-400.woff2") format("woff2"),
-  url("./assets/fonts/fa-brands-400.woff") format("woff"),
-  url("./assets/fonts/fa-brands-400.ttf") format("truetype"),
-  url("./assets/fonts/fa-brands-400.svg#fontawesome") format("svg");
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import 'assets/css/material-icons.css';
+@import 'assets/css/font-titillium-300-400-600-700.css';
+// Angular Theme
+@import '~@angular/material/theming';
+$custom-typography: mat-typography-config(
+  $font-family: '"Titillium Web", sans-serif',
+  $title: mat-typography-level(24px, 24px, normal, '"Titillium Web", sans-serif'),
+  $subheading-2: mat-typography-level(20px, 24px, normal),
+  $button: mat-typography-level(16px, 100, normal, '"Titillium Web", sans-serif'),
+  $body-1: mat-typography-level(16px, 100, 400)
+);
+//$mat-light-theme-foreground: (
+//  text: rgba(33, 33, 33, 1),
+//  slider-off: rgba(33, 33, 33, .2)
+//);
+//$dark-primary-text: map-get($mat-light-theme-foreground, text);
+@include mat-core($custom-typography);
+
+$link-palette: (
+  50: #e0edf9,
+  100: #b3d1f0,
+  200: #80b3e6,
+  300: #4d94db,
+  400: #267dd4,
+  500: #0066cc,
+  600: #005ec7,
+  700: #0053c0,
+  800: #0049b9,
+  900: #0038ad,
+  A100: #d7e1ff,
+  A200: #a4baff,
+  A400: #7194ff,
+  A700: #5881ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  )
+);
+
+$palette: mat-palette($link-palette);
+$link-theme: mat-light-theme($palette, $palette);
+@include angular-material-theme($link-theme);
+
+$background-color: #0066CC;
+$background-2nd-color: #0059B3;
+$background-3rd-color: #F5F5F5;
+$background-nth-color: #fff;
+
+$hover-color: mat-color($link-palette, 50);
+$text-color: #212121;
+$text-2nd-color: rgba(33, 33, 33, 0.5);
+
+$reverse-text-color: #ffffff;
+
+$sidenavWidth: 300px;
+// $border-color: rgba(33, 33, 33, 0.16);
+
+// Material
+.mat-form-field.mat-focused .mat-form-field-label,
+.mat-form-field.mat-focused .mat-form-field-label .mat-placeholder-required {
+  color: $text-color !important;
 }
 
-.fab {
-  font-family: 'Font Awesome 5 Brands';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 36px;
+.mat-drawer-backdrop {
+  background-color: rgba(0, 0, 0, 0.01) !important;
 }
 
-.fa-facebook-f:before {
-  content: '\f39e';
-}
-
-.fa-twitter:before {
-  content: '\f099';
-}
-
-.fa-youtube:before {
-  content: '\f167';
-}
-
-.fa-instagram:before {
-  content: '\f16d';
-}
-
-.social a {
-  color: #FFFFFF;
-}
-
-.social a:hover {
-  color: #65DCDF;
+.mat-drawer-inner-container {
+  overflow-y: hidden;
 }
 
 html, body {
+  font-family: 'Titillium Web', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
   padding: 0;
   margin: 0;
   width: 100%;
@@ -51,24 +94,55 @@ html, body {
 }
 
 h1 {
+  font-family: "Titillium Web", sans-serif;
   font-size: 2rem;
 }
 
-.mat-paginator {
-  font-family: 'Titillium Web', sans-serif !important;
+p {
+  font-family: "Titillium Web", sans-serif;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+  color: $text-color;
 }
 
-.color-white-60 {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.border-white-16 {
-  border-color: rgba(255, 255, 255, 0.16) !important;
-}
-
-a, a:hover {
+a {
+  font-family: "Titillium Web", sans-serif;
+  color: $background-color;
   text-decoration: none;
-  color: #65DCDF;
+}
+
+a:hover {
+  color: $text-color;
+  text-decoration: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+.grecaptcha-badge {
+  z-index: 1;
+}
+
+.active-route,
+.active-route:hover,
+.route-link:hover {
+  color: $background-color;
+}
+
+.route-link-disabled,
+.active-route {
+  cursor: default;
+}
+
+.route-link-disabled,
+.route-link-disabled:hover {
+  color: $text-2nd-color;
+  cursor: default;
+}
+
+.action {
+  cursor: pointer;
 }
 
 .overflow-auto {
@@ -76,26 +150,319 @@ a, a:hover {
   overflow-x: hidden;
 }
 
-.global-container {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
+.mat-dialog-container {
+  border-radius: 0 !important;
 }
 
-.footer-bottom {
-  position: absolute !important;
+.global-container {
+  width: 100%;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: $background-3rd-color;
+}
+
+.side-nav {
+  width: $sidenavWidth;
+  border: 0 solid transparent;
+  background-color: $background-nth-color;
+}
+
+.side-nav-menu {
+  position: relative;
+  top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  overflow-y: auto;
 }
 
-#shoppingCart {
-  margin-top: 0;
-  transition: all .5s;
+.side-nav-menu mat-list-item:last-of-type {
+  flex-grow: 1;
 }
 
-.mat-snack-bar-container {
-  background: #fff;
-  color: #000;
-  border-left: 5px solid #ff0000;
+.side-nav-title {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: .75rem 1rem;
+  line-height: 1;
+  color: $reverse-text-color;
+  background-color: $background-color;
+}
+
+.side-nav .logo-govpay {
+  padding: 3rem 1rem 1rem 1rem;
+}
+
+.side-nav .logo-govpay p {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: .875rem;
+  font-weight: 400;
+}
+
+.side-nav .logo-govpay img {
+  height: 48px;
+}
+
+.language-bar {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $reverse-text-color;
+  background-color: $background-2nd-color;
+}
+
+.header-bar {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  //padding-top: .75rem;
+  //padding-bottom: .75rem;
+  color: $reverse-text-color;
+  background-color: $background-color;
+}
+
+.language-bar p.multiline-text {
+  font-size: 1rem;
+  color: $reverse-text-color;
+}
+
+.header-bar a,
+.header-bar p {
+  font-size: 1.5rem;
+  color: $reverse-text-color;
+}
+
+.header-bar .icon-label {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.language-bar a,
+.language-bar a:hover,
+.header-bar a:hover {
+  color: $reverse-text-color;
+}
+
+.language-bar p.dropdown-item.active,
+.language-bar p.dropdown-item:active {
+  background-color: $background-color;
+}
+
+.etichetta {
+  color: $text-2nd-color;
+}
+
+pay-spid-login {
+  margin-left: 1rem;
+}
+
+mat-list-item a,
+mat-list-item a:hover {
+  width: 100%;
+  color: $text-color;
+}
+
+button.mat-button,
+button.mat-flat-button,
+pay-icon-button .cart-button button.cart-button,
+pay-icon-button .flat-button button.flat-button,
+pay-icon-button .icon-button button.icon-button {
+  text-transform: uppercase;
+  padding: .75rem .9375rem;
+  border-radius: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: $reverse-text-color;
+}
+
+button.mat-button {
+  color: $text-color;
+}
+
+.mat-simple-snackbar-action button {
+  max-height: unset !important;
+  color: $background-color;
+}
+
+pay-icon-button .cart-button button.cart-button {
+  display: block;
+  text-transform: none;
+  font-weight: 400;
+  padding: .75rem .9375rem;
+}
+
+pay-icon-button .cart-button button.cart-button:hover {
+  background-color: transparent;
+}
+
+pay-icon-button img.src-icon {
+  height: 20px;
+}
+
+button.mat-flat-button:hover {
+  background-color: $text-color;
+}
+
+pay-card .icon-button button.icon-button {
+  margin-top: 1.25rem;
+}
+
+pay-title-deco .title-deco .art-deco {
+  background-color: $background-color;
+}
+
+.title-deco .label {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: $text-color;
+}
+
+pay-quadro-servizio .quadro-servizio {
+  font-family: 'Titillium Web', sans-serif;
+  padding: 1rem;
+  background-color: $background-nth-color;
+}
+
+pay-quadro-servizio .quadro-servizio:hover {
+  background-color: $hover-color;
+  cursor: pointer;
+}
+
+pay-quadro-servizio .quadro-servizio .gruppo {
+  font-size: 1rem;
+  font-weight: 400;
+  color: $text-color;
+}
+
+pay-quadro-servizio .quadro-servizio .titolo {
+  font-size: 2rem;
+  font-weight: 400;
+  color: $text-color;
+  line-height: 1.3;
+  padding-top: 3rem;
+  margin: 0 0 .5rem 0;
+}
+
+pay-quadro-servizio .quadro-servizio .meta {
+  margin: 0;
+}
+
+pay-quadro-servizio.quadro-hidden {
+  display: none;
+}
+
+mat-option .mat-option-text {
+  font-size: 1rem;
+}
+
+.pipe-filler {
+  width: 56px;
+}
+
+pay-item {
+  background-color: $reverse-text-color;
+  padding: .5rem 1rem;
+  margin-bottom: .5rem;
+}
+
+p.main-text {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 .5rem 0;
+}
+
+p.meta-text {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0 0 0 0;
+}
+
+pay-item .edit-icon,
+pay-item .delete-icon {
+  width: 56px;
+  margin-top: -.5rem;
+  margin-bottom: -.5rem;
+}
+
+pay-item .edit-icon:hover,
+pay-item .delete-icon:hover {
+  color: $reverse-text-color;
+  background-color: $background-color;
+}
+
+pay-item .touch-device {
+  position: absolute;
+  padding: 0 .5rem;
+  top: .5rem;
+  bottom: .5rem;
+  right: -100%;
+  background: rgba(255, 255, 255, 1);
+  background: -moz-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
+  background: -webkit-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
+  background: -o-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
+  background: -ms-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=1 );
+  transition: right .35s linear;
+}
+
+pay-item .touch-device.in {
+  right: 0;
+  transition: right .5s linear;
+}
+pay-cart .cart-footer {
+  background-color: $text-color;
+  padding: .5rem 1rem;
+}
+
+pay-cart .cart-footer .main-text {
+  color: $reverse-text-color;
+  margin: 0 0 0 0;
+}
+
+// JSON schema form
+legend.legend {
+  text-transform: lowercase;
+  font-family: "Titillium Web", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400 !important;
+  color: $text-2nd-color;
+}
+
+label.mat-form-field-label {
+  text-transform: lowercase;
+}
+
+legend.legend:first-letter,
+label.mat-form-field-label:first-letter {
+  text-transform: uppercase;
+}
+
+.mat-focused .mat-form-field-required-marker {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.mat-focused .mat-form-field-ripple,
+.mat-focused .mat-form-field-underline {
+  background-color: $background-color;
+}
+
+.mat-focused.mat-form-field-appearance-legacy .mat-form-field-underline {
+  height: 2px;
+}
+
+@media (min-width: 768px) {
+}
+
+@media (min-width: 1440px) {
+  .language-bar {
+    padding-left: $sidenavWidth;
+  }
 }

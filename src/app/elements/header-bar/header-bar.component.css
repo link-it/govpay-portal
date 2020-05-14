@@ -1,0 +1,12 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+.action {
+  cursor: pointer;
+}
+
+.multiline-text {
+  white-space: normal;
+}

@@ -1,12 +1,12 @@
 {
-  "/govpay/frontend/api/pagamento/rs/public/v1/*": {
-    "target": "https://spcoop.it",
+  "/govpay/frontend/api/pagamento/rs/public/v2/*": {
+    "target": "https://demo.govcloud.it",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/govpay/frontend/api/pagamento/rs/spid/v1/*": {
-    "target": "https://spcoop.it",
+  "/govpay/frontend/api/pagamento/rs/spid/v2/*": {
+    "target": "https://demo.govcloud.it",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

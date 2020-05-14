@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Dato } from 'link-material';
 import { PayService } from '../services/pay.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -9,11 +8,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './profilo.component.html',
   styleUrls: ['./profilo.component.css']
 })
-export class ProfiloComponent implements OnInit, OnDestroy {
+// export
+class ProfiloComponent implements OnInit, OnDestroy {
 
   @Input('title') _title: string = '';
   @Input('user-name') _name: string = '';
-  @Input('user-details') _details: Dato[] = [];
+  @Input('user-details') _details: any[] = [];
 
   protected _langSubscription: Subscription;
 
@@ -41,13 +41,13 @@ export class ProfiloComponent implements OnInit, OnDestroy {
   }
 
   protected setUserProfile() {
-    if (this.pay.isAuthenticated()) {
-      this._title = PayService.SHARED_LABELS.riepilogo;
-      this._name = PayService.User.anagrafica?PayService.User.anagrafica.anagrafica:PayService.SHARED_LABELS.anagrafica.profilo;
-      this._details = [
-        new Dato({ label: PayService.SHARED_LABELS.anagrafica.codiceFiscale, value: PayService.User.anagrafica?PayService.User.anagrafica.identificativo:PayService.SHARED_LABELS.notAvailable }),
-        new Dato({ label: PayService.SHARED_LABELS.anagrafica.email, value: PayService.User.anagrafica?PayService.User.anagrafica.email:PayService.SHARED_LABELS.notAvailable })
-      ];
-    }
+    // if (this.pay.isAuthenticated()) {
+    //   this._title = PayService.SHARED_LABELS.riepilogo;
+    //   this._name = PayService.User.anagrafica?PayService.User.anagrafica.anagrafica:PayService.SHARED_LABELS.anagrafica.profilo;
+    //   this._details = [
+    //     new Dato({ label: PayService.SHARED_LABELS.anagrafica.codiceFiscale, value: PayService.User.anagrafica?PayService.User.anagrafica.identificativo:PayService.SHARED_LABELS.notAvailable }),
+    //     new Dato({ label: PayService.SHARED_LABELS.anagrafica.email, value: PayService.User.anagrafica?PayService.User.anagrafica.email:PayService.SHARED_LABELS.notAvailable })
+    //   ];
+    // }
   }
 }

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertLocalization, AvvisoLocalization, AvvisoPagamentoComponent, Dato, Standard } from 'link-material';
+// import { AlertLocalization, AvvisoLocalization, AvvisoPagamentoComponent, Dato, Standard } from 'link-material';
 
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
@@ -12,16 +12,17 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
   templateUrl: './avviso.component.html',
   styleUrls: ['./avviso.component.css']
 })
-export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('ap') _ap: AvvisoPagamentoComponent;
+// export
+class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('ap') _ap: any; // AvvisoPagamentoComponent;
 
   protected _langSubscription: Subscription;
   protected _formatoValuta: Function;
 
-  protected _ald: AvvisoLocalization = new AvvisoLocalization();
-  protected _wld: AlertLocalization = new AlertLocalization();
+  protected _ald: any; // AvvisoLocalization = new AvvisoLocalization();
+  protected _wld: any; // AlertLocalization = new AlertLocalization();
 
-  protected _payments: Standard[] = [];
+  protected _payments: any[]; // Standard[] = [];
   protected _pendenze: any[] = [];
   protected _recapito: string = '';
   protected _showRecapito: boolean = false;
@@ -31,7 +32,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   protected _paymentStatus: string = '';
   protected _esito: string = '';
-  protected _ricevute: Standard[] = [];
+  protected _ricevute: any[]; // Standard[] = [];
   protected _pollingTimeout: number = 0;
   protected ESITO_OK: string = PayService.ESITO_OK;
   protected ESITO_DIFFERITO: string = PayService.ESITO_DIFFERITO;
@@ -46,7 +47,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   protected _sessione: boolean = true;
 
   constructor(public router: Router, public pay: PayService, private activateRoute: ActivatedRoute, public translate: TranslateService) {
-    this._formatoValuta = pay._currencyFormat.bind(pay);
+    this._formatoValuta = pay.currencyFormat.bind(pay);
     this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
       // console.log('Avviso language changed', event);
       this.translateDynamicObject();
@@ -141,13 +142,13 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   protected _fixPayment(event: any) {
     this._payments = this._pendenze.map(p => {
-      const _mapped = new Standard({ rawData: {} });
-      _mapped.rawData.stato = p.stato;
-      _mapped.rawData.idDominio = p.dominio.idDominio;
-      _mapped.rawData.numeroAvviso = p.numeroAvviso;
+      const _mapped = {}; //  = new Standard({ rawData: {} });
+      _mapped['rawData'].stato = p.stato;
+      _mapped['rawData'].idDominio = p.dominio.idDominio;
+      _mapped['rawData'].numeroAvviso = p.numeroAvviso;
       return _mapped;
     }).filter(p => {
-      return (PayService.STATI_PENDENZA[p.rawData.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA);
+      return (PayService.STATI_PENDENZA[p['rawData'].stato] == PayService.STATI_PENDENZA.NON_ESEGUITA);
     });
     if(this._payments.length != 0) {
       this._submitted = false;
@@ -305,22 +306,22 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param response
    */
   protected loadRicevute(response: any) {
-    response.body.rpp.forEach(rpp => {
-      if(rpp.rt && rpp.rt.soggettoVersante) {
-        this._recapito = rpp.rt.soggettoVersante['e-mailVersante']?rpp.rt.soggettoVersante['e-mailVersante']:'';
-      }
-    });
-    this._pendenze = response.body.pendenze;
-    this._showFix = false;
-    this._pendenze.forEach(p => {
-      if(PayService.STATI_PENDENZA[p.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA && this._paymentStatus !== this.STATUS_TIMEOUT) {
-        this._showFix = true;
-      }
-    });
-    this._numeroAvviso = (this._pendenze.length == 1)?this._pendenze[0].numeroAvviso:'';
-    if(this.pay.isAuthenticated() && PayService.STATI_PAGAMENTO[response.body.stato] !== PayService.STATI_PAGAMENTO.IN_CORSO) {
-      this._updateRicevute(response.body.rpp);
-    }
+    // response.body.rpp.forEach(rpp => {
+    //   if(rpp.rt && rpp.rt.soggettoVersante) {
+    //     this._recapito = rpp.rt.soggettoVersante['e-mailVersante']?rpp.rt.soggettoVersante['e-mailVersante']:'';
+    //   }
+    // });
+    // this._pendenze = response.body.pendenze;
+    // this._showFix = false;
+    // this._pendenze.forEach(p => {
+    //   if(PayService.STATI_PENDENZA[p.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA && this._paymentStatus !== this.STATUS_TIMEOUT) {
+    //     this._showFix = true;
+    //   }
+    // });
+    // this._numeroAvviso = (this._pendenze.length == 1)?this._pendenze[0].numeroAvviso:'';
+    // if(this.pay.isAuthenticated() && PayService.STATI_PAGAMENTO[response.body.stato] !== PayService.STATI_PAGAMENTO.IN_CORSO) {
+    //   this._updateRicevute(response.body.rpp);
+    // }
   }
 
 
@@ -356,7 +357,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
          PayService.STATI_PENDENZA[_stato] == PayService.STATI_PENDENZA.SCADUTA) {
         _showReceipt = false;
       }
-      return new Standard({
+      return {}; /*new Standard({
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
         titolo: new Dato({ label: _causale }),
         sottotitolo: new Dato({ label: Dato.concatStrings(l, ', ') }),
@@ -364,45 +365,46 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         stato: PayService.STATI_PENDENZA[_stato],
         icon: (_showReceipt)?'receipt':'',
         rawData: _item
-      });
+      });*/
     });
   }
 
-  protected _refreshData(): Standard[] {
-    this._setupNote();
-    const buffer = this._payments.map((item: any) => {
-      const _tempRawUid = item.uid;
-      item = item.rawData;
-      let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.senza_scadenza;
-      let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds});// + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
-      if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA || PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
-        // const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
-        if(item.dataPagamento) {
-          _ds = moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage());
-        }
-        _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds});// + _iuvOrAvviso });
-      }
-      const _std = new Standard({
-        // Restore previous uid(s) for cart component ref elements
-        uid: _tempRawUid,
-        localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-        titolo: new Dato({ label: item.causale || item.descrizione }),
-        sottotitolo: _meta,
-        importo: parseFloat(item.importo),
-        stato: PayService.STATI_PENDENZA[item.stato],
-        rawData: item
-      });
-      _std.collapsingInfo = [];
-      _std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso }));
-      if(item.dominio && item.dominio.ragioneSociale) {
-        _std.collapsingInfo.push(new Dato({label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale}));
-      }
-      return _std;
-      });
-
-    this._updateRicevute(this._ricevute);
-
-    return buffer;
+  protected _refreshData(): any[] { // Standard[] {
+    // this._setupNote();
+    // const buffer = this._payments.map((item: any) => {
+    //   const _tempRawUid = item.uid;
+    //   item = item.rawData;
+    //   let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.senza_scadenza;
+    //   let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds});// + ', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
+    //   if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA || PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.DUPLICATA) {
+    //     // const _iuvOrAvviso = (item.numeroAvviso)?', ' + PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso:', ' + PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento;
+    //     if(item.dataPagamento) {
+    //       _ds = moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage());
+    //     }
+    //     _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds});// + _iuvOrAvviso });
+    //   }
+    //   const _std = new Standard({
+    //     // Restore previous uid(s) for cart component ref elements
+    //     uid: _tempRawUid,
+    //     localeNumberFormat: this.pay.getNumberFormatByLanguage(),
+    //     titolo: new Dato({ label: item.causale || item.descrizione }),
+    //     sottotitolo: _meta,
+    //     importo: parseFloat(item.importo),
+    //     stato: PayService.STATI_PENDENZA[item.stato],
+    //     rawData: item
+    //   });
+    //   _std.collapsingInfo = [];
+    //   _std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso }));
+    //   if(item.dominio && item.dominio.ragioneSociale) {
+    //     _std.collapsingInfo.push(new Dato({label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale}));
+    //   }
+    //   return _std;
+    //   });
+    //
+    // this._updateRicevute(this._ricevute);
+    //
+    // return buffer;
+    return [];
   }
 
   protected _setupNote() {
@@ -446,7 +448,7 @@ export class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @private
    */
   protected _onIconReceipt(event) {
-    this.pay.getRPP(event.rawData.rpp);
+    // this.pay.getRPP(event.rawData.rpp);
   }
 
 }

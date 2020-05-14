@@ -1,9 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-
-// Restricted Routing
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-
-// DI Service
+import { ActivatedRouteSnapshot, CanActivate, Navigation, RouterStateSnapshot } from '@angular/router';
 import { PayService } from './pay.service';
 
 @Injectable()
@@ -16,17 +12,36 @@ export class AuthGuardService implements CanActivate, OnDestroy {
   }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> | boolean {
-
-    if (this.pay.isAuthenticated()) {
-      return true;
+    const router = this.pay.router;
+    const cn: Navigation = router.getCurrentNavigation();
+    if (cn && cn.extras && cn.extras.state) {
+      PayService.ExtraState = cn.extras.state;
+    } else {
+      PayService.ResetState();
     }
 
-    if (!this.pay.isAuthenticated() && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
-      return true;
+    if (state.url === '/riepilogo' || state.url === '/archivio') {
+      if (this.pay.isAuthenticated()) {
+        return true;
+      } else {
+        this.pay.updateSpinner(true);
+        return this.pay.sessione(state.url);
+      }
+    }
+    if (state.url === '/dettaglio-servizio' && !PayService.ExtraState) {
+      router.navigateByUrl('/');
+      return false;
+    }
+    if ((state.url === '/ricevuta' || state.url === '/carrello') && PayService.ShoppingCart.length === 0) {
+      router.navigateByUrl('/');
+      return false;
     }
 
-    this.pay.updateSpinner(true);
-    return this.pay.sessione(state.url);
+    return true;
+
+    // if (!this.pay.isAuthenticated() && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
+    //   return true;
+    // }
   }
 
 }

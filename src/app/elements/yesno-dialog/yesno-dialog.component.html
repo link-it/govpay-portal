@@ -1,0 +1,10 @@
+<mat-dialog-content>
+  <p class="text-break" *ngFor="let m of _dialogData?.message">{{ m }}</p>
+</mat-dialog-content>
+<div class="d-block text-right pt-4">
+  <button mat-button color="accent" type="button" (click)="_closeDialog(true)">{{ _dialogData?.NOLabel }}</button>
+  <button mat-button class="ml-3" color="accent" type="button" (click)="_closeDialog()" *ngIf="_dialogData.YESLabel">
+    <i class="material-icons mr-3" *ngIf="_dialogData.icon">{{ _dialogData?.icon }}</i>
+    {{ _dialogData?.YESLabel }}
+  </button>
+</div>

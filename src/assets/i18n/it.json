@@ -1,219 +1,191 @@
 {
-  "Header": {
-    "titolo": "Regione",
-    "sottotitolo": "Comune Dimostrativo",
-    "menu": {
-      "items": [
-        { "label": "Paga un avviso", "link": "/accesso" },
-        { "label": "Posizione debitoria", "link": "/riepilogo" },
-        { "label": "Archivio dei pagamenti", "link": "/archivio" }
+  "Language": {
+    "Header": {
+      "Titolo": "Comune",
+      "LanguageBar": {
+        "Titolo": "Regione"
+      }
+    },
+    "SideNav": {
+      "Titolo": "Gestione pagamenti",
+      "MenuItems": [
+        {
+          "Label": "Pagamenti",
+          "Link": "/pagamenti"
+        },
+        {
+          "Label": "Posizione debitoria",
+          "Link": "/riepilogo"
+        },
+        {
+          "Label": "Archivio dei pagamenti",
+          "Link": "/archivio"
+        },
+        {
+          "Label": "Carrello",
+          "Link": "/carrello"
+        }
       ],
-      "account": {
-        "name": "",
-        "settings": [
-          { "label": "Profilo utente", "link": "/profilo" },
-          { "label": "Esci", "link": "" }
-        ]
-      }
-    }
-  },
-  "Footer": {
-    "titolo": "Comune Dimostrativo",
-    "recapito": {
-      "titolo": "Recapiti e contatti",
-      "indirizzo": "Piazza della Vittoria, 1 00135 Roma",
-      "centralino": "Centralino: +39 00 00000",
-      "postaCertificata": "Pec: dimostrativo@comune.regione.it",
-      "uffici": "Organigramma",
-      "reteDiplomatica": ""
+      "Logout": "Esci"
     },
-    "indirizzi": {
-      "organigramma": "https://www.sample.it/",
-      "reteDiplomatica": "",
-      "comunicazioni": "https://www.sample.it/",
-      "info": "https://www.sample.it/",
-      "faq": "https://www.sample.it/",
-      "riferimenti": "https://www.sample.it/",
-      "rss": "https://www.sample.it/",
-      "news": "https://www.sample.it/",
-      "crediti": "https://www.sample.it/",
-      "noteLegali": "https://www.sample.it/",
-      "privacy": "https://www.sample.it/",
-      "cookie": "https://www.sample.it/",
-      "appIOS": "https://www.sample.it/",
-      "appAndroid": "https://www.sample.it/",
-      "facebook": "https://www.sample.it/",
-      "twitter": "https://www.sample.it/",
-      "youtube": "https://www.sample.it/",
-      "instagram": "https://www.sample.it/"
+    "Spid": {
+      "Label": "Accedi con SPID",
+      "Info": "Maggiori informazioni",
+      "Ask": "Non hai SPID?",
+      "Help": "Serve aiuto?"
     },
-    "urp": {
-      "titolo": "Relazioni con il pubblico",
-      "orario": "L'Ufficio è aperto al pubblico per visite dal lunedì al venerdì dalle 9:00 alle 13:00",
-      "contatti": {
-        "telefono": "Telefono: +39 06 3691 8899 dal lunedì al venerdì dalle ore 8.30 alle 15.30",
-        "fax": "Fax: +39 06 3236210",
-        "pec": "Indirizzi PEC",
-        "moduloInfo": "Modulo richiesta informazioni",
-        "faq": "FAQ"
-      }
-    },
-    "app": {
-      "titolo": "Farnesina app",
-      "riferimenti": "Unità di crisi",
-      "rss": "RSS Feed",
-      "news": "News Alert",
-      "iOS": "mAPPamondo (iOS)",
-      "android": "mAPPamondo (Android)"
-    },
-    "crediti": "Crediti",
-    "noteLegali": "Note legali",
-    "privacy": "Privacy",
-    "cookie": "Cookie policy"
-  },
-  "Accesso": {
-    "titolo": "Il servizio di pagamento del Comune Dimostrativo",
-    "descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget augue a quam iaculis porttitor. Sed tincidunt ullamcorper ante, id tincidunt urna. Nulla nec tempor urna, in consectetur ipsum. Nam ac ornare tortor, sed imperdiet orci."
-  },
-  "PayCard": {
-    "titolo": "Paga un avviso pagoPA",
-    "note": "Se hai ricevuto un Avviso pagoPA, puoi pagarlo indicando il numero avviso oppure scansionando il qrcode.",
-    "form": {
-      "avviso": "Numero avviso",
-      "fotocamera": "Fotocamera",
-      "creditore": "Ente creditore",
-      "submit": "Procedi",
-      "errors": {
-        "common": "Il codice inserito non corrisponde ad alcun creditore in elenco.",
-        "denied": "Codice creditore %1 non abilitato.",
-        "config": "Nessun creditore configurato.",
-        "required": "Creditore obbligatorio."
-      }
-    }
-  },
-  "LoginCard": {
-    "titolo": "Accedi alla tua posizione",
-    "note": "Accedendo al portale in modalità autenticata potrai consultare la tua Posizione Debitoria e lo Storico dei Pagamenti in forma protetta e riservata.",
-    "spid": "Entra con SPID",
-    "info": "Maggiori informazioni",
-    "ask": "Non hai SPID?",
-    "help": "Serve aiuto?"
-  },
-  "PosizioneDebitoria": {
-    "titolo": "Posizione debitoria",
-    "filter": {
-      "stato": "Stato",
-      "noFilter": "Tutti"
-    }
-  },
-  "Cart": {
-    "titolo": "Carrello",
-    "importo": "Totale",
-    "submit": "Procedi al pagamento"
-  },
-  "Archivio": {
-    "titolo": "Archivio dei pagamenti",
-    "filter": {
-      "stato": "Stato",
-      "noFilter": "Tutti"
-    }
-  },
-  "Avviso": {
-    "titolo": "Riepilogo pagamento",
-    "note": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
-    "sottotitolo": "Recapito ricevuta",
-    "dettaglio": "Praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
-    "importo": "Totale",
-    "submit": "Procedi al pagamento",
-    "cancel": "Annulla",
-    "email": "Email",
-    "confermaEmail": "Conferma email",
-    "error": "Verificare le informazioni inserite.",
-    "wait": "Recupero informazioni in corso...",
-    "close": "Nuovo pagamento"
-  },
-  "Alert": {
-    "eseguito": "Pagamento eseguito",
-    "fallito": "Pagamento non eseguito",
-    "dettaglioEseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
-    "dettaglioFallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
-    "dettaglioInCorso": {
-      "ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
-      "timeout": {
-        "ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail",
-        "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail"
+    "Pagamenti": {
+      "Titolo": "Pagamenti online",
+      "Bollettino": {
+        "Titolo": "Paga un bollettino",
+        "Note": "Dove trovo il numero dell’avviso?",
+        "Submit": "Aggiungi al carrello",
+        "Dialog": {
+          "Close": "Ho capito"
+        },
+        "Form": {
+          "Avviso": "Numero dell'avviso",
+          "Fotocamera": "Fotocamera",
+          "Creditore": "Ente creditore",
+          "Errors": {
+            "Common": "Il codice inserito non corrisponde ad alcun creditore in elenco.",
+            "Denied": "Codice creditore {{value}} non abilitato.",
+            "Config": "Nessun creditore configurato.",
+            "Required": "Creditore obbligatorio."
+          }
+        }
       },
-      "errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA."
-    },
-    "submit": "Prova di nuovo",
-    "close": "Nuovo pagamento"
-  },
-  "Common": {
-    "riepilogo": "Riepilogo",
-    "anagrafica": {
-      "profilo": "Profilo utente",
-      "email": "Email",
-      "codiceFiscale": "Codice fiscale"
-    },
-    "avvisoNumero": "Avviso numero %1",
-    "itemsPerPageLabel": "Elementi per pagina",
-    "nextPageLabel": "Successivi",
-    "previousPageLabel": "Precedenti",
-    "lastPageLabel": "Ultima pagina",
-    "firstPageLabel": "Prima pagina",
-    "risultatiPendenze": "Trovate # pendenze|Trovata # pendenza",
-    "risultatiPagamenti": "Trovati # pagamenti|Trovato # pagamento",
-    "notAvailable": "Non disponibile",
-    "scadenza": "Scadenza",
-    "data": "Data",
-    "senza_scadenza": "Non prevista",
-    "avviso": "Avviso",
-    "iuv": "IUV",
-    "beneficiario": "Beneficiario",
-    "pagamento": "Pagamento",
-    "pagamentoInCorso": "In corso",
-    "pagamentoFallito": "Rifiutato",
-    "pagamentoEseguito": "Eseguito",
-    "pagamentoParzialmenteEseguito": "Parzialmente eseguito",
-    "pagamentoAnnullato": "Annullato",
-    "pagamentoNonEseguito": "Non eseguito",
-    "pendenzaEseguita": "Pagata",
-    "pendenzaParzialmenteEseguita": "Parzialmente eseguita",
-    "pendenzaNonEseguita": "Da pagare",
-    "pendenzaAnnullata": "Annullata",
-    "pendenzaScaduta": "Scaduta",
-    "pendenzaInRitardo": "Da pagare - In Ritardo",
-    "verificaPendenzaEseguita": "Pagata",
-    "verificaPendenzaDuplicata": "Pagata",
-    "verificaPendenzaNonEseguita": "Da pagare",
-    "verificaPendenzaAnnullata": "Annullata",
-    "verificaPendenzaSconosciuta": "Sconosciuta",
-    "verificaPendenzaScaduta": "Scaduta",
-    "compoundError": {
-      "error": "Impossibile procedere con il ",
-      "error2": "Il pagamento risulta già eseguito.",
-      "errorSub1": "pagamento poiché la pendenza risulta annullata.",
-      "errorSub2": "pagamento poiché la pendenza risulta scaduta il %1.",
-      "errorSub3": "pagamento; non risultano ulteriori informazioni."
-    },
-    "alertAction": "Chiudi",
-    "warningRicevuta": "Nessun documento disponibile",
-    "ricevuta": "Ricevuta.pdf",
-    "archivio": "Ricevute.zip"
-  },
-  "http": {
-    "error_map": [
-      {
-        "match": "stringa_di_controllo",
-        "message": "[%1, %2, %3, %4] Messaggio di errore"
+      "Servizi": {
+        "Titolo": "Paga un servizio",
+        "Filtro": "Filtra la lista..."
       }
-    ],
-    "status_400": "[%1, %2, %3, %4] Richiesta non valida.",
-    "status_401": "[%1, %2, %3, %4] Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
-    "status_403": "[%1, %2, %3, %4] Accesso non consentito.",
-    "status_404": "[%1, %2, %3, %4] Servizio non trovato.",
-    "status_500": "[%1, %2, %3, %4] Errore interno del server.",
-    "status_504": "[%1, %2, %3, %4] Timeout del gateway.",
-    "default": "[%1, %2, %3, %4] Servizio non disponibile, si prega di riprovare più tardi."
+    },
+    "Cart": {
+      "Badge": "{{value}} Pagamento|{{value}} Pagamenti",
+      "Titolo": "Carrello",
+      "Pagamenti": {
+        "Titolo": "Elenco pagamenti",
+        "Paga": "Paga ora",
+        "Stampa": "Stampa bollettino",
+        "Totale": "Totale"
+      }
+    },
+    "DettaglioServizio": {
+      "Titolo": "Informazioni sul servizio",
+      "Form": {
+        "Titolo": "Dati necessari al pagamento",
+        "Salva": "Salva",
+        "Verifica": "Verifica"
+      },
+      "Dialog": {
+        "Avviso": "Vuoi aggiungere al carrello la pendenza con i dati appena inseriti?",
+        "Causale": "Causale pagamento",
+        "ImportoPendenza": "Importo",
+        "Submit": "Aggiungi al carrello",
+        "Close": "Annulla"
+      }
+    },
+    "Ricevuta": {
+      "Titolo": "Ricevuta di pagamento",
+      "Form": {
+        "Titolo": "Dati necessari alla consegna della ricevuta",
+        "Note": "Ti chiediamo questi dati perché...",
+        "Email": "Email",
+        "ConfermaEmail": "Conferma email",
+        "Submit": "Concludi il pagamento",
+        "Error": "Verificare le informazioni inserite"
+      }
+    },
+    "Posizione": {
+      "Titolo": "Posizione debitoria",
+      "Debiti": {
+        "Titolo": "C'è {{value}} servizio da pagare|Ci sono {{value}} servizi da pagare"
+      }
+    },
+    "Archivio": {
+      "Titolo": "Archivio dei pagamenti",
+      "Pagamenti": {
+        "Titolo": "C'è {{value}} pagamento|Ci sono {{value}} pagamenti"
+      }
+    },
+    "Esito": {
+      "Titolo": "Esito del pagamento",
+      "Pagamenti": {
+        "Titolo": "Riepilogo",
+        "Dettaglio": {
+          "Eseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
+          "Fallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
+          "Errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
+          "InCorso": {
+            "Titolo": "Recupero informazioni in corso...",
+            "Ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
+            "Timeout": {
+              "Ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail",
+              "Errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail"
+            }
+          }
+        }
+      }
+    },
+    "JsonForm": {
+      "Required": "Campo obbligatorio",
+      "MinLength": "Numero minimo di caratteri richiesti: {{minimumLength}} (valore corrente: {{currentLength}})",
+      "MaxLength": "Numero massimo di caratteri: {{maximumLength}} (valore corrente: {{currentLength}})",
+      "Pattern": "Schema non corrispondente: {{requiredPattern}}",
+      "Format": {
+        "Date": "Formato data non corrispondente",
+        "Time": "Formato orario non corrispondente",
+        "DateTime": "Formato data/ora non corrispondente",
+        "Email": "Indirizzo email non valido",
+        "Hostname": "Hostname non valido",
+        "Ipv4": "Indirizzo IPv4 non valido, es. 127.0.0.1",
+        "Ipv6": "Indirizzo IPv6 non valido, es. 1234:5678:9ABC:DEF0:1234:5678:9ABC:DEF0",
+        "Url": "Url non valido, es. http://www.example.com/page.html",
+        "UUID": "UUID non valido, es. 12345678-9ABC-DEF0-1234-56789ABCDEF0",
+        "Color": "Colore non valido, es. #FFFFFF o rgb(255, 255, 255)",
+        "JsonPointer": "Puntatore JSON non valido, es. /pointer/to/something",
+        "RelativeJsonPointer": "Puntatore JSON relativo non valido, es. 2/pointer/to/something",
+        "Regex": "Espressione regolare non valida, es. (1-)?\\d{3}-\\d{3}-\\d{4}",
+        "Generic": "Valore non correttamente formattato: {{requiredFormat}}"
+      },
+      "Minimum": "Valore minimo {{minimumValue}} o maggiore",
+      "ExclusiveMinimum": "Valore minimo richiesto almeno {{exclusiveMinimumValue}}",
+      "Maximum": "Valore massimo {{maximumValue}} o inferiore",
+      "ExclusiveMaximum": "Valore massimo richiesto al più {{exclusiveMaximumValue}}",
+      "MultipleOf": "Deve essere un multiplo di {{multipleOfValue}}",
+      "Decimals": "Numero decimali richiesti {{decimals}} o meno",
+      "MinProperties": "Proprietà richieste: {{minimumProperties}} o più (proprietà correnti: {{currentProperties}})",
+      "MaxProperties": "Proprietà richieste: {{maximumProperties}} o meno (proprietà correnti: {{currentProperties}})",
+      "MinItems": "Elementi richiesti: {{minimumItems}} o più (elementi correnti: {{currentItems}})",
+      "MaxItems": "Elementi richiesti: {{maximumItems}} or meno (elementi correnti: {{currentItems}})",
+      "UniqueItems": "Ogni elemento deve essere unico"
+    },
+    "Http": {
+      "ErrorMap": [{
+          "Match": "stringa_di_controllo",
+          "Message": "[%1, %2, %3, %4] Messaggio di errore"
+        }
+      ],
+      "Status400": "[%1, %2, %3, %4] Richiesta non valida.",
+      "Status401": "[%1, %2, %3, %4] Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
+      "Status403": "[%1, %2, %3, %4] Accesso non consentito.",
+      "Status404": "[%1, %2, %3, %4] Servizio non trovato.",
+      "Status422": "[%1, %2, %3, %4] Impossibile completare la richiesta.",
+      "Status500": "[%1, %2, %3, %4] Errore interno del server.",
+      "Status504": "[%1, %2, %3, %4] Timeout del gateway.",
+      "Default": "[%1, %2, %3, %4] Servizio non disponibile, si prega di riprovare più tardi."
+    },
+    "Common": {
+      "AlertAction": "Chiudi",
+      "NumeroAvviso": "Numero avviso",
+      "Scadenza": "Scadenza",
+      "SenzaScadenza": "Non prevista",
+      "NotAvailable": "Non disponibile",
+      "PendenzaInserita": "La pendenza con numero avviso {{numeroAvviso}} risulta già inserita nel carrello",
+      "PendenzaEseguita": "La pendenza con numero avviso {{numeroAvviso}} risulta già pagata il giorno {{data}}",
+      "PendenzaAnnullata": "La pendenza con numero avviso {{numeroAvviso}} è stata annullata",
+      "PendenzaSconosciuta": "Non è presente alcuna pendenza con numero avviso {{numeroAvviso}}",
+      "PendenzaScaduta": "La pendenza con numero avviso {{numeroAvviso}} è scaduta il giorno {{data}}"
+    }
   }
 }

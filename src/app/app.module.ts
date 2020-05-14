@@ -3,48 +3,76 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { JsonSchemaFormComponent, MaterialDesignFrameworkModule } from 'angular7-json-schema-form';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { AppComponent, AuthGuardPipe } from './app.component';
 import { MatSelectModule } from '@angular/material/select';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
-import { LinkMaterialModule } from 'link-material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { AccessoComponent } from './elements/accesso/accesso.component';
-import { PosizioneDebitoriaComponent } from './elements/posizione-debitoria/posizione-debitoria.component';
-import { ArchivioComponent } from './elements/archivio/archivio.component';
-import { AvvisoComponent } from './elements/avviso/avviso.component';
 import { PayService } from './elements/services/pay.service';
 import { AuthGuardService } from './elements/services/auth-gard.service';
-import { ProfiloComponent } from './elements/profilo/profilo.component';
+
+
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { TranslateLoaderExt } from './elements/classes/translate-loader-ext';
+import { MatButtonModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatSidenavModule } from '@angular/material';
+import { HeaderBarComponent } from './elements/header-bar/header-bar.component';
+import { LanguageBarComponent } from './elements/language-bar/language-bar.component';
+import { SpidLoginComponent } from './elements/spid-login/spid-login.component';
+import { PagamentiComponent } from './elements/pagamenti/pagamenti.component';
+import { TitleDecoComponent } from './elements/title-deco/title-deco.component';
+import { IconButtonComponent } from './elements/icon-button/icon-button.component';
+import { QuadroServizioComponent } from './elements/quadro-servizio/quadro-servizio.component';
+import { DettaglioServizioComponent } from './elements/dettaglio-servizio/dettaglio-servizio.component';
+import { PayCardComponent } from './elements/pay-card/pay-card.component';
+import { CartComponent, HasEditablePipe } from './elements/cart/cart.component';
+import { PayItemComponent } from './elements/pay-item/pay-item.component';
+import { RicevutaPagamentoComponent } from './elements/ricevuta-pagamento/ricevuta-pagamento.component';
+import { PosizioneDebitoriaComponent } from './elements/posizione-debitoria/posizione-debitoria.component';
+import { ArchivioComponent } from './elements/archivio/archivio.component';
+import { YesnoDialogComponent } from './elements/yesno-dialog/yesno-dialog.component';
+import { EsitoComponent } from './elements/esito/esito.component';
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateLoaderExt(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
   declarations: [
     AppComponent,
-    AccessoComponent,
+    AuthGuardPipe,
+    PagamentiComponent,
+    RicevutaPagamentoComponent,
+    DettaglioServizioComponent,
     PosizioneDebitoriaComponent,
     ArchivioComponent,
-    AvvisoComponent,
-    ProfiloComponent
+    HeaderBarComponent,
+    LanguageBarComponent,
+    SpidLoginComponent,
+    TitleDecoComponent,
+    IconButtonComponent,
+    QuadroServizioComponent,
+    PayCardComponent,
+    CartComponent,
+    HasEditablePipe,
+    PayItemComponent,
+    YesnoDialogComponent,
+    EsitoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule, FormsModule,
+    FlexLayoutModule,
     HttpClientModule,
     MatProgressSpinnerModule,
-    LinkMaterialModule,
-    MatSelectModule,
-    MatPaginatorModule,
     MatSnackBarModule,
     TranslateModule.forRoot({
       loader: {
@@ -52,9 +80,22 @@ export function createTranslateLoader(http: HttpClient) {
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
+    }),
+    MatSidenavModule,
+    MatListModule,
+    MatDividerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MaterialDesignFrameworkModule,
+    ZXingScannerModule
   ],
   providers: [ PayService, AuthGuardService ],
-  bootstrap: [AppComponent]
+  entryComponents: [ YesnoDialogComponent, JsonSchemaFormComponent ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -1,0 +1,30 @@
+<div #item class="row">
+  <div class="col-7" (click)="_resetTouch()">
+    <p class="main-text">{{ _titolo }}</p>
+    <p class="meta-text" *ngIf="_metaTitolo">{{ _metaTitolo }}</p>
+  </div>
+  <div class="col" (click)="_resetTouch()">
+    <p class="main-text">{{ _currencyFormat(_importo) }}</p>
+    <p class="meta-text" *ngIf="_metaImporto">{{ _metaImporto }}</p>
+  </div>
+  <div class="d-none d-md-flex align-items-center justify-content-center edit-icon" *ngIf="_secondaryIcon && !_touchDevice">
+    <button mat-icon-button (click)="_onIconClick('_secondaryIcon')">
+      <mat-icon>{{ _secondaryIcon }}</mat-icon>
+    </button>
+  </div>
+  <div class="d-none d-md-flex align-items-center justify-content-center delete-icon" *ngIf="_primaryIcon && !_touchDevice">
+    <button mat-icon-button (click)="_onIconClick('_primaryIcon')">
+      <mat-icon>{{ _primaryIcon }}</mat-icon>
+    </button>
+  </div>
+  <div #touch class="d-flex d-md-none align-items-center justify-content-center touch-device" *ngIf="(_primaryIcon || _secondaryIcon) && _touchDevice">
+    <button mat-icon-button (click)="_onIconClick('_secondaryIcon')" *ngIf="_secondaryIcon">
+      <mat-icon>{{ _secondaryIcon }}</mat-icon>
+    </button>
+    <button mat-icon-button (click)="_onIconClick('_primaryIcon')" *ngIf="_primaryIcon">
+      <mat-icon>{{ _primaryIcon }}</mat-icon>
+    </button>
+  </div>
+</div>
+
+

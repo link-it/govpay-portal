@@ -1,0 +1,36 @@
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12 col-md-2"></div>
+    <div class="col-12 col-md-8 mb-5 mb-md-0">
+      <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Ricevuta.Form.Titolo"></pay-title-deco>
+      <p class="pt-5">{{ Pay.I18n.json.Ricevuta.Form.Note }}</p>
+      <form [formGroup]="_fg" (ngSubmit)="_onFormSubmit(_fg)">
+        <div class="container-fluid">
+          <div class="row py-5">
+            <div class="col-12 col-sm-6 px-0 pr-sm-3">
+              <mat-form-field class="w-100">
+                <input matInput [placeholder]="Pay.I18n.json.Ricevuta.Form.Email" formControlName="email" name="email" required>
+              </mat-form-field>
+            </div>
+            <div class="col-12 col-sm-6 px-0 pl-sm-3">
+              <mat-form-field class="w-100">
+                <input matInput [placeholder]="Pay.I18n.json.Ricevuta.Form.ConfermaEmail" formControlName="confermaEmail" name="confermaEmail" required>
+                <mat-error *ngIf="_fg.errors">
+                  {{_fg.errors['message']}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 px-0">
+              <pay-icon-button type="submit" [disabled]="!_fg.valid">{{ Pay.I18n.json.Ricevuta.Form.Submit }}</pay-icon-button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-12 col-md-2"></div>
+  </div>
+</div>
+
+

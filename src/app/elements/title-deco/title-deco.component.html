@@ -1,0 +1,7 @@
+<div class="{{ _artClass }}">
+  <div class="art-deco"></div>
+  <div class="d-flex flex-nowrap align-items-center">
+    <div class="label">{{ _titolo }}</div>
+    <button class="ml-auto" mat-icon-button *ngIf="!_simple" (click)="_onIconClick($event)"><mat-icon>{{ _icona }}</mat-icon></button>
+  </div>
+</div>

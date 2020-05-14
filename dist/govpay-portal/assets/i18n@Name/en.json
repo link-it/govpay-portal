@@ -1,219 +1,191 @@
 {
-  "Header": {
-    "titolo": "Ministry of Foreign Affairs and International Cooperation @Red",
-    "sottotitolo": "Farnesina pagoPA @Red",
-    "menu": {
-      "items": [
-        { "label": "Pay a notice", "link": "/accesso" },
-        { "label": "Debt position", "link": "/riepilogo" },
-        { "label": "Archive of payments", "link": "/archivio" }
+  "Language": {
+    "Header": {
+      "Titolo": "Administration",
+      "LanguageBar": {
+        "Titolo": "Region"
+      }
+    },
+    "SideNav": {
+      "Titolo": "Payment management",
+      "MenuItems": [
+        {
+          "Label": "Payments",
+          "Link": "/pagamenti"
+        },
+        {
+          "Label": "Debt position",
+          "Link": "/riepilogo"
+        },
+        {
+          "Label": "Payments history",
+          "Link": "/archivio"
+        },
+        {
+          "Label": "Cart",
+          "Link": "/carrello"
+        }
       ],
-      "account": {
-        "name": "",
-        "settings": [
-          { "label": "User profile", "link": "/profilo" },
-          { "label": "Log out", "link": "" }
-        ]
-      }
-    }
-  },
-  "Footer": {
-    "titolo": "Ministry of Foreign Affairs and International Cooperation @Red",
-    "recapito": {
-      "titolo": "Contact details",
-      "indirizzo": "Ministry of Foreign Affairs and International Cooperation Piazzale della Farnesina, 1 00135 Roma",
-      "centralino": "Switchboard: +39 06 36911",
-      "postaCertificata": "Institutional and certified e-mail address of the MAECI: ministero.affariesteri@cert.esteri.it",
-      "uffici": "All offices",
-      "reteDiplomatica": "Diplomatic network"
+      "Logout": "Log out"
     },
-    "indirizzi": {
-      "organigramma": "https://www.esteri.it/mae/it/ministero/struttura/organigramma.html",
-      "reteDiplomatica": "https://www.esteri.it/mae/it/ministero/laretediplomatica",
-      "comunicazioni": "https://www.esteri.it/mae/it/trasparenza_comunicazioni_legali/organizzazione/telefono_posta_elettronica.html",
-      "info": "https://www.esteri.it/mae/it/servizi/sportello_info/domandefrequenti/faqrichiestainfo.html",
-      "faq": "https://www.esteri.it/mae/it/servizi/sportello_info/domandefrequenti",
-      "riferimenti": "https://www.dovesiamonelmondo.it/dovemondo/index.php?id=71",
-      "rss": "https://www.esteri.it/mae/it/header_footer/feedrss.html",
-      "news": "https://www.esteri.it/mae/it/header_footer/areaintnewsletter.html",
-      "crediti": "https://www.esteri.it/mae/header_footer/cdr.html",
-      "noteLegali": "https://www.esteri.it/mae/header_footer/noteLegali.html",
-      "privacy": "https://www.esteri.it/mae/header_footer/privacy.html",
-      "cookie": "https://www.esteri.it/mae/header_footer/privacy-e-cookie.html",
-      "appIOS": "https://apps.apple.com/it/app/mappamondo-consolare/id1465893831",
-      "appAndroid": "https://play.google.com/store/apps/details?id=com.mae.mappamondoConsolare",
-      "facebook": "https://www.facebook.com/ItalyMFA.it",
-      "twitter": "https://twitter.com/ItalyMFA",
-      "youtube": "https://www.youtube.com/ministeroesteri?gl=IT&hl=it",
-      "instagram": "https://www.instagram.com/italymfa/"
+    "Spid": {
+      "Label": "Login with SPID",
+      "Info": "More information",
+      "Ask": "Don't you have SPID?",
+      "Help": "Need help?"
     },
-    "urp": {
-      "titolo": "Public relations",
-      "orario": "The Office is open to the public for visits from Monday to Friday from 9:00 am to 1:00 pm",
-      "contatti": {
-        "telefono": "Telephone: +39 06 3691 8899 Monday to Friday from 8.30 to 15.30",
-        "fax": "Fax: +39 06 3236210",
-        "pec": "PEC addresses",
-        "moduloInfo": "Information request form",
-        "faq": "FAQ @Red"
-      }
-    },
-    "app": {
-      "titolo": "Farnesina app @Red",
-      "riferimenti": "Crisis unit",
-      "rss": "RSS Feed",
-      "news": "News Alert",
-      "iOS": "mAPPamondo (iOS)",
-      "android": "mAPPamondo (Android)"
-    },
-    "crediti": "Credits @Red",
-    "noteLegali": "Legal notices",
-    "privacy": "Privacy",
-    "cookie": "Cookie policy"
-  },
-  "Accesso": {
-    "titolo": "The MAECI payment service",
-    "descrizione": "English lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget augue a quam iaculis porttitor. Sed tincidunt ullamcorper ante, id tincidunt urna. Nulla nec tempor urna, in consectetur ipsum. Nam ac ornare tortor, sed imperdiet orci."
-  },
-  "PayCard": {
-    "titolo": "Pay with pagoPA @Red",
-    "note": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
-    "form": {
-      "avviso": "Notice number",
-      "fotocamera": "Camera",
-      "creditore": "Creditor",
-      "submit": "Submit",
-      "errors": {
-        "common": "The code entered does not correspond to any creditor in the list.",
-        "denied": "Creditor code %1 not enabled.",
-        "config": "No creditor configured.",
-        "required": "Creditor required."
-      }
-    }
-  },
-  "LoginCard": {
-    "titolo": "Log in to your account",
-    "note": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
-    "spid": "Login with SPID",
-    "info": "More information",
-    "ask": "Don't you have SPID?",
-    "help": "Need help?"
-  },
-  "PosizioneDebitoria": {
-    "titolo": "Debt position",
-    "filter": {
-      "stato": "Status",
-      "noFilter": "All"
-    }
-  },
-  "Cart": {
-    "titolo": "Cart",
-    "importo": "Total",
-    "submit": "Proceed to payment"
-  },
-  "Archivio": {
-    "titolo": "Archive of payments",
-    "filter": {
-      "stato": "Status",
-      "noFilter": "All"
-    }
-  },
-  "Avviso": {
-    "titolo": "Payment summary",
-    "note": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
-    "sottotitolo": "Receipt destination",
-    "dettaglio": "English praesent nec ullamcorper lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis massa est.",
-    "importo": "Total",
-    "submit": "Proceed to payment",
-    "cancel": "Cancel",
-    "email": "Email",
-    "confermaEmail": "Confirm email",
-    "error": "Verify the information entered.",
-    "wait": "Recovery of information in progress...",
-    "close": "New payment"
-  },
-  "Alert": {
-    "eseguito": "Payment executed",
-    "fallito": "Payment not executed",
-    "dettaglioEseguito": "The payment required for the notice %1 appears to have been successful. The payment receipt will be sent to the address provided.",
-    "dettaglioFallito": "The payment required for the %1 alert does NOT appear to have been successful.",
-    "dettaglioInCorso": {
-      "ok": "The payment process has been completed successfully. We are awaiting confirmation of payment from the pagoPA platform.",
-      "timeout": {
-        "ok": "The payment process has been completed successfully, but there has been a delay in communicating the payment claim from the pagoPA platform. As soon as it is made available, we will send it to the email address.",
-        "errore": "The payment process was completed without the payment of the due, but there was a delay in the communication of the payment attestation from the pagoPA platform. As soon as it is made available, we will send it to the email address."
+    "Pagamenti": {
+      "Titolo": "Online payments",
+      "Bollettino": {
+        "Titolo": "Simple payment",
+        "Note": "Where do you find the notice number?",
+        "Submit": "Add to cart",
+        "Dialog": {
+          "Close": "Got it"
+        },
+        "Form": {
+          "Avviso": "Notice number",
+          "Fotocamera": "Camera",
+          "Creditore": "Creditor",
+          "Errors": {
+            "Common": "The code entered does not correspond to any creditor in the list.",
+            "Denied": "Creditor code {{value}} not enabled.",
+            "Config": "No creditor configured.",
+            "Required": "Creditor required."
+          }
+        }
       },
-      "errore": "The payment process has been completed without the payment of the due amount. We are awaiting confirmation of payment from the pagoPA platform"
-    },
-    "submit": "Fix incomplete payments",
-    "close": "New payment"
-  },
-  "Common": {
-    "riepilogo": "Summary",
-    "anagrafica": {
-      "profilo": "User profile",
-      "email": "Email",
-      "codiceFiscale": "Tax ID"
-    },
-    "avvisoNumero": "Notice number %1",
-    "itemsPerPageLabel": "Items per page",
-    "nextPageLabel": "Next",
-    "previousPageLabel": "Previous",
-    "lastPageLabel": "Last page",
-    "firstPageLabel": "First page",
-    "risultatiPendenze": "Found # items|Found # item",
-    "risultatiPagamenti": "Found # payments|Found # payment",
-    "notAvailable": "Not available",
-    "scadenza": "Deadline",
-    "data": "Date",
-    "senza_scadenza": "No Expires",
-    "avviso": "Notice",
-    "iuv": "IUV",
-    "beneficiario": "Payee",
-    "pagamento": "Payment",
-    "pagamentoInCorso": "In progress",
-    "pagamentoFallito": "Rejected",
-    "pagamentoEseguito": "Paid",
-    "pagamentoParzialmenteEseguito": "Partially Paid",
-    "pagamentoAnnullato": "Canceled",
-    "pagamentoNonEseguito": "Not performed",
-    "pendenzaEseguita": "Paid",
-    "pendenzaParzialmenteEseguita": "Partially Paid",
-    "pendenzaNonEseguita": "To pay",
-    "pendenzaAnnullata": "Canceled",
-    "pendenzaScaduta": "Expired",
-    "pendenzaInRitardo": "To pay - Delay",
-    "verificaPendenzaEseguita": "Paid",
-    "verificaPendenzaDuplicata": "Paid",
-    "verificaPendenzaNonEseguita": "To pay",
-    "verificaPendenzaAnnullata": "Canceled",
-    "verificaPendenzaSconosciuta": "Unknown",
-    "verificaPendenzaScaduta": "Expired",
-    "compoundError": {
-      "error": "Unable to proceed with ",
-      "error2": "Payment is already done.",
-      "errorSub1": "payment because the notice is canceled.",
-      "errorSub2": "payment since the notice has expired on %1.",
-      "errorSub3": "payment; there is no further information."
-    },
-    "alertAction": "Close",
-    "warningRicevuta": "No documents available",
-    "ricevuta": "Receipt.pdf",
-    "archivio": "Receipts.zip"
-  },
-  "http": {
-    "error_map": [
-      {
-        "match": "string_to_match",
-        "message": "Error message"
+      "Servizi": {
+        "Titolo": "Pay a service",
+        "Filtro": "Text filter..."
       }
-    ],
-    "status_400": "[%1, %2, %3, %4] Bad request.",
-    "status_401": "[%1, %2, %3, %4] Access not authorized. Try to login again.",
-    "status_403": "[%1, %2, %3, %4] Access forbidden.",
-    "status_404": "[%1, %2, %3, %4] Service not found.",
-    "status_500": "[%1, %2, %3, %4] Internal server error.",
-    "status_504": "[%1, %2, %3, %4] Gateway timeout.",
-    "default": "[%1, %2, %3, %4] Service not available, please try again later."
+    },
+    "Cart": {
+      "Badge": "{{value}} Payment|{{value}} Payments",
+      "Titolo": "Cart",
+      "Pagamenti": {
+        "Titolo": "Payments list",
+        "Paga": "Pay now",
+        "Stampa": "Print notice",
+        "Totale": "Total"
+      }
+    },
+    "DettaglioServizio": {
+      "Titolo": "Service information",
+      "Form": {
+        "Titolo": "Payment details",
+        "Salva": "Save",
+        "Verifica": "Verify"
+      },
+      "Dialog": {
+        "Avviso": "Do you want to add this charge to the cart with these data just entered?",
+        "Causale": "Causal payment",
+        "ImportoPendenza": "Amount due",
+        "Submit": "Add to cart",
+        "Close": "Cancel"
+      }
+    },
+    "Ricevuta": {
+      "Titolo": "Payment receipt",
+      "Form": {
+        "Titolo": "Data necessary for the delivery of the receipt",
+        "Note": "We ask you for this data because...",
+        "Email": "Email",
+        "ConfermaEmail": "Confirm email",
+        "Submit": "Complete the payment",
+        "Error": "Check the information entered"
+      }
+    },
+    "Posizione": {
+      "Titolo": "Debt position",
+      "Debiti": {
+        "Titolo": "{{value}} notice to pay|{{value}} notices to pay"
+      }
+    },
+    "Archivio": {
+      "Titolo": "Payments history",
+      "Pagamenti": {
+        "Titolo": "{{value}} stored payment|{{value}} stored payments"
+      }
+    },
+    "Esito": {
+      "Titolo": "Payment outcome",
+      "Pagamenti": {
+        "Titolo": "Summary",
+        "Dettaglio": {
+          "Eseguito": "The payment required appears to have been successful. The payment receipt will be sent to the address provided.",
+          "Fallito": "The payment required does NOT appear to have been successful.",
+          "Errore": "The payment process has been completed without the payment of the due amount. We are awaiting confirmation of payment from the pagoPA platform",
+          "InCorso": {
+            "Titolo": "Recovery of information in progress...",
+            "Ok": "The payment process has been completed successfully. We are awaiting confirmation of payment from the pagoPA platform.",
+            "Timeout": {
+              "Ok": "The payment process has been completed successfully, but there has been a delay in communicating the payment claim from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
+              "Errore": "The payment process was completed without the payment of the due, but there was a delay in the communication of the payment attestation from the pagoPA platform. As soon as it is made available, we will send it to your email address."
+            }
+          }
+        }
+      }
+    },
+    "JsonForm": {
+      "Required": "This field is required",
+      "MinLength": "Must be {{minimumLength}} characters or longer (current length: {{currentLength}})",
+      "MaxLength": "Must be {{maximumLength}} characters or shorter (current length: {{currentLength}})",
+      "Pattern": "Must match pattern: {{requiredPattern}}",
+      "Format": {
+        "Date": "Must be a date",
+        "Time": "Must be a time",
+        "DateTime": "Must be a date-time",
+        "Email": "Must be an email address",
+        "Hostname": "Must be a hostname",
+        "Ipv4": "Must be an IPv4 address",
+        "Ipv6": "Must be an IPv6 address, like 1234:5678:9ABC:DEF0:1234:5678:9ABC:DEF0",
+        "Url": "Must be a url, like http://www.example.com/page.html",
+        "UUID": "Must be a uuid, like 12345678-9ABC-DEF0-1234-56789ABCDEF0",
+        "Color": "Must be a color, like #FFFFFF or rgb(255, 255, 255)",
+        "JsonPointer": "Must be a JSON Pointer, like /pointer/to/something",
+        "RelativeJsonPointer": "Must be a relative JSON Pointer, like 2/pointer/to/something",
+        "Regex": "Must be a regular expression, like (1-)?\\d{3}-\\d{3}-\\d{4}",
+        "Generic": "Must be a correctly formatted: {{requiredFormat}}"
+      },
+      "Minimum": "Must be {{minimumValue}} or more",
+      "ExclusiveMinimum": "Must be more than {{exclusiveMinimumValue}}",
+      "Maximum": "Must be {{maximumValue}} or less",
+      "ExclusiveMaximum": "Must be less than {{exclusiveMaximumValue}}",
+      "MultipleOf": "Must be a multiple of {{multipleOfValue}}",
+      "Decimals": "Must have {{decimals}} or fewer decimal places",
+      "MinProperties": "Must have {{minimumProperties}} or more items (current items: {{currentProperties}})",
+      "MaxProperties": "Must have {{maximumProperties}} or fewer items (current items: {{currentProperties}}",
+      "MinItems": "Must have {{minimumItems}} or more items (current items: {{currentItems}})",
+      "MaxItems": "Must have {{maximumItems}} or fewer items (current items: {{currentItems}})",
+      "UniqueItems": "All items must be unique"
+    },
+    "Http": {
+      "ErrorMap": [{
+          "Match": "string_to_match",
+          "Message": "[%1, %2, %3, %4] Error message"
+        }
+      ],
+      "Status400": "[%1, %2, %3, %4] Bad request.",
+      "Status401": "[%1, %2, %3, %4] Access not authorized. Try to login again.",
+      "Status403": "[%1, %2, %3, %4] Access forbidden.",
+      "Status404": "[%1, %2, %3, %4] Service not found.",
+      "Status422": "[%1, %2, %3, %4] Unable to complete the request.",
+      "Status500": "[%1, %2, %3, %4] Internal server error.",
+      "Status504": "[%1, %2, %3, %4] Gateway timeout.",
+      "Default": "[%1, %2, %3, %4] Service not available, please try again later."
+    },
+    "Common": {
+      "AlertAction": "Close",
+      "NumeroAvviso": "Notice",
+      "Scadenza": "Deadline",
+      "SenzaScadenza": "No Expires",
+      "NotAvailable": "Not available",
+      "PendenzaInserita": "The notice with number {{numeroAvviso}} has already added to cart",
+      "PendenzaEseguita": "The notice with number {{numeroAvviso}} has already been paid on {{data}}",
+      "PendenzaAnnullata": "The notice with number {{numeroAvviso}} has benn canceled",
+      "PendenzaSconosciuta": "The notice with number {{numeroAvviso}} is unknown",
+      "PendenzaScaduta": "The notice with number {{numeroAvviso}} has expired on {{data}}"
+    }
   }
 }
