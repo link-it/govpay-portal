@@ -184,8 +184,8 @@ button:focus {
   font-family: 'Titillium Web', sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
-  padding: .75rem 1rem;
-  line-height: 1;
+  padding: 0 1rem;
+  line-height: 1.5;
   color: $reverse-text-color;
   background-color: $background-color;
 }
@@ -216,10 +216,24 @@ button:focus {
   font-family: 'Titillium Web', sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
-  //padding-top: .75rem;
-  //padding-bottom: .75rem;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
   color: $reverse-text-color;
   background-color: $background-color;
+}
+
+.language-bar .dropdown-toggle::after {
+  font-family: 'Material Icons';
+  position: relative;
+  top: 2px;
+  margin-left: 4px;
+  border: none;
+  content: 'expand_more';
+  vertical-align: 0em;
+}
+
+.language-bar-title {
+  padding: .75rem 0;
 }
 
 .language-bar p.multiline-text {
@@ -241,6 +255,8 @@ button:focus {
 .language-bar a,
 .language-bar a:hover,
 .header-bar a:hover {
+  font-family: 'Titillium Web', sans-serif;
+  font-weight: 400;
   color: $reverse-text-color;
 }
 
@@ -364,7 +380,7 @@ mat-option .mat-option-text {
 
 pay-item {
   background-color: $reverse-text-color;
-  padding: .5rem 1rem;
+  padding: 1rem;
   margin-bottom: .5rem;
 }
 
@@ -387,8 +403,8 @@ p.meta-text {
 pay-item .edit-icon,
 pay-item .delete-icon {
   width: 56px;
-  margin-top: -.5rem;
-  margin-bottom: -.5rem;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
 }
 
 pay-item .edit-icon:hover,

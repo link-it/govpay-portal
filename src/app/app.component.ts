@@ -116,9 +116,11 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   _languageHandler(event: any) {
-    this._language = event.language.alpha3Code.toUpperCase();
-    this._doTranslate();
-    this.translate.use(event.language.alpha2Code);
+    if (event.language.alpha2Code !== this.translate.currentLang) {
+      this._language = event.language.alpha3Code.toUpperCase();
+      this._doTranslate();
+      this.translate.use(event.language.alpha2Code);
+    }
   }
 
   _rightIconClickHandler() {

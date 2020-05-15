@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12 d-flex align-items-center">
-        <div class="w-100 text-truncate">
+        <div class="{{_languageClass?_languageClass+'-title ':''}}w-100 text-truncate">
           <a class="w-100 multiline-text" [href]="_href" target="_blank" *ngIf="_href!='#'">{{ _title }}</a>
           <p class="m-0 multiline-text" *ngIf="_href=='#'">{{ _title }}</p>
         </div>

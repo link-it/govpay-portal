@@ -7,9 +7,9 @@
   outline: none !important;
   box-shadow: none !important;
   background-color: #06C;
-  border: 5px solid #06C;
+  border: none;
   color: #FFF;
-  padding: 0 .75rem;
+  padding: .75rem;
   font-size: 1rem;
   text-align: center;
   border-radius: 0;
@@ -17,14 +17,14 @@
 
 .button-spid:hover {
   background-color: #036;
-  border: 5px solid #036;
+  border: none;
 }
 
 .button-spid:active {
   outline: none !important;
   box-shadow: none !important;
   background-color: #036;
-  border: 5px solid #036;
+  border: none;
   color: #fff;
 }
 
@@ -67,6 +67,7 @@ a.dropdown-item:last-child {
 
 .dropdown-toggle::after {
   border: none !important;
+  content: '';
 }
 
 @media (max-width: 567px) and (max-height: 768px) {
