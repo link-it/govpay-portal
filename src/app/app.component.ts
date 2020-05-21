@@ -23,7 +23,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _isLoading: boolean = false;
   _languages: Language[] = [];
   _language: string = '';
-  _sideMode: string = 'side';
 
   // @HostListener('window:resize') onResize() {}
   @ViewChild('headerBar', { read: ElementRef }) private _headerBar: ElementRef;
@@ -73,7 +72,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   _updateLayout() {
-    this._sideMode = this.breakpointObserver.isMatched('(min-width: 1440px)')?'side':'over';
     if (this._headerBar && this._languageBar && this._globalContent) {
       this._mst = this._languageBar.nativeElement.clientHeight;
       this._hbh = this._headerBar.nativeElement.clientHeight;

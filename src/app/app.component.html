@@ -6,7 +6,7 @@
                   *ngIf="!Pay.User && Pay.SPID['ACCESS']"></pay-spid-login>
 </pay-language-bar>
 <mat-sidenav-container>
-  <mat-sidenav #sidenav class="side-nav" [mode]="_sideMode" [opened]="(_sideMode == 'side')">
+  <mat-sidenav #sidenav class="side-nav" mode="over">
     <div class="side-nav-title d-flex align-items-center" [style.height.px]="_hbh">
       <span class="text-truncate">{{ Pay.I18n.json.SideNav.Titolo }}</span>
     </div>
@@ -30,8 +30,8 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <pay-header-bar #headerBar [title]="Pay.Header.Titolo" (click-left-icon)="_leftIconClickHandler($event, sidenav)" (click-right-icon)="_rightIconClickHandler()"
-                    [show-left-icon]="(_sideMode !== 'side' || Pay.Header.IsModal)" [left-icon]="Pay.Header.IsModal?'close':'menu'" right-icon="shopping_cart"
-                    [right-icon-label]="Pay.I18n.json.Cart.Badge" header-theme="header-bar"></pay-header-bar>
+                    [left-icon]="Pay.Header.IsModal?'close':'menu'" right-icon="shopping_cart" [right-icon-label]="Pay.I18n.json.Cart.Badge"
+                    header-theme="header-bar"></pay-header-bar>
     <div #globalContent class="global-container" [style.height.px]="_gch">
       <router-outlet></router-outlet>
     </div>

@@ -3,9 +3,11 @@
   "version": "2.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --vendorSourceMap",
     "start-proxy": "ng serve --aot=true --vendorSourceMap --proxy-config proxy.config.json",
+    "start": "ng serve --vendorSourceMap",
+    "clean": "rm -r ./dist/govpay-portal/assets/css && rm -r ./dist/govpay-portal/assets/fonts",
     "build": "ng build --prod --aot=true --build-optimizer=true --output-hashing=none",
+    "dist": "npm run build && npm run clean",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

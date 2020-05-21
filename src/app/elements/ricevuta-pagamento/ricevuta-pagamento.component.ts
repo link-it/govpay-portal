@@ -81,7 +81,7 @@ export class RicevutaPagamentoComponent implements OnInit, OnChanges {
     const _body = {
       pendenze: PayService.ShoppingCart.map(p => {
         return {
-          idDominio: p.rawData.idDominio?p.rawData.idDominio:p.rawData.dominio.idDominio,
+          idDominio: p.rawData.idDominio,
           numeroAvviso: p.rawData.numeroAvviso
         };
       }),

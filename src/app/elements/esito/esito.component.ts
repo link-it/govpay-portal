@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Standard } from '../classes/standard';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 
 import * as moment from 'moment';
+import { Subscription } from 'rxjs/index';
 
 @Component({
   selector: 'pay-esito',
   templateUrl: './esito.component.html',
   styleUrls: ['./esito.component.scss']
 })
-export class EsitoComponent implements OnInit {
+export class EsitoComponent implements OnInit, OnDestroy {
 
   Pay = PayService;
 
@@ -30,7 +31,14 @@ export class EsitoComponent implements OnInit {
   _pollingTimeout: number = 0;
   _payments: any[] = [];
 
-  constructor(protected router: Router, protected pay: PayService, protected activateRoute: ActivatedRoute, protected translate: TranslateService) { }
+  _langSubscription: Subscription;
+
+  constructor(protected router: Router, protected pay: PayService, protected activateRoute: ActivatedRoute, protected translate: TranslateService) {
+    this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      if (this._payments.length !== 0) {
+        this._payments = this.__loopFix(this._payments, true);
+      }
+    }); }
 
   ngOnInit() {
     this._sessione = false;
@@ -41,6 +49,12 @@ export class EsitoComponent implements OnInit {
     } else {
       this.pay.updateSpinner(true);
       this._recuperaSessionePagamento(_idSessione);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this._langSubscription) {
+      this._langSubscription.unsubscribe();
     }
   }
 
@@ -107,22 +121,7 @@ export class EsitoComponent implements OnInit {
 
   _paymentsToFix(response: any): any[] {
     const _response = response.body;
-    return (_response.pendenze || []).map(p => {
-      const _dataScadenza = p.dataScadenza?moment(p.dataScadenza).format(this.pay.getDateFormatByLanguage()):'';
-      const _subtitle: string[] = [];
-      _subtitle.push(`${PayService.I18n.json.Common.Scadenza}: ${_dataScadenza?_dataScadenza:PayService.I18n.json.Common.SenzaScadenza}`);
-      _subtitle.push(_response.numeroAvviso?`${PayService.I18n.json.Common.NumeroAvviso}: ${_response.numeroAvviso}`:'');
-      return new Standard({
-        localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-        uid: p.numeroAvviso,
-        titolo: p.causale,
-        sottotitolo: _subtitle.join(', '),
-        importo: p.importo,
-        stato: PayService.STATI_VERIFICA_PENDENZA[p.stato],
-        editable: false,
-        rawData: p
-      });
-    }).filter((s) => (s.stato === PayService.STATI_VERIFICA_PENDENZA['NON_ESEGUITA']));
+    return this.__loopFix(_response['pendenze']);
   }
 
   _toggleCartClick(event: any) {
@@ -139,5 +138,33 @@ export class EsitoComponent implements OnInit {
       }
     }
     PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+  }
+
+  /**
+   * @param {any[]} _loop
+   * @param {boolean} _rawData
+   * @returns {any[]}
+   * @private
+   */
+  __loopFix(_loop: any[], _rawData: boolean = false): any[] {
+    return (_loop || []).map(p => {
+      if (_rawData) {
+        p = p.rawData;
+      }
+      const _dataScadenza = p.dataScadenza?moment(p.dataScadenza).format(this.pay.getDateFormatByLanguage()):'';
+      const _subtitle: string[] = [];
+      _subtitle.push(`${PayService.I18n.json.Common.Scadenza}: ${_dataScadenza?_dataScadenza:PayService.I18n.json.Common.SenzaScadenza}`);
+      _subtitle.push(p.numeroAvviso?`${PayService.I18n.json.Common.NumeroAvviso}: ${p.numeroAvviso}`:'');
+      return new Standard({
+        localeNumberFormat: this.pay.getNumberFormatByLanguage(),
+        uid: p.numeroAvviso,
+        titolo: p.causale,
+        sottotitolo: _subtitle.join(', '),
+        importo: p.importo,
+        stato: PayService.STATI_VERIFICA_PENDENZA[p.stato],
+        editable: false,
+        rawData: p
+      });
+    }).filter((s) => (s.stato === PayService.STATI_VERIFICA_PENDENZA['NON_ESEGUITA']));
   }
 }

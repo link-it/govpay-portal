@@ -181,6 +181,8 @@
       "Scadenza": "Scadenza",
       "SenzaScadenza": "Non prevista",
       "NotAvailable": "Non disponibile",
+      "BollettinoPdf": "BollettinoPDF.pdf",
+      "ArchivioPdf": "Archivio.zip",
       "PendenzaInserita": "La pendenza con numero avviso {{numeroAvviso}} risulta già inserita nel carrello",
       "PendenzaEseguita": "La pendenza con numero avviso {{numeroAvviso}} risulta già pagata il giorno {{data}}",
       "PendenzaAnnullata": "La pendenza con numero avviso {{numeroAvviso}} è stata annullata",

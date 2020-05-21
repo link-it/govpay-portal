@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'pay-icon-button',
@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./icon-button.component.scss']
 })
 export class IconButtonComponent implements OnInit {
+  @HostBinding('class.no-webkit') _noWebkit: boolean = true;
 
   @Input('button-class') _buttonClass: string = 'flat-button';
   @Input('button-color') _buttonColor: string = 'primary';

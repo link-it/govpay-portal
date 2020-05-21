@@ -181,6 +181,8 @@
       "Scadenza": "Deadline",
       "SenzaScadenza": "No Expires",
       "NotAvailable": "Not available",
+      "BollettinoPdf": "PDFDocument.pdf",
+      "ArchivioPdf": "Archive.zip",
       "PendenzaInserita": "The notice with number {{numeroAvviso}} has already added to cart",
       "PendenzaEseguita": "The notice with number {{numeroAvviso}} has already been paid on {{data}}",
       "PendenzaAnnullata": "The notice with number {{numeroAvviso}} has benn canceled",

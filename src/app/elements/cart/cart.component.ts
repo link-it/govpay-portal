@@ -4,6 +4,7 @@ import { Standard } from '../classes/standard';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { AvvisoTpl } from '../classes/avviso-tpl';
 
 @Component({
   selector: 'pay-cart',
@@ -35,6 +36,13 @@ export class CartComponent implements OnInit, AfterContentChecked {
   }
 
   _ibClickStampa() {
+    const _props: AvvisoTpl[] = PayService.ShoppingCart.map((c: Standard) => {
+      const atp: AvvisoTpl = new AvvisoTpl();
+      atp.avviso = c.rawData['numeroAvviso'];
+      atp.creditore = c.rawData['idDominio'];
+      return atp;
+    });
+    this.pay.pdf(_props);
   }
 
   _payItemIconClick(event: any) {
@@ -60,7 +68,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
     const _body = {
       pendenze: PayService.ShoppingCart.map(p => {
         return {
-          idDominio: p.rawData.idDominio?p.rawData.idDominio:p.rawData.dominio.idDominio,
+          idDominio: p.rawData.idDominio,
           numeroAvviso: p.rawData.numeroAvviso
         };
       }),

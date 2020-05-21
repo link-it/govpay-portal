@@ -130,6 +130,7 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
     _subtitle.push(_response['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_response['numeroAvviso']}`:'');
     PayService.ExtraState['idA2A'] = _response['idA2A'];
     PayService.ExtraState['idPendenza'] = _response['idPendenza'];
+    PayService.ExtraState['idDominio'] = _response['dominio']['idDominio'];
     PayService.ExtraState['numeroAvviso'] = _response['numeroAvviso'];
     PayService.ExtraState['dataScadenza'] = _response['dataScadenza'];
     if (PayService.Cart.indexOf(_response['numeroAvviso']) === -1) {

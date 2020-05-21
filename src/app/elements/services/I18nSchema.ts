@@ -183,6 +183,8 @@ export class I18n {
       Scadenza: '',
       SenzaScadenza: '',
       NotAvailable: '',
+      BollettinoPdf: '',
+      ArchivioPdf: '',
       PendenzaInserita: '',
       PendenzaEseguita: '',
       PendenzaAnnullata: '',

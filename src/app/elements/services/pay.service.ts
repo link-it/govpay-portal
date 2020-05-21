@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { forkJoin, Observable } from 'rxjs';
 import { timeout, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatPaginatorIntl, MatSnackBar, MatSnackBarConfig } from '@angular/material';
@@ -12,6 +12,7 @@ import { Creditore } from '../classes/creditore';
 import { Standard } from '../classes/standard';
 
 import * as moment from 'moment';
+import { AvvisoTpl } from '../classes/avviso-tpl';
 
 declare let PayConfig, SwitchConfig;
 declare let saveAs;
@@ -411,6 +412,54 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   /**
+   * Stampe pdf
+   * @param {AvvisoTpl[]} props
+   * @param {boolean} open
+   */
+   pdf(props: AvvisoTpl[], open: boolean = true) {
+    const methods = props.map((prop, index) => {
+      let headers = new HttpHeaders();
+      headers = headers.set('Content-Type', 'application/pdf');
+      headers = headers.set('Accept', 'application/pdf');
+      let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
+      if (!open) {
+        url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      }
+      url += PayService.URL_AVVISO.split('{idDominio}').join(prop.creditore).split('{numeroAvviso}').join(prop.avviso);
+      const method = this.http.get(url, { headers: headers, observe: 'response', responseType: 'blob' });
+
+      return method.pipe(timeout(PayService.TIMEOUT));
+    });
+    forkJoin(methods).subscribe(
+      (responses) => {
+        this._generateZip(responses);
+      },
+      (error) => {
+        this.updateSpinner(false);
+        this.onError(error);
+      });
+  }
+
+  /**
+   * Zip file
+   * @param {any} _responses
+   * @private
+   */
+  protected _generateZip(_responses: any) {
+    const zip = new JSZip();
+    _responses.forEach((response, i) => {
+      const header = response.headers.get('content-disposition');
+      const filename = header?header.match(/filename="(.+)"/)[1]:`${PayService.I18n.json.Common.BollettinoPdf}_${i}`;
+
+      zip.file(filename, response.body);
+    });
+    zip.generateAsync({type: 'blob'}).then(function (zipData) {
+      saveAs(zipData, PayService.I18n.json.Common.ArchivioPdf);
+      this.updateSpinner(false);
+    }.bind(this));
+  }
+
+  /**
    * Logout User
    * @returns {Observable<any>}
    */
@@ -703,25 +752,6 @@ export class PayService implements OnInit, OnDestroy {
   //       this.updateSpinner(false);
   //       this.onError(error);
   //     });
-  // }
-
-  /**
-   * Zip file
-   * @param {any} _responses
-   * @private
-   */
-  // protected _generateZip(_responses: any) {
-  //   const zip = new JSZip();
-  //   _responses.forEach((response) => {
-  //     const header = response.headers.get('content-disposition');
-  //     const filename = header?header.match(/filename="(.+)"/)[1]:PayService.SHARED_LABELS.ricevuta;
-  //
-  //     zip.file(filename, response.body);
-  //   });
-  //   zip.generateAsync({type: 'blob'}).then(function (zipData) {
-  //     saveAs(zipData, PayService.SHARED_LABELS.archivio);
-  //     this.updateSpinner(false);
-  //   }.bind(this));
   // }
 
   static ResetState() {
