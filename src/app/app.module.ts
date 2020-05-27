@@ -21,7 +21,7 @@ import { AuthGuardService } from './elements/services/auth-gard.service';
 
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { TranslateLoaderExt } from './elements/classes/translate-loader-ext';
-import { MatButtonModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatSidenavModule } from '@angular/material';
+import { MatBadgeModule, MatButtonModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatSidenavModule } from '@angular/material';
 import { HeaderBarComponent } from './elements/header-bar/header-bar.component';
 import { LanguageBarComponent } from './elements/language-bar/language-bar.component';
 import { SpidLoginComponent } from './elements/spid-login/spid-login.component';
@@ -31,7 +31,7 @@ import { IconButtonComponent } from './elements/icon-button/icon-button.componen
 import { QuadroServizioComponent } from './elements/quadro-servizio/quadro-servizio.component';
 import { DettaglioServizioComponent } from './elements/dettaglio-servizio/dettaglio-servizio.component';
 import { PayCardComponent } from './elements/pay-card/pay-card.component';
-import { CartComponent, HasEditablePipe } from './elements/cart/cart.component';
+import { CartComponent } from './elements/cart/cart.component';
 import { PayItemComponent } from './elements/pay-item/pay-item.component';
 import { RicevutaPagamentoComponent } from './elements/ricevuta-pagamento/ricevuta-pagamento.component';
 import { PosizioneDebitoriaComponent } from './elements/posizione-debitoria/posizione-debitoria.component';
@@ -60,7 +60,6 @@ export function createTranslateLoader(http: HttpClient) {
     QuadroServizioComponent,
     PayCardComponent,
     CartComponent,
-    HasEditablePipe,
     PayItemComponent,
     YesnoDialogComponent,
     EsitoComponent
@@ -91,6 +90,8 @@ export function createTranslateLoader(http: HttpClient) {
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    MatBadgeModule,
+    MatMenuModule,
     MaterialDesignFrameworkModule,
     ZXingScannerModule
   ],

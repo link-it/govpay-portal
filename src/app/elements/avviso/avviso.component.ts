@@ -164,7 +164,7 @@ class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   _newPayment() {
     this.pay.resetAvvisoPagamento();
-    this.router.navigateByUrl('/accesso' + PayService.BY_SWITCH);
+    this.router.navigateByUrl('/accesso');
   }
 
   /**
@@ -244,7 +244,7 @@ class AvvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         this.pay.updateSpinner(false);
         this.pay.onError(error);
         if(PayService.User) {
-          this.router.navigateByUrl('/riepilogo' + PayService.BY_SWITCH);
+          this.router.navigateByUrl('/riepilogo');
         } else {
           this._newPayment();
         }

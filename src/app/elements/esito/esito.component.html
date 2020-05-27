@@ -16,7 +16,7 @@
       <p class="pb-5 m-0" *ngIf="_paid === 0 && _status === STATUS_TIMEOUT">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Errore }}</p>
       <pay-item *ngFor="let p of _payments" primary-icon="shopping_cart" primary-icon-off="remove_shopping_cart" [item]="p"
                 [titolo]="p.titolo" [meta-titolo]="p.sottotitolo" [importo]="p.importo" (on-icon-click)="_toggleCartClick($event)"
-                [currency-format]="pay.currencyFormat.bind(pay)"></pay-item>
+                [currency-format]="pay.currencyFormat.bind(pay)" [mobile-breakpoint]="Pay.MobileBreakPointNotice"></pay-item>
     </div>
     <div class="col-12 col-md-2"></div>
   </div>

@@ -13,7 +13,10 @@
     <mat-list role="list" class="side-nav-menu d-flex flex-column" [style.height.px]="_gch">
       <mat-list-item role="listitem" *ngFor="let _item of Pay.I18n.json.SideNav.MenuItems | AuthGuard"
                      (click)="_sideNavItemClick(sidenav, _item.Link)">
-        <a [routerLink]="_item.Link" routerLinkActive="active-route" [ngClass]="_classRoute(_item.Link)">{{ _item.Label }}</a>
+        <a [routerLink]="_item.Link" routerLinkActive="active-route" [ngClass]="_classRoute(_item.Link)">
+          <span *ngIf="!_showBadgeCart(_item.Link)">{{ _item.Label }}</span>
+          <span *ngIf="_showBadgeCart(_item.Link)" [matBadge]="Pay.Cart['length']" [matBadgeOverlap]="false">{{ _item.Label }}</span>
+        </a>
       </mat-list-item>
       <mat-divider class="my-3" *ngIf="Pay.SPID['Access'] && Pay.I18n.json.Account"></mat-divider>
       <mat-list-item role="listitem" (click)="_sideNavItemClick(sidenav, '/profilo')" *ngIf="Pay.SPID['Access'] && Pay.I18n.json.Account">
@@ -31,7 +34,7 @@
   <mat-sidenav-content>
     <pay-header-bar #headerBar [title]="Pay.Header.Titolo" (click-left-icon)="_leftIconClickHandler($event, sidenav)" (click-right-icon)="_rightIconClickHandler()"
                     [left-icon]="Pay.Header.IsModal?'close':'menu'" right-icon="shopping_cart" [right-icon-label]="Pay.I18n.json.Cart.Badge"
-                    header-theme="header-bar"></pay-header-bar>
+                    header-theme="header-bar" [show-right-icon]="_showCart"></pay-header-bar>
     <div #globalContent class="global-container" [style.height.px]="_gch">
       <router-outlet></router-outlet>
     </div>

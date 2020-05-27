@@ -67,7 +67,9 @@
         "Titolo": "Elenco pagamenti",
         "Paga": "Paga ora",
         "Stampa": "Stampa bollettino",
-        "Totale": "Totale"
+        "Totale": "Totale",
+        "Inserimento": "Pendenza inserita nel carrello",
+        "Rimozione": "Pendenza rimossa dal carrello"
       }
     },
     "DettaglioServizio": {
@@ -181,6 +183,8 @@
       "Scadenza": "Scadenza",
       "SenzaScadenza": "Non prevista",
       "NotAvailable": "Non disponibile",
+      "Modifica": "Modifica",
+      "Elimina": "Elimina",
       "BollettinoPdf": "BollettinoPDF.pdf",
       "ArchivioPdf": "Archivio.zip",
       "PendenzaInserita": "La pendenza con numero avviso {{numeroAvviso}} risulta già inserita nel carrello",

@@ -57,11 +57,13 @@ $link-theme: mat-light-theme($palette, $palette);
 $background-color: #0066CC;
 $background-2nd-color: #0059B3;
 $background-3rd-color: #F5F5F5;
+$background-4th-color: rgba(255, 255, 255, .75);
+$background-5th-color: rgba(0, 0, 0, .04);
 $background-nth-color: #fff;
 
 $hover-color: mat-color($link-palette, 50);
 $text-color: #212121;
-$text-2nd-color: rgba(33, 33, 33, 0.5);
+$text-2nd-color: rgba(33, 33, 33, .5);
 
 $reverse-text-color: #ffffff;
 
@@ -75,7 +77,7 @@ $sidenavWidth: 300px;
 }
 
 .mat-drawer-backdrop {
-  background-color: rgba(0, 0, 0, 0.01) !important;
+  background-color: rgba(0, 0, 0, .01) !important;
 }
 
 .mat-drawer-inner-container {
@@ -135,9 +137,32 @@ button:focus {
   cursor: default;
 }
 
+.language-bar p.dropdown-item {
+  min-height: 48px;
+  line-height: 48px;
+  padding: 0 1rem;
+  color: $text-color;
+}
+
+.language-bar p.dropdown-item:hover,
+.mat-menu-item:hover:not([disabled]),
+.mat-menu-item.cdk-program-focused:not([disabled]),
+.mat-menu-item.cdk-keyboard-focused:not([disabled]),
+.mat-menu-item-highlighted:not([disabled]),
+.language-bar p.dropdown-item.active,
+.language-bar p.dropdown-item:active {
+  color: $text-color;
+  background-color: $background-5th-color;
+}
+
+.language-bar p.dropdown-item.active-language,
+.language-bar p.dropdown-item.active-language:hover,
+.language-bar p.dropdown-item.active-language.active,
+.language-bar p.dropdown-item.active-language:active,
 .route-link-disabled,
 .route-link-disabled:hover {
   color: $text-2nd-color;
+  background-color: transparent;
   cursor: default;
 }
 
@@ -258,11 +283,6 @@ button:focus {
   font-family: 'Titillium Web', sans-serif;
   font-weight: 400;
   color: $reverse-text-color;
-}
-
-.language-bar p.dropdown-item.active,
-.language-bar p.dropdown-item:active {
-  background-color: $background-color;
 }
 
 .etichetta {
@@ -400,38 +420,41 @@ p.meta-text {
   margin: 0 0 0 0;
 }
 
-pay-item .edit-icon,
-pay-item .delete-icon {
+pay-item .action-menu-icon,
+pay-item .primary-icon {
   width: 56px;
   margin-top: -1rem;
   margin-bottom: -1rem;
 }
 
-pay-item .edit-icon:hover,
-pay-item .delete-icon:hover {
+pay-item .expander-icon {
+  width: 40px;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
+}
+
+pay-item .action-menu-icon:hover,
+pay-item .primary-icon:hover {
   color: $reverse-text-color;
   background-color: $background-color;
 }
 
 pay-item .touch-device {
   position: absolute;
+  z-index: 1;
   padding: 0 .5rem;
   top: .5rem;
   bottom: .5rem;
+  left: 100%;
   right: -100%;
-  background: rgba(255, 255, 255, 1);
-  background: -moz-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
-  background: -webkit-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
-  background: -o-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
-  background: -ms-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 5%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=1 );
-  transition: right .35s linear;
+  transition: all .35s linear;
 }
 
 pay-item .touch-device.in {
+  left: 0;
   right: 0;
-  transition: right .5s linear;
+  transition: all .35s linear;
+  background: $background-4th-color;
 }
 pay-cart .cart-footer {
   background-color: $text-color;

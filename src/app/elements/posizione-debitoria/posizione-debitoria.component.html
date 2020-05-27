@@ -4,7 +4,7 @@
     <div class="col-12 col-md-8">
       <pay-title-deco class="mb-5" art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Posizione.Debiti.Titolo"></pay-title-deco>
       <pay-item *ngFor="let sp of Pay.PosizioneDebitoria" primary-icon="shopping_cart" primary-icon-off="remove_shopping_cart"
-                [currency-format]="pay.currencyFormat.bind(pay)"></pay-item>
+                [currency-format]="pay.currencyFormat.bind(pay)" [mobile-breakpoint]="Pay.MobileBreakPointNotice"></pay-item>
     </div>
     <div class="col-12 col-md-2"></div>
   </div>

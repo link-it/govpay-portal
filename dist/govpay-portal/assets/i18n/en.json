@@ -67,7 +67,9 @@
         "Titolo": "Payments list",
         "Paga": "Pay now",
         "Stampa": "Print notice",
-        "Totale": "Total"
+        "Totale": "Total",
+        "Inserimento": "Notice added to cart",
+        "Rimozione": "Notice removed from cart"
       }
     },
     "DettaglioServizio": {
@@ -181,6 +183,8 @@
       "Scadenza": "Deadline",
       "SenzaScadenza": "No Expires",
       "NotAvailable": "Not available",
+      "Modifica": "Edit",
+      "Elimina": "Delete",
       "BollettinoPdf": "PDFDocument.pdf",
       "ArchivioPdf": "Archive.zip",
       "PendenzaInserita": "The notice with number {{numeroAvviso}} has already added to cart",

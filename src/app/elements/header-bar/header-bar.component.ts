@@ -14,6 +14,7 @@ export class HeaderBarComponent implements OnInit, AfterViewInit {
   @Input('show-left-icon') _showLeftIcon: boolean = true;
   @Input('left-icon') _iconLeft: string = 'menu';
 
+  @Input('show-right-icon') _showRightIcon: boolean = true;
   @Input('right-icon') _iconRight: string = '';
   @Input('right-icon-label') _label: string = '';
 

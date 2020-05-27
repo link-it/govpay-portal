@@ -69,7 +69,9 @@ export class I18n {
         Titolo: '',
         Paga: '',
         Stampa: '',
-        Totale: ''
+        Totale: '',
+        Inserimento: '',
+        Rimozione: ''
       }
     },
     DettaglioServizio: {
@@ -183,6 +185,8 @@ export class I18n {
       Scadenza: '',
       SenzaScadenza: '',
       NotAvailable: '',
+      Modifica: '',
+      Elimina: '',
       BollettinoPdf: '',
       ArchivioPdf: '',
       PendenzaInserita: '',

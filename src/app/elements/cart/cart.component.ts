@@ -35,23 +35,22 @@ export class CartComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  _ibClickStampa() {
-    const _props: AvvisoTpl[] = PayService.ShoppingCart.map((c: Standard) => {
-      const atp: AvvisoTpl = new AvvisoTpl();
-      atp.avviso = c.rawData['numeroAvviso'];
-      atp.creditore = c.rawData['idDominio'];
-      return atp;
-    });
+  _clickStampa(target: Standard) {
+    const _props: AvvisoTpl[] = [];
+    const atp: AvvisoTpl = new AvvisoTpl();
+    atp.avviso = target.rawData['numeroAvviso'];
+    atp.creditore = target.rawData['idDominio'];
+    _props.push(atp);
     this.pay.pdf(_props);
   }
 
-  _payItemIconClick(event: any) {
-    if (event.icon == 'delete') {
-      this._removeElement((event.target as Standard).uid);
+  _menuItemClick(target: Standard, icon: string) {
+    if (icon == 'delete') {
+      this._removeElement(target.uid);
     }
-    if (event.icon == 'edit') {
+    if (icon == 'edit') {
       PayService.EDIT_MODE = true;
-      this.router.navigateByUrl('/dettaglio-servizio', { state: (event.target as Standard) });
+      this.router.navigateByUrl('/dettaglio-servizio', { state: target });
     }
   }
 
@@ -105,12 +104,4 @@ export class CartComponent implements OnInit, AfterContentChecked {
     }
   }
 
-}
-
-
-@Pipe({name: 'HasEditable'})
-export class HasEditablePipe implements PipeTransform {
-  transform(values: any[]): boolean {
-    return (values.filter(item => !!item.editable).length !== 0);
-  }
 }

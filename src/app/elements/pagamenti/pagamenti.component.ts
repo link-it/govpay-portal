@@ -22,13 +22,12 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
   Pay = PayService;
 
   _timer: any;
-  _creditoriConfigurati: Creditore[] = [];
   _msnry: any;
   _servizi: any[] = [];
 
   constructor(public pay: PayService, protected translate: TranslateService, protected dialog: MatDialog) {
-    if (PayService.CREDITORI) {
-      this._creditoriConfigurati = PayService.CREDITORI;
+    if (PayService.CREDITORI && PayService.CREDITORI.length === 0) {
+      console.log('Configurazione non corretta. Elenco creditori non impostato.');
     }
   }
 
@@ -162,7 +161,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
    */
   _elencoServizi() {
     this.pay.updateSpinner(true);
-    const _firstCreditor: string = (this._creditoriConfigurati[0] as Creditore).value;
+    const _firstCreditor: string = (PayService.CREDITORI[0] as Creditore).value;
     this.pay.elencoServizi(_firstCreditor,true).subscribe(
       (result) => {
         if(result.body) {

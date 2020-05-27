@@ -25,7 +25,6 @@ export class PayService implements OnInit, OnDestroy {
 
   public static RECAPTCHA_V3_SITE_KEY: any;
   public static SPID: any;
-  public static BY_SWITCH: string = '';
   public static ROOT_SERVICE: string = '';
   public static HOSTNAME: string = '';
   public static SPID_HOSTNAME: string = '';
@@ -47,6 +46,7 @@ export class PayService implements OnInit, OnDestroy {
   public static Header: any = { Titolo: '', IsModal: false };
   public static I18n: I18n = new I18n();
   public static ExtraState: any;
+  public static MobileBreakPointNotice: number = 767;
   public static EDIT_MODE: boolean = false;
 
 
@@ -141,7 +141,6 @@ export class PayService implements OnInit, OnDestroy {
   initConfig() {
     if(SwitchConfig.SELECTOR) {
       this.translate.currentLoader['prefix'] = './assets/i18n' + SwitchConfig.SELECTOR + '/';
-      PayService.BY_SWITCH = SwitchConfig.BY_SWITCH;
     }
     PayService.RECAPTCHA_V3_SITE_KEY = PayConfig.RECAPTCHA_V3_SITE_KEY;
     PayService.SPID = PayConfig['SPID_SETTINGS'];
@@ -149,7 +148,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.HOSTNAME = PayConfig['REVERSE_PROXY'];
     PayService.SPID_HOSTNAME = PayConfig['AUTH_HOST'];
     PayService.SPID_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
-    PayService.CREDITORI = PayConfig['DOMINI'];
+    PayService.CREDITORI = PayConfig['DOMINI'].slice(0, 1);
     PayService.LINGUE = PayConfig['LINGUE'];
     PayService.IS_SINGLE = (PayConfig['DOMINI'].length == 1);
     PayService.TIME_OUT_POLLING = PayConfig['TIME_OUT_POLL'];
@@ -430,6 +429,7 @@ export class PayService implements OnInit, OnDestroy {
 
       return method.pipe(timeout(PayService.TIMEOUT));
     });
+    this.updateSpinner(true);
     forkJoin(methods).subscribe(
       (responses) => {
         this._generateZip(responses);
@@ -449,7 +449,7 @@ export class PayService implements OnInit, OnDestroy {
     const zip = new JSZip();
     _responses.forEach((response, i) => {
       const header = response.headers.get('content-disposition');
-      const filename = header?header.match(/filename="(.+)"/)[1]:`${PayService.I18n.json.Common.BollettinoPdf}_${i}`;
+      const filename = header?header.match(/filename="(.+)"/)[1]:`${PayService.I18n.json.Common.BollettinoPdf}_${i+1}`;
 
       zip.file(filename, response.body);
     });

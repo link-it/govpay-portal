@@ -11,7 +11,7 @@
               <a class="w-100 multiline-text" [href]="_href" *ngIf="_href!='#'">{{ _title }}</a>
               <p class="w-100 m-0 multiline-text" *ngIf="_href=='#'">{{ _title }}</p>
             </div>
-            <pay-icon-button button-class="cart-button" (ib-click)="_onIconRight()" [icon]="_iconRight">{{ _label }}</pay-icon-button>
+            <pay-icon-button button-class="cart-button" (ib-click)="_onIconRight()" [icon]="_iconRight" *ngIf="_showRightIcon">{{ _label }}</pay-icon-button>
           </div>
         </div>
       </div>

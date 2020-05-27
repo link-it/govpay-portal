@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'pay-item',
   templateUrl: './pay-item.component.html',
   styleUrls: ['./pay-item.component.scss']
 })
-export class PayItemComponent implements OnInit, AfterViewInit {
+export class PayItemComponent implements AfterViewInit, AfterContentChecked {
   @ViewChild('item', { read: ElementRef }) _host: ElementRef;
   @ViewChild('touch', { read: ElementRef }) _hostTouch: ElementRef;
 
@@ -13,44 +13,73 @@ export class PayItemComponent implements OnInit, AfterViewInit {
   @Input('meta-titolo') _metaTitolo: string = '';
   @Input('importo') _importo: number = 0;
   @Input('meta-importo') _metaImporto: string = '';
+
+  @Input('use-action-menu') _actionMenu: boolean = false;
+
+  @Input('expanding-mode') _expandMode: boolean = false;
+
   @Input('primary-icon') _primaryIcon: string = '';
   @Input('primary-icon-off') _primaryIconOff: string = '';
-  @Input('secondary-icon') _secondaryIcon: string = '';
-  @Input('secondary-icon-off') _secondaryIconOff: string = '';
+
   @Input('currency-format') _currencyFormat = function(value) {
     return value;
   };
   @Input('item') _item: any;
+  @Input('mobile-breakpoint') _breakpoint: number;
 
   @Output('on-icon-click') _iconClick: EventEmitter<any> = new EventEmitter(null);
 
   _touchDevice: boolean = false;
+  _expanded: boolean = false;
+  _menuOpened: boolean = false;
+  _touch: any;
 
   constructor() {
   }
 
-  ngOnInit() {
-    this._touchDevice = this._isTouchDevice();
+  ngAfterContentChecked() {
+    this.__setupTouchMode();
   }
 
   ngAfterViewInit() {
     if (!window['Hammer']) {
       console.warn('HammerJs not installed!');
+    } else {
+      this._touch = new window['Hammer'](this._host.nativeElement);
     }
-    if (this._touchDevice && window['Hammer']) {
-      const touch = new window['Hammer'](this._host.nativeElement);
-      touch.on('swipeleft', () => {
-        if (this._hostTouch && this._hostTouch.nativeElement) {
-          this._hostTouch.nativeElement.className = this._hostTouch.nativeElement.className.split(' ').concat(['in']).join(' ');
-        }
-      });
+  }
+
+  __setupTouchMode() {
+    if (this._touch) {
+      this._touchDevice = this._isTouchDevice() || (window.innerWidth <= this._breakpoint);
+      if (this._touchDevice && window['Hammer']) {
+        this._touch.on('swipeleft', this.__swiping.bind(this));
+      } else {
+        this._touch.off('swipeleft', this.__swiping.bind(this));
+      }
+    }
+  }
+
+  __swiping(event: any) {
+    if (this._hostTouch && this._hostTouch.nativeElement) {
+      this._hostTouch.nativeElement.className = this._hostTouch.nativeElement.className.split(' ').concat(['in']).join(' ');
+    }
+  }
+
+  _toggleExpand() {
+    if (this._expandMode) {
+      this._expanded = !this._expanded;
     }
   }
 
   _resetTouch() {
-    if (this._hostTouch && this._hostTouch.nativeElement) {
+    if (this._touchDevice && !this._menuOpened && this._hostTouch && this._hostTouch.nativeElement) {
       this._hostTouch.nativeElement.className = this._hostTouch.nativeElement.className.split(' ').filter( (item) => item !== 'in').join(' ');
     }
+  }
+
+  __moreVert(isOpen: boolean) {
+    this._menuOpened = isOpen;
   }
 
   _isTouchDevice() {
@@ -69,5 +98,4 @@ export class PayItemComponent implements OnInit, AfterViewInit {
     }
     this._iconClick.emit(click);
   }
-
 }

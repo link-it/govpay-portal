@@ -20,6 +20,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _hbh: number = 64;
   _mst: number = 0;
   // protected _isLogged: boolean = false;
+  _showCart: boolean = true;
   _isLoading: boolean = false;
   _languages: Language[] = [];
   _language: string = '';
@@ -73,6 +74,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   _updateLayout() {
     if (this._headerBar && this._languageBar && this._globalContent) {
+      this._showCart = !this.breakpointObserver.isMatched(`(max-width: ${PayService.MobileBreakPointNotice}px)`);
       this._mst = this._languageBar.nativeElement.clientHeight;
       this._hbh = this._headerBar.nativeElement.clientHeight;
       this._gch = window.innerHeight - this._hbh - this._languageBar.nativeElement.clientHeight;
@@ -165,6 +167,10 @@ export class AppComponent implements OnInit, AfterContentChecked {
       'route-link-disabled': (url === '/carrello' && PayService.ShoppingCart.length === 0),
       'route-link': true
     };
+  }
+
+  _showBadgeCart(link: any): boolean {
+    return (window.innerWidth <= PayService.MobileBreakPointNotice && link == '/carrello' && PayService.Cart.length !== 0);
   }
 }
 

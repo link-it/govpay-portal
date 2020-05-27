@@ -81,7 +81,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
     // });
     // this.pay.AVVISO_PAGAMENTO.Numero = (_cart.length == 1)?_cart[0].rawData.numeroAvviso:'';
     //
-    // this.router.navigateByUrl('/pagamento' + PayService.BY_SWITCH);
+    // this.router.navigateByUrl('/pagamento');
   }
 
   /**

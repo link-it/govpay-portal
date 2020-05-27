@@ -17,6 +17,7 @@ export class LanguageBarComponent implements OnInit, AfterViewInit {
   @Input('current-language') _currentLanguage: string = '';
 
   @Input('language-bar-theme') _languageClass: string = '';
+  @Input('active-language-theme') _activeClass: string = 'active-language';
 
   @Output('on-change-language') _changeLang: EventEmitter<any> = new EventEmitter();
 
@@ -42,5 +43,12 @@ export class LanguageBarComponent implements OnInit, AfterViewInit {
       this._currentLanguage = _language.alpha3Code.toUpperCase();
       this._changeLang.emit({ language: _language });
     }
+  }
+
+  _ngLanguageClass(alpha3Code: string) {
+    const _cl: any = { 'dropdown-item m-0 action': true };
+    _cl[this._activeClass] = (this._currentLanguage === alpha3Code);
+
+    return _cl;
   }
 }

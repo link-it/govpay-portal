@@ -10,8 +10,8 @@ function _defaultConfig(config, error) {
   document.write('<script src="assets/Config'+ _cfg +'.pay?cache='+(new Date().getTime())+'" onerror="'+ _err +'"></script>');
 }
 _init();
-const domains = location.hostname.split('.');
-if(domains.length === 3 && domains[0] !== 'www') {
+const domains = location.hostname.toLowerCase().split('.');
+if(domains.length >= 3 && domains[0].length >2 && domains[0].indexOf('www') === -1) {
   _defaultConfig('@' + domains[0], '_init(event)');
   window['SwitchConfig'] = {
     SELECTOR: '@' + domains[0]
