@@ -27,21 +27,7 @@
           <mat-icon class="action" *ngIf="notice.value !== ''">close</mat-icon>
         </button>
         <mat-error *ngIf="_avviso.errors && _avviso.errors['required']">
-          {{_avviso.errors['message']}}
-        </mat-error>
-      </mat-form-field>
-      <p class="mb-3 mat-error" *ngIf="_noDomain && _creditore && _creditore.errors">{{_creditore.errors['message']}}</p>
-      <mat-form-field class="d-block" *ngIf="_creditori.length > 1">
-        <input matInput [placeholder]="_creditorePH" name="creditore" [formControl]="_creditore"
-               [matAutocomplete]="auto" [required]="_creditori.length > 1">
-        <mat-icon matSuffix>arrow_drop_down</mat-icon>
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let cr of _filtered | async" [value]="cr.value">
-            {{cr.label}} - ({{cr.value}})
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="_creditore?.errors && !_noDomain">
-          {{_creditore?.errors['message']}}
+          {{ _requiredError }}
         </mat-error>
       </mat-form-field>
       <pay-icon-button button-class="icon-button" [type]="submit" icon="shopping_cart" [disabled]="!_fg.valid">{{ _submitLabel }}</pay-icon-button>

@@ -1,4 +1,4 @@
-import { OnInit, Component, ElementRef, HostListener, ViewChild, AfterContentChecked } from '@angular/core';
+import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PayService } from './elements/services/pay.service';
@@ -6,6 +6,8 @@ import { Language } from './elements/classes/language';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Pipe, PipeTransform } from '@angular/core';
+import { validateNow } from './elements/pagamenti/pagamenti.component';
+import { Creditore } from './elements/classes/creditore';
 
 @Component({
   selector: 'pay-root',
@@ -25,7 +27,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _languages: Language[] = [];
   _language: string = '';
 
-  // @HostListener('window:resize') onResize() {}
   @ViewChild('headerBar', { read: ElementRef }) private _headerBar: ElementRef;
   @ViewChild('languageBar', { read: ElementRef }) private _languageBar: ElementRef;
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
@@ -41,13 +42,22 @@ export class AppComponent implements OnInit, AfterContentChecked {
         const kv = p.split('=');
         _params[kv[0]] = kv[1];
       });
-      if(_params && _params['numeroAvviso'] && _params['idDominio']) {
-        PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
-           Numero: _params['numeroAvviso'],
-        Creditore: _params['idDominio'],
-        };
-        if(PayService.UUID_CHECK && _params['UUID']) {
-          PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
+      if(_params) {
+        if (_params['idSession'] && _params['idDominio']) {
+          PayService.CREDITORI.forEach((cr: Creditore) => {
+            if (cr.value === _params['idDominio']) {
+              PayService.CreditoreAttivo = cr;
+            }
+          });
+        }
+        if (_params['numeroAvviso'] && _params['idDominio']) {
+          PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
+             Numero: _params['numeroAvviso'],
+          Creditore: _params['idDominio'],
+          };
+          if(PayService.UUID_CHECK && _params['UUID']) {
+            PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
+          }
         }
       }
     }
@@ -73,11 +83,13 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   _updateLayout() {
-    if (this._headerBar && this._languageBar && this._globalContent) {
-      this._showCart = !this.breakpointObserver.isMatched(`(max-width: ${PayService.MobileBreakPointNotice}px)`);
+    if (this._languageBar) {
       this._mst = this._languageBar.nativeElement.clientHeight;
-      this._hbh = this._headerBar.nativeElement.clientHeight;
-      this._gch = window.innerHeight - this._hbh - this._languageBar.nativeElement.clientHeight;
+      if (this._headerBar && this._globalContent) {
+        this._showCart = !this.breakpointObserver.isMatched(`(max-width: ${PayService.MobileBreakPointNotice}px)`);
+        this._hbh = this._headerBar.nativeElement.clientHeight;
+        this._gch = window.innerHeight - this._hbh - this._languageBar.nativeElement.clientHeight;
+      }
     }
   }
 
@@ -171,6 +183,17 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   _showBadgeCart(link: any): boolean {
     return (window.innerWidth <= PayService.MobileBreakPointNotice && link == '/carrello' && PayService.Cart.length !== 0);
+  }
+
+  __onActiveChange(creditore: any) {
+    if (PayService.CreditoreAttivo !== creditore) {
+      this.__onChange(creditore);
+      validateNow.next(true);
+    }
+  }
+
+  __onChange(creditore: any) {
+    PayService.CreditoreAttivo = creditore || null;
   }
 }
 

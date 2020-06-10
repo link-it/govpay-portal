@@ -20,6 +20,10 @@ export class I18n {
       Titolo: '',
       LanguageBar: {
         Titolo: ''
+      },
+      Erogatore: {
+        Titolo: '',
+        Creditore: ''
       }
     },
     SideNav: {
@@ -48,11 +52,7 @@ export class I18n {
         Form: {
           Avviso: '',
           Fotocamera: '',
-          Creditore: '',
           Errors: {
-            Common: '',
-            Denied: '',
-            Config: '',
             Required: ''
           }
         }
@@ -187,6 +187,7 @@ export class I18n {
       NotAvailable: '',
       Modifica: '',
       Elimina: '',
+      CodeException: '',
       BollettinoPdf: '',
       ArchivioPdf: '',
       PendenzaInserita: '',

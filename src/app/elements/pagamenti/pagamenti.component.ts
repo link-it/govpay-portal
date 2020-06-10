@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit } from '@angular/core';
 import { PayService } from '../services/pay.service';
-import { Creditore } from '../classes/creditore';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
 import { Standard } from '../classes/standard';
@@ -8,6 +7,7 @@ import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { TranslateService } from '@ngx-translate/core';
 
 import * as moment from 'moment';
+import { BehaviorSubject, Subscription } from 'rxjs/index';
 
 declare let Masonry: any;
 declare let $: any;
@@ -21,6 +21,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
 
   Pay = PayService;
 
+  _validateSub: Subscription;
   _timer: any;
   _msnry: any;
   _servizi: any[] = [];
@@ -29,6 +30,11 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
     if (PayService.CREDITORI && PayService.CREDITORI.length === 0) {
       console.log('Configurazione non corretta. Elenco creditori non impostato.');
     }
+    this._validateSub = validateNow.subscribe((selfValidation: boolean) => {
+      if (selfValidation) {
+        this._elencoServizi();
+      }
+    });
   }
 
   ngOnInit() {
@@ -42,6 +48,9 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
 
   ngOnDestroy() {
     PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = null;
+    if (this._validateSub) {
+      this._validateSub.unsubscribe();
+    }
   }
 
   ngAfterViewInit() {
@@ -95,7 +104,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
     }
 
     this.pay.updateSpinner(true);
-    this.pay.richiestaAvviso(data.notice.creditore, data.notice.numeroAvviso, true, data.query).subscribe(
+    this.pay.richiestaAvviso(PayService.CreditoreAttivo.value, data.notice.numeroAvviso, true, data.query).subscribe(
       (result) => {
         if(result.body) {
           this.pay.updateSpinner(false);
@@ -161,8 +170,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
    */
   _elencoServizi() {
     this.pay.updateSpinner(true);
-    const _firstCreditor: string = (PayService.CREDITORI[0] as Creditore).value;
-    this.pay.elencoServizi(_firstCreditor,true).subscribe(
+    this.pay.elencoServizi(PayService.CreditoreAttivo.value,true).subscribe(
       (result) => {
         if(result.body) {
           const _response = result.body;
@@ -273,3 +281,5 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
     });
   }
 }
+
+export let validateNow: BehaviorSubject<boolean> = new BehaviorSubject(false);

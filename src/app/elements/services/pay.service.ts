@@ -41,8 +41,9 @@ export class PayService implements OnInit, OnDestroy {
   public static LogoGovpay: string = 'assets/govpay.svg';
   public static ShoppingCart: Standard[] = [];
   public static Cart: string[] = [];
-  public static PosizioneDebitoria: any[] = [{}, {}];
-  public static ArchivioPagamenti: any[] = [{}, {}];
+  public static CreditoreAttivo: Creditore;
+  public static PosizioneDebitoria: any[] = [];
+  public static ArchivioPagamenti: any[] = [];
   public static Header: any = { Titolo: '', IsModal: false };
   public static I18n: I18n = new I18n();
   public static ExtraState: any;
@@ -148,7 +149,8 @@ export class PayService implements OnInit, OnDestroy {
     PayService.HOSTNAME = PayConfig['REVERSE_PROXY'];
     PayService.SPID_HOSTNAME = PayConfig['AUTH_HOST'];
     PayService.SPID_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
-    PayService.CREDITORI = PayConfig['DOMINI'].slice(0, 1);
+    PayService.CREDITORI = PayConfig['DOMINI'];
+    PayService.CreditoreAttivo = (PayConfig['DOMINI'].length == 1)?PayConfig['DOMINI'][0]:null;
     PayService.LINGUE = PayConfig['LINGUE'];
     PayService.IS_SINGLE = (PayConfig['DOMINI'].length == 1);
     PayService.TIME_OUT_POLLING = PayConfig['TIME_OUT_POLL'];
@@ -554,6 +556,7 @@ export class PayService implements OnInit, OnDestroy {
    */
   onError(error: any, customMessage?: string) {
     let _msg = '';
+    let _hasMapCode: boolean = false;
     const _replacement = (!error.error)?[]:[
       (error.error['categoria'] || ''),
       (error.error['codice'] || ''),
@@ -562,12 +565,15 @@ export class PayService implements OnInit, OnDestroy {
     ];
     try {
       const _errorMaps = PayService.I18n.json.Http.ErrorMap;
-      if(_errorMaps) {
+      if(_errorMaps && error.error) {
         for(let ke = 0; ke < _errorMaps.length; ke++) {
           const _emap = _errorMaps[ke];
-          if ((error.error['descrizione'] && error.error['descrizione'].indexOf(_emap.Match) !== -1) ||
+          if ((error.error['categoria'] && error.error['categoria'].indexOf(_emap.Match) !== -1) ||
+              (error.error['codice'] && error.error['codice'].indexOf(_emap.Match) !== -1) ||
+              (error.error['descrizione'] && error.error['descrizione'].indexOf(_emap.Match) !== -1) ||
               (error.error['dettaglio'] && error.error['dettaglio'].indexOf(_emap.Match) !== -1)) {
             _msg = _emap.Message;
+            _hasMapCode = true;
             break;
           }
         }
@@ -605,13 +611,17 @@ export class PayService implements OnInit, OnDestroy {
         const r = new RegExp(`\s?%${i + 1},?`);
         _msg = (s!=='')?_msg.split('%'+ (i + 1)).join(s):_msg.replace(r,'');
       });
-      _msg = _msg.replace(/\[\s*]\s?/,'');
+      if (_replacement.length !== 0) {
+        _msg = _msg.replace(/\[\s*]\s?/,'');
+      } else {
+        _msg = _msg.replace(/\[.*]\s*/,'');
+      }
     } catch(e) {
-      _msg = 'Si è verificato un problema non previsto.';
+      _msg = PayService.I18n.json.Common.CodeException;
       console.log(e);
     }
 
-    this.alert(_msg);
+    this.alert(_msg, true, _hasMapCode);
   }
 
   /**

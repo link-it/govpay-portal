@@ -2,21 +2,19 @@
   <div class="container">
     <div class="row">
       <div class="col-12 d-flex align-items-center">
-        <div class="{{_languageClass?_languageClass+'-title ':''}}w-100 text-truncate">
-          <a class="w-100 multiline-text" [href]="_href" target="_blank" *ngIf="_href!='#'">{{ _title }}</a>
-          <p class="m-0 multiline-text" *ngIf="_href=='#'">{{ _title }}</p>
-        </div>
-        <div class="dropdown" *ngIf="_showLanguageMenu && _translations && _translations.length > 1">
+        <ng-content select="[add-on]"></ng-content>
+        <div class="dropdown ml-auto dropdown-languages" *ngIf="_showLanguageMenu && _translations && _translations.length > 1">
           <a class="dropdown-toggle" href="#" id="languages" role="button" data-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false">{{ _currentLanguage }}</a>
           <div class="dropdown-menu dropdown-menu-right mat-elevation-z4" aria-labelledby="languages">
             <p *ngFor="let lang of _translations" (click)="_changeLanguage(lang)"
-               [class]="'dropdown-item m-0' + (_currentLanguage === lang.alpha3Code?' active-language':' action')">
+               [class]="'dropdown-item m-0' + (_currentLanguage === lang.alpha3Code?' active-item':' action')">
               {{ lang.language }}
             </p>
           </div>
         </div>
         <ng-content></ng-content>
       </div>
+    </div>
   </div>
 </div>

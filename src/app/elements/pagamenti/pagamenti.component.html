@@ -7,15 +7,13 @@
   <div class="row pb-5 mb-md-5">
     <div class="col-12 col-md-2"></div>
     <div class="col-12 col-md-8">
-      <pay-card [avviso-placeholder]="Pay.I18n.json.Pagamenti.Bollettino.Form.Avviso" [camera-select]="Pay.I18n.json.Pagamenti.Bollettino.Form.Fotocamera"
-                [submit]="Pay.I18n.json.Pagamenti.Bollettino.Submit" [creditore-placeholder]="Pay.I18n.json.Pagamenti.Bollettino.Form.Creditore"
-                [common-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Common" [denied-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Denied"
-                [config-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Config" [required-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Required"
-                [creditori]="Pay.CREDITORI" (on-submit)="_checkBollettino($event)"></pay-card>
+      <pay-card [placeholder]="Pay.I18n.json.Pagamenti.Bollettino.Form.Avviso" [camera-select]="Pay.I18n.json.Pagamenti.Bollettino.Form.Fotocamera"
+                [submit]="Pay.I18n.json.Pagamenti.Bollettino.Submit" [required-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Required"
+                (on-submit)="_checkBollettino($event)"></pay-card>
     </div>
     <div class="col-12 col-md-2"></div>
   </div>
-  <span class="w-100" *ngIf="(Pay.CREDITORI.length == 1 && _servizi.length != 0) || Pay.CREDITORI.length > 1">
+  <span class="w-100" *ngIf="_servizi.length !== 0">
     <div class="row mb-5">
       <div class="col-12">
         <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Pagamenti.Servizi.Titolo"></pay-title-deco>

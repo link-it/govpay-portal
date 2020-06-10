@@ -1,11 +1,23 @@
-<pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [title]="Pay.I18n.json.Header.LanguageBar.Titolo" [language-list]="_languages"
-                  (on-change-language)="_languageHandler($event)" [current-language]="_language"
-                  language-bar-theme="language-bar">
+<pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [language-list]="_languages" language-bar-theme="language-bar"
+                  (on-change-language)="_languageHandler($event)" [current-language]="_language">
+  <div add-on class="dropdown w-100" *ngIf="Pay.CREDITORI.length > 1 && Pay.CreditoreAttivo">
+    <a class="dropdown-toggle" href="#" id="creditori" role="button" data-toggle="dropdown"
+       aria-haspopup="true" aria-expanded="false">{{ Pay.CreditoreAttivo?.label }}</a>
+    <div class="dropdown-menu mat-elevation-z4" aria-labelledby="creditori">
+      <p *ngFor="let cr of Pay.CREDITORI" (click)="__onActiveChange(cr)"
+         [class]="'dropdown-item m-0' + ((Pay.CreditoreAttivo && Pay.CreditoreAttivo.value === cr.value)?' active-item':' action')">
+        {{ cr.label }}
+      </p>
+    </div>
+  </div>
+  <p add-on *ngIf="Pay.CREDITORI.length === 1" class="language-bar-title w-100 m-0 multiline-text">{{ Pay.I18n.json.Header.LanguageBar.Titolo }}</p>
   <pay-spid-login [label]="Pay.I18n.json.Spid.Label" [info]="Pay.I18n.json.Spid.Info" [ask]="Pay.I18n.json.Spid.Ask" [help]="Pay.I18n.json.Spid.Help"
                   [action]="Pay.SPID['ACTION_FORM_URL']" [spid-test-url]="Pay.SPID['TEST_PROVIDER']" [response-target]="Pay.SPID['SERVICE_TARGET']"
-                  *ngIf="!Pay.User && Pay.SPID['ACCESS']"></pay-spid-login>
+                  *ngIf="!Pay.User && Pay.SPID['ACCESS'] && !Pay.CreditoreAttivo"></pay-spid-login>
 </pay-language-bar>
-<mat-sidenav-container>
+<pay-choice-dialog *ngIf="Pay.CREDITORI.length > 1 && !Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)"
+                   [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [style.top.px]="_mst"></pay-choice-dialog>
+<mat-sidenav-container *ngIf="Pay.CreditoreAttivo">
   <mat-sidenav #sidenav class="side-nav" mode="over">
     <div class="side-nav-title d-flex align-items-center" [style.height.px]="_hbh">
       <span class="text-truncate">{{ Pay.I18n.json.SideNav.Titolo }}</span>

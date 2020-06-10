@@ -7,10 +7,6 @@
   cursor: pointer;
 }
 
-.multiline-text {
-  white-space: normal;
-}
-
 .dropdown-menu {
   border: none;
 }

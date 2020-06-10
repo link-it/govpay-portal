@@ -4,6 +4,10 @@
       "Titolo": "Comune",
       "LanguageBar": {
         "Titolo": "Regione"
+      },
+      "Erogatore": {
+        "Titolo": "Gestione pagamenti",
+        "Creditore": "Seleziona Ente erogatore"
       }
     },
     "SideNav": {
@@ -46,12 +50,8 @@
         "Form": {
           "Avviso": "Numero dell'avviso",
           "Fotocamera": "Fotocamera",
-          "Creditore": "Ente creditore",
           "Errors": {
-            "Common": "Il codice inserito non corrisponde ad alcun creditore in elenco.",
-            "Denied": "Codice creditore {{value}} non abilitato.",
-            "Config": "Nessun creditore configurato.",
-            "Required": "Creditore obbligatorio."
+            "Required": "Campo obbligatorio."
           }
         }
       },
@@ -185,6 +185,7 @@
       "NotAvailable": "Non disponibile",
       "Modifica": "Modifica",
       "Elimina": "Elimina",
+      "CodeException": "Si è verificato un problema non previsto, si prega di riprovare più tardi",
       "BollettinoPdf": "BollettinoPDF.pdf",
       "ArchivioPdf": "Archivio.zip",
       "PendenzaInserita": "La pendenza con numero avviso {{numeroAvviso}} risulta già inserita nel carrello",

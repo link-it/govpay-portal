@@ -66,7 +66,7 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
   }
 
   _generaPendenza(form: any, verify: boolean = false) {
-    const creditore: string = PayService.CREDITORI[0].value;
+    const creditore: string = PayService.CreditoreAttivo.value;
     let query = '';
     let tipoPendenza: string = '';
     if (PayService.ExtraState instanceof Standard) {

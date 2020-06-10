@@ -38,6 +38,7 @@ import { PosizioneDebitoriaComponent } from './elements/posizione-debitoria/posi
 import { ArchivioComponent } from './elements/archivio/archivio.component';
 import { YesnoDialogComponent } from './elements/yesno-dialog/yesno-dialog.component';
 import { EsitoComponent } from './elements/esito/esito.component';
+import { ChoiceDialogComponent } from './elements/choice-dialog/choice-dialog.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateLoaderExt(http, './assets/i18n/', '.json');
@@ -62,7 +63,8 @@ export function createTranslateLoader(http: HttpClient) {
     CartComponent,
     PayItemComponent,
     YesnoDialogComponent,
-    EsitoComponent
+    EsitoComponent,
+    ChoiceDialogComponent
   ],
   imports: [
     BrowserModule,

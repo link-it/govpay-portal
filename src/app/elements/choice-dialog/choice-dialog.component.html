@@ -1,0 +1,21 @@
+<div class="choice-dialog">
+  <div class="container choice-group">
+    <div class="row">
+      <div class="col-12 col-md-2"></div>
+      <div class="col-12 col-md-8">
+        <h1>{{ _title }}</h1>
+        <form>
+          <mat-form-field>
+            <mat-select [(ngModel)]="_selectedValue" name="selector" [placeholder]="_labelSelector"
+                        (selectionChange)="_choiceChange($event)">
+              <mat-option *ngFor="let el of _elements" [value]="el">
+                {{ el.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col-12 col-md-2"></div>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,10 @@
       "Titolo": "Administration",
       "LanguageBar": {
         "Titolo": "Region"
+      },
+      "Erogatore": {
+        "Titolo": "Payment management",
+        "Creditore": "Select a creditor"
       }
     },
     "SideNav": {
@@ -46,12 +50,8 @@
         "Form": {
           "Avviso": "Notice number",
           "Fotocamera": "Camera",
-          "Creditore": "Creditor",
           "Errors": {
-            "Common": "The code entered does not correspond to any creditor in the list.",
-            "Denied": "Creditor code {{value}} not enabled.",
-            "Config": "No creditor configured.",
-            "Required": "Creditor required."
+            "Required": "Field required."
           }
         }
       },
@@ -185,6 +185,7 @@
       "NotAvailable": "Not available",
       "Modifica": "Edit",
       "Elimina": "Delete",
+      "CodeException": "Unpredictable problem. Please try again later",
       "BollettinoPdf": "PDFDocument.pdf",
       "ArchivioPdf": "Archive.zip",
       "PendenzaInserita": "The notice with number {{numeroAvviso}} has already added to cart",
