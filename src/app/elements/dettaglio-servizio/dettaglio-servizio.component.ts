@@ -124,10 +124,11 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
     if (PayService.ExtraState instanceof Standard) {
       PayService.ExtraState = PayService.ExtraState['rawData'];
     }
-    const _dataScadenza = _response['dataScadenza']?moment(_response['dataScadenza']).format(this.pay.getDateFormatByLanguage()):'';
-    const _subtitle: string[] = [];
-    _subtitle.push(`${PayService.I18n.json.Common.Scadenza}: ${_dataScadenza?_dataScadenza:PayService.I18n.json.Common.SenzaScadenza}`);
-    _subtitle.push(_response['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_response['numeroAvviso']}`:'');
+    const _dataScadenza: string = _response['dataScadenza']?moment(_response['dataScadenza']).format(this.pay.getDateFormatByLanguage()):'';
+    const _dataValidita: string = _response['dataValidita']?moment(_response['dataValidita']).format(this.pay.getDateFormatByLanguage()):'';
+    const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
+    // const _avviso: string = _response['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_response['numeroAvviso']}`:'';
+
     PayService.ExtraState['idA2A'] = _response['idA2A'];
     PayService.ExtraState['idPendenza'] = _response['idPendenza'];
     PayService.ExtraState['idDominio'] = _response['dominio']['idDominio'];
@@ -140,7 +141,8 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
           localeNumberFormat: this.pay.getNumberFormatByLanguage(),
           uid: _response['numeroAvviso'],
           titolo: _response['causale'],
-          sottotitolo: _subtitle.join(', '),
+          sottotitolo: '',
+          metadati: (_terminePagamento || PayService.I18n.json.Common.SenzaScadenza),
           importo: _response['importo'],
           stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato']],
           editable: true,
@@ -154,7 +156,8 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
           p.localeNumberFormat = this.pay.getNumberFormatByLanguage();
           p.uid = _response['numeroAvviso'];
           p.titolo = _response['causale'];
-          p.sottotitolo = _subtitle.join(', ');
+          p.sottotitolo = '';
+          p.metadati = (_terminePagamento || PayService.I18n.json.Common.SenzaScadenza);
           p.importo = _response['importo'];
           p.stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato']];
           p.editable = true;

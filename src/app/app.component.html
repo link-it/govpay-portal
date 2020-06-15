@@ -16,7 +16,8 @@
                   *ngIf="!Pay.User && Pay.SPID['ACCESS'] && !Pay.CreditoreAttivo"></pay-spid-login>
 </pay-language-bar>
 <pay-choice-dialog *ngIf="Pay.CREDITORI.length > 1 && !Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)"
-                   [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [style.top.px]="_mst"></pay-choice-dialog>
+                   [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [title]="Pay.I18n.json.Header.Erogatore.Titolo"
+                   [logo]="Pay.LogoReverseGovpay" [style.top.px]="_mst"></pay-choice-dialog>
 <mat-sidenav-container *ngIf="Pay.CreditoreAttivo">
   <mat-sidenav #sidenav class="side-nav" mode="over">
     <div class="side-nav-title d-flex align-items-center" [style.height.px]="_hbh">

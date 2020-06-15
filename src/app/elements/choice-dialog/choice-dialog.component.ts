@@ -11,6 +11,7 @@ export class ChoiceDialogComponent implements OnInit {
   @Input('title') _title: string = '';
   @Input('label-selector') _labelSelector: string = '';
   @Input('elements') _elements: Creditore[] = [];
+  @Input('logo') _logo: string = '';
 
   @Output('change') _onChange: EventEmitter<any> = new EventEmitter(null);
 

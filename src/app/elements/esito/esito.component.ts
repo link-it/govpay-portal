@@ -23,12 +23,13 @@ export class EsitoComponent implements OnInit, OnDestroy {
   STATUS_NON_ESEGUITO: string = PayService.STATUS_NON_ESEGUITO;
   STATUS_INCORSO: string = PayService.STATUS_INCORSO;
   STATUS_TIMEOUT: string = PayService.STATUS_TIMEOUT;
+  TIME_OUT_POLLING: number = PayService.TIME_OUT_POLLING;
+  _POLLING_TIMEOUT: number = -1;
 
   _status: string = PayService.STATUS_INCORSO;
   _esito: string = '';
   _sessione: boolean;
   _paid: number = -1;
-  _pollingTimeout: number = 0;
   _payments: any[] = [];
 
   _langSubscription: Subscription;
@@ -42,6 +43,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._sessione = false;
+    this._POLLING_TIMEOUT = -1;
     const _idSessione: string = this.activateRoute.snapshot.queryParamMap.get('idSession');
     this._esito = this.activateRoute.snapshot.queryParamMap.get('esito');
     if(!_idSessione) {
@@ -67,7 +69,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this._paid = -1;
+        this._paid = (this._esito.toLowerCase() == this.ESITO_OK || this._esito.toLowerCase() == this.ESITO_DIFFERITO)?1:0;
         this._status = this.STATUS_TIMEOUT;
         this.pay.updateSpinner(false);
         this.pay.onError(error);
@@ -90,20 +92,18 @@ export class EsitoComponent implements OnInit, OnDestroy {
         case PayService.STATI_PAGAMENTO['NON_ESEGUITO']:
           this._status = this.STATUS_NON_ESEGUITO;
           this.pay.updateSpinner(false);
-          this._payments = this._paymentsToFix(response);
           break;
         case PayService.STATI_PAGAMENTO['IN_CORSO']:
-          if(this._pollingTimeout < PayService.TIME_OUT_POLLING) {
+          if(this._POLLING_TIMEOUT < this.TIME_OUT_POLLING) {
             this._status = this.STATUS_INCORSO;
-            this.polling(sessione);
-            this._pollingTimeout++;
           } else {
-            this._pollingTimeout = 0;
             this._status = this.STATUS_TIMEOUT;
-            this.pay.updateSpinner(false);
           }
+          this._POLLING_TIMEOUT++;
+          this.polling(sessione);
           break;
       }
+      this._payments = this._paymentsToFix(response);
     } catch (e) {
       this.pay.onError(e);
       this.pay.updateSpinner(false);
@@ -121,23 +121,34 @@ export class EsitoComponent implements OnInit, OnDestroy {
 
   _paymentsToFix(response: any): any[] {
     const _response = response.body;
-    return this.__loopFix(_response['pendenze']);
+    return this.__loopFix(_response['pendenze'], false, _response);
   }
 
   _toggleCartClick(event: any) {
-    if (event.icon == 'shopping_cart') {
-      if(PayService.Cart.indexOf(event.target.uid) === -1) {
-        PayService.Cart.push(event.target.uid);
-        PayService.ShoppingCart.push(event.target);
-        this.__mobileToastCart(true);
-      }
-    } else {
-      const _cartIndex: number = PayService.Cart.indexOf(event.target.uid);
-      if(_cartIndex !== -1) {
-        PayService.ShoppingCart = PayService.ShoppingCart.filter((p: Standard) => p.uid !== event.target.uid);
-        PayService.Cart.splice(_cartIndex, 1);
-        this.__mobileToastCart(false);
-      }
+    switch (event.icon) {
+      case 'shopping_cart':
+        if(PayService.Cart.indexOf(event.target.uid) === -1) {
+          PayService.Cart.push(event.target.uid);
+          PayService.ShoppingCart.push(event.target);
+          this.__mobileToastCart(true);
+        }
+        break;
+      case 'remove_shopping_cart':
+        const _cartIndex: number = PayService.Cart.indexOf(event.target.uid);
+        if(_cartIndex !== -1) {
+          PayService.ShoppingCart = PayService.ShoppingCart.filter((p: Standard) => p.uid !== event.target.uid);
+          PayService.Cart.splice(_cartIndex, 1);
+          this.__mobileToastCart(false);
+        }
+        break;
+      case 'receipt':
+        try {
+          this.pay.getRPP(event.target.rawData.govpay['rpp']);
+        } catch (e) {
+          console.warn(e);
+        }
+        break;
+      default:
     }
     PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
   }
@@ -151,28 +162,57 @@ export class EsitoComponent implements OnInit, OnDestroy {
   /**
    * @param {any[]} _loop
    * @param {boolean} _rawData
+   * @param {any[]} _fullResponse
    * @returns {any[]}
    * @private
    */
-  __loopFix(_loop: any[], _rawData: boolean = false): any[] {
+  __loopFix(_loop: any[], _rawData: boolean = false, _fullResponse: any = null): any[] {
+    let _statoAvviso;
+    if (_fullResponse) {
+      _statoAvviso = this.__statoAvvisoMap(_fullResponse['rpp']);
+    }
+
     return (_loop || []).map(p => {
       if (_rawData) {
-        p = p.rawData;
+        _statoAvviso = p.rawData.statoAvviso;
+        p = p.rawData.govpay;
       }
-      const _dataScadenza = p.dataScadenza?moment(p.dataScadenza).format(this.pay.getDateFormatByLanguage()):'';
-      const _subtitle: string[] = [];
-      _subtitle.push(`${PayService.I18n.json.Common.Scadenza}: ${_dataScadenza?_dataScadenza:PayService.I18n.json.Common.SenzaScadenza}`);
-      _subtitle.push(p.numeroAvviso?`${PayService.I18n.json.Common.NumeroAvviso}: ${p.numeroAvviso}`:'');
+      const _editable: boolean = PayService.TIPO_ONERE[p.tipo].editable;
+      // const _dataScadenza: string = p['dataScadenza']?moment(p['dataScadenza']).format(this.pay.getDateFormatByLanguage()):'';
+      // const _dataValidita: string = p['dataValidita']?moment(p['dataValidita']).format(this.pay.getDateFormatByLanguage()):'';
+      // const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
+      const _iuv: string = _statoAvviso[p.numeroAvviso].iuv?`${PayService.I18n.json.Common.IUV}: ${_statoAvviso[p.numeroAvviso].iuv}`:'';
+      const _eseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato] === PayService.STATI_PAGAMENTO.ESEGUITO);
+      const _nonEseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato] === PayService.STATI_PAGAMENTO.NON_ESEGUITO);
+      const _primaryIcon: string = _eseguito?'receipt':(_nonEseguito?'shopping_cart':'');
+      const _primaryIconOff: string = _nonEseguito?'remove_shopping_cart':'';
+
       return new Standard({
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
         uid: p.numeroAvviso,
         titolo: p.causale,
-        sottotitolo: _subtitle.join(', '),
+        sottotitolo: _iuv,
+        metadati: PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(_statoAvviso[p.numeroAvviso].stato)],
         importo: p.importo,
         stato: PayService.STATI_VERIFICA_PENDENZA[p.stato],
-        editable: false,
-        rawData: p
+        editable: _editable,
+        primaryIcon: _primaryIcon,
+        primaryIconOff: _primaryIconOff,
+        rawData: { govpay: p, statoAvviso: _statoAvviso }
       });
-    }).filter((s) => (s.stato === PayService.STATI_VERIFICA_PENDENZA['NON_ESEGUITA']));
+    });
+  }
+
+  __statoAvvisoMap(_rpps: any[]): any {
+    const _map: any = {};
+    _rpps.forEach((rpp: any) => {
+      _map[rpp['pendenza']['numeroAvviso']] = { stato: PayService.STATI_PAGAMENTO.IN_CORSO.toUpperCase(), iuv: rpp['rpt']['datiVersamento']['identificativoUnivocoVersamento'] };
+      if (rpp.stato === 'RT_ACCETTATA_PA') {
+        const s: string = (rpp.rt)?PayService.STATUS_CODE[rpp['rt']['datiPagamento']['codiceEsitoPagamento']]:'';
+        _map[rpp['pendenza']['numeroAvviso']].stato = (s || PayService.STATI_PAGAMENTO.IN_CORSO.toUpperCase());
+      }
+    });
+
+    return _map;
   }
 }

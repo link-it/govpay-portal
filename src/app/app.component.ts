@@ -1,13 +1,13 @@
-import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked } from '@angular/core';
+import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked, HostListener } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PayService } from './elements/services/pay.service';
 import { Language } from './elements/classes/language';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { validateNow } from './elements/pagamenti/pagamenti.component';
+import { serviziChange, validateNow } from './elements/pagamenti/pagamenti.component';
 import { Creditore } from './elements/classes/creditore';
+import { Subscription } from 'rxjs/index';
 
 @Component({
   selector: 'pay-root',
@@ -27,14 +27,21 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _languages: Language[] = [];
   _language: string = '';
 
+  @HostListener('window:resize') onResize() {
+    this._updateLayout();
+  }
   @ViewChild('headerBar', { read: ElementRef }) private _headerBar: ElementRef;
   @ViewChild('languageBar', { read: ElementRef }) private _languageBar: ElementRef;
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
 
-  constructor(public router: Router, public pay: PayService, public translate: TranslateService,
-              public breakpointObserver: BreakpointObserver) {
+  constructor(public router: Router, public pay: PayService, public translate: TranslateService) {
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
       PayService.TranslateDynamicObject(translate, pay);
+    });
+    serviziChange.subscribe((hasChanged: boolean) => {
+      if (hasChanged) {
+        this._updateLayout();
+      }
     });
     if(location.search) {
       const _params: any = {};
@@ -79,14 +86,13 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked() {
     this._isLoading = this.pay.spinner;
-    this._updateLayout();
   }
 
   _updateLayout() {
+    this._showCart = !(window.innerWidth < PayService.MobileBreakPointNotice);
     if (this._languageBar) {
       this._mst = this._languageBar.nativeElement.clientHeight;
       if (this._headerBar && this._globalContent) {
-        this._showCart = !this.breakpointObserver.isMatched(`(max-width: ${PayService.MobileBreakPointNotice}px)`);
         this._hbh = this._headerBar.nativeElement.clientHeight;
         this._gch = window.innerHeight - this._hbh - this._languageBar.nativeElement.clientHeight;
       }
@@ -161,6 +167,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
         }
       break;
       default:
+        this._updateLayout();
         sidenav.toggle();
     }
   }
@@ -182,19 +189,24 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   _showBadgeCart(link: any): boolean {
-    return (window.innerWidth <= PayService.MobileBreakPointNotice && link == '/carrello' && PayService.Cart.length !== 0);
+    return (window.innerWidth < PayService.MobileBreakPointNotice && link == '/carrello' && PayService.Cart.length !== 0);
   }
 
   __onActiveChange(creditore: any) {
     if (PayService.CreditoreAttivo !== creditore) {
       this.__onChange(creditore);
+      PayService.ResetCart(this.pay.router, this.translate);
       validateNow.next(true);
     }
   }
 
   __onChange(creditore: any) {
     PayService.CreditoreAttivo = creditore || null;
+    if (this.pay.router.url.indexOf('esito-pagamento') !== -1) {
+      this.pay.router.navigateByUrl('/pagamenti');
+    }
   }
+
 }
 
 @Pipe({name: 'AuthGuard'})

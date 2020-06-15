@@ -51,7 +51,7 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
 
   __setupTouchMode() {
     if (this._touch) {
-      this._touchDevice = this._isTouchDevice() || (window.innerWidth <= this._breakpoint);
+      this._touchDevice = this._isTouchDevice() || (window.innerWidth < this._breakpoint);
       if (this._touchDevice && window['Hammer']) {
         this._touch.on('swipeleft', this.__swiping.bind(this));
       } else {

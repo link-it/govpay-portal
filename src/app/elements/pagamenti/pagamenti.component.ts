@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit, Output } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
@@ -114,11 +114,11 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
           let _paid: boolean = false;
           const _stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato']];
           const _dataScadenza = _response['dataScadenza']?moment(_response['dataScadenza']).format(this.pay.getDateFormatByLanguage()):'';
-          // const _dataValidita = _response['dataValidita']?moment(_response['dataValidita']).format(this.pay.getDateFormatByLanguage()):'';
+          const _dataValidita = _response['dataValidita']?moment(_response['dataValidita']).format(this.pay.getDateFormatByLanguage()):'';
           const _dataPagamento = _response['dataPagamento']?moment(_response['dataPagamento']).format(this.pay.getDateFormatByLanguage()):'';
-          const _subtitle: string[] = [];
-          _subtitle.push(`${PayService.I18n.json.Common.Scadenza}: ${_dataScadenza?_dataScadenza:PayService.I18n.json.Common.SenzaScadenza}`);
-          _subtitle.push(_response['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_response['numeroAvviso']}`:'');
+          const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
+          const _avviso: string = _response['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_response['numeroAvviso']}`:'';
+
           switch(_stato) {
             case (PayService.STATI_VERIFICA_PENDENZA['SCADUTA']):
              _expired = true;
@@ -142,7 +142,8 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
                   localeNumberFormat: this.pay.getNumberFormatByLanguage(),
                   uid: _response['numeroAvviso'],
                   titolo: _response['descrizione'],
-                  sottotitolo: _subtitle.join(', '),
+                  sottotitolo: _avviso,
+                  metadati: _terminePagamento,
                   importo: _response['importo'],
                   stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato']],
                   editable: false,
@@ -175,6 +176,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
         if(result.body) {
           const _response = result.body;
           this._servizi = this._mapServizio(_response['risultati']);
+          serviziChange.next(true);
           this._loadMasonry();
         }
         this.pay.updateSpinner(false);
@@ -271,15 +273,18 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
   }
 
   _loadMasonry() {
-    setTimeout(() => {
-      this._msnry = new Masonry( '.servizi-container', {
-        itemSelector: '.grid-item',
-        columnWidth: '.grid-sizer',
-        percentPosition: true,
-        gutter: 32
+    if (this._servizi.length !== 0) {
+      setTimeout(() => {
+        this._msnry = new Masonry('.servizi-container', {
+          itemSelector: '.grid-item',
+          columnWidth: '.grid-sizer',
+          percentPosition: true,
+          gutter: 32
+        });
       });
-    });
+    }
   }
 }
 
 export let validateNow: BehaviorSubject<boolean> = new BehaviorSubject(false);
+export let serviziChange: BehaviorSubject<boolean> = new BehaviorSubject(false);

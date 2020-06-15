@@ -117,13 +117,17 @@
         "Dettaglio": {
           "Eseguito": "The payment required appears to have been successful. The payment receipt will be sent to the address provided.",
           "Fallito": "The payment required does NOT appear to have been successful.",
-          "Errore": "The payment process has been completed without the payment of the due amount. We are awaiting confirmation of payment from the pagoPA platform",
           "InCorso": {
             "Titolo": "Recovery of information in progress...",
             "Ok": "The payment process has been completed successfully. We are awaiting confirmation of payment from the pagoPA platform.",
+            "Errore": "The payment process has been completed without the payment of the due amount. We are awaiting confirmation of payment from the pagoPA platform.",
             "Timeout": {
               "Ok": "The payment process has been completed successfully, but there has been a delay in communicating the payment claim from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
-              "Errore": "The payment process was completed without the payment of the due, but there was a delay in the communication of the payment attestation from the pagoPA platform. As soon as it is made available, we will send it to your email address."
+              "Errore": "The payment process was completed without the payment of the due, but there was a delay in the communication of the payment attestation from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
+              "Overflow": {
+                "Ok": "The payment process has been completed successfully. Still trying to communicate the payment claim from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
+                "Errore": "The payment process was completed without the payment of the due. The communication of the payment attestation from the pagoPA platform is not yet available. We will take care of delivering it to your email address."
+              }
             }
           }
         }
@@ -180,19 +184,29 @@
     "Common": {
       "AlertAction": "Close",
       "NumeroAvviso": "Notice",
-      "Scadenza": "Deadline",
-      "SenzaScadenza": "No Expires",
+      "IUV": "Payment ID",
+      "Scadenza": "By",
+      "SenzaScadenza": "No expiration date",
       "NotAvailable": "Not available",
       "Modifica": "Edit",
       "Elimina": "Delete",
       "CodeException": "Unpredictable problem. Please try again later",
-      "BollettinoPdf": "PDFDocument.pdf",
+      "DocumentoPdf": "Document.pdf",
       "ArchivioPdf": "Archive.zip",
+      "WarningRicevuta": "No documents available",
       "PendenzaInserita": "The notice with number {{numeroAvviso}} has already added to cart",
       "PendenzaEseguita": "The notice with number {{numeroAvviso}} has already been paid on {{data}}",
       "PendenzaAnnullata": "The notice with number {{numeroAvviso}} has benn canceled",
       "PendenzaSconosciuta": "The notice with number {{numeroAvviso}} is unknown",
-      "PendenzaScaduta": "The notice with number {{numeroAvviso}} has expired on {{data}}"
+      "PendenzaScaduta": "The notice with number {{numeroAvviso}} has expired on {{data}}",
+      "CodiciEsito": {
+        "InCorso": "In progress",
+        "Annullato": "Canceled",
+        "Fallito": "Failed",
+        "Eseguito": "Paid",
+        "NonEseguito": "Not paid",
+        "EseguitoParziale": "Partially paid"
+      }
     }
   }
 }

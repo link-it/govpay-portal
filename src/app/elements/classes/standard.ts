@@ -3,9 +3,12 @@ export class Standard {
   uid: string = null;
   rawData: any = null;
   editable: boolean = false;
+  primaryIcon: string = '';
+  primaryIconOff: string = '';
 
   titolo: string = '';
   sottotitolo: string = '';
+  metadati: string = '';
   importo: number = 0;
   stato: string = null;
 

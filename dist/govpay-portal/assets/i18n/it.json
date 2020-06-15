@@ -117,13 +117,17 @@
         "Dettaglio": {
           "Eseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
           "Fallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
-          "Errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
           "InCorso": {
             "Titolo": "Recupero informazioni in corso...",
             "Ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
+            "Errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
             "Timeout": {
-              "Ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail",
-              "Errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail"
+              "Ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail.",
+              "Errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail.",
+              "Overflow": {
+                "Ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo eccessivo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail.",
+                "Errore": "Il processo di pagamento è stato completato senza il pagamento del dovuto. La comunicazione dell'attestato di pagamento dalla piattaforma pagoPA non è ancora disponibile, non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail."
+              }
             }
           }
         }
@@ -180,19 +184,29 @@
     "Common": {
       "AlertAction": "Chiudi",
       "NumeroAvviso": "Numero avviso",
-      "Scadenza": "Scadenza",
-      "SenzaScadenza": "Non prevista",
+      "IUV": "Identificativo versamento",
+      "Scadenza": "Entro il",
+      "SenzaScadenza": "Senza scadenza",
       "NotAvailable": "Non disponibile",
       "Modifica": "Modifica",
       "Elimina": "Elimina",
       "CodeException": "Si è verificato un problema non previsto, si prega di riprovare più tardi",
-      "BollettinoPdf": "BollettinoPDF.pdf",
+      "DocumentoPdf": "Documento.pdf",
       "ArchivioPdf": "Archivio.zip",
+      "WarningRicevuta": "Nessun documento disponibile",
       "PendenzaInserita": "La pendenza con numero avviso {{numeroAvviso}} risulta già inserita nel carrello",
       "PendenzaEseguita": "La pendenza con numero avviso {{numeroAvviso}} risulta già pagata il giorno {{data}}",
       "PendenzaAnnullata": "La pendenza con numero avviso {{numeroAvviso}} è stata annullata",
       "PendenzaSconosciuta": "Non è presente alcuna pendenza con numero avviso {{numeroAvviso}}",
-      "PendenzaScaduta": "La pendenza con numero avviso {{numeroAvviso}} è scaduta il giorno {{data}}"
+      "PendenzaScaduta": "La pendenza con numero avviso {{numeroAvviso}} è scaduta il giorno {{data}}",
+      "CodiciEsito": {
+        "InCorso": "In corso",
+        "Annullato": "Annullato",
+        "Fallito": "Fallito",
+        "Eseguito": "Eseguito",
+        "NonEseguito": "Non eseguito",
+        "EseguitoParziale": "Eseguito parziale"
+      }
     }
   }
 }

@@ -80,8 +80,14 @@ export class RicevutaPagamentoComponent implements OnInit, OnChanges {
     }
     const _body = {
       pendenze: PayService.ShoppingCart.map(p => {
+        if (p.editable) {
+          return {
+            idA2A: p.rawData.idA2A,
+            idPendenza: p.rawData.idPendenza
+          };
+        }
         return {
-          idDominio: p.rawData.idDominio,
+          idDominio: p.rawData.dominio?p.rawData.dominio.idDominio:p.rawData.idDominio,
           numeroAvviso: p.rawData.numeroAvviso
         };
       }),

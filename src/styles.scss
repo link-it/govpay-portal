@@ -8,7 +8,8 @@ $custom-typography: mat-typography-config(
   $title: mat-typography-level(24px, 24px, normal, '"Titillium Web", sans-serif'),
   $subheading-2: mat-typography-level(20px, 24px, normal),
   $button: mat-typography-level(16px, 100, normal, '"Titillium Web", sans-serif'),
-  $body-1: mat-typography-level(16px, 100, 400)
+  $body-1: mat-typography-level(16px, 100, 400),
+  $input: mat-typography-level(inherit, 1.6, 400)
 );
 //$mat-light-theme-foreground: (
 //  text: rgba(33, 33, 33, 1),
@@ -317,9 +318,28 @@ pay-choice-dialog {
 
 pay-choice-dialog .choice-dialog {
   width: 100%;
-  align-self: center;
-  -ms-flex-item-align: center;
-  -ms-grid-row-align: center;
+  display: flex;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+pay-choice-dialog .choice-group h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 3rem;
+  color: $reverse-text-color;
+}
+
+pay-choice-dialog .gutter {
+  flex-grow: .35;
+}
+
+pay-choice-dialog .choice-logo {
+  margin-bottom: 3rem;
 }
 
 pay-choice-dialog mat-form-field,
@@ -474,6 +494,7 @@ p.meta-text {
   font-weight: 400;
   line-height: 1.3;
   margin: 0 0 0 0;
+  word-break: break-all;
 }
 
 pay-item .action-menu-icon,
@@ -554,4 +575,16 @@ label.mat-form-field-label:first-letter {
 }
 
 @media (min-width: 768px) {
+  pay-choice-dialog .choice-group h1 {
+    font-size: 3rem;
+    margin-bottom: 6rem;
+  }
+
+  pay-choice-dialog .gutter {
+    flex-grow: .45;
+  }
+
+  pay-choice-dialog .choice-logo {
+    margin-bottom: 6rem;
+  }
 }

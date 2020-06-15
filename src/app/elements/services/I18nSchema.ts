@@ -119,13 +119,17 @@ export class I18n {
         Dettaglio: {
           Eseguito: '',
           Fallito: '',
-          Errore: '',
           InCorso: {
             Titolo: '',
             Ok: '',
+            Errore: '',
             Timeout: {
               Ok: '',
-              Errore: ''
+              Errore: '',
+              Overflow: {
+                Ok: '',
+                Errore: ''
+              }
             }
           }
         }
@@ -182,19 +186,29 @@ export class I18n {
     Common: {
       AlertAction: '',
       NumeroAvviso: '',
+      IUV: '',
       Scadenza: '',
       SenzaScadenza: '',
       NotAvailable: '',
       Modifica: '',
       Elimina: '',
       CodeException: '',
-      BollettinoPdf: '',
+      DocumentoPdf: '',
       ArchivioPdf: '',
+      WarningRicevuta: '',
       PendenzaInserita: '',
       PendenzaEseguita: '',
       PendenzaAnnullata: '',
       PendenzaSconosciuta: '',
-      PendenzaScaduta: ''
+      PendenzaScaduta: '',
+      CodiciEsito: {
+        InCorso: '',
+        Annullato: '',
+        Fallito: '',
+        Eseguito: '',
+        NonEseguito: '',
+        EseguitoParziale: ''
+      }
     }
   };
 

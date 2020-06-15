@@ -39,6 +39,7 @@ export class PayService implements OnInit, OnDestroy {
   public static ALPHA_3_CODE: string = '';
   public static LogoPagoPA: string = 'assets/pagopa.svg';
   public static LogoGovpay: string = 'assets/govpay.svg';
+  public static LogoReverseGovpay: string = 'assets/govpay-reverse.svg';
   public static ShoppingCart: Standard[] = [];
   public static Cart: string[] = [];
   public static CreditoreAttivo: Creditore;
@@ -47,7 +48,7 @@ export class PayService implements OnInit, OnDestroy {
   public static Header: any = { Titolo: '', IsModal: false };
   public static I18n: I18n = new I18n();
   public static ExtraState: any;
-  public static MobileBreakPointNotice: number = 767;
+  public static MobileBreakPointNotice: number = 768;
   public static EDIT_MODE: boolean = false;
 
 
@@ -76,22 +77,22 @@ export class PayService implements OnInit, OnDestroy {
     NON_ESEGUITO: 'non_eseguito',
     ESEGUITO_PARZIALE: 'eseguito_parziale'
   };
-  // STATI PENDENZE
-  public static STATI_PENDENZA: any = {
-    ESEGUITA: 'eseguita',
-    DUPLICATA: 'duplicata',
-    NON_ESEGUITA: 'non_eseguita',
-    ESEGUITA_PARZIALE: 'eseguita_parziale',
-    ANNULLATA: 'annullata',
-    SCADUTA: 'scaduta',
-    IN_RITARDO: 'in_ritardo'
-  };
-  public static STATI_PENDENZA_CODE: any = {
-    0: 'ESEGUITA',
-    1: 'NON_ESEGUITA',
-    2: 'ESEGUITA_PARZIALE',
-    3: 'NON_ESEGUITA',
-    4: 'NON_ESEGUITA'
+  // STATI PENDENZE <rimuovere>
+    /*public static STATI_PENDENZA: any = {
+      ESEGUITA: 'eseguita',
+      DUPLICATA: 'duplicata',
+      NON_ESEGUITA: 'non_eseguita',
+      ESEGUITA_PARZIALE: 'eseguita_parziale',
+      ANNULLATA: 'annullata',
+      SCADUTA: 'scaduta',
+      IN_RITARDO: 'in_ritardo'
+    };*/
+  public static STATUS_CODE: any = {
+    0: 'ESEGUITO',
+    1: 'NON_ESEGUITO',
+    2: 'ESEGUITO_PARZIALE',
+    3: 'NON_ESEGUITO',
+    4: 'NON_ESEGUITO'
   };
   // STATI PENDENZA SU VERIFICA /avvisi
   public static STATI_VERIFICA_PENDENZA: any = {
@@ -100,10 +101,17 @@ export class PayService implements OnInit, OnDestroy {
     NON_ESEGUITA: 'non_eseguita',
     ANNULLATA: 'annullata',
     SCONOSCIUTA: 'sconosciuta',
-    SCADUTA: 'scaduta'
+    SCADUTA: 'scaduta',
+    ESEGUITA_PARZIALE: 'eseguita_parziale',
+    IN_RITARDO: 'in_ritardo'
   };
 
   /*- esito.component -*/
+  public static TIPO_ONERE: any = {
+    'spontaneo': { editable: true },
+    'dovuto': { editable: false }
+  };
+
   // Esito pagamento
   public static ESITO_OK: string = 'ok';
   public static ESITO_DIFFERITO: string = 'differito';
@@ -413,6 +421,155 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   /**
+   * Procedura download ricevuta
+   * Get RPP detail
+   * @param {string} url
+   * @param {boolean} archive
+   * @param {boolean} open
+   */
+  getRPP(url: string, archive: boolean = false, open: boolean = true) {
+    this.updateSpinner(true);
+    this.richiestaRPP(url, open).subscribe(
+      (result) => {
+        try {
+          if (result.body) {
+            if (result.body['risultati'] && result.body['risultati']['length'] != 0) {
+              const _data = {url: [], type: []};
+              let _risultati = [];
+              if(!archive) {
+                _risultati = result.body['risultati'].filter((r) => {
+                  return (r.rt && parseInt(r.rt['datiPagamento']['codiceEsitoPagamento'], 10) === 0);
+                });
+              } else {
+                _risultati = result.body['risultati'] || [];
+              }
+              _risultati.forEach(item => {
+                let urlRicevuta = '/' + item['rpt']['dominio']['identificativoDominio'];
+                urlRicevuta += '/' + item['rpt']['datiVersamento']['identificativoUnivocoVersamento'];
+                urlRicevuta += '/' + item['rpt']['datiVersamento']['codiceContestoPagamento'];
+                urlRicevuta += '/rt';
+                _data.url.push(urlRicevuta);
+                _data.type.push('application/pdf');
+              });
+              if (_data.url.length != 0) {
+                if (_data.url.length > 1) {
+                  this.multiService(_data.url, _data.type);
+                } else {
+                  this.getReceipt(_data.url[0]);
+                }
+              }
+            } else {
+              this.alert(PayService.I18n.json.Common.WarningRicevuta);
+            }
+          }
+        } catch (e) {
+          this.onError(e);
+        } finally {
+          this.updateSpinner(false);
+        }
+      },
+      (error) => {
+        this.updateSpinner(false);
+        this.onError(error);
+      });
+  }
+
+  /**
+   * Richiesta rpp
+   * @param {string} rppUrl
+   * @param {boolean} open
+   * @returns {Observable<any>}
+   */
+  protected richiestaRPP(rppUrl: string, open: boolean = true): Observable<any> {
+    let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
+    if (!open) {
+      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+    }
+    url += rppUrl;
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
+
+  /**
+   * Forkjoin multiple pdf
+   * @param {string[]} services
+   * @param {string[]} contents
+   * @param {boolean} open
+   */
+  protected multiService(services: string[], contents: string[], open: boolean = true) {
+    const methods = services.map((service, index) => {
+      let headers = new HttpHeaders();
+      headers = headers.set('Content-Type', contents[index]);
+      headers = headers.set('Accept', contents[index]);
+      let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
+      if (!open) {
+        url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      }
+      url += PayService.URL_RPP + service;
+      const method = this.http.get(url, { headers: headers, observe: 'response', responseType: 'blob' });
+
+      return method.pipe(timeout(PayService.TIMEOUT));
+    });
+    forkJoin(methods).subscribe(
+      (responses) => {
+        this._generateZip(responses);
+      },
+      (error) => {
+        this.updateSpinner(false);
+        this.onError(error);
+      });
+  }
+
+  /**
+   * Get receipt pdf
+   * @param {string} url
+   * @param {boolean} open
+   */
+  protected getReceipt(url: string, open: boolean = true) {
+    this.updateSpinner(true);
+    this.ricevuta(url, open).subscribe(
+      (response) => {
+        this.updateSpinner(false);
+        const header = response.headers.get('content-disposition');
+        const filename = header?header.match(/filename="(.+)"/)[1]:PayService.I18n.json.Common.DocumentoPdf;
+        saveAs(response.body, filename);
+      },
+      (error) => {
+        this.updateSpinner(false);
+        this.onError(error);
+      });
+  }
+
+  /**
+   * Ricevuta
+   * @param {string} ricevutaUrl
+   * @param {boolean} open
+   * @returns {Observable<any>}
+   */
+  protected ricevuta(ricevutaUrl: string, open: boolean = true) {
+    let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
+    if (!open) {
+      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+    }
+    url += PayService.URL_RPP + ricevutaUrl;
+    let _headers = new HttpHeaders();
+    _headers = _headers.set('Content-Type', 'application/pdf');
+    _headers = _headers.set('Accept', 'application/pdf');
+    return this.http.get(url, { headers: _headers, observe: 'response', responseType: 'blob' })
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
+
+  /**
    * Stampe pdf
    * @param {AvvisoTpl[]} props
    * @param {boolean} open
@@ -445,13 +602,14 @@ export class PayService implements OnInit, OnDestroy {
   /**
    * Zip file
    * @param {any} _responses
+   * @param {string} _defaultName
    * @private
    */
-  protected _generateZip(_responses: any) {
+  protected _generateZip(_responses: any, _defaultName: string = PayService.I18n.json.Common.DocumentoPdf) {
     const zip = new JSZip();
     _responses.forEach((response, i) => {
       const header = response.headers.get('content-disposition');
-      const filename = header?header.match(/filename="(.+)"/)[1]:`${PayService.I18n.json.Common.BollettinoPdf}_${i+1}`;
+      const filename = header?header.match(/filename="(.+)"/)[1]:`${_defaultName}_${i+1}`;
 
       zip.file(filename, response.body);
     });
@@ -506,41 +664,6 @@ export class PayService implements OnInit, OnDestroy {
   //     url += '?' + query;
   //   }
   //   return this.http.get(url, {observe: 'response'})
-  //     .pipe(
-  //       timeout(PayService.TIMEOUT),
-  //       map((response: HttpResponse<any>) => {
-  //         return response;
-  //       })
-  //     );
-  // }
-
-  /**
-   * Richiesta rpp
-   * @param {string} rppUrl
-   * @returns {Observable<any>}
-   */
-  // richiestaRPP(rppUrl: string): Observable<any> {
-  //   const url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + rppUrl;
-  //   return this.http.get(url, {observe: 'response'})
-  //     .pipe(
-  //       timeout(PayService.TIMEOUT),
-  //       map((response: HttpResponse<any>) => {
-  //         return response;
-  //       })
-  //     );
-  // }
-
-  /**
-   * Ricevuta
-   * @param {string} ricevutaUrl
-   * @returns {Observable<any>}
-   */
-  // ricevuta(ricevutaUrl: string) {
-  //   const url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_RPP + ricevutaUrl;
-  //   let _headers = new HttpHeaders();
-  //   _headers = _headers.set('Content-Type', 'application/pdf');
-  //   _headers = _headers.set('Accept', 'application/pdf');
-  //   return this.http.get(url, { headers: _headers, observe: 'response', responseType: 'blob' })
   //     .pipe(
   //       timeout(PayService.TIMEOUT),
   //       map((response: HttpResponse<any>) => {
@@ -667,103 +790,6 @@ export class PayService implements OnInit, OnDestroy {
     return PayService.SPID['ACCESS'];
   }
 
-  /**
-   * Procedura download ricevuta
-   * Get RPP detail
-   * @param {string} url
-   * @param {boolean} archive
-   */
-  // getRPP(url: string, archive: boolean = false) {
-  //   this.updateSpinner(true);
-  //   this.richiestaRPP(url).subscribe(
-  //     (result) => {
-  //       try {
-  //         if (result.body) {
-  //           if (result.body.risultati && result.body.risultati.length != 0) {
-  //             const _data = {url: [], type: []};
-  //             let _risultati = [];
-  //             if(!archive) {
-  //               _risultati = result.body.risultati.filter((r) => {
-  //                 return (r.rt && parseInt(r.rt.datiPagamento.codiceEsitoPagamento, 10) === 0);
-  //               });
-  //             } else {
-  //               _risultati = result.body.risultati || [];
-  //             }
-  //             _risultati.forEach(item => {
-  //               let urlRicevuta = '/' + item.rpt.dominio.identificativoDominio;
-  //               urlRicevuta += '/' + item.rpt.datiVersamento.identificativoUnivocoVersamento;
-  //               urlRicevuta += '/' + item.rpt.datiVersamento.codiceContestoPagamento;
-  //               urlRicevuta += '/rt';
-  //               _data.url.push(urlRicevuta);
-  //               _data.type.push('application/pdf');
-  //             });
-  //             if (_data.url.length != 0) {
-  //               if (_data.url.length > 1) {
-  //                 this.multiService(_data.url, _data.type);
-  //               } else {
-  //                 this.getReceipt(_data.url[0]);
-  //               }
-  //             }
-  //           } else {
-  //             this.alert(PayService.SHARED_LABELS.warningRicevuta);
-  //           }
-  //         }
-  //       } catch (e) {
-  //         this.onError(e);
-  //       } finally {
-  //         this.updateSpinner(false);
-  //       }
-  //     },
-  //     (error) => {
-  //       this.updateSpinner(false);
-  //       this.onError(error);
-  //     });
-  // }
-
-  /**
-   * Get receipt pdf
-   * @param {string} url
-   */
-  // protected getReceipt(url: string) {
-  //   this.updateSpinner(true);
-  //   this.ricevuta(url).subscribe(
-  //     (response) => {
-  //       this.updateSpinner(false);
-  //       const header = response.headers.get('content-disposition');
-  //       const filename = header?header.match(/filename="(.+)"/)[1]:PayService.SHARED_LABELS.ricevuta;
-  //       saveAs(response.body, filename);
-  //     },
-  //     (error) => {
-  //       this.updateSpinner(false);
-  //       this.onError(error);
-  //     });
-  // }
-
-  /**
-   * Forkjoin multiple pdf
-   * @param {string[]} services
-   * @param {string[]} contents
-   */
-  // protected multiService(services: string[], contents: string[]) {
-  //   const methods = services.map((service, index) => {
-  //     let headers = new HttpHeaders();
-  //     headers = headers.set('Content-Type', contents[index]);
-  //     headers = headers.set('Accept', contents[index]);
-  //     const url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_RPP + service;
-  //     const method = this.http.get(url, { headers: headers, observe: 'response', responseType: 'blob' });
-  //
-  //     return method.pipe(timeout(PayService.TIMEOUT));
-  //   });
-  //   forkJoin(methods).subscribe(
-  //     (responses) => {
-  //       this._generateZip(responses);
-  //     },
-  //     (error) => {
-  //       this.updateSpinner(false);
-  //       this.onError(error);
-  //     });
-  // }
-
   static ResetState() {
     PayService.ExtraState = undefined;
   }
@@ -842,11 +868,15 @@ export class PayService implements OnInit, OnDestroy {
     }
     if (PayService.ShoppingCart.length !== 0) {
       PayService.ShoppingCart.forEach((item: Standard) => {
-        const _dataScadenza = item.rawData['dataScadenza']?moment(item.rawData['dataScadenza']).format(PayService.DateFormatByLanguage(translate)):'';
-        const _subtitle: string[] = [];
-        _subtitle.push(`${PayService.I18n.json.Common.Scadenza}: ${_dataScadenza?_dataScadenza:PayService.I18n.json.Common.SenzaScadenza}`);
-        _subtitle.push(item.rawData['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${item.rawData['numeroAvviso']}`:'');
-        item.sottotitolo = _subtitle.join(', ');
+        const _ird: any = (item.rawData.govpay || item.rawData);
+        const _editable: boolean = item.editable || ((_ird.tipo)?PayService.TIPO_ONERE[_ird.tipo].editable:false);
+        const _dataScadenza: string = _ird['dataScadenza']?moment(_ird['dataScadenza']).format(PayService.DateFormatByLanguage(translate)):'';
+        const _dataValidita: string = _ird['dataValidita']?moment(_ird['dataValidita']).format(PayService.DateFormatByLanguage(translate)):'';
+        const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
+        const _avviso: string = _ird['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_ird['numeroAvviso']}`:'';
+
+        item.sottotitolo = !_editable?_avviso:'';
+        item.metadati = _terminePagamento;
       });
     }
   }
@@ -885,6 +915,25 @@ export class PayService implements OnInit, OnDestroy {
       console.log('Formato json non corretto');
       return '';
     }
+  }
+
+  /**
+   * Convert code AA_BB or aa_bb to AaBb
+   * @param {string} str
+   * @returns {string}
+   * @constructor
+   */
+  static CamelCode(str: string): string {
+    return str.toLowerCase().split('_').map((s: string) => {
+      return s.charAt(0).toUpperCase()+s.substring(1);
+    }).join('');
+  }
+
+  static ResetCart(router: Router, translate: TranslateService) {
+    PayService.ShoppingCart = [];
+    PayService.Cart = [];
+    PayService.MapHeading(router, translate);
+    PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[translate.currentLang], 0);
   }
 
 }

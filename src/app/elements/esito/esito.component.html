@@ -7,15 +7,17 @@
   <div class="row">
     <div class="col-12 col-md-2"></div>
     <div class="col-12 col-md-8">
-      <p class="pb-5 m-0 text-center" *ngIf="_paid === -1 && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Titolo }}</p>
-      <p class="pb-5 m-0" *ngIf="_paid === 1 && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Ok }}</p>
-      <p class="pb-5 m-0" *ngIf="_paid === 1 && _status === STATUS_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Eseguito }}</p>
-      <p class="pb-5 m-0" *ngIf="_paid === 1 && _status === STATUS_TIMEOUT">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Ok }}</p>
-      <p class="pb-5 m-0" *ngIf="_paid === 0 && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Errore }}</p>
-      <p class="pb-5 m-0" *ngIf="_paid === 0 && _status === STATUS_NON_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Fallito }}</p>
-      <p class="pb-5 m-0" *ngIf="_paid === 0 && _status === STATUS_TIMEOUT">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Errore }}</p>
-      <pay-item *ngFor="let p of _payments" primary-icon="shopping_cart" primary-icon-off="remove_shopping_cart" [item]="p"
-                [titolo]="p.titolo" [meta-titolo]="p.sottotitolo" [importo]="p.importo" (on-icon-click)="_toggleCartClick($event)"
+    <p class="pb-5 m-0 text-center" *ngIf="_paid === -1 && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Titolo }}</p>
+    <p class="pb-5 m-0" *ngIf="_paid === 1 && _POLLING_TIMEOUT <= 0 && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Ok }}</p>
+    <p class="pb-5 m-0" *ngIf="_paid === 1 && (_POLLING_TIMEOUT > 0 && _POLLING_TIMEOUT < TIME_OUT_POLLING) && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Ok }}</p>
+    <p class="pb-5 m-0" *ngIf="_paid === 1 && (_POLLING_TIMEOUT >= TIME_OUT_POLLING) && _status === STATUS_TIMEOUT">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Overflow.Ok }}</p>
+    <p class="pb-5 m-0" *ngIf="_paid === 0 && _POLLING_TIMEOUT <= 0 && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Errore }}</p>
+    <p class="pb-5 m-0" *ngIf="_paid === 0 && (_POLLING_TIMEOUT > 0 && _POLLING_TIMEOUT < TIME_OUT_POLLING) && _status !== STATUS_NON_ESEGUITO && _status !== STATUS_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Errore }}</p>
+    <p class="pb-5 m-0" *ngIf="_paid === 0 && (_POLLING_TIMEOUT >= TIME_OUT_POLLING) && _status !== STATUS_NON_ESEGUITO && _status !== STATUS_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Overflow.Errore }}</p>
+    <p class="pb-5 m-0" *ngIf="_status === STATUS_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Eseguito }}</p>
+    <p class="pb-5 m-0" *ngIf="_status === STATUS_NON_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Fallito }}</p>
+      <pay-item *ngFor="let p of _payments" [primary-icon]="p.primaryIcon" [primary-icon-off]="p.primaryIconOff" [item]="p"
+                [titolo]="p.titolo" [meta-titolo]="p.sottotitolo" [importo]="p.importo" [meta-importo]="p.metadati" (on-icon-click)="_toggleCartClick($event)"
                 [currency-format]="pay.currencyFormat.bind(pay)" [mobile-breakpoint]="Pay.MobileBreakPointNotice"></pay-item>
     </div>
     <div class="col-12 col-md-2"></div>
