@@ -66,6 +66,9 @@ export class CartComponent implements OnInit, AfterContentChecked {
     const _recapito: string = PayService.User.anagrafica?PayService.User.anagrafica.email:'';
     const _body = {
       pendenze: PayService.ShoppingCart.map(p => {
+        if (p.rawData.govpay) {
+          p.rawData = p.rawData.govpay;
+        }
         if (p.editable) {
           return {
             idA2A: p.rawData.idA2A,
