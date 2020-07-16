@@ -7,7 +7,6 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { serviziChange, validateNow } from './elements/pagamenti/pagamenti.component';
 import { Creditore } from './elements/classes/creditore';
-import { Subscription } from 'rxjs/index';
 
 @Component({
   selector: 'pay-root',
@@ -82,21 +81,28 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this._mst = (PayService.CREDITORI.length > 1 && this._languages.length == 1)?0:48;
+    this._checkCartIcon();
+  }
 
   ngAfterContentChecked() {
     this._isLoading = this.pay.spinner;
   }
 
   _updateLayout() {
-    this._showCart = !(window.innerWidth < PayService.MobileBreakPointNotice);
+    this._checkCartIcon();
     if (this._languageBar) {
       this._mst = this._languageBar.nativeElement.clientHeight;
       if (this._headerBar && this._globalContent) {
         this._hbh = this._headerBar.nativeElement.clientHeight;
-        this._gch = window.innerHeight - this._hbh - this._languageBar.nativeElement.clientHeight;
+        this._gch = window.innerHeight - this._hbh - this._mst;
       }
     }
+  }
+
+  _checkCartIcon() {
+    this._showCart = !(window.innerWidth < PayService.MobileBreakPointNotice);
   }
 
   _initLanguages() {
@@ -202,9 +208,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   __onChange(creditore: any) {
     PayService.CreditoreAttivo = creditore || null;
-    if (this.pay.router.url.indexOf('esito-pagamento') !== -1) {
-      this.pay.router.navigateByUrl('/pagamenti');
-    }
+    this.Pay.ResetCart(this.router, this.translate);
+    this.pay.router.navigateByUrl('/pagamenti');
   }
 
 }

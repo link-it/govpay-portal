@@ -246,8 +246,6 @@ button:focus {
   font-family: 'Titillium Web', sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
-  padding-top: .5rem;
-  padding-bottom: .5rem;
   color: $reverse-text-color;
   background-color: $background-color;
 }
@@ -278,6 +276,7 @@ button:focus {
 .header-bar a,
 .header-bar p {
   font-size: 1.5rem;
+  padding: .875rem 1rem .875rem 0;
   color: $reverse-text-color;
 }
 

@@ -1,6 +1,6 @@
 <pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [language-list]="_languages" language-bar-theme="language-bar"
                   (on-change-language)="_languageHandler($event)" [current-language]="_language">
-  <div add-on class="dropdown w-100" *ngIf="Pay.CREDITORI.length > 1 && Pay.CreditoreAttivo">
+  <div add-on class="my-1 py-2 dropdown w-100" *ngIf="Pay.CREDITORI.length > 1 && Pay.CreditoreAttivo">
     <a class="dropdown-toggle" href="#" id="creditori" role="button" data-toggle="dropdown"
        aria-haspopup="true" aria-expanded="false">{{ Pay.CreditoreAttivo?.label }}</a>
     <div class="dropdown-menu mat-elevation-z4" aria-labelledby="creditori">
@@ -13,7 +13,7 @@
   <p add-on *ngIf="Pay.CREDITORI.length === 1" class="language-bar-title w-100 m-0 multiline-text">{{ Pay.I18n.json.Header.LanguageBar.Titolo }}</p>
   <pay-spid-login [label]="Pay.I18n.json.Spid.Label" [info]="Pay.I18n.json.Spid.Info" [ask]="Pay.I18n.json.Spid.Ask" [help]="Pay.I18n.json.Spid.Help"
                   [action]="Pay.SPID['ACTION_FORM_URL']" [spid-test-url]="Pay.SPID['TEST_PROVIDER']" [response-target]="Pay.SPID['SERVICE_TARGET']"
-                  *ngIf="!Pay.User && Pay.SPID['ACCESS'] && !Pay.CreditoreAttivo"></pay-spid-login>
+                  *ngIf="!Pay.User && Pay.SPID['ACCESS']"></pay-spid-login>
 </pay-language-bar>
 <pay-choice-dialog *ngIf="Pay.CREDITORI.length > 1 && !Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)"
                    [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [title]="Pay.I18n.json.Header.Erogatore.Titolo"
