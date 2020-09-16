@@ -530,7 +530,7 @@ export class PayService implements OnInit, OnDestroy {
    * @param {string} url
    * @param {boolean} open
    */
-  protected getReceipt(url: string, open: boolean = true) {
+  public getReceipt(url: string, open: boolean = true) {
     this.updateSpinner(true);
     this.ricevuta(url, open).subscribe(
       (response) => {

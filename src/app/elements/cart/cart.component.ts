@@ -80,7 +80,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
           numeroAvviso: p.rawData.numeroAvviso
         };
       }),
-      urlRitorno: PayService.PAY_RESPONSE_URL
+      urlRitorno: `${PayService.PAY_RESPONSE_URL}?idDominio=${PayService.CreditoreAttivo.value}`
     };
     if(PayService.User) {
       _body['soggettoVersante'] = {

@@ -120,7 +120,15 @@ export class EsitoComponent implements OnInit, OnDestroy {
   }
 
   _paymentsToFix(response: any): any[] {
-    const _response = response.body;
+    const _response: any = response.body;
+    _response['pendenze'].forEach((pnd: any) => {
+      _response.rpp.some((rpp: any) => {
+        if (rpp.pendenza.idA2A === pnd.idA2A && rpp.pendenza.idPendenza === pnd.idPendenza) {
+          pnd.rpp = rpp;
+          return true;
+        }
+      });
+    });
     return this.__loopFix(_response['pendenze'], false, _response);
   }
 
@@ -143,7 +151,23 @@ export class EsitoComponent implements OnInit, OnDestroy {
         break;
       case 'receipt':
         try {
-          this.pay.getRPP(event.target.rawData.govpay['rpp']);
+          const rpp = event.target.rawData.govpay['rpp'];
+          if (rpp) {
+            let urlRicevuta = '';
+            if (rpp.rt && parseInt(rpp.rt['datiPagamento']['codiceEsitoPagamento'], 10) === 0) {
+              urlRicevuta = '/' + rpp.rpt.dominio.identificativoDominio;
+              urlRicevuta += '/' + rpp.rpt.datiVersamento.identificativoUnivocoVersamento;
+              urlRicevuta += '/' + rpp.rpt.datiVersamento.codiceContestoPagamento;
+              urlRicevuta += '/rt';
+            }
+            if (urlRicevuta) {
+              this.pay.getReceipt(urlRicevuta);
+            } else {
+              this.pay.alert(PayService.I18n.json.Common.WarningRicevuta);
+            }
+          } else {
+            this.pay.alert(PayService.I18n.json.Common.WarningRicevuta);
+          }
         } catch (e) {
           console.warn(e);
         }
