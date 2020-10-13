@@ -30,22 +30,10 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
   _decodedForm;
   _jsonLayout;
   _jsonSchema;
+  _jsonUISchema;
   _jsonData;
 
   protected _langSubscription: Subscription;
-
-  protected jsonKeySort = function (a, b) {
-    if (!a.key || !b.key) { return 0; }
-    const keyA = a.key.toLowerCase();
-    const keyB = b.key.toLowerCase();
-    if (keyB < keyA) {
-      return -1;
-    }
-    if (keyB > keyA) {
-      return 1;
-    }
-    return 0;
-  };
 
   constructor(protected dialog: MatDialog, public pay: PayService, public translate: TranslateService) {
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -80,9 +68,8 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
       tipoPendenza = PayService.ExtraState['idTipoPendenza'];
       PayService.ExtraState.jsfDef['data'] = form.jsf.data;
     }
-    const _originalForm = this._formDataToInternalSchema(form.jsf.data, this._jsonLayout);
     this.pay.updateSpinner(true);
-    this.pay.richiestaPendenza(creditore, tipoPendenza, _originalForm, query).subscribe(
+    this.pay.richiestaPendenza(creditore, tipoPendenza, form.jsf.data, query).subscribe(
       (response) => {
         this.pay.updateSpinner(false);
         if (verify) {
@@ -170,93 +157,6 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Map json key according to language
-   * @param {string[]} propertyName
-   * @param object
-   * @param {string} oldKey
-   * @param newItem
-   * @param {boolean} DEBUG
-   * @returns {any}
-   * @private
-   */
-  protected _mapJsonSchema(propertyName: string[], object: any, oldKey: string, newItem: any, DEBUG: boolean = false): any {
-    const key = propertyName[0];
-    const newKey = newItem.title.toLowerCase().split(' ').join('_');
-    if (DEBUG) {
-      console.log(key, propertyName, object, oldKey, newItem );
-    }
-    if (object[key] && object[key].required) {
-      object[key].required = JSON.parse(JSON.stringify(object[key].required).replace(oldKey, newKey));
-      if (DEBUG) {
-        console.log('required child', key, object[key].required);
-      }
-    }
-    if (object.required && propertyName.length == 2) {
-      object.required = JSON.parse(JSON.stringify(object.required).replace(oldKey, newKey));
-      if (DEBUG) {
-        console.log('required root', object.required);
-      }
-    }
-    if (key === oldKey) {
-      object = JSON.parse(JSON.stringify(object).replace(oldKey, newKey));
-      if (newItem.placeholder) {
-        object[newKey].placeholder = newItem.placeholder;
-      }
-      if (DEBUG) {
-        console.log('new key', object);
-      }
-    }
-    if (object[key] && key !== oldKey) {
-      propertyName.shift();
-      object[key] = this._mapJsonSchema(propertyName, object[key], oldKey, newItem, DEBUG);
-    }
-
-    return object;
-  }
-
-  /**
-   * Convert to internal properties schema
-   * @param _formData
-   * @param _layout
-   * @returns {any}
-   * @private
-   */
-  _formDataToInternalSchema(_formData: any, _layout: any): any {
-    if (_layout) {
-      _layout.forEach(l => {
-        const _key: string = l.title.toLowerCase().split(' ').join('_');
-        const _origKey: string = l.key.split('.').pop();
-        _formData = JSON.parse(JSON.stringify(_formData).replace('"'+_key+'":', '"'+_origKey+'":'));
-      });
-      return _formData;
-    }
-    return null;
-  }
-
-  /**
-   * Translate json form data on language switching
-   * @param _formData
-   * @param _oldLayout
-   * @param _newLayout
-   * @returns {any}
-   * @private
-   */
-  _translateFormData(_formData: any, _oldLayout: any, _newLayout: any): any {
-    if (_oldLayout.length === _newLayout.length) {
-      _newLayout.sort(this.jsonKeySort);
-      _oldLayout.sort(this.jsonKeySort).forEach((l: any, i: number) => {
-        _newLayout[i].oldKey = l.title.toLowerCase().split(' ').join('_');
-        _newLayout[i].newKey = _newLayout[i].title.toLowerCase().split(' ').join('_');
-      });
-      _newLayout.forEach(l => {
-        _formData = JSON.parse(JSON.stringify(_formData).replace('"'+l.oldKey+'":', '"'+l.newKey+'":'));
-      });
-      return _formData;
-    }
-    return null;
-  }
-
-  /**
    * Json form by schema
    * @param {boolean} newLanguage
    * @private
@@ -275,21 +175,17 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
         this._decodedForm['jsfDef'] = JSON.parse(PayService.DecodeB64(this._decodedForm['form']['definizione']));
         this._decodedForm['detail'] = JSON.parse(PayService.DecodeB64(this._decodedForm['form']['impaginazione']));
         if (_filledData && Object.keys(_filledData).length !== 0) {
-          const _oldLayout: any = [].concat(this._jsonLayout);
-          const _newLayout: any = this._decodedForm['jsfDef']['layout_'+PayService.ALPHA_3_CODE];
-          this._jsonData = this._translateFormData(_filledData, _oldLayout, _newLayout);
+          this._jsonData = JSON.parse(JSON.stringify(_filledData));
         }
       }
       try {
         if (this._decodedForm['form'] && this._decodedForm['form']['tipo'] === 'angular2-json-schema-form') {
           if (this._decodedForm['jsfDef']) {
             const _schema: any = Object.assign({}, this._decodedForm['jsfDef']['schema']);
+            const _uiSchema: any = Object.assign({}, this._decodedForm['jsfDef']['uiSchema']);
             this._jsonLayout = this._decodedForm['jsfDef']['layout_'+PayService.ALPHA_3_CODE];
-            this._jsonLayout.sort(this.jsonKeySort).forEach(item => {
-              const propertyName = ['properties'].concat(item.key.replace(/\./g, '.properties.').split('.'));
-              const oldKey = propertyName[propertyName.length-1];
-              this._jsonSchema = this._mapJsonSchema(propertyName, _schema, oldKey, item, Debug);
-            });
+            this._jsonUISchema = _uiSchema;
+            this._jsonSchema = _schema;
             if (Debug) {
               console.log(JSON.stringify(this._jsonSchema, null, 2));
             }

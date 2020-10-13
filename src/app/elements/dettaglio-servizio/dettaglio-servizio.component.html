@@ -18,7 +18,7 @@
     </div>
     <div class="col-12 col-md-6" *ngIf="_decodedForm['jsfDef']">
       <pay-title-deco art-class="title-deco mb-5" [simple]="true" [titolo]="Pay.I18n.json.DettaglioServizio.Form.Titolo"></pay-title-deco>
-      <json-schema-form #jsf [options]="_formOptions" [framework]="'material-design'" [schema]="_jsonSchema" [data]="_jsonData"
+      <json-schema-form #jsf [options]="_formOptions" [framework]="'material-design'" [schema]="_jsonSchema" [data]="_jsonData" [UISchema]="_jsonUISchema"
                         (isValid)="_isValid($event)"></json-schema-form>
       <div class="pt-4">
         <button mat-flat-button color="primary" (click)="_generaPendenza(jsf, true)" [disabled]="!_jsFormValid" *ngIf="_decodedForm.detail['requireUserConfirm']">
