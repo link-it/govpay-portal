@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
 import { Standard } from '../classes/standard';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 
 import * as moment from 'moment';
 import { BehaviorSubject, Subscription } from 'rxjs/index';
@@ -34,6 +34,11 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
       if (selfValidation) {
         this._elencoServizi();
       }
+    });
+    translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      setTimeout(() => {
+        this._loadMasonry();
+      });
     });
   }
 
@@ -279,6 +284,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
           itemSelector: '.grid-item',
           columnWidth: '.grid-sizer',
           percentPosition: true,
+          horizontalOrder: true,
           gutter: 32
         });
       });
