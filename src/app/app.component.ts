@@ -50,13 +50,10 @@ export class AppComponent implements OnInit, AfterContentChecked {
       });
       if(_params) {
         if (_params['idSession'] && _params['idDominio']) {
-          PayService.CREDITORI.forEach((cr: Creditore) => {
-            if (cr.value === _params['idDominio']) {
-              PayService.CreditoreAttivo = cr;
-            }
-          });
+          this._setCreditoreAttivo(_params['idDominio']);
         }
         if (_params['numeroAvviso'] && _params['idDominio']) {
+          this._setCreditoreAttivo(_params['idDominio']);
           PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
              Numero: _params['numeroAvviso'],
           Creditore: _params['idDominio'],
@@ -64,6 +61,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
           if(PayService.UUID_CHECK && _params['UUID']) {
             PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
           }
+          this.__directPayment();
         }
       }
     }
@@ -198,6 +196,14 @@ export class AppComponent implements OnInit, AfterContentChecked {
     return (window.innerWidth < PayService.MobileBreakPointNotice && link == '/carrello' && PayService.Cart.length !== 0);
   }
 
+  _setCreditoreAttivo(dominio: string) {
+    PayService.CREDITORI.forEach((cr: Creditore) => {
+      if (cr.value === dominio) {
+        PayService.CreditoreAttivo = cr;
+      }
+    });
+  }
+
   __onActiveChange(creditore: any) {
     if (PayService.CreditoreAttivo !== creditore) {
       this.__onChange(creditore);
@@ -209,6 +215,10 @@ export class AppComponent implements OnInit, AfterContentChecked {
   __onChange(creditore: any) {
     PayService.CreditoreAttivo = creditore || null;
     this.Pay.ResetCart(this.router, this.translate);
+    this.pay.router.navigateByUrl('/pagamenti');
+  }
+
+  __directPayment() {
     this.pay.router.navigateByUrl('/pagamenti');
   }
 
