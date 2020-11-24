@@ -64,7 +64,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
         if(!PayService.UUID_CHECK || (PayService.UUID_CHECK && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID)) {
           const data: any = {
             token: '',
-            query: `?UUID=' + ${PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID}`,
+            query: `?UUID=${PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID}`,
             notice: {
               numeroAvviso: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero,
               dominio: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Creditore
