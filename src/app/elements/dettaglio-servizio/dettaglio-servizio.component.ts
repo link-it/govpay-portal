@@ -183,7 +183,7 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
           if (this._decodedForm['jsfDef']) {
             const _schema: any = Object.assign({}, this._decodedForm['jsfDef']['schema']);
             const _uiSchema: any = Object.assign({}, this._decodedForm['jsfDef']['uiSchema']);
-            this._jsonLayout = this._decodedForm['jsfDef']['layout_'+PayService.ALPHA_3_CODE];
+            this._jsonLayout = (this._decodedForm['jsfDef']['layout_'+PayService.ALPHA_3_CODE] || this._decodedForm['jsfDef'].layout);
             this._jsonUISchema = _uiSchema;
             this._jsonSchema = _schema;
             if (Debug) {
