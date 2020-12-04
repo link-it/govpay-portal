@@ -109,7 +109,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
     }
 
     this.pay.updateSpinner(true);
-    this.pay.richiestaAvviso(PayService.CreditoreAttivo.value, data.notice.numeroAvviso, true, data.query).subscribe(
+    this.pay.richiestaAvviso(PayService.CreditoreAttivo.value, data.notice.numeroAvviso.toString().trim(), true, data.query).subscribe(
       (result) => {
         if(result.body) {
           this.pay.updateSpinner(false);

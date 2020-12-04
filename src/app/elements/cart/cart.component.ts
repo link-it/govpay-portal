@@ -36,12 +36,20 @@ export class CartComponent implements OnInit, AfterContentChecked {
   }
 
   _clickStampa(target: Standard) {
-    const _props: AvvisoTpl[] = [];
-    const atp: AvvisoTpl = new AvvisoTpl();
-    atp.avviso = target.rawData['numeroAvviso'];
-    atp.creditore = target.rawData['idDominio'];
-    _props.push(atp);
-    this.pay.pdf(_props);
+    this.pay.updateSpinner(true);
+    PayService.GenerateRecaptchaV3Token('stampaBollettino').then((response) => {
+      this.pay.updateSpinner(false);
+      const _query: string = response.token?`gRecaptchaResponse=${response.token}`:'';
+      const _props: AvvisoTpl[] = [];
+      const atp: AvvisoTpl = new AvvisoTpl();
+      atp.avviso = target.rawData['numeroAvviso'];
+      atp.creditore = target.rawData['idDominio'];
+      _props.push(atp);
+      this.pay.pdf(_props, _query);
+    }).catch((error) => {
+      this.pay.updateSpinner(false);
+      this.pay.onError(error);
+    });
   }
 
   _menuItemClick(target: Standard, icon: string) {

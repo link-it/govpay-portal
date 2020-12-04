@@ -572,9 +572,10 @@ export class PayService implements OnInit, OnDestroy {
   /**
    * Stampe pdf
    * @param {AvvisoTpl[]} props
+   * @param {string} recaptcha
    * @param {boolean} open
    */
-   pdf(props: AvvisoTpl[], open: boolean = true) {
+   pdf(props: AvvisoTpl[], recaptcha: string = '', open: boolean = true) {
     const methods = props.map((prop, index) => {
       let headers = new HttpHeaders();
       headers = headers.set('Content-Type', 'application/pdf');
@@ -584,6 +585,9 @@ export class PayService implements OnInit, OnDestroy {
         url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
       }
       url += PayService.URL_AVVISO.split('{idDominio}').join(prop.creditore).split('{numeroAvviso}').join(prop.avviso);
+      if (recaptcha) {
+        url += (url.indexOf('?') !== -1)?`&${recaptcha}`:`?${recaptcha}`;
+      }
       const method = this.http.get(url, { headers: headers, observe: 'response', responseType: 'blob' });
 
       return method.pipe(timeout(PayService.TIMEOUT));

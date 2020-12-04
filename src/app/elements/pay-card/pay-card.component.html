@@ -21,7 +21,8 @@
   <div class="d-block" *ngIf="!_enableScanner">
     <form [formGroup]="_fg" (ngSubmit)="_onSubmit(_fg.value)">
       <mat-form-field class="d-block">
-        <input #notice matInput [placeholder]="_avvisoPH" name="avviso" [formControlName]="'avviso'" autocomplete="off" required>
+        <input #notice matInput [placeholder]="_avvisoPH" name="avviso" [formControlName]="'avviso'"
+               (keydown.space)="$event.preventDefault()" autocomplete="off" required>
         <button matSuffix mat-icon-button type="button" (click)="_clearOrScan($event, notice)">
           <mat-icon class="action" *ngIf="notice.value === ''">photo_camera</mat-icon>
           <mat-icon class="action" *ngIf="notice.value !== ''">close</mat-icon>
