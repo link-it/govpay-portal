@@ -573,9 +573,10 @@ export class PayService implements OnInit, OnDestroy {
    * Stampe pdf
    * @param {AvvisoTpl[]} props
    * @param {string} recaptcha
+   * @param {boolean} zip
    * @param {boolean} open
    */
-   pdf(props: AvvisoTpl[], recaptcha: string = '', open: boolean = true) {
+   pdf(props: AvvisoTpl[], recaptcha: string = '', zip: boolean = true, open: boolean = true) {
     const methods = props.map((prop, index) => {
       let headers = new HttpHeaders();
       headers = headers.set('Content-Type', 'application/pdf');
@@ -595,12 +596,34 @@ export class PayService implements OnInit, OnDestroy {
     this.updateSpinner(true);
     forkJoin(methods).subscribe(
       (responses) => {
-        this._generateZip(responses);
+        if (!zip) {
+          this._directPdfSave(responses);
+        } else {
+          this._generateZip(responses);
+        }
       },
       (error) => {
         this.updateSpinner(false);
         this.onError(error);
       });
+  }
+
+  /**
+   * Saving files individually
+   * @param _responses
+   * @private
+   */
+  protected _directPdfSave(_responses: any) {
+    try {
+      _responses.forEach((response, i) => {
+        const header = response.headers.get('content-disposition');
+        const filename = header?header.match(/filename="(.+)"/)[1]:`${PayService.I18n.json.Common.DocumentoPdf}_${i+1}`;
+        saveAs(response.body, filename);
+      });
+      this.updateSpinner(false);
+    } catch(e) {
+      this.onError(e);
+    }
   }
 
   /**

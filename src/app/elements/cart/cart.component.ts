@@ -45,7 +45,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
       atp.avviso = target.rawData['numeroAvviso'];
       atp.creditore = target.rawData['idDominio'];
       _props.push(atp);
-      this.pay.pdf(_props, _query);
+      this.pay.pdf(_props, _query, false);
     }).catch((error) => {
       this.pay.updateSpinner(false);
       this.pay.onError(error);
