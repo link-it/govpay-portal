@@ -37,6 +37,7 @@ export class PayService implements OnInit, OnDestroy {
   public static PAY_RESPONSE_URL: string = '';
   public static UUID_CHECK: string = '';
   public static ALPHA_3_CODE: string = '';
+  public static QueryProfile: string = '';
   public static LogoPagoPA: string = 'assets/pagopa.svg';
   public static LogoGovpay: string = 'assets/govpay.svg';
   public static LogoReverseGovpay: string = 'assets/govpay-reverse.svg';
@@ -150,6 +151,9 @@ export class PayService implements OnInit, OnDestroy {
   initConfig() {
     if(SwitchConfig.SELECTOR) {
       this.translate.currentLoader['prefix'] = './assets/i18n' + SwitchConfig.SELECTOR + '/';
+    }
+    if(SwitchConfig.PROFILE && SwitchConfig.PROFILE.Id) {
+      PayService.QueryProfile = SwitchConfig.PROFILE.Query+SwitchConfig.PROFILE.Id;
     }
     PayService.RECAPTCHA_V3_SITE_KEY = PayConfig.RECAPTCHA_V3_SITE_KEY;
     PayService.SPID = PayConfig['SPID_SETTINGS'];
