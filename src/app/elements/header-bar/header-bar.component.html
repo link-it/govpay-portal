@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12">
         <div class="container-fluid">
-          <div class="row align-items-center">
+          <div class="row align-items-center flex-nowrap">
             <button mat-icon-button class="mr-3" (click)="_onIconLeft()" *ngIf="_showLeftIcon">
               <mat-icon class="{{ _iconClass }} material-icons action" aria-label="menu">{{ _iconLeft }}</mat-icon>
             </button>
@@ -11,6 +11,7 @@
               <a class="w-100 multiline-text" [href]="_href" *ngIf="_href!='#'">{{ _title }}</a>
               <p class="w-100 m-0 multiline-text" *ngIf="_href=='#'">{{ _title }}</p>
             </div>
+            <ng-content select="[add-on]"></ng-content>
             <pay-icon-button button-class="cart-button" (ib-click)="_onIconRight()" [icon]="_iconRight" *ngIf="_showRightIcon">{{ _label }}</pay-icon-button>
           </div>
         </div>

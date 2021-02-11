@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'pay-item',
@@ -6,8 +6,9 @@ import { AfterContentChecked, AfterViewInit, Component, ElementRef, EventEmitter
   styleUrls: ['./pay-item.component.scss']
 })
 export class PayItemComponent implements AfterViewInit, AfterContentChecked {
+  @HostBinding('class.in') _slideIn: boolean = false;
+  @HostBinding('class.show-more') _expanded: boolean = false;
   @ViewChild('item', { read: ElementRef }) _host: ElementRef;
-  @ViewChild('touch', { read: ElementRef }) _hostTouch: ElementRef;
 
   @Input('titolo') _titolo: string = '';
   @Input('meta-titolo') _metaTitolo: string = '';
@@ -30,7 +31,6 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
   @Output('on-icon-click') _iconClick: EventEmitter<any> = new EventEmitter(null);
 
   _touchDevice: boolean = false;
-  _expanded: boolean = false;
   _menuOpened: boolean = false;
   _touch: any;
 
@@ -61,20 +61,25 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
   }
 
   __swiping(event: any) {
-    if (this._hostTouch && this._hostTouch.nativeElement) {
-      this._hostTouch.nativeElement.className = this._hostTouch.nativeElement.className.split(' ').concat(['in']).join(' ');
+    if (!this._expanded) {
+      if (!this._slideIn) {
+        this._slideIn = true;
+      }
     }
   }
 
-  _toggleExpand() {
+  _toggleExpand(event: any) {
     if (this._expandMode) {
-      this._expanded = !this._expanded;
+      if (!this._menuOpened && !this._slideIn) {
+        this._expanded = !this._expanded;
+      }
     }
   }
 
   _resetTouch() {
-    if (this._touchDevice && !this._menuOpened && this._hostTouch && this._hostTouch.nativeElement) {
-      this._hostTouch.nativeElement.className = this._hostTouch.nativeElement.className.split(' ').filter( (item) => item !== 'in').join(' ');
+    event.stopImmediatePropagation();
+    if (this._touchDevice && !this._menuOpened && this._slideIn) {
+      this._slideIn = false;
     }
   }
 
@@ -86,7 +91,7 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
     return 'ontouchstart' in document.documentElement;
   }
 
-  _onIconClick(type: string) {
+  _onIconClick(event, type: string) {
     event.stopImmediatePropagation();
     const click = { type: 'icon-click', target: this._item, toggle: false, icon: this[type] };
     if (this[type + 'Off']) {

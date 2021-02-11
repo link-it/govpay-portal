@@ -1,35 +1,38 @@
-<div #item class="row" (click)="_toggleExpand()">
-  <div class="col-8">
-    <p class="main-text">{{ _titolo }}</p>
-    <p class="meta-text" *ngIf="_metaTitolo">{{ _metaTitolo }}</p>
+<div #item class="item" (click)="_toggleExpand($event)">
+  <div class="row">
+    <div class="col-7">
+      <p class="main-text">{{ _titolo }}</p>
+      <p class="meta-text" *ngIf="_metaTitolo">{{ _metaTitolo }}</p>
+    </div>
+    <div class="col">
+      <p class="main-text">{{ _currencyFormat(_importo) }}</p>
+      <p class="meta-text" *ngIf="_metaImporto">{{ _metaImporto }}</p>
+    </div>
+    <div class="d-flex align-items-center justify-content-center expander-icon" *ngIf="_expandMode">
+      <mat-icon>{{ _expanded?'expand_less':'expand_more' }}</mat-icon>
+    </div>
+    <div class="d-none d-md-flex align-items-center justify-content-center primary-icon" *ngIf="!_actionMenu && _primaryIcon && !_touchDevice">
+      <button mat-icon-button (click)="_onIconClick($event, '_primaryIcon')">
+        <mat-icon>{{ _primaryIcon }}</mat-icon>
+      </button>
+    </div>
+    <div class="d-none d-md-flex align-items-center justify-content-center action-menu-icon" *ngIf="_actionMenu">
+      <button mat-icon-button [matMenuTriggerFor]="menu"
+              (menuOpened)="__moreVert(true)" (menuClosed)="__moreVert(false)">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
   </div>
-  <div class="col">
-    <p class="main-text">{{ _currencyFormat(_importo) }}</p>
-    <p class="meta-text" *ngIf="_metaImporto">{{ _metaImporto }}</p>
-  </div>
-  <div class="d-flex align-items-center justify-content-center expander-icon" *ngIf="_expandMode">
-    <mat-icon>{{ _expanded?'expand_less':'expand_more' }}</mat-icon>
-  </div>
-  <div class="d-none d-md-flex align-items-center justify-content-center primary-icon" *ngIf="!_actionMenu && _primaryIcon && !_touchDevice">
-    <button mat-icon-button (click)="_onIconClick('_primaryIcon')">
-      <mat-icon>{{ _primaryIcon }}</mat-icon>
-    </button>
-  </div>
-  <div class="d-none d-md-flex align-items-center justify-content-center action-menu-icon" *ngIf="_actionMenu">
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-  </div>
-  <div #touch class="d-flex d-md-none align-items-center justify-content-end touch-device"
-       (click)="_resetTouch()" *ngIf="_touchDevice">
-    <button mat-icon-button (click)="_onIconClick('_primaryIcon')" *ngIf="!_actionMenu && _primaryIcon">
-      <mat-icon>{{ _primaryIcon }}</mat-icon>
-    </button>
-    <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="_actionMenu"
-            (menuOpened)="__moreVert(true)" (menuClosed)="__moreVert(false)">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-  </div>
+  <div class="trigger" *ngIf="_slideIn" (click)="_resetTouch($event)"></div>
+</div>
+<div class="d-flex d-md-none align-items-center justify-content-end touch-device" *ngIf="_touchDevice">
+  <button mat-icon-button (click)="_onIconClick($event, '_primaryIcon')" *ngIf="!_actionMenu && _primaryIcon">
+    <mat-icon>{{ _primaryIcon }}</mat-icon>
+  </button>
+  <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="_actionMenu"
+          (menuOpened)="__moreVert(true)" (menuClosed)="__moreVert(false)">
+    <mat-icon>more_vert</mat-icon>
+  </button>
 </div>
 <div class="row" *ngIf="_expandMode && _expanded">
   <div class="col-12">

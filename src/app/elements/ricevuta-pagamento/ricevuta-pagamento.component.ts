@@ -78,6 +78,7 @@ export class RicevutaPagamentoComponent implements OnInit, OnChanges {
     } else {
       _recapito = event?event.form.email:'';
     }
+    const RETURN_URL: string = `${PayService.PAY_RESPONSE_URL}?idDominio=${PayService.CreditoreAttivo.value}`;
     const _body = {
       pendenze: PayService.ShoppingCart.map(p => {
         if (p.rawData.govpay) {
@@ -94,7 +95,7 @@ export class RicevutaPagamentoComponent implements OnInit, OnChanges {
           numeroAvviso: p.rawData.numeroAvviso
         };
       }),
-      urlRitorno: `${PayService.PAY_RESPONSE_URL}?idDominio=${PayService.CreditoreAttivo.value}`
+      urlRitorno: (PayService.QueryProfile)?`${RETURN_URL}&${PayService.QueryProfile}`:RETURN_URL
     };
     if(PayService.User) {
       _body['soggettoVersante'] = {

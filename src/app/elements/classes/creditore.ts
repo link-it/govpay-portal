@@ -2,6 +2,7 @@ export class Creditore {
 
   label: string = '';
   value: string = '';
+  logo: string = '';
 
   constructor (_data?: any) {
 

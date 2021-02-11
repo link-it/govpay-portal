@@ -37,6 +37,8 @@ export class PayService implements OnInit, OnDestroy {
   public static PAY_RESPONSE_URL: string = '';
   public static UUID_CHECK: string = '';
   public static ALPHA_3_CODE: string = '';
+  public static Gestore: any;
+  public static QueryProfile: string = '';
   public static LogoPagoPA: string = 'assets/pagopa.svg';
   public static LogoGovpay: string = 'assets/govpay.svg';
   public static LogoReverseGovpay: string = 'assets/govpay-reverse.svg';
@@ -151,6 +153,9 @@ export class PayService implements OnInit, OnDestroy {
     if(SwitchConfig.SELECTOR) {
       this.translate.currentLoader['prefix'] = './assets/i18n' + SwitchConfig.SELECTOR + '/';
     }
+    if(SwitchConfig.PROFILE && SwitchConfig.PROFILE.Id) {
+      PayService.QueryProfile = SwitchConfig.PROFILE.Query+SwitchConfig.PROFILE.Id;
+    }
     PayService.RECAPTCHA_V3_SITE_KEY = PayConfig.RECAPTCHA_V3_SITE_KEY;
     PayService.SPID = PayConfig['SPID_SETTINGS'];
     PayService.ROOT_SERVICE = PayConfig['PUBLIC_ROOT_SERVICE'];
@@ -165,6 +170,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.POLLING_INTERVAL = PayConfig['POLLING_INTERVAL'];
     PayService.PAY_RESPONSE_URL = PayConfig['PAY_RESPONSE_URL'];
     PayService.UUID_CHECK = PayConfig['UUID_CHECK'];
+    PayService.Gestore = PayConfig['GESTORE'];
   }
 
   // static StatiPendenza(): any[] {
@@ -650,16 +656,16 @@ export class PayService implements OnInit, OnDestroy {
    * Logout User
    * @returns {Observable<any>}
    */
-  // logout(): Observable<any> {
-  //   const url = PayService.SPID['LOGOUT_URL'] || '';
-  //   return this.http.get(url)
-  //     .pipe(
-  //       timeout(PayService.TIMEOUT),
-  //       map((response: HttpResponse<any>) => {
-  //         return response;
-  //       })
-  //     );
-  // }
+  logout(): Observable<any> {
+    const url = PayService.SPID['LOGOUT_URL'] || '';
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
 
   /**
    * Pendenze

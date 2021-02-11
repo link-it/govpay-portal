@@ -2,5 +2,55 @@
   position: relative;
   display: block;
   font-size: 1rem;
-  overflow: hidden;
+}
+
+.action-menu-icon,
+.primary-icon {
+  width: 56px;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
+}
+
+.expander-icon {
+  width: 40px;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
+}
+
+:host .item {
+  position: relative;
+  padding: 1rem;
+  transition: all .15s linear;
+  left: 0;
+  z-index: 1;
+}
+
+:host(.in) .item {
+  left: -56px;
+  transition: all .15s linear;
+}
+
+.touch-device {
+  position: absolute;
+  padding: 0 .5rem;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+:host(.show-more) .touch-device {
+  opacity: 0;
+  pointer-events: none;
+}
+
+:host(.in) .touch-device {
+  pointer-events: auto;
+}
+
+.trigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }

@@ -1,12 +1,12 @@
 <div class="{{ _languageClass }} w-100">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-12 d-flex align-items-center">
         <ng-content select="[add-on]"></ng-content>
         <div class="dropdown ml-auto dropdown-languages" *ngIf="_showLanguageMenu && _translations && _translations.length > 1">
           <a class="dropdown-toggle" href="#" id="languages" role="button" data-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false">{{ _currentLanguage }}</a>
-          <div class="dropdown-menu dropdown-menu-right mat-elevation-z4" aria-labelledby="languages">
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languages">
             <p *ngFor="let lang of _translations" (click)="_changeLanguage(lang)"
                [class]="'dropdown-item m-0' + (_currentLanguage === lang.alpha3Code?' active-item':' action')">
               {{ lang.language }}

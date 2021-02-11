@@ -16,6 +16,10 @@ export class I18n {
   };
 
   json = {
+    Gestore: {
+      Ragione: '',
+      Sede: ''
+    },
     Header: {
       Titolo: '',
       LanguageBar: {
@@ -68,6 +72,7 @@ export class I18n {
       Pagamenti: {
         Titolo: '',
         Paga: '',
+        Indietro: '',
         Stampa: '',
         Totale: '',
         Inserimento: '',

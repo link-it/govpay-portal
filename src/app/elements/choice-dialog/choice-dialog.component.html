@@ -1,4 +1,4 @@
-<div class="choice-dialog">
+<!--<div class="choice-dialog">
   <div class="container choice-group">
     <div class="row">
       <div class="col-12 col-md-2"></div>
@@ -28,4 +28,55 @@
       <div class="col-12 col-md-2"></div>
     </div>
   </div>
+</div>-->
+<div class="choice-dialog">
+  <div #gestore class="d-flex align-items-end background-cover background-gestore">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-2"></div>
+        <div class="col-12 col-md-8 mb-5 pb-md-5">
+          <img [src]="_logoGestore" class="logo-gestore">
+        </div>
+        <div class="col-12 col-md-2"></div>
+      </div>
+    </div>
+  </div>
+  <section>
+    <div class="container choice-group">
+      <div class="row">
+        <div class="col-12 col-md-2"></div>
+        <div class="col-12 col-md-8">
+          <h1>{{ _title }}</h1>
+          <form class="py-5">
+            <mat-form-field class="py-md-5">
+              <mat-select [(ngModel)]="_selectedValue" name="selector" [placeholder]="_labelSelector"
+                          (selectionChange)="_choiceChange($event)">
+                <mat-option *ngFor="let el of _elements" [value]="el">
+                  {{ el.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-12 col-md-2"></div>
+      </div>
+    </div>
+    <div class="container choice-logo">
+      <div class="row">
+        <div class="col-12 col-md-2"></div>
+        <div class="col-12 col-md-8">
+          <div class="row">
+            <div class="col-12 col-md-6 mb-5 mb-md-0">
+              <p>{{ _mainInfo }}</p>
+              <p>{{ _subInfo }}</p>
+            </div>
+            <div class="col-12 col-md-6 text-md-right">
+              <img [src]="_logo">
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-2"></div>
+      </div>
+    </div>
+  </section>
 </div>

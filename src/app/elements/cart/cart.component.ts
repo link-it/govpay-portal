@@ -71,6 +71,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
   }
 
   _skipMailRicevuta() {
+    const RETURN_URL: string = `${PayService.PAY_RESPONSE_URL}?idDominio=${PayService.CreditoreAttivo.value}`;
     const _recapito: string = PayService.User.anagrafica?PayService.User.anagrafica.email:'';
     const _body = {
       pendenze: PayService.ShoppingCart.map(p => {
@@ -88,7 +89,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
           numeroAvviso: p.rawData.numeroAvviso
         };
       }),
-      urlRitorno: `${PayService.PAY_RESPONSE_URL}?idDominio=${PayService.CreditoreAttivo.value}`
+      urlRitorno: (PayService.QueryProfile)?`${RETURN_URL}&${PayService.QueryProfile}`:RETURN_URL
     };
     if(PayService.User) {
       _body['soggettoVersante'] = {
@@ -121,4 +122,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  __backToPayments() {
+    this.router.navigateByUrl('/pagamenti');
+  }
 }
