@@ -1,21 +1,42 @@
-function _init(event) {
-  window['SwitchConfig'] = {};
-  if(event) {
-    document.write('<script src="assets/Config.pay?cache='+(new Date().getTime())+'"></script>');
-  }
-}
 function _defaultConfig(config, error) {
   const _cfg = config || '';
   const _err = error || null;
-  document.write('<script src="assets/Config'+ _cfg +'.pay?cache='+(new Date().getTime())+'" onerror="'+ _err +'"></script>');
+  var script = '<script src="assets/Config'+ _cfg +'.pay?cache='+(new Date().getTime())+'"';
+  script += (error)?' onerror="'+ _err +'"':'';
+  script += '></script>';
+  document.write(script);
 }
-_init();
+function _resetConfig() {
+  window['SwitchConfig'] = {};
+}
+function _parseQueryString() {
+  const cparams = location.search.substr(1).split('&');
+  const params = {};
+  for (var i = cparams.length - 1; i >= 0; i--) {
+    const cpl = cparams[i].split('=');
+    params[cpl[0]] = cpl[1];
+  }
+  return params;
+}
+_resetConfig();
+_defaultConfig();
 const domains = location.hostname.toLowerCase().split('.');
-if(domains.length >= 3 && domains[0].length >2 && domains[0].indexOf('www') === -1) {
-  _defaultConfig('@' + domains[0], '_init(event)');
+const queryObject = _parseQueryString();
+const hasDomain = (domains.length >= 3 && domains[0].length > 2 && domains[0].indexOf('www') === -1);
+var profile = '';
+if (queryObject.id_ec) {
+  profile = '@' + queryObject.id_ec;
+}
+if (!profile && hasDomain) {
+  profile = '@' + domains[0];
+}
+if (profile) {
+  _defaultConfig(profile, '_resetConfig()');
   window['SwitchConfig'] = {
-    SELECTOR: '@' + domains[0]
+    SELECTOR: profile,
+    PROFILE: {
+      Query: 'id_ec=',
+      Id: profile.substr(1)
+    }
   };
-} else {
-  _defaultConfig();
 }

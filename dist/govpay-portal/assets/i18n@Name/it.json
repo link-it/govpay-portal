@@ -1,12 +1,16 @@
 {
   "Language": {
+    "Gestore": {
+      "Ragione": "Novares 2 SPA, partita IVA e codice fiscale: 12105121003, CCIAA Roma 1350563, capitale sociale € 000.000,00 interamente versato",
+      "Sede": "Via degli Orti di Trastevere 72, 00000 Roma, telefono: 06 98960999, PEC: novares@pec.novares.it, web: www.novares.it"
+    },
     "Header": {
-      "Titolo": "Comune",
+      "Titolo": "Comune 2",
       "LanguageBar": {
-        "Titolo": "Regione"
+        "Titolo": "Regione 2"
       },
       "Erogatore": {
-        "Titolo": "Gestione pagamenti",
+        "Titolo": "Gestione pagamenti 2",
         "Creditore": "Seleziona Ente erogatore"
       }
     },
@@ -18,12 +22,12 @@
           "Link": "/pagamenti"
         },
         {
-          "Label": "Posizione debitoria",
-          "Link": "/riepilogo"
+          "Label": "Archivio pagamenti",
+          "Link": "/archivio"
         },
         {
-          "Label": "Archivio dei pagamenti",
-          "Link": "/archivio"
+          "Label": "Posizione debitoria",
+          "Link": "/riepilogo"
         },
         {
           "Label": "Carrello",
@@ -66,6 +70,7 @@
       "Pagamenti": {
         "Titolo": "Elenco pagamenti",
         "Paga": "Paga ora",
+        "Indietro": "Torna ai pagamenti",
         "Stampa": "Stampa bollettino",
         "Totale": "Totale",
         "Inserimento": "Pendenza inserita nel carrello",

@@ -2,7 +2,8 @@
 
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '01234567890' }
+      { label: 'Comune Dimostrativo 2', value: '01234567890', logo: "" },
+      { label: 'Comune Alternativo 2', value: '12345678901', logo: "logo2.png" }
     ]
   }
 
@@ -19,6 +20,19 @@
         alpha3Code: 'eng'
       }
     ]
+  }
+
+  function _assetsGestore() {
+    return {
+      Logo: {
+        Small: 'logo-small.png',
+        Full: 'logo.png'
+      },
+      Background: {
+        Small: 'background-small.jpg',
+        Full: 'background.jpg'
+      }
+    };
   }
 
   function _GoogleReCaptchaV3(siteKey) {
@@ -45,7 +59,8 @@
     TIME_OUT_POLL: 5, //Secs.
     POLLING_INTERVAL: 3000, //Millisecs.
     DOMINI: _elencoDomini(),
-    LINGUE: _traduzioni()
+    LINGUE: _traduzioni(),
+    GESTORE: _assetsGestore()
   };
 
   _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);

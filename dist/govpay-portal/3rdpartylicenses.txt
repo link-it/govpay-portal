@@ -520,18 +520,26 @@ THE SOFTWARE.
 @ngx-translate/core
 MIT
 
-@angular/material/icon
-
-@angular/material/button
-
-@angular/material/form-field
+@angular/material/core
 
 @angular/forms
 MIT
 
-@angular/material/core
+@angular/material/form-field
 
 @angular/material/select
+
+@angular/material/list
+
+@angular/material/divider
+
+@angular/material/sidenav
+
+@angular/material/button
+
+@angular/material/icon
+
+@angular/material/progress-spinner
 
 @zxing/ngx-scanner
 MIT
@@ -840,14 +848,6 @@ THE SOFTWARE.
 @angular/material/menu
 
 @angular/material/snack-bar
-
-@angular/material/list
-
-@angular/material/divider
-
-@angular/material/sidenav
-
-@angular/material/progress-spinner
 
 core-js
 MIT

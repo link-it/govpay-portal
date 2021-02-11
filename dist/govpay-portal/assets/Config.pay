@@ -2,8 +2,8 @@
 
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '01234567890' },
-      { label: 'Comune Alternativo', value: '12345678901' }
+      { label: 'Comune Dimostrativo', value: '01234567890', logo: "logo.png" },
+      { label: 'Comune Alternativo', value: '12345678901', logo: "" }
     ]
   }
 
@@ -22,6 +22,19 @@
     ]
   }
 
+  function _assetsGestore() {
+    return {
+      Logo: {
+        Small: 'logo-small.png',
+        Full: 'logo.png'
+      },
+      Background: {
+        Small: 'background-small.jpg',
+        Full: 'background.jpg'
+      }
+    };
+  }
+
   function _GoogleReCaptchaV3(siteKey) {
     if(siteKey) {
       document.write('<script src="https://www.google.com/recaptcha/api.js?render=' + siteKey + '"></script>');
@@ -30,15 +43,15 @@
 
   global.PayConfig = {
     REVERSE_PROXY: '',
-    AUTH_HOST: 'https://demo.govcloud.it',
+    AUTH_HOST: 'https://dev.govcloud.it',
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
-      ACCESS: false,
+      ACCESS: true,
       SERVICE_TARGET: 'http://localhost:4200/',
-      TEST_PROVIDER: 'https://idp.spid.gov.it',
-      ACTION_FORM_URL: 'https://demo.govcloud.it/Shibboleth.sso/Login',
-      LOGOUT_URL: 'https://demo.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout'
+      TEST_PROVIDER: 'https://spidtest.govcloud.it',
+      ACTION_FORM_URL: 'https://dev.govcloud.it/Shibboleth.sso/Login',
+      LOGOUT_URL: 'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout'
     },
     UUID_CHECK: true,
     RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',
@@ -46,7 +59,8 @@
     TIME_OUT_POLL: 5, //Secs.
     POLLING_INTERVAL: 3000, //Millisecs.
     DOMINI: _elencoDomini(),
-    LINGUE: _traduzioni()
+    LINGUE: _traduzioni(),
+    GESTORE: _assetsGestore()
   };
 
   _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
