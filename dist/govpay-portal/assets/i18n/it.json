@@ -1,17 +1,17 @@
 {
   "Language": {
     "Gestore": {
-      "Ragione": "Novares SPA, partita IVA e codice fiscale: 12105121003, CCIAA Roma 1350563, capitale sociale € 000.000,00 interamente versato",
-      "Sede": "Via degli Orti di Trastevere 72, 00000 Roma, telefono: 06 98960999, PEC: novares@pec.novares.it, web: www.novares.it"
+      "Ragione": "Regione Siciliana, partita IVA e codice fiscale: 80012000826, PEC: segreteria.generale@certmail.regione.sicilia.it",
+      "Sede": "Palazzo D' Orleans - Piazza Indipendenza 21 - 90129 Palermo (PA)"
     },
     "Header": {
-      "Titolo": "Comune",
+      "Titolo": "Regione Siciliana",
       "LanguageBar": {
-        "Titolo": "Regione"
+        "Titolo": "Regione Siciliana"
       },
       "Erogatore": {
         "Titolo": "Gestione pagamenti",
-        "Creditore": "Seleziona Ente erogatore"
+        "Creditore": "Seleziona l'Ente per cui effettuare il pagamento"
       }
     },
     "SideNav": {
