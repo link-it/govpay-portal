@@ -25,12 +25,12 @@
   function _assetsGestore() {
     return {
       Logo: {
-        Small: 'logo-small.png',
-        Full: 'logo.png'
+        Small: 'empty.svg',
+        Full: 'empty.svg'
       },
       Background: {
-        Small: 'background-small.jpg',
-        Full: 'background.jpg'
+        Small: 'bg-sicilia.jpg',
+        Full: 'Vespro_flag.svg'
       }
     };
   }
@@ -44,8 +44,8 @@
   global.PayConfig = {
     REVERSE_PROXY: '',
     AUTH_HOST: 'https://pagamentitest.regione.sicilia.it',
-    AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/session/v2',
-    PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
+    AUTH_ROOT_SERVICE: '/govway/in/RegioneSiciliana/GovPay-Dev-Pagamenti-Sessione/v2',
+    PUBLIC_ROOT_SERVICE: '/govway/in/RegioneSiciliana/GovPay-Dev-Pagamenti-Public/v2',
     SPID_SETTINGS: {
       ACCESS: false,
       SERVICE_TARGET: null,
@@ -55,7 +55,7 @@
     },
     UUID_CHECK: true,
     RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',
-    PAY_RESPONSE_URL: 'https://pagamentitest.regione.sicilia.it/esito-pagamento',
+    PAY_RESPONSE_URL: 'https://pagamentitest.regione.sicilia.it/site/esito-pagamento',
     TIME_OUT_POLL: 5, //Secs.
     POLLING_INTERVAL: 3000, //Millisecs.
     DOMINI: _elencoDomini(),
