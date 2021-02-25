@@ -25,10 +25,12 @@ export class PayService implements OnInit, OnDestroy {
 
   public static RECAPTCHA_V3_SITE_KEY: any;
   public static SPID: any;
+  public static IAM: any;
   public static ROOT_SERVICE: string = '';
   public static HOSTNAME: string = '';
-  public static SPID_HOSTNAME: string = '';
-  public static SPID_ROOT_SERVICE: string = '';
+  public static AUTH_HOSTNAME: string = '';
+  public static AUTH_ROOT_SERVICE: string = '';
+  public static AUTH_LOGOUT_URL: string = '';
   public static CREDITORI: Creditore[] = [];
   public static LINGUE: any[] = [];
   public static IS_SINGLE: boolean = true;
@@ -44,11 +46,13 @@ export class PayService implements OnInit, OnDestroy {
   public static LogoReverseGovpay: string = 'assets/govpay-reverse.svg';
   public static ShoppingCart: Standard[] = [];
   public static Cart: string[] = [];
+  public static SpidDomainTarget: string = '';
   public static CreditoreAttivo: Creditore;
   public static PosizioneDebitoria: any[] = [];
   public static ArchivioPagamenti: any[] = [];
   public static Header: any = { Titolo: '', IsModal: false };
   public static I18n: I18n = new I18n();
+  public static MenuItems: any[] = [];
   public static ExtraState: any;
   public static MobileBreakPointNotice: number = 768;
   public static EDIT_MODE: boolean = false;
@@ -79,16 +83,16 @@ export class PayService implements OnInit, OnDestroy {
     NON_ESEGUITO: 'non_eseguito',
     ESEGUITO_PARZIALE: 'eseguito_parziale'
   };
-  // STATI PENDENZE <rimuovere>
-    /*public static STATI_PENDENZA: any = {
-      ESEGUITA: 'eseguita',
-      DUPLICATA: 'duplicata',
-      NON_ESEGUITA: 'non_eseguita',
-      ESEGUITA_PARZIALE: 'eseguita_parziale',
-      ANNULLATA: 'annullata',
-      SCADUTA: 'scaduta',
-      IN_RITARDO: 'in_ritardo'
-    };*/
+  // STATI PENDENZE
+  public static STATI_PENDENZA: any = {
+    ESEGUITA: 'eseguita',
+    DUPLICATA: 'duplicata',
+    NON_ESEGUITA: 'non_eseguita',
+    ESEGUITA_PARZIALE: 'eseguita_parziale',
+    ANNULLATA: 'annullata',
+    SCADUTA: 'scaduta',
+    IN_RITARDO: 'in_ritardo'
+  };
   public static STATUS_CODE: any = {
     0: 'ESEGUITO',
     1: 'NON_ESEGUITO',
@@ -126,7 +130,7 @@ export class PayService implements OnInit, OnDestroy {
   /* - esito.component.ts - */
 
   spinner: boolean = false;
-  AVVISO_PAGAMENTO: any = { Numero: '', Dominio: null, Pagamenti: [] };
+  // AVVISO_PAGAMENTO: any = { Numero: '', Dominio: null, Pagamenti: [] };
 
   // Pagamento diretto via query string parameters { Numero: 'numeroAvviso', Creditore: 'idDominio', UUID: 'String' };
   public static QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO: any;
@@ -142,11 +146,9 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // PayService.TranslateDynamicObject(this.translate, this);
   }
 
   ngOnDestroy() {
-    // this._langSubscription.unsubscribe();
   }
 
   initConfig() {
@@ -158,12 +160,16 @@ export class PayService implements OnInit, OnDestroy {
     }
     PayService.RECAPTCHA_V3_SITE_KEY = PayConfig.RECAPTCHA_V3_SITE_KEY;
     PayService.SPID = PayConfig['SPID_SETTINGS'];
+    PayService.IAM = PayConfig['IAM_SETTINGS'];
     PayService.ROOT_SERVICE = PayConfig['PUBLIC_ROOT_SERVICE'];
     PayService.HOSTNAME = PayConfig['REVERSE_PROXY'];
-    PayService.SPID_HOSTNAME = PayConfig['AUTH_HOST'];
-    PayService.SPID_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
+    PayService.AUTH_HOSTNAME = PayConfig['AUTH_HOST'];
+    PayService.AUTH_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
+    PayService.AUTH_LOGOUT_URL = PayConfig['AUTH_LOGOUT_URL'];
     PayService.CREDITORI = PayConfig['DOMINI'];
-    PayService.CreditoreAttivo = (PayConfig['DOMINI'].length == 1)?PayConfig['DOMINI'][0]:null;
+    if (PayService.CREDITORI.length == 1) {
+      PayService.SetCreditoreAttivoAndDomainTarget(PayService.CREDITORI[0].value);
+    }
     PayService.LINGUE = PayConfig['LINGUE'];
     PayService.IS_SINGLE = (PayConfig['DOMINI'].length == 1);
     PayService.TIME_OUT_POLLING = PayConfig['TIME_OUT_POLL'];
@@ -211,21 +217,21 @@ export class PayService implements OnInit, OnDestroy {
     }
   }
 
-  getDateFormatByLanguage(): string {
-    return PayService.DateFormatByLanguage(this.translate);
+  getDateFormatByLanguage(timestamp: boolean = false): string {
+    return PayService.DateFormatByLanguage(this.translate, timestamp);
   }
 
-  static DateFormatByLanguage(translate: TranslateService): string {
+  static DateFormatByLanguage(translate: TranslateService, timestamp: boolean = false): string {
     let currentFormat = '';
     switch (translate.currentLang) {
       case 'en':
-        currentFormat = 'YYYY/MM/DD';
+        currentFormat = timestamp?'YYYY/MM/DD, HH:mm:ss':'YYYY/MM/DD';
         break;
       case 'it':
-        currentFormat = 'DD/MM/YYYY';
+        currentFormat = timestamp?'DD/MM/YYYY, HH:mm:ss':'DD/MM/YYYY';
         break;
       default:
-        currentFormat = 'DD/MM/YYYY';
+        currentFormat = timestamp?'DD/MM/YYYY, HH:mm:ss':'DD/MM/YYYY';
     }
     return currentFormat;
   }
@@ -266,11 +272,11 @@ export class PayService implements OnInit, OnDestroy {
     return '';
   }
 
-  resetAvvisoPagamento() {
-    this.AVVISO_PAGAMENTO.Pagamenti = [];
-    this.AVVISO_PAGAMENTO.Numero = '';
-    this.AVVISO_PAGAMENTO.Dominio = null;
-  }
+  // resetAvvisoPagamento() {
+  //   this.AVVISO_PAGAMENTO.Pagamenti = [];
+  //   this.AVVISO_PAGAMENTO.Numero = '';
+  //   this.AVVISO_PAGAMENTO.Dominio = null;
+  // }
 
   /**
    * REST SERVICES
@@ -282,7 +288,7 @@ export class PayService implements OnInit, OnDestroy {
    * @returns {Promise<any>}
    */
   sessione(url: string = ''): Promise<boolean> {
-    return this.http.get(PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_LOGGED_IN)
+    return this.http.get(PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_LOGGED_IN)
       .toPromise()
       .then(response => {
         this.cacheUser(response);
@@ -312,7 +318,7 @@ export class PayService implements OnInit, OnDestroy {
   pagaPendenze(body: any, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_PAGAMENTI;
     if(query) {
@@ -336,7 +342,7 @@ export class PayService implements OnInit, OnDestroy {
   sessionePagamento(sessione: string, open: boolean = true): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_SESSIONE_PAGAMENTO.split('{idSession}').join(sessione);
     return this.http.get(url, {observe: 'response'})
@@ -358,7 +364,7 @@ export class PayService implements OnInit, OnDestroy {
   elencoServizi(creditore: string, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_SERVIZI.split('{idDominio}').join(creditore);
     if(query) {
@@ -384,7 +390,7 @@ export class PayService implements OnInit, OnDestroy {
   richiestaAvviso(creditore: string, numeroAvviso: string, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_AVVISO.split('{idDominio}').join(creditore).split('{numeroAvviso}').join(numeroAvviso);
     if(query) {
@@ -411,7 +417,7 @@ export class PayService implements OnInit, OnDestroy {
   richiestaPendenza(creditore: string, tipoPendenza: string, body: any = null, query: string = '', open: boolean = true): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_PENDENZA.split('{idDominio}').join(creditore).split('{idTipoPendenza}').join(encodeURI(tipoPendenza));
     if(query) {
@@ -459,9 +465,9 @@ export class PayService implements OnInit, OnDestroy {
               });
               if (_data.url.length != 0) {
                 if (_data.url.length > 1) {
-                  this.multiService(_data.url, _data.type);
+                  this.multiService(_data.url, _data.type, open);
                 } else {
-                  this.getReceipt(_data.url[0]);
+                  this.getReceipt(_data.url[0], open);
                 }
               }
             } else {
@@ -489,7 +495,7 @@ export class PayService implements OnInit, OnDestroy {
   protected richiestaRPP(rppUrl: string, open: boolean = true): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += rppUrl;
     return this.http.get(url, {observe: 'response'})
@@ -514,7 +520,7 @@ export class PayService implements OnInit, OnDestroy {
       headers = headers.set('Accept', contents[index]);
       let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
       if (!open) {
-        url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+        url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
       }
       url += PayService.URL_RPP + service;
       const method = this.http.get(url, { headers: headers, observe: 'response', responseType: 'blob' });
@@ -560,7 +566,7 @@ export class PayService implements OnInit, OnDestroy {
   protected ricevuta(ricevutaUrl: string, open: boolean = true) {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_RPP + ricevutaUrl;
     let _headers = new HttpHeaders();
@@ -589,7 +595,7 @@ export class PayService implements OnInit, OnDestroy {
       headers = headers.set('Accept', 'application/pdf');
       let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
       if (!open) {
-        url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+        url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
       }
       url += PayService.URL_AVVISO.split('{idDominio}').join(prop.creditore).split('{numeroAvviso}').join(prop.avviso);
       if (recaptcha) {
@@ -657,7 +663,7 @@ export class PayService implements OnInit, OnDestroy {
    * @returns {Observable<any>}
    */
   logout(): Observable<any> {
-    const url = PayService.SPID['LOGOUT_URL'] || '';
+    const url: string = PayService.AUTH_LOGOUT_URL;
     return this.http.get(url, {observe: 'response'})
       .pipe(
         timeout(PayService.TIMEOUT),
@@ -672,38 +678,38 @@ export class PayService implements OnInit, OnDestroy {
    * @param {string} query
    * @returns {Observable<any>}
    */
-  // pendenze(query?: string): Observable<any> {
-  //   let url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_PENDENZE;
-  //   if (query) {
-  //     url += '?' + query;
-  //   }
-  //   return this.http.get(url, {observe: 'response'})
-  //     .pipe(
-  //       timeout(PayService.TIMEOUT),
-  //       map((response: HttpResponse<any>) => {
-  //         return response;
-  //       })
-  //     );
-  // }
+  pendenze(query?: string): Observable<any> {
+    let url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_PENDENZE;
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
 
   /**
    * Pagamenti GET
    * @param {string} query
    * @returns {Observable<any>}
    */
-  // pagamenti(query?: string): Observable<any> {
-  //   let url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_PAGAMENTI;
-  //   if (query) {
-  //     url += '?' + query;
-  //   }
-  //   return this.http.get(url, {observe: 'response'})
-  //     .pipe(
-  //       timeout(PayService.TIMEOUT),
-  //       map((response: HttpResponse<any>) => {
-  //         return response;
-  //       })
-  //     );
-  // }
+  pagamenti(query?: string): Observable<any> {
+    let url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_PAGAMENTI;
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
 
   /**
    * On error handler
@@ -809,6 +815,7 @@ export class PayService implements OnInit, OnDestroy {
    */
   cacheUser(user: any) {
     PayService.User = user;
+    PayService.TranslateDynamicObject(this.translate, this);
   }
 
   clearUser() {
@@ -816,11 +823,11 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   isAuthenticated(): boolean {
-    return !!PayService.User && PayService.SPID['ACCESS'];
+    return !!PayService.User && (PayService.SPID['ACCESS'] || PayService.IAM['ACCESS']);
   }
 
   hasAuthentication(): boolean {
-    return PayService.SPID['ACCESS'];
+    return (PayService.SPID['ACCESS'] || PayService.IAM['ACCESS']);
   }
 
   static ResetState() {
@@ -850,6 +857,8 @@ export class PayService implements OnInit, OnDestroy {
       PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang], PayService.ShoppingCart.length);
       PayService.I18n.json.Posizione.Debiti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang], PayService.PosizioneDebitoria.length);
       PayService.I18n.json.Archivio.Pagamenti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang], PayService.ArchivioPagamenti.length);
+
+      PayService.MenuItems = (PayService.I18n.json.SideNav.MenuItems || []).slice(0);
 
       PayService.MapHeading(_pay.router, _translate);
       _pay.updateSpinner(false);
@@ -967,6 +976,16 @@ export class PayService implements OnInit, OnDestroy {
     PayService.Cart = [];
     PayService.MapHeading(router, translate);
     PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[translate.currentLang], 0);
+  }
+
+  static SetCreditoreAttivoAndDomainTarget(dominio: string) {
+    PayService.CreditoreAttivo = undefined;
+    PayService.CREDITORI.forEach((cr: Creditore) => {
+      if (cr.value === dominio) {
+        PayService.CreditoreAttivo = cr;
+        PayService.SpidDomainTarget = (cr.value)?`${PayService.SPID['SERVICE_TARGET']}?idDominio=${cr.value}`:PayService.SPID['SERVICE_TARGET'];
+      }
+    });
   }
 
 }

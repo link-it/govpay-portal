@@ -12,6 +12,9 @@ export class Standard {
   importo: number = 0;
   stato: string = null;
 
+  expandMode: boolean = false;
+  collapsingInfo: any[] = [];
+
   localeNumberFormat: string = 'it-IT';
   readonly valuta: string = this.currencyFormat(this.importo, this.localeNumberFormat);
 

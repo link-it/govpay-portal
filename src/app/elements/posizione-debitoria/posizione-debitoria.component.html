@@ -3,8 +3,11 @@
     <div class="col-12 col-md-2"></div>
     <div class="col-12 col-md-8">
       <pay-title-deco class="mb-5" art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Posizione.Debiti.Titolo"></pay-title-deco>
-      <pay-item *ngFor="let sp of Pay.PosizioneDebitoria" primary-icon="shopping_cart" primary-icon-off="remove_shopping_cart"
-                [currency-format]="pay.currencyFormat.bind(pay)" [mobile-breakpoint]="Pay.MobileBreakPointNotice"></pay-item>
+      <pay-item *ngFor="let sp of Pay.PosizioneDebitoria" [titolo]="sp.titolo" [meta-titolo]="sp.sottotitolo" [importo]="sp.importo" [item]="sp"
+                [primary-icon]="sp.primaryIcon" [primary-icon-off]="sp.primaryIconOff" [currency-format]="pay.currencyFormat.bind(pay)"
+                [expanding-mode]="sp.expandMode" [mobile-breakpoint]="Pay.MobileBreakPointNotice" (on-icon-click)="_onIcon($event)">
+        <p expanding-content *ngFor="let info of sp.collapsingInfo">{{ info }}</p>
+      </pay-item>
     </div>
     <div class="col-12 col-md-2"></div>
   </div>

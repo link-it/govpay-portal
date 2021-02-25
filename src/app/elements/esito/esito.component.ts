@@ -49,8 +49,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
     if(!_idSessione) {
       this.router.navigateByUrl('/');
     } else {
-      this.pay.updateSpinner(true);
-      this._recuperaSessionePagamento(_idSessione);
+      this.__spidSessionExists(_idSessione);
     }
   }
 
@@ -58,6 +57,14 @@ export class EsitoComponent implements OnInit, OnDestroy {
     if (this._langSubscription) {
       this._langSubscription.unsubscribe();
     }
+  }
+
+  __spidSessionExists(_idSessione) {
+    this.pay.updateSpinner(true);
+    this.pay.sessione().then(() => {
+      this.pay.updateSpinner(true);
+      this._recuperaSessionePagamento(_idSessione);
+    });
   }
 
   _recuperaSessionePagamento(_idSessione: string) {
@@ -161,7 +168,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
               urlRicevuta += '/rt';
             }
             if (urlRicevuta) {
-              this.pay.getReceipt(urlRicevuta);
+              this.pay.getReceipt(urlRicevuta, !PayService.User);
             } else {
               this.pay.alert(PayService.I18n.json.Common.WarningRicevuta);
             }

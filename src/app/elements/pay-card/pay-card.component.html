@@ -22,7 +22,7 @@
     <form [formGroup]="_fg" (ngSubmit)="_onSubmit(_fg.value)">
       <mat-form-field class="d-block">
         <input #notice matInput [placeholder]="_avvisoPH" name="avviso" [formControlName]="'avviso'"
-               (keydown.space)="$event.preventDefault()" autocomplete="off" required>
+               (keydown.space)="$event.preventDefault()" autocomplete="off" [pattern]="_regex" required>
         <button matSuffix mat-icon-button type="button" (click)="_clearOrScan($event, notice)">
           <mat-icon class="action" *ngIf="notice.value === ''">photo_camera</mat-icon>
           <mat-icon class="action" *ngIf="notice.value !== ''">close</mat-icon>

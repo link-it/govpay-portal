@@ -12,6 +12,7 @@
     <p class="pb-5 m-0" *ngIf="_paid === 1 && (_POLLING_TIMEOUT > 0 && _POLLING_TIMEOUT < TIME_OUT_POLLING) && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Ok }}</p>
     <p class="pb-5 m-0" *ngIf="_paid === 1 && (_POLLING_TIMEOUT >= TIME_OUT_POLLING) && _status === STATUS_TIMEOUT">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Overflow.Ok }}</p>
     <p class="pb-5 m-0" *ngIf="_paid === 0 && _POLLING_TIMEOUT <= 0 && _status === STATUS_INCORSO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Errore }}</p>
+    <p class="pb-5 m-0" *ngIf="_paid === 0 && _POLLING_TIMEOUT <= 0 && _status === STATUS_TIMEOUT">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Errore }}</p>
     <p class="pb-5 m-0" *ngIf="_paid === 0 && (_POLLING_TIMEOUT > 0 && _POLLING_TIMEOUT < TIME_OUT_POLLING) && _status !== STATUS_NON_ESEGUITO && _status !== STATUS_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Errore }}</p>
     <p class="pb-5 m-0" *ngIf="_paid === 0 && (_POLLING_TIMEOUT >= TIME_OUT_POLLING) && _status !== STATUS_NON_ESEGUITO && _status !== STATUS_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.InCorso.Timeout.Overflow.Errore }}</p>
     <p class="pb-5 m-0" *ngIf="_status === STATUS_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Eseguito }}</p>
