@@ -2,7 +2,8 @@
 
   function _elencoDomini() {
     return [
-      { label: 'Regione Siciliana', value: '80012000826', logo: "regione_siciliana.svg" }
+      { label: 'Regione Siciliana', value: '80012000826', logo: "regione-sicilia.jpg" },
+      { label: 'ASP 1 - Agrigento', value: '02570930848', logo: "asp1.png" }
     ]
   }
 
