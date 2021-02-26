@@ -1,4 +1,4 @@
-import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked, HostListener } from '@angular/core';
+import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked, HostListener, HostBinding } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PayService } from './elements/services/pay.service';
@@ -13,7 +13,9 @@ import { serviziChange, validateNow } from './elements/pagamenti/pagamenti.compo
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterContentChecked {
-
+  @HostBinding('class.partners') get cfgPartners(): boolean {
+    return (this._configPartners);
+  }
   Pay = PayService;
 
   _gch: number = window.innerHeight;
@@ -26,6 +28,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _isLoading: boolean = false;
   _languages: Language[] = [];
   _language: string = '';
+
+  _configPartners: boolean = false;
 
   @HostListener('window:resize') onResize() {
     this._updateLayout();
@@ -88,6 +92,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   ngOnInit() {
+    this._configPartners = !!(PayService.Gestore.Configurazione.Menu.Partners);
     this._checkCartIcon();
   }
 

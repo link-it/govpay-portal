@@ -68,7 +68,7 @@ $text-2nd-color: rgba(33, 33, 33, .5);
 
 $reverse-text-color: #ffffff;
 
-$sidenavWidth: 300px;
+$sidenavWidth: 310px;
 // $border-color: rgba(33, 33, 33, 0.16);
 
 // Material
@@ -254,11 +254,12 @@ section {
 
 .side-nav .sidenav-background-gestore {
   width: 100%;
+  max-height: 240px;
 }
 
 .side-nav .sidenav-logo-gestore {
   position: absolute;
-  bottom: calc(50% - 24px);
+  bottom: 3rem;
   left: 15px;
 }
 
@@ -270,6 +271,11 @@ section {
   font-family: 'Titillium Web', sans-serif;
   font-size: .75rem;
   font-weight: 400;
+}
+
+.side-nav .logo-govpay .partners-group img {
+  width: auto;
+  height: 2.75rem;
 }
 
 .side-nav .sidenav-logo-gestore,
@@ -372,6 +378,10 @@ pay-choice-dialog {
   -ms-flex-pack: center;
   background-color: $background-color;
   z-index: 2;
+}
+
+pay-choice-dialog .background-cover {
+  background-color: $background-nth-color;
 }
 
 pay-choice-dialog .choice-dialog {

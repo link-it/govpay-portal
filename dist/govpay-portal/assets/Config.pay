@@ -2,7 +2,7 @@
 
   function _elencoDomini() {
     return [
-      { label: 'Regione Siciliana', value: '80012000826', logo: "regione-sicilia.jpg" },
+      { label: 'Regione Siciliana', value: '80012000826', logo: "regione-sicilia.png" },
       { label: 'ASP 1 - Agrigento', value: '02570930848', logo: "asp1.png" }
     ]
   }
@@ -25,12 +25,49 @@
   function _assetsGestore() {
     return {
       Logo: {
-        Small: 'empty.svg',
-        Full: 'empty.svg'
+        Small: 'regione-sicilia.png',
+        Full: 'regione-sicilia.png'
       },
       Background: {
-        Small: 'bg-sicilia.jpg',
-        Full: 'Vespro_flag.svg'
+        Small: 'sicilia-small.png',
+        Full: 'sicilia.png'
+      },
+      Partners: [
+        {
+          Logo: { Menu: 'unione-europea.svg', AccessPanel: 'unione-europea.svg' },
+          Url: 'https://europa.eu'
+        },
+        {
+          Logo: { Menu: 'repubblica-italiana.svg', AccessPanel: 'repubblica-italiana.svg' },
+          Url: 'https://www.quirinale.it'
+        },
+        {
+          Logo: { Menu: 'regione-siciliana.svg', AccessPanel: 'regione-siciliana.svg' },
+          Url: 'http://pti.regione.sicilia.it'
+        },
+        {
+          Logo: { Menu: 'po-fesr.svg', AccessPanel: 'po-fesr-reverse.svg' },
+          Url: 'https://www.euroinfosicilia.it'
+        }
+      ],
+      Configurazione: {
+        Menu: {
+          Infos: false,
+          Partners: true,
+          Govpay: true
+        },
+        AccessPanel: {
+          Partners: true,
+          Govpay: false
+        }
+      },
+      ProgettoGovPay: {
+        Menu: {
+          Logo: 'progetto-govpay.png'
+        },
+        AccessPanel: {
+          Logo: 'govpay-reverse.svg'
+        }
       }
     };
   }
@@ -45,6 +82,7 @@
     REVERSE_PROXY: '',
     AUTH_HOST: 'https://pagamentitest.regione.sicilia.it',
     AUTH_ROOT_SERVICE: '/govway/in/RegioneSiciliana/GovPay-Dev-Pagamenti-Sessione/v2',
+    AUTH_LOGOUT_URL: 'https://pagamentitest.regione.sicilia.it/govway/in/RegioneSiciliana/GovPay-Dev-Pagamenti-Sessione/v2/logout',
     PUBLIC_ROOT_SERVICE: '/govway/in/RegioneSiciliana/GovPay-Dev-Pagamenti-Public/v2',
     SPID_SETTINGS: {
       ACCESS: false,

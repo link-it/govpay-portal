@@ -31,6 +31,26 @@
       Background: {
         Small: 'background-small.jpg',
         Full: 'background.jpg'
+      },
+      Partners: [],
+      Configurazione: {
+        Menu: {
+          Infos: true,
+          Partners: false,
+          Govpay: true
+        },
+        AccessPanel: {
+          Partners: false,
+          Govpay: true
+        }
+      },
+      ProgettoGovPay: {
+        Menu: {
+          Logo: 'govpay.svg'
+        },
+        AccessPanel: {
+          Logo: 'govpay-reverse.svg'
+        }
       }
     };
   }
@@ -43,15 +63,15 @@
 
   global.PayConfig = {
     REVERSE_PROXY: '',
-    AUTH_HOST: '',
+    AUTH_HOST: 'https://demo.govcloud.it',
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
-    AUTH_LOGOUT_URL: 'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout',
+    AUTH_LOGOUT_URL: 'https://demo.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
       ACCESS: true,
-      SERVICE_TARGET: 'https://dev.govcloud.it/govpay-portal/riepilogo',
-      TEST_PROVIDER: 'https://spidtest.govcloud.it',
-      ACTION_FORM_URL: 'https://dev.govcloud.it/govpay/frontend/api/user/rs/spid/v1/login/gpportal'
+      SERVICE_TARGET: 'http://localhost:4200/',
+      TEST_PROVIDER: 'https://idp.spid.gov.it',
+      ACTION_FORM_URL: 'https://demo.govcloud.it/Shibboleth.sso/Login'
     },
     IAM_SETTINGS: {
       ACCESS: false,

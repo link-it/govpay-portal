@@ -1,3 +1,16 @@
+:host(.partners) .logo-govpay > img {
+  width: auto;
+  height: 1.5rem;
+}
+
+:host(.partners) .side-nav .sidenav-logo-gestore {
+  bottom: 1.5rem;
+}
+
+:host(.partners) .partners-group img {
+  margin: 0 1rem 1.5rem 0;
+}
+
 .spinner-group {
   position: fixed;
   top: 0;
