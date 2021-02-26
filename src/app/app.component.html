@@ -1,6 +1,6 @@
-<pay-choice-dialog *ngIf="!Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)"
+<pay-choice-dialog *ngIf="!Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)" [config]="Pay.Gestore?.Configurazione" [partners]="Pay.Gestore?.Partners"
                    [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [title]="Pay.I18n.json.Header.Erogatore.Titolo"
-                   [logo]="Pay.LogoReverseGovpay" [logo-gestore]="'assets/images/'+Pay.Gestore?.Logo.Full" [background]="'assets/images/'+Pay.Gestore?.Background.Full"
+                   [logo]="Pay.Gestore?.ProgettoGovPay.AccessPanel.Logo" [logo-gestore]="Pay.Gestore?.Logo.Full" [background]="Pay.Gestore?.Background.Full"
                    [main-info]="Pay.I18n.json.Gestore.Ragione" [sub-info]="Pay.I18n.json.Gestore.Sede"></pay-choice-dialog>
 <pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [language-list]="_languages" language-bar-theme="language-bar"
                   (on-change-language)="_languageHandler($event)" [current-language]="_language"
@@ -21,7 +21,7 @@
 <mat-sidenav-container *ngIf="Pay.CreditoreAttivo">
   <mat-sidenav #sidenav class="side-nav" mode="over">
     <div #gestore class="gestore">
-      <img class="sidenav-background-gestore" *ngIf="Pay.Gestore && Pay.Gestore.Background" [src]="'assets/images/'+Pay.Gestore?.Background.Full">
+      <img class="sidenav-background-gestore" *ngIf="Pay.Gestore && Pay.Gestore.Background" [src]="'assets/images/'+Pay.Gestore?.Background.Small">
       <img class="sidenav-logo-gestore" *ngIf="Pay.Gestore && Pay.Gestore.Logo.Small" [src]="'assets/images/'+Pay.Gestore?.Logo.Small">
     </div>
     <div class="side-nav-title d-flex align-items-center" [style.height.px]="_hbh">
@@ -43,9 +43,12 @@
         <span class="action">{{ Pay.I18n.json.SideNav.Logout }}</span>
       </mat-list-item>
       <div class="logo-govpay">
-        <p>{{ Pay.I18n.json.Gestore.Ragione }}</p>
-        <p>{{ Pay.I18n.json.Gestore.Sede }}</p>
-        <img [src]="Pay.LogoGovpay">
+        <div class="flex-row partners-group" *ngIf="Pay.Gestore?.Configurazione.Menu.Partners">
+          <a *ngFor="let partner of Pay.Gestore?.Partners" [href]="partner.Url" target="_blank"><img [src]="'assets/images/'+partner.Logo.Menu"></a>
+        </div>
+        <p *ngIf="Pay.Gestore?.Configurazione.Menu.Infos">{{ Pay.I18n.json.Gestore.Ragione }}</p>
+        <p *ngIf="Pay.Gestore?.Configurazione.Menu.Infos">{{ Pay.I18n.json.Gestore.Sede }}</p>
+        <img *ngIf="Pay.Gestore?.Configurazione.Menu.Govpay" [src]="'assets/images/'+Pay.Gestore?.ProgettoGovPay.Menu.Logo">
       </div>
     </mat-list>
   </mat-sidenav>

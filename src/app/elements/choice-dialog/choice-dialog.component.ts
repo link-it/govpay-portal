@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Creditore } from '../classes/creditore';
 
 @Component({
@@ -7,6 +7,9 @@ import { Creditore } from '../classes/creditore';
   styleUrls: ['./choice-dialog.component.scss']
 })
 export class ChoiceDialogComponent implements OnInit, AfterViewInit {
+  @HostBinding('class.partners') get cfgPartners(): boolean {
+    return (this._configPartners);
+  }
   @ViewChild('gestore') _gestore: ElementRef;
 
   @Input('title') _title: string = '';
@@ -17,10 +20,19 @@ export class ChoiceDialogComponent implements OnInit, AfterViewInit {
   @Input('background') _background: string = '';
   @Input('main-info') _mainInfo: string = '';
   @Input('sub-info') _subInfo: string = '';
+  @Input('config') set config(value: Configuratore) {
+    this._config = value;
+    this._configPartners = (value && value.AccessPanel.Partners);
+    this._configGovpay = (value && value.AccessPanel.Govpay);
+  }
+  @Input('partners') _partners: LogoPartner[];
 
   @Output('change') _onChange: EventEmitter<any> = new EventEmitter(null);
 
   _selectedValue: any;
+  _config: Configuratore = null;
+  _configPartners: boolean = false;
+  _configGovpay: boolean = false;
 
   constructor() { }
 
@@ -29,7 +41,7 @@ export class ChoiceDialogComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     if (this._gestore && this._gestore.nativeElement) {
-      this._gestore.nativeElement.style.backgroundImage = 'url(\''+ this._background +'\')';
+      this._gestore.nativeElement.style.backgroundImage = 'url(\'assets/images/'+ this._background +'\')';
     }
   }
 
@@ -37,4 +49,14 @@ export class ChoiceDialogComponent implements OnInit, AfterViewInit {
     this._onChange.emit(event.value);
   }
 
+}
+
+export class Configuratore {
+  Menu: { Infos: false, Partners: false, Govpay: false };
+  AccessPanel: { Partners: true, Govpay: false };
+}
+
+export class LogoPartner {
+  Logo: { Menu: '', AccessPanel: '' };
+  Url: '';
 }

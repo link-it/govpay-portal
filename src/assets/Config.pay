@@ -31,6 +31,43 @@
       Background: {
         Small: 'background-small.jpg',
         Full: 'background.jpg'
+      },
+      Partners: [
+        {
+          Logo: { Menu: 'unione-europea.png', AccessPanel: 'unione-europea.png' },
+          Url: 'https://europa.eu'
+        },
+        {
+          Logo: { Menu: 'repubblica-italiana.png', AccessPanel: 'repubblica-italiana.png' },
+          Url: 'https://www.quirinale.it'
+        },
+        {
+          Logo: { Menu: 'regione-sicilia.png', AccessPanel: 'regione-sicilia.png' },
+          Url: 'http://pti.regione.sicilia.it'
+        },
+        {
+          Logo: { Menu: 'po-fesr-reverse.png', AccessPanel: 'po-fesr.png' },
+          Url: 'https://www.euroinfosicilia.it'
+        }
+      ],
+      Configurazione: {
+        Menu: {
+          Infos: true,
+          Partners: false,
+          Govpay: true
+        },
+        AccessPanel: {
+          Partners: false,
+          Govpay: true
+        }
+      },
+      ProgettoGovPay: {
+        Menu: {
+          Logo: 'govpay.svg'
+        },
+        AccessPanel: {
+          Logo: 'govpay-reverse.svg'
+        }
       }
     };
   }
@@ -43,15 +80,15 @@
 
   global.PayConfig = {
     REVERSE_PROXY: '',
-    AUTH_HOST: '',
+    AUTH_HOST: 'https://demo.govcloud.it',
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
-    AUTH_LOGOUT_URL: 'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout',
+    AUTH_LOGOUT_URL: 'https://demo.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
       ACCESS: true,
-      SERVICE_TARGET: 'https://dev.govcloud.it/govpay-portal/riepilogo',
-      TEST_PROVIDER: 'https://spidtest.govcloud.it',
-      ACTION_FORM_URL: 'https://dev.govcloud.it/govpay/frontend/api/user/rs/spid/v1/login/gpportal'
+      SERVICE_TARGET: 'http://localhost:4200/',
+      TEST_PROVIDER: 'https://idp.spid.gov.it',
+      ACTION_FORM_URL: 'https://demo.govcloud.it/Shibboleth.sso/Login'
     },
     IAM_SETTINGS: {
       ACCESS: false,

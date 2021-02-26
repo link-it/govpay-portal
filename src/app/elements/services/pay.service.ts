@@ -42,8 +42,6 @@ export class PayService implements OnInit, OnDestroy {
   public static Gestore: any;
   public static QueryProfile: string = '';
   public static LogoPagoPA: string = 'assets/pagopa.svg';
-  public static LogoGovpay: string = 'assets/govpay.svg';
-  public static LogoReverseGovpay: string = 'assets/govpay-reverse.svg';
   public static ShoppingCart: Standard[] = [];
   public static Cart: string[] = [];
   public static SpidDomainTarget: string = '';
