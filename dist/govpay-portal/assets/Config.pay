@@ -2,8 +2,8 @@
 
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '01234567890', logo: "logo.png" },
-      { label: 'Comune Alternativo', value: '12345678901', logo: "" }
+      { label: 'Regione Siciliana', value: '80012000826', logo: "regione-sicilia.png" },
+      { label: 'ASP 1 - Agrigento', value: '02570930848', logo: "asp1.png" }
     ]
   }
 
@@ -25,28 +25,45 @@
   function _assetsGestore() {
     return {
       Logo: {
-        Small: 'logo-small.png',
-        Full: 'logo.png'
+        Small: 'regione-sicilia.png',
+        Full: 'regione-sicilia.png'
       },
       Background: {
-        Small: 'background-small.jpg',
-        Full: 'background.jpg'
+        Small: 'sicilia-small.png',
+        Full: 'sicilia.png'
       },
-      Partners: [],
+      Partners: [
+        {
+          Logo: { Menu: 'unione-europea.svg', AccessPanel: 'unione-europea.svg' },
+          Url: 'https://europa.eu'
+        },
+        {
+          Logo: { Menu: 'repubblica-italiana.svg', AccessPanel: 'repubblica-italiana.svg' },
+          Url: 'https://www.quirinale.it'
+        },
+        {
+          Logo: { Menu: 'regione-siciliana.svg', AccessPanel: 'regione-siciliana.svg' },
+          Url: 'http://pti.regione.sicilia.it'
+        },
+        {
+          Logo: { Menu: 'po-fesr.svg', AccessPanel: 'po-fesr-reverse.svg' },
+          Url: 'https://www.euroinfosicilia.it'
+        }
+      ],
       Configurazione: {
         Menu: {
-          Infos: true,
-          Partners: false,
+          Infos: false,
+          Partners: true,
           Govpay: true
         },
         AccessPanel: {
-          Partners: false,
-          Govpay: true
+          Partners: true,
+          Govpay: false
         }
       },
       ProgettoGovPay: {
         Menu: {
-          Logo: 'govpay.svg'
+          Logo: 'progetto-govpay.png'
         },
         AccessPanel: {
           Logo: 'govpay-reverse.svg'
@@ -63,23 +80,23 @@
 
   global.PayConfig = {
     REVERSE_PROXY: '',
-    AUTH_HOST: 'https://demo.govcloud.it',
-    AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
-    AUTH_LOGOUT_URL: 'https://demo.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout',
-    PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
+    AUTH_HOST: 'https://pagamentitest.regione.sicilia.it',
+    AUTH_ROOT_SERVICE: '/govway/in/RegioneSiciliana/GovPay-Dev-Pagamenti-Sessione/v2',
+    AUTH_LOGOUT_URL: 'https://pagamentitest.regione.sicilia.it/govway/in/RegioneSiciliana/GovPay-Dev-Pagamenti-Sessione/v2/logout',
+    PUBLIC_ROOT_SERVICE: '/govway/in/RegioneSiciliana/GovPay-Dev-Pagamenti-Public/v2',
     SPID_SETTINGS: {
-      ACCESS: true,
-      SERVICE_TARGET: 'http://localhost:4200/',
-      TEST_PROVIDER: 'https://idp.spid.gov.it',
-      ACTION_FORM_URL: 'https://demo.govcloud.it/Shibboleth.sso/Login'
+      ACCESS: false,
+      SERVICE_TARGET: null,
+      TEST_PROVIDER: null,
+      ACTION_FORM_URL: null
     },
     IAM_SETTINGS: {
-      ACCESS: false,
-      LOGIN_URL: ''
+      ACCESS: true,
+      LOGIN_URL: 'https://pagamentitest.regione.sicilia.it/oidc/GovPay-Dev-Login'
     },
     UUID_CHECK: true,
     RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',
-    PAY_RESPONSE_URL: 'https://localhost:4200/esito-pagamento',
+    PAY_RESPONSE_URL: 'https://pagamentitest.regione.sicilia.it/site/esito-pagamento',
     TIME_OUT_POLL: 5, //Secs.
     POLLING_INTERVAL: 3000, //Millisecs.
     DOMINI: _elencoDomini(),
