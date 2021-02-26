@@ -32,24 +32,7 @@
         Small: 'background-small.jpg',
         Full: 'background.jpg'
       },
-      Partners: [
-        {
-          Logo: { Menu: 'unione-europea.png', AccessPanel: 'unione-europea.png' },
-          Url: 'https://europa.eu'
-        },
-        {
-          Logo: { Menu: 'repubblica-italiana.png', AccessPanel: 'repubblica-italiana.png' },
-          Url: 'https://www.quirinale.it'
-        },
-        {
-          Logo: { Menu: 'regione-sicilia.png', AccessPanel: 'regione-sicilia.png' },
-          Url: 'http://pti.regione.sicilia.it'
-        },
-        {
-          Logo: { Menu: 'po-fesr-reverse.png', AccessPanel: 'po-fesr.png' },
-          Url: 'https://www.euroinfosicilia.it'
-        }
-      ],
+      Partners: [],
       Configurazione: {
         Menu: {
           Infos: true,
