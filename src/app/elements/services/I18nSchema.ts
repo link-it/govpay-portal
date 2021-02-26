@@ -44,6 +44,9 @@ export class I18n {
       Ask: '',
       Help: ''
     },
+    Iam: {
+      Label: ''
+    },
     Pagamenti: {
       Titolo: '',
       Bollettino: {
@@ -124,6 +127,7 @@ export class I18n {
         Dettaglio: {
           Eseguito: '',
           Fallito: '',
+          Errore: '',
           InCorso: {
             Titolo: '',
             Ok: '',
@@ -192,6 +196,8 @@ export class I18n {
       AlertAction: '',
       NumeroAvviso: '',
       IUV: '',
+      Beneficiario: '',
+      Pagamento: '',
       Scadenza: '',
       SenzaScadenza: '',
       NotAvailable: '',

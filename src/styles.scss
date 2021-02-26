@@ -139,6 +139,10 @@ button:focus {
   cursor: default;
 }
 
+.route-link-disabled {
+  pointer-events: none;
+}
+
 section {
   padding-top: 3rem;
   padding-bottom: 3rem;
@@ -542,6 +546,10 @@ pay-item {
   margin-bottom: .5rem;
 }
 
+//pay-item .item:hover {
+//  background-color: $hover-color;
+//}
+
 pay-item .action-menu-icon,
 pay-item .primary-icon {
   color: $text-color;
@@ -564,6 +572,21 @@ pay-item .touch-device mat-icon {
 
 pay-item .item {
   background: $background-nth-color;
+}
+
+pay-item .expanding-container {
+  padding-top: .9375rem;
+  padding-bottom: .9375rem;
+  border-top: 1px solid $background-3rd-color;
+}
+
+pay-item .expanding-container p {
+  margin-bottom: .5rem;
+}
+
+pay-item .expanding-container p:last-child,
+pay-item .expanding-container p:only-child {
+  margin-bottom: 0;
 }
 
 pay-cart .cart-footer {

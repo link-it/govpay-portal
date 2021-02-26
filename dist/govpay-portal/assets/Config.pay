@@ -50,8 +50,11 @@
       ACCESS: false,
       SERVICE_TARGET: null,
       TEST_PROVIDER: null,
-      ACTION_FORM_URL: null,
-      LOGOUT_URL: null
+      ACTION_FORM_URL: null
+    },
+    IAM_SETTINGS: {
+      ACCESS: true,
+      LOGIN_URL: 'https://pagamentitest.regione.sicilia.it/oidc/GovPay-Dev-Login'
     },
     UUID_CHECK: true,
     RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',

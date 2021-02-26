@@ -42,6 +42,9 @@
       "Ask": "Non hai SPID?",
       "Help": "Serve aiuto?"
     },
+    "Iam": {
+      "Label": "Accedi con IAM"
+    },
     "Pagamenti": {
       "Titolo": "Pagamenti online",
       "Bollettino": {
@@ -106,7 +109,7 @@
     "Posizione": {
       "Titolo": "Posizione debitoria",
       "Debiti": {
-        "Titolo": "C'è {{value}} servizio da pagare|Ci sono {{value}} servizi da pagare"
+        "Titolo": "È presente {{value}} solo servizio|Sono presenti {{value}} servizi"
       }
     },
     "Archivio": {
@@ -122,6 +125,7 @@
         "Dettaglio": {
           "Eseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
           "Fallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
+          "Errore": "Le informazioni sul pagamento sono temporaneamente non dispnobili.",
           "InCorso": {
             "Titolo": "Recupero informazioni in corso...",
             "Ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
@@ -190,6 +194,8 @@
       "AlertAction": "Chiudi",
       "NumeroAvviso": "Numero avviso",
       "IUV": "Identificativo versamento",
+      "Beneficiario": "Beneficiario",
+      "Pagamento": "Pagata il",
       "Scadenza": "Entro il",
       "SenzaScadenza": "Senza scadenza",
       "NotAvailable": "Non disponibile",

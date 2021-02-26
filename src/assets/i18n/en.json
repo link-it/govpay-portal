@@ -42,6 +42,9 @@
       "Ask": "Don't you have SPID?",
       "Help": "Need help?"
     },
+    "Iam": {
+      "Label": "Login with IAM"
+    },
     "Pagamenti": {
       "Titolo": "Online payments",
       "Bollettino": {
@@ -70,7 +73,7 @@
       "Pagamenti": {
         "Titolo": "Payments list",
         "Paga": "Pay now",
-        "Indietro": "Back to payments list",
+        "Indietro": "Back to payments",
         "Stampa": "Print notice",
         "Totale": "Total",
         "Inserimento": "Notice added to cart",
@@ -106,7 +109,7 @@
     "Posizione": {
       "Titolo": "Debt position",
       "Debiti": {
-        "Titolo": "{{value}} notice to pay|{{value}} notices to pay"
+        "Titolo": "{{value}} notice available|{{value}} notices available"
       }
     },
     "Archivio": {
@@ -122,6 +125,7 @@
         "Dettaglio": {
           "Eseguito": "The payment required appears to have been successful. The payment receipt will be sent to the address provided.",
           "Fallito": "The payment required does NOT appear to have been successful.",
+          "Errore": "Payment information is temporarily unavailable.",
           "InCorso": {
             "Titolo": "Recovery of information in progress...",
             "Ok": "The payment process has been completed successfully. We are awaiting confirmation of payment from the pagoPA platform.",
@@ -190,6 +194,8 @@
       "AlertAction": "Close",
       "NumeroAvviso": "Notice",
       "IUV": "Payment ID",
+      "Beneficiario": "Payee",
+      "Pagamento": "Paid on",
       "Scadenza": "By",
       "SenzaScadenza": "No expiration date",
       "NotAvailable": "Not available",

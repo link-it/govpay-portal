@@ -34,9 +34,11 @@
     <mat-icon>more_vert</mat-icon>
   </button>
 </div>
-<div class="row" *ngIf="_expandMode && _expanded">
-  <div class="col-12">
-    <ng-content select="[expanding-content]"></ng-content>
+<div class="container expanding-container" *ngIf="_expandMode && _expanded">
+  <div class="row">
+    <div class="col-12">
+      <ng-content select="[expanding-content]"></ng-content>
+    </div>
   </div>
 </div>
 <mat-menu #menu="matMenu">

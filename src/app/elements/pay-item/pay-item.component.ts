@@ -1,11 +1,19 @@
-import { AfterContentChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'pay-item',
   templateUrl: './pay-item.component.html',
   styleUrls: ['./pay-item.component.scss']
 })
-export class PayItemComponent implements AfterViewInit, AfterContentChecked {
+export class PayItemComponent implements AfterViewInit {
+  @HostListener('window:resize') onResize() {
+    clearTimeout(this.__timer);
+    this.__timer = setTimeout(() => {
+      this.__moreVert(false);
+      this._resetTouch();
+      this.__setupTouchMode();
+    }, 800);
+  }
   @HostBinding('class.in') _slideIn: boolean = false;
   @HostBinding('class.show-more') _expanded: boolean = false;
   @ViewChild('item', { read: ElementRef }) _host: ElementRef;
@@ -30,6 +38,7 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
 
   @Output('on-icon-click') _iconClick: EventEmitter<any> = new EventEmitter(null);
 
+  __timer: number;
   _touchDevice: boolean = false;
   _menuOpened: boolean = false;
   _touch: any;
@@ -37,15 +46,12 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
   constructor() {
   }
 
-  ngAfterContentChecked() {
-    this.__setupTouchMode();
-  }
-
   ngAfterViewInit() {
     if (!window['Hammer']) {
       console.warn('HammerJs not installed!');
     } else {
       this._touch = new window['Hammer'](this._host.nativeElement);
+      this.__setupTouchMode();
     }
   }
 
@@ -76,8 +82,10 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
     }
   }
 
-  _resetTouch() {
-    event.stopImmediatePropagation();
+  _resetTouch(event: any = null) {
+    if (event) {
+      event.stopImmediatePropagation();
+    }
     if (this._touchDevice && !this._menuOpened && this._slideIn) {
       this._slideIn = false;
     }

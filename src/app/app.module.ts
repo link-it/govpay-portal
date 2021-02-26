@@ -21,10 +21,12 @@ import { AuthGuardService } from './elements/services/auth-gard.service';
 
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { TranslateLoaderExt } from './elements/classes/translate-loader-ext';
-import { MatBadgeModule, MatButtonModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatSidenavModule } from '@angular/material';
+import { MatBadgeModule, MatButtonModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule,
+  MatInputModule, MatListModule, MatMenuModule, MatSidenavModule } from '@angular/material';
 import { HeaderBarComponent } from './elements/header-bar/header-bar.component';
 import { LanguageBarComponent } from './elements/language-bar/language-bar.component';
 import { SpidLoginComponent } from './elements/spid-login/spid-login.component';
+import { ExternalLoginComponent } from './elements/external-login/external-login.component';
 import { PagamentiComponent } from './elements/pagamenti/pagamenti.component';
 import { TitleDecoComponent } from './elements/title-deco/title-deco.component';
 import { IconButtonComponent } from './elements/icon-button/icon-button.component';
@@ -56,6 +58,7 @@ export function createTranslateLoader(http: HttpClient) {
     HeaderBarComponent,
     LanguageBarComponent,
     SpidLoginComponent,
+    ExternalLoginComponent,
     TitleDecoComponent,
     IconButtonComponent,
     QuadroServizioComponent,

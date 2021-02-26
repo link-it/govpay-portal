@@ -9,7 +9,7 @@
     <div class="col-12 col-md-8">
       <pay-card [placeholder]="Pay.I18n.json.Pagamenti.Bollettino.Form.Avviso" [camera-select]="Pay.I18n.json.Pagamenti.Bollettino.Form.Fotocamera"
                 [submit]="Pay.I18n.json.Pagamenti.Bollettino.Submit" [required-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Required"
-                (on-submit)="_checkBollettino($event)"></pay-card>
+                (on-submit)="_checkBollettino($event)" [validator]="_validatoreNumeroAvviso"></pay-card>
     </div>
     <div class="col-12 col-md-2"></div>
   </div>

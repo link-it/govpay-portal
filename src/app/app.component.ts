@@ -6,7 +6,6 @@ import { Language } from './elements/classes/language';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { serviziChange, validateNow } from './elements/pagamenti/pagamenti.component';
-import { Creditore } from './elements/classes/creditore';
 
 @Component({
   selector: 'pay-root',
@@ -27,7 +26,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _isLoading: boolean = false;
   _languages: Language[] = [];
   _language: string = '';
-  _appDomainTarget: string = '';
 
   @HostListener('window:resize') onResize() {
     this._updateLayout();
@@ -46,6 +44,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
         this._updateLayout();
       }
     });
+    let _toPaymentsSection: boolean = true;
     if(location.search) {
       const _params: any = {};
       location.search.substr(1).split('&').forEach((p) => {
@@ -54,9 +53,12 @@ export class AppComponent implements OnInit, AfterContentChecked {
       });
       if(_params) {
         if ((_params['idSession'] && _params['idDominio']) || _params['idDominio']) {
-          this._setCreditoreAttivo(_params['idDominio']);
-          if (_params['numeroAvviso']) {
-            if (PayService.CreditoreAttivo) {
+          _toPaymentsSection = false;
+          PayService.SetCreditoreAttivoAndDomainTarget(_params['idDominio']);
+          if (PayService.CreditoreAttivo) {
+            _toPaymentsSection = !_params['idSession'];
+            if (!_params['idSession'] && _params['numeroAvviso']) {
+              _toPaymentsSection = true;
               PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
                  Numero: _params['numeroAvviso'],
               Creditore: _params['idDominio'],
@@ -66,7 +68,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
               }
             }
           }
-          this.__toPayments();
         }
       }
     }
@@ -81,11 +82,12 @@ export class AppComponent implements OnInit, AfterContentChecked {
       }
       PayService.MapHeading(this.router, this.translate);
     });
-
+    if (PayService.CreditoreAttivo && _toPaymentsSection) {
+      this.__toPayments();
+    }
   }
 
   ngOnInit() {
-    // this._lb = (PayService.CREDITORI.length > 1 && this._languages.length == 1)?0:48;
     this._checkCartIcon();
   }
 
@@ -212,15 +214,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
     return (window.innerWidth < PayService.MobileBreakPointNotice && link == '/carrello' && PayService.Cart.length !== 0);
   }
 
-  _setCreditoreAttivo(dominio: string) {
-    PayService.CREDITORI.forEach((cr: Creditore) => {
-      if (cr.value === dominio) {
-        PayService.CreditoreAttivo = cr;
-        this._appDomainTarget = (cr.value)?`${PayService.SPID['SERVICE_TARGET']}?idDominio=${cr.value}`:PayService.SPID['SERVICE_TARGET'];
-      }
-    });
-  }
-
   __exit(): any {
     this.pay.clearUser();
     this.Pay.ResetCart(this.router, this.translate);
@@ -237,10 +230,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   __onChange(creditore: any) {
-    PayService.CreditoreAttivo = creditore || null;
-    this._appDomainTarget = (creditore && creditore.value)?`${PayService.SPID['SERVICE_TARGET']}?idDominio=${creditore.value}`:PayService.SPID['SERVICE_TARGET'];
+    PayService.SetCreditoreAttivoAndDomainTarget(creditore.value || '');
     this.Pay.ResetCart(this.router, this.translate);
-    this.pay.router.navigateByUrl('/pagamenti');
+    this.__toPayments();
   }
 
   __toPayments() {
@@ -254,7 +246,7 @@ export class AuthGuardPipe implements PipeTransform {
   transform(values: any[]): any[] {
     return values.filter((item: any) => {
       if (item.Link === '/archivio' || item.Link === '/riepilogo') {
-        return !!(PayService.SPID['ACCESS'] && PayService.I18n.json.Account);
+        return !!((PayService.SPID['ACCESS'] || PayService.IAM['ACCESS']) && PayService.I18n.json.Account);
       }
 
       return true;

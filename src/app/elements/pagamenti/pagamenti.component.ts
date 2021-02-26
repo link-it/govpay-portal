@@ -25,6 +25,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
   _timer: any;
   _msnry: any;
   _servizi: any[] = [];
+  _validatoreNumeroAvviso: RegExp = /\d{18}/;
 
   constructor(public pay: PayService, protected translate: TranslateService, protected dialog: MatDialog) {
     if (PayService.CREDITORI && PayService.CREDITORI.length === 0) {
@@ -64,7 +65,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
         if(!PayService.UUID_CHECK || (PayService.UUID_CHECK && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID)) {
           const data: any = {
             token: '',
-            query: `?UUID=${PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID}`,
+            query: PayService.UUID_CHECK?`?UUID=${PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID}`:'',
             notice: {
               numeroAvviso: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Numero,
               dominio: PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.Creditore
@@ -187,6 +188,9 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
         this.pay.updateSpinner(false);
       },
       (error) => {
+        this._servizi = [];
+        serviziChange.next(true);
+        this._loadMasonry();
         this.pay.updateSpinner(false);
         this.pay.onError(error);
       }
@@ -278,7 +282,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
   }
 
   _loadMasonry() {
-    if (this._servizi.length !== 0) {
+    if (this._servizi.length !== 0 && this.pay.router.url === '/pagamenti') {
       setTimeout(() => {
         this._msnry = new Masonry('.servizi-container', {
           itemSelector: '.grid-item',

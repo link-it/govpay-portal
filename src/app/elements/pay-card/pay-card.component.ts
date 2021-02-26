@@ -17,6 +17,7 @@ export class PayCardComponent {
   @Input('camera-select') _cameraSelect: string = '';
   @Input('placeholder') _avvisoPH: string = '';
   @Input('required-error') _requiredError: string = '';
+  @Input('validator') _regex: RegExp;
 
   @Input('submit') _submitLabel: string = '';
   @Output('on-submit') _submit: EventEmitter<any> = new EventEmitter();
