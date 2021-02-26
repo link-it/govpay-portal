@@ -19,25 +19,25 @@ $custom-typography: mat-typography-config(
 @include mat-core($custom-typography);
 
 $link-palette: (
-  50: #e0edf9,
-  100: #b3d1f0,
-  200: #80b3e6,
-  300: #4d94db,
-  400: #267dd4,
-  500: #362D81,
-  600: #005ec7,
-  700: #0053c0,
-  800: #0049b9,
-  900: #0038ad,
-  A100: #d7e1ff,
-  A200: #a4baff,
-  A400: #7194ff,
-  A700: #5881ff,
+  50: #e0e9f5,
+  100: #b3c8e6,
+  200: #80a4d6,
+  300: #4d80c6,
+  400: #2664b9,
+  500: #0049ad,
+  600: #0042a6,
+  700: #00399c,
+  800: #003193,
+  900: #002183,
+  A100: #b0bdff,
+  A200: #7d93ff,
+  A400: #4a69ff,
+  A700: #3054ff,
   contrast: (
     50: #000000,
     100: #000000,
     200: #000000,
-    300: #000000,
+    300: #ffffff,
     400: #ffffff,
     500: #ffffff,
     600: #ffffff,
@@ -46,8 +46,8 @@ $link-palette: (
     900: #ffffff,
     A100: #000000,
     A200: #000000,
-    A400: #000000,
-    A700: #000000,
+    A400: #ffffff,
+    A700: #ffffff,
   )
 );
 
@@ -55,7 +55,7 @@ $palette: mat-palette($link-palette);
 $link-theme: mat-light-theme($palette, $palette);
 @include angular-material-theme($link-theme);
 
-$background-color: #362D81;
+$background-color: #0049ad;
 // $background-2nd-color: #...;
 $background-3rd-color: #F5F5F5;
 $background-4th-color: rgba(255, 255, 255, .75);
