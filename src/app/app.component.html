@@ -68,8 +68,8 @@
       <pay-spid-login add-on [label]="Pay.I18n.json.Spid.Label" [info]="Pay.I18n.json.Spid.Info" [ask]="Pay.I18n.json.Spid.Ask" [help]="Pay.I18n.json.Spid.Help"
                       [action]="Pay.SPID['ACTION_FORM_URL']" [spid-test-url]="Pay.SPID['TEST_PROVIDER']" [response-target]="Pay.SpidDomainTarget"
                       *ngIf="!Pay.User && !Pay.IAM['ACCESS'] && Pay.SPID['ACCESS'] && !Pay.I18n.json.Account"></pay-spid-login>
-      <pay-external-login add-on *ngIf="!Pay.User && !Pay.SPID['ACCESS'] && Pay.IAM['ACCESS'] && !Pay.I18n.json.Account"
-                          [url]="Pay.IAM['LOGIN_URL']" [label]="Pay.I18n.json.Iam.Label"></pay-external-login>
+      <pay-external-login add-on *ngIf="!Pay.User && !Pay.SPID['ACCESS'] && Pay.IAM['ACCESS'] && __IAMLoginUrl && !Pay.I18n.json.Account"
+                          [url]="__IAMLoginUrl" [label]="Pay.I18n.json.Iam.Label"></pay-external-login>
     </pay-header-bar>
     <div #globalContent class="global-container" [style.height.px]="_gch">
       <router-outlet></router-outlet>

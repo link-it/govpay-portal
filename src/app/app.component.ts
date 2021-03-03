@@ -29,6 +29,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _languages: Language[] = [];
   _language: string = '';
 
+  __IAMLoginUrl: string = '';
+
   _configPartners: boolean = false;
 
   @HostListener('window:resize') onResize() {
@@ -86,6 +88,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
       }
       PayService.MapHeading(this.router, this.translate);
     });
+    this.__checkIAMLogin();
     if (PayService.CreditoreAttivo && _toPaymentsSection) {
       this.__toPayments();
     }
@@ -236,12 +239,27 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   __onChange(creditore: any) {
     PayService.SetCreditoreAttivoAndDomainTarget(creditore.value || '');
+    this.__checkIAMLogin();
     this.Pay.ResetCart(this.router, this.translate);
     this.__toPayments();
   }
 
   __toPayments() {
     this.pay.router.navigateByUrl('/pagamenti');
+  }
+
+  __checkIAMLogin() {
+    this.__IAMLoginUrl = PayService.IAM['LOGIN_URL'];
+    if (PayService.CreditoreAttivo && PayService.IAM['ACCESS']) {
+      const q: string = `idDominio=${PayService.CreditoreAttivo.value}`;
+      if (PayService.IAM['LOGIN_URL'].indexOf('?') !== -1) {
+        const uaq: string[] = PayService.IAM['LOGIN_URL'].split('?');
+        uaq[1] += `&${q}`;
+        this.__IAMLoginUrl = uaq.join('?');
+      } else {
+        this.__IAMLoginUrl = `${PayService.IAM['LOGIN_URL']}?${q}`;
+      }
+    }
   }
 
 }
