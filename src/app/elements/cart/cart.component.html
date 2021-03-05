@@ -15,13 +15,15 @@
   <div class="row mb-5">
     <div class="col-12 col-md-2"></div>
     <div class="col-12 col-md-8">
-      <div class="cart-footer">
-        <div class="row">
-          <div class="col-8">
-            <p class="main-text">{{ Pay.I18n.json.Cart.Pagamenti.Totale }}</p>
-          </div>
-          <div class="col">
-            <p class="main-text">{{ pay.currencyFormat(_totale) }}</p>
+      <div class="col">
+        <div class="row cart-footer">
+          <div class="d-flex col px-0">
+            <div class="col-7">
+              <p class="main-text">{{ Pay.I18n.json.Cart.Pagamenti.Totale }}</p>
+            </div>
+            <div class="col">
+              <p class="main-text">{{ pay.currencyFormat(_totale) }}</p>
+            </div>
           </div>
           <div class="d-none d-md-flex pipe-filler"></div>
         </div>

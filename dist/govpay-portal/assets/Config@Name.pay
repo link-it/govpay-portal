@@ -25,45 +25,28 @@
   function _assetsGestore() {
     return {
       Logo: {
-        Small: 'regione-sicilia.png',
-        Full: 'regione-sicilia.png'
+        Small: 'logo-small.png',
+        Full: 'logo.png'
       },
       Background: {
-        Small: 'sicilia-small.png',
-        Full: 'sicilia.png'
+        Small: 'background-small.jpg',
+        Full: 'background.jpg'
       },
-      Partners: [
-        {
-          Logo: { Menu: 'unione-europea.svg', AccessPanel: 'unione-europea.svg' },
-          Url: 'https://europa.eu'
-        },
-        {
-          Logo: { Menu: 'repubblica-italiana.svg', AccessPanel: 'repubblica-italiana.svg' },
-          Url: 'https://www.quirinale.it'
-        },
-        {
-          Logo: { Menu: 'regione-siciliana.svg', AccessPanel: 'regione-siciliana.svg' },
-          Url: 'http://pti.regione.sicilia.it'
-        },
-        {
-          Logo: { Menu: 'po-fesr.svg', AccessPanel: 'po-fesr-reverse.svg' },
-          Url: 'https://www.euroinfosicilia.it'
-        }
-      ],
+      Partners: [],
       Configurazione: {
         Menu: {
-          Infos: false,
-          Partners: true,
+          Infos: true,
+          Partners: false,
           Govpay: true
         },
         AccessPanel: {
-          Partners: true,
-          Govpay: false
+          Partners: false,
+          Govpay: true
         }
       },
       ProgettoGovPay: {
         Menu: {
-          Logo: 'progetto-govpay.png'
+          Logo: 'govpay.svg'
         },
         AccessPanel: {
           Logo: 'govpay-reverse.svg'
@@ -86,9 +69,9 @@
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
       ACCESS: true,
-      SERVICE_TARGET: 'https://dev.govcloud.it/govpay-portal/riepilogo',
+      SERVICE_TARGET: 'http://localhost:4200/',
       TEST_PROVIDER: 'https://spidtest.govcloud.it',
-      ACTION_FORM_URL: 'https://dev.govcloud.it/govpay/frontend/api/user/rs/spid/v1/login/gpportal'
+      ACTION_FORM_URL: 'https://dev.govcloud.it/Shibboleth.sso/Login'
     },
     IAM_SETTINGS: {
       ACCESS: false,

@@ -556,9 +556,9 @@ pay-item {
   margin-bottom: .5rem;
 }
 
-//pay-item .item:hover {
-//  background-color: $hover-color;
-//}
+pay-item .item .item-trigger:hover {
+  background-color: $hover-color;
+}
 
 pay-item .action-menu-icon,
 pay-item .primary-icon {
@@ -601,7 +601,7 @@ pay-item .expanding-container p:only-child {
 
 pay-cart .cart-footer {
   background-color: $text-color;
-  padding: .5rem 1rem;
+  padding: .5rem 0;
 }
 
 pay-cart .cart-footer .main-text {
