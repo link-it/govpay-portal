@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { forkJoin, Observable } from 'rxjs';
 import { timeout, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { MatPaginatorIntl, MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { DateAdapter, MatPaginatorIntl, MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { I18n } from './I18nSchema';
@@ -22,6 +22,8 @@ declare let JSZip;
   providedIn: 'root'
 })
 export class PayService implements OnInit, OnDestroy {
+
+  public static DateAdapter: any;
 
   public static RECAPTCHA_V3_SITE_KEY: any;
   public static SPID: any;
@@ -139,7 +141,9 @@ export class PayService implements OnInit, OnDestroy {
   // protected _langSubscription: Subscription;
 
   constructor(private message: MatSnackBar, private http: HttpClient, public router: Router,
-              private paginator: MatPaginatorIntl, public translate: TranslateService) {
+              private paginator: MatPaginatorIntl, public translate: TranslateService,
+              private dateAdapter: DateAdapter<any>) {
+    PayService.DateAdapter = dateAdapter;
     this.initConfig();
   }
 
@@ -839,6 +843,7 @@ export class PayService implements OnInit, OnDestroy {
    * @constructor
    */
   static TranslateDynamicObject(_translate: TranslateService, _pay: PayService) {
+    PayService.DateAdapter.setLocale(_translate.currentLang);
     PayService.ALPHA_3_CODE = PayService.LINGUE.filter((l: Language) => (l.alpha2Code === _translate.currentLang))[0].alpha3Code;
     _translate.get('Language').subscribe((_language: any) => {
       PayService.I18n.json = Object.assign({}, _language);
