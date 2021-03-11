@@ -120,6 +120,7 @@ a:hover {
   text-decoration: none;
 }
 
+a:focus,
 button:focus {
   outline: none;
 }
@@ -219,6 +220,10 @@ section {
   background-color: $background-3rd-color;
 }
 
+mat-sidenav-container.mat-drawer-container {
+  overflow: unset;
+}
+
 .side-nav {
   position: fixed !important;
   width: $sidenavWidth;
@@ -275,7 +280,7 @@ section {
 
 .side-nav .logo-govpay .partners-group img {
   width: auto;
-  height: 2.75rem;
+  height: 2rem;
 }
 
 .side-nav .sidenav-logo-gestore,

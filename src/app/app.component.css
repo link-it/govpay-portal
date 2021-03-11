@@ -1,4 +1,4 @@
-:host(.partners) .logo-govpay > img {
+:host(.partners) .logo-govpay img.govpay-prj {
   width: auto;
   height: 1.5rem;
 }
@@ -7,7 +7,8 @@
   bottom: 1.5rem;
 }
 
-:host(.partners) .partners-group img {
+:host(.partners) .partners-group a {
+  display: inline-block;
   margin: 0 1rem 1.5rem 0;
 }
 

@@ -25,7 +25,7 @@
   function _assetsGestore() {
     return {
       Logo: {
-        Small: 'logo-small.png',
+        Small: 'logo.png',
         Full: 'logo.png'
       },
       Background: {
@@ -46,10 +46,12 @@
       },
       ProgettoGovPay: {
         Menu: {
-          Logo: 'govpay.svg'
+          Logo: 'govpay.svg',
+          Url: 'http://#'
         },
         AccessPanel: {
-          Logo: 'govpay-reverse.svg'
+          Logo: 'govpay-reverse.svg',
+          Url: 'http://#'
         }
       }
     };

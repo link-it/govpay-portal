@@ -15,7 +15,7 @@ export class ChoiceDialogComponent implements OnInit, AfterViewInit {
   @Input('title') _title: string = '';
   @Input('label-selector') _labelSelector: string = '';
   @Input('elements') _elements: Creditore[] = [];
-  @Input('logo') _logo: string = '';
+  @Input('logo') _logo: LogoGovpay;
   @Input('logo-gestore') _logoGestore: string = '';
   @Input('background') _background: string = '';
   @Input('main-info') _mainInfo: string = '';
@@ -58,5 +58,10 @@ export class Configuratore {
 
 export class LogoPartner {
   Logo: { Menu: '', AccessPanel: '' };
+  Url: '';
+}
+
+export class LogoGovpay {
+  Logo: '';
   Url: '';
 }

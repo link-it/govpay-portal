@@ -1,6 +1,6 @@
 <pay-choice-dialog *ngIf="!Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)" [config]="Pay.Gestore?.Configurazione" [partners]="Pay.Gestore?.Partners"
                    [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [title]="Pay.I18n.json.Header.Erogatore.Titolo"
-                   [logo]="Pay.Gestore?.ProgettoGovPay.AccessPanel.Logo" [logo-gestore]="Pay.Gestore?.Logo.Full" [background]="Pay.Gestore?.Background.Full"
+                   [logo]="Pay.Gestore?.ProgettoGovPay.AccessPanel" [logo-gestore]="Pay.Gestore?.Logo.Full" [background]="Pay.Gestore?.Background.Full"
                    [main-info]="Pay.I18n.json.Gestore.Ragione" [sub-info]="Pay.I18n.json.Gestore.Sede"></pay-choice-dialog>
 <pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [language-list]="_languages" language-bar-theme="language-bar"
                   (on-change-language)="_languageHandler($event)" [current-language]="_language"
@@ -48,7 +48,9 @@
         </div>
         <p *ngIf="Pay.Gestore?.Configurazione.Menu.Infos">{{ Pay.I18n.json.Gestore.Ragione }}</p>
         <p *ngIf="Pay.Gestore?.Configurazione.Menu.Infos">{{ Pay.I18n.json.Gestore.Sede }}</p>
-        <img *ngIf="Pay.Gestore?.Configurazione.Menu.Govpay" [src]="'assets/images/'+Pay.Gestore?.ProgettoGovPay.Menu.Logo">
+        <a [href]="Pay.Gestore?.ProgettoGovPay.Menu.Url" target="_blank">
+          <img class="govpay-prj" *ngIf="Pay.Gestore?.Configurazione.Menu.Govpay" [src]="'assets/images/'+Pay.Gestore?.ProgettoGovPay.Menu.Logo">
+        </a>
       </div>
     </mat-list>
   </mat-sidenav>
