@@ -38,11 +38,7 @@
           Url: 'http://#'
         },
         {
-          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png' },
-          Url: 'http://#'
-        },
-        {
-          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png' },
+          Logo: { Menu: 'partner-logo-double.png', AccessPanel: 'partner-logo-double-reverse.png' },
           Url: 'http://#'
         }
       ],

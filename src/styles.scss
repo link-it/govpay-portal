@@ -283,9 +283,15 @@ mat-sidenav-container.mat-drawer-container {
   height: 2rem;
 }
 
-.side-nav .sidenav-logo-gestore,
-.side-nav .logo-govpay img {
-  height: 48px;
+.side-nav .sidenav-logo-gestore {
+  width: auto;
+  max-height: 3rem;
+}
+
+.side-nav .logo-govpay img.govpay-prj {
+  display: block;
+  max-width: 9rem;
+  max-height: 4.8125rem;
 }
 
 .language-bar {
@@ -405,6 +411,11 @@ pay-choice-dialog .choice-group h1 {
 pay-choice-dialog .choice-logo p {
   font-size: .75rem;
   color: $reverse-text-color;
+}
+
+pay-choice-dialog .choice-logo img.access-panel {
+  max-width: 9rem;
+  max-height: 4.8125rem;
 }
 
 pay-choice-dialog mat-form-field,
