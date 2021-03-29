@@ -1,0 +1,75 @@
+<ng-template [ngIf]="!Pay.User">
+  <div class="container py-5">
+    <div class="row mb-5 h-100">
+      <div class="col-12 col-md-2"></div>
+      <div class="col-12 col-md-8 align-self-center">
+        <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Certificazioni.Titolo"></pay-title-deco>
+      </div>
+      <div class="col-12 col-md-2"></div>
+    </div>
+    <div class="row pb-5 mb-md-5">
+      <div class="col-12 col-md-2"></div>
+      <div class="col-12 col-md-8">
+        <h1 class="mb-5">{{Pay.I18n.json.Certificazioni.Anonimo.Titolo}}</h1>
+        <p class="m-0">{{Pay.I18n.json.Certificazioni.Anonimo.Descrizione}}</p>
+      </div>
+      <div class="col-12 col-md-2"></div>
+    </div>
+  </div>
+</ng-template>
+<ng-template [ngIf]="Pay.User">
+  <div class="container py-5">
+    <div class="row mb-5">
+      <div class="col-12 col-md-2"></div>
+      <div class="col-12 col-md-8">
+        <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Certificazioni.Form.Titolo"></pay-title-deco>
+      </div>
+      <div class="col-12 col-md-2"></div>
+    </div>
+    <div class="row pb-5 mb-md-5">
+      <div class="col-12 col-md-2"></div>
+      <div class="col-12 col-md-8">
+        <form [formGroup]="fGroup" (submit)="__submit(fGroup.value)">
+          <div class="mb-3">
+            <mat-slide-toggle color="accent" formControlName="bollo" (change)="__slideChange($event)">
+              {{Pay.I18n.json.Certificazioni.Form.Bollo}}
+            </mat-slide-toggle>
+            <small class="d-block mt-3" *ngIf="bollo_ctrl.value === true">{{Pay.I18n.json.Certificazioni.Form.Nota}}</small>
+          </div>
+          <mat-form-field class="d-block mb-3" color="accent">
+            <mat-label>{{Pay.I18n.json.Certificazioni.Form.TipoCertificato}}</mat-label>
+            <mat-select formControlName="tipoCertificato" multiple required>
+              <mat-option *ngFor="let tc of Pay.I18n.json.Certificazioni.TipiCertificato" [value]="tc.Value">
+                {{tc.Label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="d-block mb-3" color="accent" *ngIf="!__hasBollo">
+            <mat-label>{{Pay.I18n.json.Certificazioni.Form.Esenzione}}</mat-label>
+            <mat-select formControlName="motivoEsenzione" [required]="!__hasBollo" (selectionChange)="__motivoChange($event)">
+              <mat-option *ngFor="let m of Pay.I18n.json.Certificazioni.Motivazioni" [value]="m.Value">
+                {{m.Label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="d-block mb-3" color="accent" *ngIf="!__hasBollo && __hasExtraMotivo">
+            <input matInput [placeholder]="Pay.I18n.json.Certificazioni.Form.EsenzioneExtra.Label" formControlName="motivoExtra"
+                   [required]="!__hasBollo && __hasExtraMotivo" autocomplete="off">
+          </mat-form-field>
+          <mat-form-field class="d-block mb-3" color="accent">
+            <mat-label>{{Pay.I18n.json.Certificazioni.Form.Destinazione}}</mat-label>
+            <mat-select formControlName="destinazione" required>
+              <mat-option *ngFor="let du of Pay.I18n.json.Certificazioni.Destinazioni" [value]="du.Value">
+                {{du.Label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-flat-button type="submit" color="primary" [disabled]="!__fGroupValid">
+            {{ Pay.I18n.json.Certificazioni.Form.Invia }}
+          </button>
+        </form>
+      </div>
+      <div class="col-12 col-md-2"></div>
+    </div>
+  </div>
+</ng-template>

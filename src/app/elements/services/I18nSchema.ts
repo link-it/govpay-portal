@@ -47,6 +47,33 @@ export class I18n {
     Iam: {
       Label: ''
     },
+    Certificazioni: {
+      Anonimo: {
+        Titolo: '',
+        Descrizione: ''
+      },
+      Titolo: '',
+      Descrizione: '',
+      Form: {
+        Titolo: '',
+        TipoCertificato: '',
+        Bollo: '',
+        Nota: '',
+        Esenzione: '',
+        EsenzioneExtra: { Label: '', Value: '' },
+        Destinazione: '',
+        Invia: ''
+      },
+      TipiCertificato: [
+        { Label: '', Value: '' }
+      ],
+      Motivazioni: [
+        { Label: '', Value: '' }
+      ],
+      Destinazioni: [
+        { Label: '', Value: '', Predefinito: '' }
+      ]
+    },
     Pagamenti: {
       Titolo: '',
       Bollettino: {

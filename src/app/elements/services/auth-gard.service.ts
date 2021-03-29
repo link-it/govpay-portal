@@ -20,25 +20,29 @@ export class AuthGuardService implements CanActivate, OnDestroy {
       PayService.ResetState();
     }
 
-    if (state.url === '/riepilogo' || state.url === '/archivio') {
-      if (this.pay.isAuthenticated()) {
-        return true;
-      } else {
-        this.pay.updateSpinner(true);
-        return this.pay.sessione(state.url);
+    if (PayService.CERTIFICAZIONI['ACCESS'] && state.url === 'certificazioni') {
+
+    } else {
+      if (state.url === '/riepilogo' || state.url === '/archivio') {
+        if (this.pay.isAuthenticated()) {
+          return true;
+        } else {
+          this.pay.updateSpinner(true);
+          return this.pay.sessione(state.url);
+        }
       }
-    }
-    if (state.url === '/dettaglio-servizio' && !PayService.ExtraState) {
-      router.navigateByUrl('/');
-      return false;
-    }
-    if (state.url === '/pagamenti' && !PayService.CreditoreAttivo) {
-      router.navigateByUrl('/');
-      return false;
-    }
-    if ((state.url === '/ricevuta' || state.url === '/carrello') && PayService.ShoppingCart.length === 0) {
-      router.navigateByUrl('/');
-      return false;
+      if (state.url === '/dettaglio-servizio' && !PayService.ExtraState) {
+        router.navigateByUrl('/');
+        return false;
+      }
+      if (state.url === '/pagamenti' && !PayService.CreditoreAttivo) {
+        router.navigateByUrl('/');
+        return false;
+      }
+      if ((state.url === '/ricevuta' || state.url === '/carrello') && PayService.ShoppingCart.length === 0) {
+        router.navigateByUrl('/');
+        return false;
+      }
     }
 
     return true;

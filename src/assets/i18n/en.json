@@ -18,20 +18,8 @@
       "Titolo": "Payment management",
       "MenuItems": [
         {
-          "Label": "Payments",
-          "Link": "/pagamenti"
-        },
-        {
-          "Label": "Payments history",
-          "Link": "/archivio"
-        },
-        {
-          "Label": "Debt position",
-          "Link": "/riepilogo"
-        },
-        {
-          "Label": "Cart",
-          "Link": "/carrello"
+          "Label": "Certifications",
+          "Link": "/certificazioni"
         }
       ],
       "Logout": "Log out"
@@ -44,6 +32,66 @@
     },
     "Iam": {
       "Label": "Login with IAM"
+    },
+    "Certificazioni": {
+      "Anonimo": {
+        "Titolo": "Accedi ai servizi, entra con SPID",
+        "Descrizione": "SPID è il sistema di accesso che consente di utilizzare, con un'identità digitale unica, i servizi online della Pubblica Amministrazione e dei privati accreditati. Se sei già in possesso di un'identità digitale, accedi con le credenziali del tuo gestore. Se non hai ancora un'identità digitale, richiedila ad uno dei gestori."
+      },
+      "Titolo": "Certifications",
+      "Form": {
+        "Titolo": "Certification Request",
+        "TipoCertificato": "Tipo certificato",
+        "Bollo": "Certificato in bollo",
+        "Nota": "Sul documento dovrà essere apposta una marca da bollo con data di emissione uguale o antecedente a quella del documento stesso.",
+        "Esenzione": "Motivo dell‘esenzione",
+        "EsenzioneExtra": { "Label": "Altro", "Value": "Altro motivo di esenzione" },
+        "Destinazione": "Destinazione d‘uso",
+        "Invia": "Submit"
+      },
+      "TipiCertificato": [
+        { "Label": "Certificato di nascita", "Value": "Certificato di nascita" },
+        { "Label": "Certificato di morte", "Value": "Certificato di morte" },
+        { "Label": "Certificato di matrimonio", "Value": "Certificato di matrimonio" },
+        { "Label": "Certificato di cancellazione anagrafica", "Value": "Certificato di cancellazione anagrafica" },
+        { "Label": "Certificato di cittadinanza", "Value": "Certificato di cittadinanza" },
+        { "Label": "Certificato storico di cittadinanza", "Value": "Certificato storico di cittadinanza" },
+        { "Label": "Certificato di esistenza in vita", "Value": "Certificato di esistenza in vita" },
+        { "Label": "Certificato di residenza", "Value": "Certificato di residenza" },
+        { "Label": "Certificato storico di residenza", "Value": "Certificato storico di residenza" },
+        { "Label": "Certificato di residenza AIRE", "Value": "Certificato di residenza AIRE" },
+        { "Label": "Certificato di stato civile", "Value": "Certificato di stato civile" },
+        { "Label": "Certificato di stato di famiglia", "Value": "Certificato di stato di famiglia" },
+        { "Label": "Certificato di stato di famiglia e di stato civile", "Value": "Certificato di stato di famiglia e di stato civile" },
+        { "Label": "Certificato di residenza in convivenza", "Value": "Certificato di residenza in convivenza" },
+        { "Label": "Certificato di stato di famiglia AIRE", "Value": "Certificato di stato di famiglia AIRE" },
+        { "Label": "Certificato di stato di famiglia con rapporti di parentela", "Value": "Certificato di stato di famiglia con rapporti di parentela" },
+        { "Label": "Certificato di stato libero", "Value": "Certificato di stato libero" },
+        { "Label": "Certificato di unione civile", "Value": "Certificato di unione civile" },
+        { "Label": "Certificato di convivenza", "Value": "Certificato di convivenza" },
+        { "Label": "Certificato storico di residenza alla data", "Value": "Certificato storico di residenza alla data" }
+      ],
+      "Motivazioni": [
+        { "Label": "NESSUNA ESENZIONE", "Value": "Nessuna esenzione" },
+        { "Label": "ONLUS - art. 27 bis, tabella allegato B)  DPR 642/1972", "Value": "ONLUS" },
+        { "Label": "SOCIETA' SPORTIVE - art. 8 bis, tabella allegato B)  DPR 642/1972", "Value": "Società sportive" },
+        { "Label": "PROCESSUALE (certificati da produrre nel procedimento) - art. 18 DPR 30.5.2002, n. 115 e Circ. Agenzia delle entrate, 14.8.2002, n. 70/E", "Value": "Certificati da produrre in procedimento processuale" },
+        { "Label": "C.T.U. nominato dal Tribunale o dal Pubblico ministero; CURATORE FALLIMENTARE - art. 16, tabella allegato B) DPR 642/1972", "Value": "CTU nominato dal tribunale o da PM" },
+        { "Label": "INTERDIZIONE, INABILITAZIONE, AMMINISTRAZIONE DI SOSTEGNO (certificati da produrre nel procedimento) - art. 13, tabella allegato B) DPR 642/72 e Circ. MIN. GIUST. prot. M-DG. DAG del 5 febbraio 2007.14803.U", "Value": "Interdizione, inabilitazione, amministrazione di sostegno" },
+        { "Label": "ADOZIONE, AFFIDAMENTO, TUTELA MINORI - art. 13, tabella allegato B)  DPR 642/1972 e art. 82 L. 184/1983", "Value": "Adozione, affidamento, tutela di minori" },
+        { "Label": "SEPARAZIONE/DIVORZIO ai sensi dell‘art. 19 della legge 74/1987", "Value": "Separazione o divorzio" },
+        { "Label": "VARIAZIONE TOPONOMASTICA STRADALE E NUMERAZIONE CIVICA ai sensi dell‘art. 16 co. 8, della L. 537/1993", "Value": "Variazione toponomastica stradale e numerazione civica" },
+        { "Label": "PENSIONE ESTERA - art. 9, tabella allegato B)  DPR 642/1972", "Value": "Pensione estera" },
+        { "Label": "SCAMBIO DI ATTI E DOCUMENTI FRA PP.AA. - art. 16, tabella allegato B) DPR 642/1972", "Value": "Scambio di atti e documenti tra PPAA" },
+        { "Label": "ALTRO MOTIVO DI ESENZIONE", "Value": "Altro motivo di esenzione" }
+      ],
+      "Destinazioni": [
+        { "Label": "Nessuna destinazione d’uso specifica", "Value": "No", "Predefinito": true },
+        { "Label": "Certificato destinato a PA estera", "Value": "Certificato destinato a PA estera" },
+        { "Label": "Certificato rilasciato per procedimenti disciplinati dalle norme sull’immigrazione (questi sono richiesti soprattutto dai cittadini stranieri che devono portarli in questura per regolarizzare le loro posizioni)", "Value": "Certificato rilasciato per procedimenti disciplinarti dalle norme sull'immigrazione" },
+        { "Label": "Ai sensi dell’Art. 40 DPR 445/2000 per cause giudiziarie", "Value": "Certificato rilasciato per cause giudiziarie" },
+        { "Label": "Ai sensi dell’Art. 40 DPR 28 dicembre 2000 N.445 per l’estero (rilasciato ai cittadini italiani che devono produrlo all’estero)", "Value": "Certificato rilasciato per l'estero" }
+      ]
     },
     "Pagamenti": {
       "Titolo": "Online payments",

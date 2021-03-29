@@ -90,7 +90,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
     });
     this.__checkIAMLogin();
     if (PayService.CreditoreAttivo && _toPaymentsSection) {
-      this.__toPayments();
+      PayService.CERTIFICAZIONI['ACCESS']?this.__toCerts():this.__toPayments();
     }
   }
 
@@ -117,7 +117,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   _checkCartIcon() {
-    this._showCart = !(window.innerWidth < PayService.MobileBreakPointNotice);
+    this._showCart = false; // !(window.innerWidth < PayService.MobileBreakPointNotice);
   }
 
   _initLanguages() {
@@ -175,7 +175,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
         switch (url) {
           case '/dettaglio-servizio':
             if (!PayService.EDIT_MODE) {
-              this.pay.router.navigateByUrl('/pagamenti');
+              this.__toPayments();
             } else {
               PayService.EDIT_MODE = false;
               this.pay.router.navigateByUrl('/carrello');
@@ -241,11 +241,15 @@ export class AppComponent implements OnInit, AfterContentChecked {
     PayService.SetCreditoreAttivoAndDomainTarget(creditore.value || '');
     this.__checkIAMLogin();
     this.Pay.ResetCart(this.router, this.translate);
-    this.__toPayments();
+    PayService.CERTIFICAZIONI['ACCESS']?this.__toCerts():this.__toPayments();
   }
 
   __toPayments() {
     this.pay.router.navigateByUrl('/pagamenti');
+  }
+
+  __toCerts() {
+    this.pay.router.navigateByUrl('/certificazioni');
   }
 
   __checkIAMLogin() {

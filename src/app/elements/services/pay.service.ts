@@ -28,6 +28,7 @@ export class PayService implements OnInit, OnDestroy {
   public static RECAPTCHA_V3_SITE_KEY: any;
   public static SPID: any;
   public static IAM: any;
+  public static CERTIFICAZIONI: any;
   public static ROOT_SERVICE: string = '';
   public static HOSTNAME: string = '';
   public static AUTH_HOSTNAME: string = '';
@@ -163,6 +164,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.RECAPTCHA_V3_SITE_KEY = PayConfig.RECAPTCHA_V3_SITE_KEY;
     PayService.SPID = PayConfig['SPID_SETTINGS'];
     PayService.IAM = PayConfig['IAM_SETTINGS'];
+    PayService.CERTIFICAZIONI = PayConfig['CERTIFICAZIONI'];
     PayService.ROOT_SERVICE = PayConfig['PUBLIC_ROOT_SERVICE'];
     PayService.HOSTNAME = PayConfig['REVERSE_PROXY'];
     PayService.AUTH_HOSTNAME = PayConfig['AUTH_HOST'];
@@ -308,6 +310,43 @@ export class PayService implements OnInit, OnDestroy {
         // ma è di accesso pubblico
         return true;
       });
+  }
+
+  /**
+   * Auth User
+   * @params {string} url
+   * @returns {Promise<any>}
+   */
+  sessionePerCertificati(url: string = ''): Promise<boolean> {
+    return this.http.get(PayService.CERTIFICAZIONI['AUTH_HOST'] + PayService.CERTIFICAZIONI['PROFILO'])
+      .toPromise()
+      .then(response => {
+        this.cacheCertifcatiUser(response);
+        this.updateSpinner(false);
+        return true;
+      })
+      .catch(error => {
+        this.clearUser();
+        this.updateSpinner(false);
+        if (url !== '') {
+          this.router.navigateByUrl('/');
+          return false;
+        }
+        // Solo /pagamenti controlla la sessione
+        // ma è di accesso pubblico
+        return true;
+      });
+  }
+
+  richiediCertificazione(body: any): Observable<any> {
+    const url = PayService.CERTIFICAZIONI['AUTH_HOST'] + PayService.CERTIFICAZIONI['CERTIFICAZIONE'];
+    return this.http.post(url, body, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
   }
 
   /**
@@ -820,6 +859,19 @@ export class PayService implements OnInit, OnDestroy {
     PayService.TranslateDynamicObject(this.translate, this);
   }
 
+  cacheCertifcatiUser(user: any) {
+    PayService.User = {
+      anagrafica: {
+        anagrafica: `${user.name || ''} ${user.familyName || ''}`,
+        nome: user.name || '',
+        cognome: user.familyName || '',
+        identificativo: user.fiscalNumber,
+        email: user.email || ''
+      }
+    };
+    PayService.TranslateDynamicObject(this.translate, this);
+  }
+
   clearUser() {
     PayService.User = undefined;
   }
@@ -856,6 +908,7 @@ export class PayService implements OnInit, OnDestroy {
       if (!PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang]) {
         PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang] = _language.Archivio.Pagamenti.Titolo.substring(0);
       }
+      PayService.I18n.json.Certificazioni = _language.Certificazioni;
       PayService.I18n.json.Account = PayService.User?PayService.User.anagrafica['anagrafica']:'';
       PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang], PayService.ShoppingCart.length);
       PayService.I18n.json.Posizione.Debiti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang], PayService.PosizioneDebitoria.length);
@@ -870,6 +923,10 @@ export class PayService implements OnInit, OnDestroy {
 
   static MapHeading(router: Router, translate: TranslateService) {
     switch(router.url.split('?')[0]) {
+      case '/certificazioni':
+        PayService.Header.Titolo = PayService.I18n.json.Certificazioni.Titolo;
+        PayService.Header.IsModal = false;
+        break;
       case '/pagamenti':
         PayService.Header.Titolo = PayService.I18n.json.Pagamenti.Titolo;
         PayService.Header.IsModal = false;

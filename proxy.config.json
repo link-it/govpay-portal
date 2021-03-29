@@ -10,5 +10,17 @@
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
+  },
+  "/servizi/userinfo": {
+    "target": "https://pescasseroli.comune.msspid.io",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/govway/out/*": {
+    "target": "https://pescasseroli.comune.msspid.io",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
   }
 }
