@@ -546,6 +546,14 @@ mat-option .mat-option-text {
   font-size: 1rem;
 }
 
+.mat-select-panel .mat-option.multiline-select-option {
+  height: unset !important;
+  line-height: 1.3 !important;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  white-space: normal;
+}
+
 .pipe-filler {
   width: 56px;
 }

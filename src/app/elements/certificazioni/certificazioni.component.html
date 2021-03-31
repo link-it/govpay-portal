@@ -39,7 +39,7 @@
           <mat-form-field class="d-block mb-3" color="accent">
             <mat-label>{{Pay.I18n.json.Certificazioni.Form.TipoCertificato}}</mat-label>
             <mat-select formControlName="tipoCertificato" required>
-              <mat-option *ngFor="let tc of Pay.I18n.json.Certificazioni.TipiCertificato" [value]="tc.Value">
+              <mat-option class="multiline-select-option" *ngFor="let tc of Pay.I18n.json.Certificazioni.TipiCertificato" [value]="tc.Value">
                 {{tc.Label}}
               </mat-option>
             </mat-select>
@@ -47,8 +47,8 @@
           <mat-form-field class="d-block mb-3" color="accent" *ngIf="!__hasBollo">
             <mat-label>{{Pay.I18n.json.Certificazioni.Form.Esenzione}}</mat-label>
             <mat-select formControlName="motivoEsenzione" [required]="!__hasBollo" (selectionChange)="__motivoChange($event)">
-              <mat-option *ngFor="let m of Pay.I18n.json.Certificazioni.Motivazioni" [value]="m.Value">
-                {{m.Label}}
+              <mat-option class="multiline-select-option" *ngFor="let m of Pay.I18n.json.Certificazioni.Motivazioni" [value]="m.Value">
+                <div>{{m.Label}}</div>
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -59,7 +59,7 @@
           <mat-form-field class="d-block mb-3" color="accent">
             <mat-label>{{Pay.I18n.json.Certificazioni.Form.Destinazione}}</mat-label>
             <mat-select formControlName="destinazione" required>
-              <mat-option *ngFor="let du of Pay.I18n.json.Certificazioni.Destinazioni" [value]="du.Value">
+              <mat-option class="multiline-select-option" *ngFor="let du of Pay.I18n.json.Certificazioni.Destinazioni" [value]="du.Value">
                 {{du.Label}}
               </mat-option>
             </mat-select>

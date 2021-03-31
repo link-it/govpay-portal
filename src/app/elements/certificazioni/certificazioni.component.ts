@@ -110,9 +110,7 @@ export class CertificazioniComponent implements OnInit, AfterContentChecked {
       this.pay.richiediCertificazione(body).subscribe(
         (result) => {
           this.pay.updateSpinner(false);
-          console.log('Response', result);
           if (result && result.body) {
-            console.log('Body', result.body);
             const data: any = result.body.pdf_certificato;
             const name: string = `${result.body.numero_protocollo_anpr}_${result.body.id_operazione_anpr}_${result.body.id_operazione_comune}.pdf`;
             this.pay.saveB64Data(data, name);
