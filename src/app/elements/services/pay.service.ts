@@ -700,7 +700,7 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   saveB64Data(data: string, fullName: string) {
-    const blob = new Blob([ data ]);
+    const blob: any = PayService.B64toBlob(data);
     saveAs(blob, fullName);
   }
 
@@ -1022,6 +1022,27 @@ export class PayService implements OnInit, OnDestroy {
       console.log('Formato json non corretto');
       return '';
     }
+  }
+
+  static B64toBlob(b64Data: any, contentType: string = '', sliceSize: number = 512): any {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, {type: contentType});
+
+    return blob;
   }
 
   /**
