@@ -87,9 +87,9 @@ export class CertificazioniComponent implements OnInit, AfterContentChecked {
     console.log(formValues);
     const body: any = {
       intestatario: {
-        codice_fiscale: 'FUPOFZ82W61Y509Z', // PayService.User.anagrafica.identificativo,
-        nome: 'Olo', // PayService.User.anagrafica.nome,
-        cognome: 'Sorrentino' // PayService.User.anagrafica.cognome
+        codice_fiscale: PayService.User.anagrafica.identificativo,
+        nome: PayService.User.anagrafica.nome,
+        cognome: PayService.User.anagrafica.cognome
       },
       dati_controllo: {
         importo_bollo: this.bollo_ctrl.value?16:0,
