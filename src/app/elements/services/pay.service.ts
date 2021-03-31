@@ -10,9 +10,9 @@ import { I18n } from './I18nSchema';
 import { Language } from '../classes/language';
 import { Creditore } from '../classes/creditore';
 import { Standard } from '../classes/standard';
+import { AvvisoTpl } from '../classes/avviso-tpl';
 
 import * as moment from 'moment';
-import { AvvisoTpl } from '../classes/avviso-tpl';
 
 declare let PayConfig, SwitchConfig;
 declare let saveAs;
@@ -697,6 +697,11 @@ export class PayService implements OnInit, OnDestroy {
       saveAs(zipData, PayService.I18n.json.Common.ArchivioPdf);
       this.updateSpinner(false);
     }.bind(this));
+  }
+
+  saveB64Data(data: string, fullName: string) {
+    const blob = new Blob([ data ]);
+    saveAs(blob, fullName);
   }
 
   /**

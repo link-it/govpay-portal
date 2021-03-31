@@ -85,19 +85,18 @@ export class CertificazioniComponent implements OnInit, AfterContentChecked {
 
   __submit(formValues: any) {
     console.log(formValues);
-    // TODO Dati User
     const body: any = {
       intestatario: {
-        codice_fiscale: PayService.User.anagrafica.identificativo,
-        nome: PayService.User.anagrafica.nome,
-        cognome: PayService.User.anagrafica.cognome
+        codice_fiscale: 'FUPOFZ82W61Y509Z', // PayService.User.anagrafica.identificativo,
+        nome: 'Olo', // PayService.User.anagrafica.nome,
+        cognome: 'Sorrentino' // PayService.User.anagrafica.cognome
       },
       dati_controllo: {
         importo_bollo: this.bollo_ctrl.value?16:0,
         importo_diritti : .01,
         pa_estera: formValues.destinazione
       },
-      lista_certificati: formValues.tipoCertificato
+      lista_certificati: [ formValues.tipoCertificato ]
     };
     if (formValues.motivoEsenzione) {
       body.dati_controllo.motivo_esenzione = formValues.motivoEsenzione;
@@ -110,7 +109,12 @@ export class CertificazioniComponent implements OnInit, AfterContentChecked {
       this.pay.updateSpinner(true);
       this.pay.richiediCertificazione(body).subscribe(
         (result) => {
-          console.log(result);
+          this.pay.updateSpinner(false);
+          if (result) {
+            const data: any = result.pdf_certificato;
+            const name: string = `${result.numero_protocollo_anpr}_${result.id_operazione_anpr}_${result.id_operazione_comune}.pdf`;
+            this.pay.saveB64Data(data, name);
+          }
         },
         (error) => {
           this.pay.updateSpinner(false);

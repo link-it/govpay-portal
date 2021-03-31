@@ -38,7 +38,7 @@
           </div>
           <mat-form-field class="d-block mb-3" color="accent">
             <mat-label>{{Pay.I18n.json.Certificazioni.Form.TipoCertificato}}</mat-label>
-            <mat-select formControlName="tipoCertificato" multiple required>
+            <mat-select formControlName="tipoCertificato" required>
               <mat-option *ngFor="let tc of Pay.I18n.json.Certificazioni.TipiCertificato" [value]="tc.Value">
                 {{tc.Label}}
               </mat-option>
