@@ -3,7 +3,7 @@
     <div class="col-12 col-md-2"></div>
     <div class="col-12 col-md-8">
       <pay-title-deco class="mb-5" art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Cart.Pagamenti.Titolo"></pay-title-deco>
-      <pay-item *ngFor="let p of Pay.ShoppingCart" [item]="p" [titolo]="p.titolo" [meta-titolo]="p.sottotitolo" [importo]="p.importo" [meta-importo]="p.metadati"
+      <pay-item *ngFor="let p of Pay.ShoppingCart" [item]="p" [titolo]="p.titolo" [meta-data]="p.metadati" [importo]="p.importo"
                 [use-action-menu]="true" [currency-format]="pay.currencyFormat.bind(pay)" [mobile-breakpoint]="Pay.MobileBreakPointNotice">
         <button actions mat-menu-item color="accent" (click)="_menuItemClick(p, 'edit')" *ngIf="p.editable">{{ Pay.I18n.json.Common.Modifica }}</button>
         <button actions mat-menu-item color="accent" (click)="_menuItemClick(p, 'delete')">{{ Pay.I18n.json.Common.Elimina }}</button>
@@ -22,7 +22,7 @@
               <p class="main-text">{{ Pay.I18n.json.Cart.Pagamenti.Totale }}</p>
             </div>
             <div class="col">
-              <p class="main-text">{{ pay.currencyFormat(_totale) }}</p>
+              <p class="main-text text-right">{{ pay.currencyFormat(_totale) }}</p>
             </div>
           </div>
           <div class="d-none d-md-flex pipe-filler"></div>

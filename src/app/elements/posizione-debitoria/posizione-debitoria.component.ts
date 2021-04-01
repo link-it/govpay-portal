@@ -71,10 +71,19 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         item = item.rawData;
       }
       let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.I18n.json.Common.SenzaScadenza;
-      let _meta = `${PayService.I18n.json.Common.Scadenza}: ${_ds}`;
+      const _meta: string[] = [];
+      _meta.push(`${PayService.I18n.json.Common.Scadenza}: ${_ds}`);
       if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA) {
         _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
-        _meta = `${PayService.I18n.json.Common.Pagamento}: ${_ds}`;
+        _meta.push(`${PayService.I18n.json.Common.Pagamento}: ${_ds}`);
+      }
+      let _iuvOrAvviso: string = `${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`;
+      if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA) {
+        _iuvOrAvviso = (item.numeroAvviso)?`${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`:`${PayService.I18n.json.Common.IUV}: ${item.iuvPagamento}`;
+      }
+      _meta.push(_iuvOrAvviso);
+      if(item.dominio && item.dominio.ragioneSociale) {
+        _meta.push(`${PayService.I18n.json.Common.Beneficiario}: ${item.dominio.ragioneSociale}`);
       }
       let _statoPendenza = PayService.STATI_PENDENZA[item.stato];
       if ((PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.NON_ESEGUITA) &&
@@ -87,7 +96,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         const inCart: boolean = (PayService.Cart.indexOf(_std.uid) !== -1);
         _std.localeNumberFormat = this.pay.getNumberFormatByLanguage();
         _std.titolo = (item.causale || item.descrizione);
-        _std.sottotitolo = _meta;
+        _std.sottotitolo = _meta.join(', ');
         _std.importo = parseFloat(item.importo);
         _std.stato = _statoPendenza;
         _std.rawData = item;
@@ -97,24 +106,10 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
       } else {
         _std.primaryIcon = (PayService.STATI_PENDENZA[item.stato] !== PayService.STATI_PENDENZA.SCADUTA)?'receipt':'';
       }
-      this._addCollapsedData(_std, item);
       return _std;
     });
 
     return _buffer;
-  }
-
-  _addCollapsedData(std: Standard, item: any) {
-    let _iuvOrAvviso: string = `${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`;
-    std.collapsingInfo = [];
-    if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA) {
-      _iuvOrAvviso = (item.numeroAvviso)?`${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`:`${PayService.I18n.json.Common.IUV}: ${item.iuvPagamento}`;
-    }
-    std.collapsingInfo.push(_iuvOrAvviso);
-    if(item.dominio && item.dominio.ragioneSociale) {
-      std.collapsingInfo.push(`${PayService.I18n.json.Common.Beneficiario}: ${item.dominio.ragioneSociale}`);
-    }
-    std.expandMode = (std.collapsingInfo.length !== 0);
   }
 
   /**

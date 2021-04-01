@@ -22,6 +22,7 @@ export class PayItemComponent implements AfterViewInit {
   @Input('meta-titolo') _metaTitolo: string = '';
   @Input('importo') _importo: number = 0;
   @Input('meta-importo') _metaImporto: string = '';
+  @Input('meta-data') _metaData: string = '';
 
   @Input('use-action-menu') _actionMenu: boolean = false;
 

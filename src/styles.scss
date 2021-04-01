@@ -572,20 +572,21 @@ pay-item {
   margin-bottom: .5rem;
 }
 
-pay-item .item .item-trigger:hover {
-  background-color: $hover-color;
+pay-item .secondary-column p.main-text,
+pay-item .secondary-column p.meta-text {
+  text-align: right;
 }
 
 pay-item .action-menu-icon,
 pay-item .primary-icon {
-  color: $text-color;
-  background-color: $background-nth-color;
+  color: $reverse-text-color;
+  background-color: $background-color;
 }
 
 pay-item .action-menu-icon:hover,
 pay-item .primary-icon:hover {
   color: $reverse-text-color;
-  background-color: $background-color;
+  background-color: $text-color;
 }
 
 pay-item .touch-device {

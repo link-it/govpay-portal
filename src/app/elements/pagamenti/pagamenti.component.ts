@@ -116,6 +116,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
           this.pay.updateSpinner(false);
 
           const _response = result.body;
+          const _meta: string[] = [];
           let _expired: boolean = false;
           let _paid: boolean = false;
           const _stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato']];
@@ -124,7 +125,12 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
           const _dataPagamento = _response['dataPagamento']?moment(_response['dataPagamento']).format(this.pay.getDateFormatByLanguage()):'';
           const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
           const _avviso: string = _response['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_response['numeroAvviso']}`:'';
-
+          if (_terminePagamento) {
+            _meta.push(_terminePagamento);
+          }
+          if (_avviso) {
+            _meta.push(_avviso);
+          }
           switch(_stato) {
             case (PayService.STATI_VERIFICA_PENDENZA['SCADUTA']):
              _expired = true;
@@ -148,8 +154,8 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
                   localeNumberFormat: this.pay.getNumberFormatByLanguage(),
                   uid: _response['numeroAvviso'],
                   titolo: _response['descrizione'],
-                  sottotitolo: _avviso,
-                  metadati: _terminePagamento,
+                  sottotitolo: '',
+                  metadati: _meta.join(', '),
                   importo: _response['importo'],
                   stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato']],
                   editable: false,
