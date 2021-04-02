@@ -1,13 +1,14 @@
-import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit, Output } from '@angular/core';
+import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit, Output, ViewChild } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
 import { Standard } from '../classes/standard';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Subscription } from 'rxjs/index';
+import { PayCardComponent } from '../pay-card/pay-card.component';
 
 import * as moment from 'moment';
-import { BehaviorSubject, Subscription } from 'rxjs/index';
 
 declare let Masonry: any;
 declare let $: any;
@@ -18,7 +19,7 @@ declare let $: any;
   styleUrls: ['./pagamenti.component.css']
 })
 export class PagamentiComponent implements OnInit, AfterContentChecked, AfterViewInit, OnDestroy {
-
+  @ViewChild('pc') _paycard: PayCardComponent;
   Pay = PayService;
 
   _validateSub: Subscription;
@@ -163,6 +164,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
                 })
               );
               PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+              this.__resetPayCard();
               this.pay.router.navigateByUrl('/carrello');
             } else {
               this._notifyMismatch(message);
@@ -284,6 +286,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
   }
 
   _onQuadroClick(quadro: any) {
+    this.__resetPayCard();
     this.pay.router.navigateByUrl('/dettaglio-servizio', { state: quadro });
   }
 
@@ -298,6 +301,12 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
           gutter: 32
         });
       });
+    }
+  }
+
+  __resetPayCard() {
+    if (this._paycard) {
+      this._paycard.reset();
     }
   }
 }

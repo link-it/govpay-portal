@@ -52,8 +52,7 @@ export class PayCardComponent {
   _clearOrScan(event, notice: any) {
     if (notice.value) {
       notice.value = '';
-      this._avviso.setErrors(null);
-      this._fg.reset();
+      this.reset();
     } else {
       this._onScan(event);
     }
@@ -111,6 +110,13 @@ export class PayCardComponent {
       setTimeout(() => {
         this.scanner.startScan(this._desiredDevice);
       });
+    }
+  }
+
+  reset() {
+    if (this._fg && this._avviso) {
+      this._fg.reset();
+      this._avviso.setErrors(null);
     }
   }
 }

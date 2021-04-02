@@ -13,7 +13,7 @@ import { AppComponent } from './app.component';
 
 const routes: Routes = [
   { path: '', component: AppComponent },
-  { path: 'pagamenti', component: PagamentiComponent, canActivate: [ AuthGuardService ] },
+  { path: 'pagamenti', component: PagamentiComponent, canActivate: [ AuthGuardService ], data: { shouldReuse: true } },
   { path: 'dettaglio-servizio', component: DettaglioServizioComponent, canActivate: [ AuthGuardService ] },
   { path: 'carrello', component: CartComponent, canActivate: [ AuthGuardService ] },
   { path: 'ricevuta', component: RicevutaPagamentoComponent, canActivate: [ AuthGuardService ] },
