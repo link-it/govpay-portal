@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'pay-item',
   templateUrl: './pay-item.component.html',
   styleUrls: ['./pay-item.component.scss']
 })
-export class PayItemComponent implements AfterViewInit {
+export class PayItemComponent implements AfterViewInit, AfterContentChecked {
   @HostListener('window:resize') onResize() {
     clearTimeout(this.__timer);
     this.__timer = setTimeout(() => {
@@ -25,6 +25,7 @@ export class PayItemComponent implements AfterViewInit {
   @Input('meta-data') _metaData: string = '';
 
   @Input('use-action-menu') _actionMenu: boolean = false;
+  @Input('disable-gesture') _disableGesture: boolean = false;
 
   @Input('expanding-mode') _expandMode: boolean = false;
 
@@ -41,6 +42,7 @@ export class PayItemComponent implements AfterViewInit {
 
   __timer: number;
   _touchDevice: boolean = false;
+  __touchDevice: boolean = false;
   _menuOpened: boolean = false;
   _touch: any;
 
@@ -56,9 +58,13 @@ export class PayItemComponent implements AfterViewInit {
     }
   }
 
+  ngAfterContentChecked() {
+    this.__touchDevice = this._touchDevice;
+  }
+
   __setupTouchMode() {
     if (this._touch) {
-      this._touchDevice = this._isTouchDevice() || (window.innerWidth < this._breakpoint);
+      this._touchDevice = (this._isTouchDevice() || (window.innerWidth < this._breakpoint)) && !this._disableGesture;
       if (this._touchDevice && window['Hammer']) {
         this._touch.on('swipeleft', this.__swiping.bind(this));
       } else {

@@ -20,7 +20,7 @@
         <mat-icon>{{ _expanded?'expand_less':'expand_more' }}</mat-icon>
       </div>
     </div>
-    <div class="d-none d-md-flex align-items-center justify-content-center primary-icon" *ngIf="!_actionMenu && _primaryIcon && !_touchDevice">
+    <div class="d-none d-md-flex align-items-center justify-content-center primary-icon" *ngIf="!_actionMenu && _primaryIcon && !__touchDevice">
       <button mat-icon-button (click)="_onIconClick($event, '_primaryIcon')">
         <mat-icon>{{ _primaryIcon }}</mat-icon>
       </button>
@@ -34,7 +34,7 @@
   </div>
   <div class="trigger" *ngIf="_slideIn" (click)="_resetTouch($event)"></div>
 </div>
-<div class="d-flex d-md-none align-items-center justify-content-end touch-device" *ngIf="_touchDevice">
+<div class="d-flex d-md-none align-items-center justify-content-end touch-device" *ngIf="__touchDevice">
   <button mat-icon-button (click)="_onIconClick($event, '_primaryIcon')" *ngIf="!_actionMenu && _primaryIcon">
     <mat-icon>{{ _primaryIcon }}</mat-icon>
   </button>
