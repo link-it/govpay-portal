@@ -91,7 +91,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
    */
   updateStatus(response: any, sessione: string) {
     try {
-      switch(PayService.STATI_PAGAMENTO[response.body.stato]) {
+      switch(PayService.STATI_PAGAMENTO[response.body.stato.toUpperCase()]) {
         case PayService.STATI_PAGAMENTO['ESEGUITO']:
           this._status = this.STATUS_ESEGUITO;
           this.pay.updateSpinner(false);
@@ -213,8 +213,8 @@ export class EsitoComponent implements OnInit, OnDestroy {
       // const _dataValidita: string = p['dataValidita']?moment(p['dataValidita']).format(this.pay.getDateFormatByLanguage()):'';
       // const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
       const _iuv: string = _statoAvviso[p.numeroAvviso].iuv?`${PayService.I18n.json.Common.IUV}: ${_statoAvviso[p.numeroAvviso].iuv}`:'';
-      const _eseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato] === PayService.STATI_PAGAMENTO.ESEGUITO);
-      const _nonEseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato] === PayService.STATI_PAGAMENTO.NON_ESEGUITO);
+      const _eseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato.toUpperCase()] === PayService.STATI_PAGAMENTO.ESEGUITO);
+      const _nonEseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato.toUpperCase()] === PayService.STATI_PAGAMENTO.NON_ESEGUITO);
       const _primaryIcon: string = _eseguito?'receipt':(_nonEseguito?'shopping_cart':'');
       const _primaryIconOff: string = _nonEseguito?'remove_shopping_cart':'';
 
@@ -225,7 +225,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
         sottotitolo: _iuv,
         metadati: PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(_statoAvviso[p.numeroAvviso].stato)],
         importo: p.importo,
-        stato: PayService.STATI_VERIFICA_PENDENZA[p.stato],
+        stato: PayService.STATI_VERIFICA_PENDENZA[p.stato.toUpperCase()],
         editable: _editable,
         primaryIcon: _primaryIcon,
         primaryIconOff: _primaryIconOff,
@@ -238,7 +238,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
     const _map: any = {};
     _rpps.forEach((rpp: any) => {
       _map[rpp['pendenza']['numeroAvviso']] = { stato: PayService.STATI_PAGAMENTO.IN_CORSO.toUpperCase(), iuv: rpp['rpt']['datiVersamento']['identificativoUnivocoVersamento'] };
-      if (rpp.stato === 'RT_ACCETTATA_PA') {
+      if (rpp.stato.toUpperCase() === 'RT_ACCETTATA_PA') {
         const s: string = (rpp.rt)?PayService.STATUS_CODE[rpp['rt']['datiPagamento']['codiceEsitoPagamento']]:'';
         _map[rpp['pendenza']['numeroAvviso']].stato = (s || PayService.STATI_PAGAMENTO.IN_CORSO.toUpperCase());
       }

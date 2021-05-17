@@ -120,7 +120,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
           const _meta: string[] = [];
           let _expired: boolean = false;
           let _paid: boolean = false;
-          const _stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato']];
+          const _stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato'].toUpperCase()];
           const _dataScadenza = _response['dataScadenza']?moment(_response['dataScadenza']).format(this.pay.getDateFormatByLanguage()):'';
           const _dataValidita = _response['dataValidita']?moment(_response['dataValidita']).format(this.pay.getDateFormatByLanguage()):'';
           const _dataPagamento = _response['dataPagamento']?moment(_response['dataPagamento']).format(this.pay.getDateFormatByLanguage()):'';
@@ -158,7 +158,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
                   sottotitolo: '',
                   metadati: _meta.join(', '),
                   importo: _response['importo'],
-                  stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato']],
+                  stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato'].toUpperCase()],
                   editable: false,
                   rawData: _response
                 })
