@@ -982,8 +982,15 @@ export class PayService implements OnInit, OnDestroy {
         const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
         const _avviso: string = _ird['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_ird['numeroAvviso']}`:'';
 
-        item.sottotitolo = !_editable?_avviso:'';
-        item.metadati = _terminePagamento;
+        item.sottotitolo = '';
+        const _meta: string[] = [];
+        if (!_editable && _avviso) {
+          _meta.push(_avviso);
+        }
+        if (_terminePagamento) {
+          _meta.push(_terminePagamento);
+        }
+        item.metadati = _meta.join(', ');
       });
     }
   }

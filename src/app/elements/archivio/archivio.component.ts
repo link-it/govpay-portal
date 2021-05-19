@@ -81,8 +81,8 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       const _drp = (item.dataRichiestaPagamento)?moment(item.dataRichiestaPagamento).format(this.pay.getDateFormatByLanguage(true)):PayService.I18n.json.Common.NotAvailable;
       let _showReceipt = true;
-      if(PayService.STATI_PAGAMENTO[item.stato] === PayService.STATI_PAGAMENTO.FALLITO ||
-         PayService.STATI_PAGAMENTO[item.stato] === PayService.STATI_PAGAMENTO.IN_CORSO) {
+      if(PayService.STATI_PAGAMENTO[item.stato.toUpperCase()] === PayService.STATI_PAGAMENTO.FALLITO ||
+         PayService.STATI_PAGAMENTO[item.stato.toUpperCase()] === PayService.STATI_PAGAMENTO.IN_CORSO) {
         _showReceipt = false;
       }
       return new Standard({
@@ -90,11 +90,11 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
         titolo: item.nome,
         sottotitolo: `${PayService.I18n.json.Common.Pagamento}: ${_drp}`,
         importo: item.importo,
-        stato: PayService.STATI_PAGAMENTO[item.stato],
+        stato: PayService.STATI_PAGAMENTO[item.stato.toUpperCase()],
         primaryIcon: (_showReceipt)?'receipt':'',
         rawData: item
       });
     });
-    return _buffer;
+    return _buffer.filter(item => PayService.STATI_PAGAMENTO[item.stato.toUpperCase()] !== PayService.STATI_PAGAMENTO.FALLITO);
   }
 }

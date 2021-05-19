@@ -1,13 +1,14 @@
-import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit, Output } from '@angular/core';
+import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit, Output, ViewChild } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
 import { Standard } from '../classes/standard';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Subscription } from 'rxjs/index';
+import { PayCardComponent } from '../pay-card/pay-card.component';
 
 import * as moment from 'moment';
-import { BehaviorSubject, Subscription } from 'rxjs/index';
 
 declare let Masonry: any;
 declare let $: any;
@@ -18,7 +19,7 @@ declare let $: any;
   styleUrls: ['./pagamenti.component.css']
 })
 export class PagamentiComponent implements OnInit, AfterContentChecked, AfterViewInit, OnDestroy {
-
+  @ViewChild('pc') _paycard: PayCardComponent;
   Pay = PayService;
 
   _validateSub: Subscription;
@@ -116,15 +117,21 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
           this.pay.updateSpinner(false);
 
           const _response = result.body;
+          const _meta: string[] = [];
           let _expired: boolean = false;
           let _paid: boolean = false;
-          const _stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato']];
+          const _stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato'].toUpperCase()];
           const _dataScadenza = _response['dataScadenza']?moment(_response['dataScadenza']).format(this.pay.getDateFormatByLanguage()):'';
           const _dataValidita = _response['dataValidita']?moment(_response['dataValidita']).format(this.pay.getDateFormatByLanguage()):'';
           const _dataPagamento = _response['dataPagamento']?moment(_response['dataPagamento']).format(this.pay.getDateFormatByLanguage()):'';
           const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
           const _avviso: string = _response['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_response['numeroAvviso']}`:'';
-
+          if (_terminePagamento) {
+            _meta.push(_terminePagamento);
+          }
+          if (_avviso) {
+            _meta.push(_avviso);
+          }
           switch(_stato) {
             case (PayService.STATI_VERIFICA_PENDENZA['SCADUTA']):
              _expired = true;
@@ -148,15 +155,16 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
                   localeNumberFormat: this.pay.getNumberFormatByLanguage(),
                   uid: _response['numeroAvviso'],
                   titolo: _response['descrizione'],
-                  sottotitolo: _avviso,
-                  metadati: _terminePagamento,
+                  sottotitolo: '',
+                  metadati: _meta.join(', '),
                   importo: _response['importo'],
-                  stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato']],
+                  stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato'].toUpperCase()],
                   editable: false,
                   rawData: _response
                 })
               );
               PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+              this.__resetPayCard();
               this.pay.router.navigateByUrl('/carrello');
             } else {
               this._notifyMismatch(message);
@@ -278,6 +286,7 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
   }
 
   _onQuadroClick(quadro: any) {
+    this.__resetPayCard();
     this.pay.router.navigateByUrl('/dettaglio-servizio', { state: quadro });
   }
 
@@ -292,6 +301,12 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
           gutter: 32
         });
       });
+    }
+  }
+
+  __resetPayCard() {
+    if (this._paycard) {
+      this._paycard.reset();
     }
   }
 }

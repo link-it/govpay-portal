@@ -143,8 +143,10 @@ export class AppComponent implements OnInit, AfterContentChecked {
       this.translate.addLangs(_codeLangs);
       this._language = _currentLanguage.alpha3Code.toUpperCase();
       PayService.ALPHA_3_CODE = _currentLanguage.alpha3Code;
+      if (this.translate.currentLang !== _currentLanguage.alpha2Code) {
+        this._doTranslate();
+      }
       this.translate.use(_currentLanguage.alpha2Code);
-      this._doTranslate();
     } catch (e) {
       console.log('Verificare configurazione lingue');
     }

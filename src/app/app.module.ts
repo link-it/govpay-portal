@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouteReuseStrategy } from '@angular/router';
 import { JsonSchemaFormComponent, MaterialDesignFrameworkModule } from 'angular7-json-schema-form';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -17,7 +18,6 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 import { PayService } from './elements/services/pay.service';
 import { AuthGuardService } from './elements/services/auth-gard.service';
-
 
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { TranslateLoaderExt } from './elements/classes/translate-loader-ext';
@@ -44,6 +44,7 @@ import { ArchivioComponent } from './elements/archivio/archivio.component';
 import { YesnoDialogComponent } from './elements/yesno-dialog/yesno-dialog.component';
 import { EsitoComponent } from './elements/esito/esito.component';
 import { ChoiceDialogComponent } from './elements/choice-dialog/choice-dialog.component';
+import { ReuseStrategy } from './elements/services/reuse-strategy';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateLoaderExt(http, './assets/i18n/', '.json');
@@ -105,7 +106,9 @@ export function createTranslateLoader(http: HttpClient) {
     MaterialDesignFrameworkModule,
     ZXingScannerModule
   ],
-  providers: [ PayService, AuthGuardService ],
+  providers: [ PayService, AuthGuardService,
+    { provide: RouteReuseStrategy, useClass: ReuseStrategy },
+  ],
   entryComponents: [ YesnoDialogComponent, JsonSchemaFormComponent ],
   bootstrap: [ AppComponent ]
 })

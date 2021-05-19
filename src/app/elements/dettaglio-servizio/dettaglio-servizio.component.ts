@@ -131,7 +131,7 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
           sottotitolo: '',
           metadati: (_terminePagamento || PayService.I18n.json.Common.SenzaScadenza),
           importo: _response['importo'],
-          stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato']],
+          stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato'].toUpperCase()],
           editable: true,
           rawData: Object.assign({}, PayService.ExtraState)
         })
@@ -146,7 +146,7 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
           p.sottotitolo = '';
           p.metadati = (_terminePagamento || PayService.I18n.json.Common.SenzaScadenza);
           p.importo = _response['importo'];
-          p.stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato']];
+          p.stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato'].toUpperCase()];
           p.editable = true;
           p.rawData = Object.assign({}, PayService.ExtraState);
         }

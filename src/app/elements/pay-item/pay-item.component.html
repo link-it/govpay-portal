@@ -1,19 +1,26 @@
 <div #item class="item" (click)="_toggleExpand($event)">
   <div class="row">
-    <div class="d-flex col item-trigger">
-      <div class="col-7">
-        <p class="main-text">{{ _titolo }}</p>
-        <p class="meta-text" *ngIf="_metaTitolo">{{ _metaTitolo }}</p>
+    <div class="col item-trigger">
+      <div class="row">
+        <div class="col-8 main-column">
+          <p class="main-text">{{ _titolo }}</p>
+          <p class="meta-text" *ngIf="_metaTitolo">{{ _metaTitolo }}</p>
+        </div>
+        <div class="col secondary-column">
+          <p class="main-text">{{ _currencyFormat(_importo) }}</p>
+          <p class="meta-text" *ngIf="_metaImporto">{{ _metaImporto }}</p>
+        </div>
       </div>
-      <div class="col">
-        <p class="main-text">{{ _currencyFormat(_importo) }}</p>
-        <p class="meta-text" *ngIf="_metaImporto">{{ _metaImporto }}</p>
+      <div class="row" *ngIf="_metaData">
+        <div class="col-12 meta-column">
+          {{ _metaData }}
+        </div>
       </div>
       <div class="d-flex align-items-center justify-content-center expander-icon" *ngIf="_expandMode">
         <mat-icon>{{ _expanded?'expand_less':'expand_more' }}</mat-icon>
       </div>
     </div>
-    <div class="d-none d-md-flex align-items-center justify-content-center primary-icon" *ngIf="!_actionMenu && _primaryIcon && !_touchDevice">
+    <div class="d-none d-md-flex align-items-center justify-content-center primary-icon" *ngIf="!_actionMenu && _primaryIcon && !__touchDevice">
       <button mat-icon-button (click)="_onIconClick($event, '_primaryIcon')">
         <mat-icon>{{ _primaryIcon }}</mat-icon>
       </button>
@@ -27,7 +34,7 @@
   </div>
   <div class="trigger" *ngIf="_slideIn" (click)="_resetTouch($event)"></div>
 </div>
-<div class="d-flex d-md-none align-items-center justify-content-end touch-device" *ngIf="_touchDevice">
+<div class="d-flex d-md-none align-items-center justify-content-end touch-device" *ngIf="__touchDevice">
   <button mat-icon-button (click)="_onIconClick($event, '_primaryIcon')" *ngIf="!_actionMenu && _primaryIcon">
     <mat-icon>{{ _primaryIcon }}</mat-icon>
   </button>
