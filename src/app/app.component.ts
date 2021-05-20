@@ -50,7 +50,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
         this._updateLayout();
       }
     });
-    let _toPaymentsSection: boolean = true;
+    let _toPublicAccessSection: boolean = true;
     if(location.search) {
       const _params: any = {};
       location.search.substr(1).split('&').forEach((p) => {
@@ -59,12 +59,12 @@ export class AppComponent implements OnInit, AfterContentChecked {
       });
       if(_params) {
         if ((_params['idSession'] && _params['idDominio']) || _params['idDominio']) {
-          _toPaymentsSection = false;
+          _toPublicAccessSection = false;
           PayService.SetCreditoreAttivoAndDomainTarget(_params['idDominio']);
           if (PayService.CreditoreAttivo) {
-            _toPaymentsSection = !_params['idSession'];
+            _toPublicAccessSection = !_params['idSession'];
             if (!_params['idSession'] && _params['numeroAvviso']) {
-              _toPaymentsSection = true;
+              _toPublicAccessSection = true;
               PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
                  Numero: _params['numeroAvviso'],
               Creditore: _params['idDominio'],
@@ -89,8 +89,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
       PayService.MapHeading(this.router, this.translate);
     });
     this.__checkIAMLogin();
-    if (PayService.CreditoreAttivo && _toPaymentsSection) {
-      this.__toPayments();
+    if (PayService.CreditoreAttivo && _toPublicAccessSection) {
+      this.__toPublicAccess();
     }
   }
 
@@ -227,8 +227,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   __exit(): any {
     this.pay.clearUser();
     this.Pay.ResetCart(this.router, this.translate);
-    PayService.CreditoreAttivo = null;
-    this.pay.router.navigateByUrl('/');
+    this.__toPublicExit();
   }
 
   __onActiveChange(creditore: any) {
@@ -243,11 +242,28 @@ export class AppComponent implements OnInit, AfterContentChecked {
     PayService.SetCreditoreAttivoAndDomainTarget(creditore.value || '');
     this.__checkIAMLogin();
     this.Pay.ResetCart(this.router, this.translate);
-    this.__toPayments();
+    this.__toPublicAccess();
   }
 
   __toPayments() {
     this.pay.router.navigateByUrl('/pagamenti');
+  }
+
+  __toPublicAccess() {
+    if (PayService.RouteConfig['PUBLIC_ACCESS'] && PayService.RouteConfigExists(PayService.RouteConfig['PUBLIC_ACCESS'], this.router)) {
+      this.pay.router.navigateByUrl('/'+PayService.RouteConfig['PUBLIC_ACCESS']);
+    } else {
+      this.__toPayments();
+    }
+  }
+
+  __toPublicExit() {
+    if (PayService.RouteConfig['PUBLIC_EXIT'] && PayService.RouteConfigExists(PayService.RouteConfig['PUBLIC_EXIT'], this.router)) {
+      this.pay.router.navigateByUrl('/'+PayService.RouteConfig['PUBLIC_EXIT']);
+    } else {
+      PayService.CreditoreAttivo = null;
+      this.pay.router.navigateByUrl('/');
+    }
   }
 
   __checkIAMLogin() {
@@ -268,10 +284,14 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
 @Pipe({name: 'AuthGuard'})
 export class AuthGuardPipe implements PipeTransform {
-  transform(values: any[]): any[] {
+  transform(values: any[], user: boolean): any[] {
     return values.filter((item: any) => {
       if (item.Link === '/archivio' || item.Link === '/riepilogo') {
-        return !!((PayService.SPID['ACCESS'] || PayService.IAM['ACCESS']) && PayService.I18n.json.Account);
+        if (user) {
+          return !!((PayService.SPID['ACCESS'] || PayService.IAM['ACCESS']) && PayService.I18n.json.Account);
+        } else {
+          return false;
+        }
       }
 
       return true;

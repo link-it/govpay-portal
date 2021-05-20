@@ -42,6 +42,7 @@ export class PayService implements OnInit, OnDestroy {
   public static UUID_CHECK: string = '';
   public static ALPHA_3_CODE: string = '';
   public static Gestore: any;
+  public static RouteConfig: any;
   public static QueryProfile: string = '';
   public static LogoPagoPA: string = 'assets/pagopa.svg';
   public static ShoppingCart: Standard[] = [];
@@ -179,6 +180,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.PAY_RESPONSE_URL = PayConfig['PAY_RESPONSE_URL'];
     PayService.UUID_CHECK = PayConfig['UUID_CHECK'];
     PayService.Gestore = PayConfig['GESTORE'];
+    PayService.RouteConfig = PayConfig['ROUTING'];
   }
 
   // static StatiPendenza(): any[] {
@@ -996,6 +998,17 @@ export class PayService implements OnInit, OnDestroy {
         PayService.SpidDomainTarget = (cr.value)?`${PayService.SPID['SERVICE_TARGET']}?idDominio=${cr.value}`:PayService.SPID['SERVICE_TARGET'];
       }
     });
+  }
+
+  static RouteConfigExists(route: string, router: Router): boolean {
+    let inCfg: boolean = false;
+    if (router && route) {
+      router.config.some((cfg: any) => {
+        inCfg = (route === cfg.path);
+        return inCfg;
+      });
+    }
+    return inCfg;
   }
 
 }

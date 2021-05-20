@@ -93,6 +93,10 @@
     PAY_RESPONSE_URL: 'https://localhost:4200/esito-pagamento',
     TIME_OUT_POLL: 5, //Secs.
     POLLING_INTERVAL: 3000, //Millisecs.
+    ROUTING: {
+      PUBLIC_ACCESS: '',
+      PUBLIC_EXIT: 'pagamenti'
+    },
     DOMINI: _elencoDomini(),
     LINGUE: _traduzioni(),
     GESTORE: _assetsGestore()
