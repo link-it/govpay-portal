@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { timeout, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { DateAdapter, MatPaginatorIntl, MatSnackBar, MatSnackBarConfig } from '@angular/material';
@@ -51,13 +51,16 @@ export class PayService implements OnInit, OnDestroy {
   public static CreditoreAttivo: Creditore;
   public static PosizioneDebitoria: any[] = [];
   public static ArchivioPagamenti: any[] = [];
-  public static Header: any = { Titolo: '', IsModal: false };
+  public static Header: any = { Titolo: '', LeftIcon: 'menu' };
   public static I18n: I18n = new I18n();
   public static MenuItems: any[] = [];
   public static ExtraState: any;
+  public static AssessoratoDetail: boolean = false;
   public static MobileBreakPointNotice: number = 768;
-  public static EDIT_MODE: boolean = false;
+  public static EditMode: boolean = false;
 
+  public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
+  public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
 
   // URL Services
   public static URL_SERVIZI: string = '/domini/{idDominio}/tipiPendenza';
@@ -849,9 +852,9 @@ export class PayService implements OnInit, OnDestroy {
     PayService.ALPHA_3_CODE = PayService.LINGUE.filter((l: Language) => (l.alpha2Code === _translate.currentLang))[0].alpha3Code;
     _translate.get('Language').subscribe((_language: any) => {
       PayService.I18n.json = Object.assign({}, _language);
-      if (!PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang]) {
-        PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang] = _language.Cart.Badge.substring(0);
-      }
+      // if (!PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang]) {
+      //   PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang] = _language.Cart.Badge.substring(0);
+      // }
       if (!PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang]) {
         PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang] = _language.Posizione.Debiti.Titolo.substring(0);
       }
@@ -859,7 +862,7 @@ export class PayService implements OnInit, OnDestroy {
         PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang] = _language.Archivio.Pagamenti.Titolo.substring(0);
       }
       PayService.I18n.json.Account = PayService.User?PayService.User.anagrafica['anagrafica']:'';
-      PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang], PayService.ShoppingCart.length);
+      // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang], PayService.ShoppingCart.length);
       PayService.I18n.json.Posizione.Debiti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang], PayService.PosizioneDebitoria.length);
       PayService.I18n.json.Archivio.Pagamenti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang], PayService.ArchivioPagamenti.length);
 
@@ -871,10 +874,21 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   static MapHeading(router: Router, translate: TranslateService) {
+    let tabs: boolean = false;
     switch(router.url.split('?')[0]) {
-      case '/pagamenti':
+      case '/pagamento-servizio':
+        if (PayService.AssessoratoDetail) {
+          PayService.Header.LeftIcon = 'arrow_back';
+          PayService.Header.Titolo = PayService.I18n.jsonSchema.Assessorato.TitoloSchema[PayService.ALPHA_3_CODE];
+        } else {
+          tabs = true;
+          PayService.Header.Titolo = PayService.I18n.json.Pagamenti.Titolo;
+          PayService.Header.LeftIcon = 'menu';
+        }
+        break;
+      case '/bollettino':
         PayService.Header.Titolo = PayService.I18n.json.Pagamenti.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       case '/dettaglio-servizio':
         if (PayService.ExtraState) {
@@ -887,31 +901,31 @@ export class PayService implements OnInit, OnDestroy {
         } else {
           PayService.Header.Titolo = PayService.I18n.json.Header.Titolo;
         }
-        PayService.Header.IsModal = true;
+        PayService.Header.LeftIcon = 'close';
         break;
       case '/carrello':
         PayService.Header.Titolo = PayService.I18n.json.Cart.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       case '/ricevuta':
         PayService.Header.Titolo = PayService.I18n.json.Ricevuta.Titolo;
-        PayService.Header.IsModal = true;
+        PayService.Header.LeftIcon = 'close';
         break;
       case '/riepilogo':
         PayService.Header.Titolo = PayService.I18n.json.Posizione.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       case '/archivio':
         PayService.Header.Titolo = PayService.I18n.json.Archivio.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       case '/esito-pagamento':
         PayService.Header.Titolo = PayService.I18n.json.Esito.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       default:
         PayService.Header.Titolo = PayService.I18n.json.Header.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
     }
     if (PayService.ShoppingCart.length !== 0) {
       PayService.ShoppingCart.forEach((item: Standard) => {
@@ -933,6 +947,36 @@ export class PayService implements OnInit, OnDestroy {
         item.metadati = _meta.join(', ');
       });
     }
+    PayService.TabsBehavior.next({ update: true, tabs: tabs });
+  }
+
+  static MapAssessoratoTitle(varianti: any, index: number) {
+    PayService.LINGUE.forEach((lingua: any) => {
+      const _el: any = varianti[lingua.alpha3Code].groups[index];
+      PayService.I18n.jsonSchema.Assessorato.TitoloSchema[lingua.alpha3Code] = _el.group;
+    });
+  }
+
+  static MapResultsTitle(N: number, M: number): string {
+    const risultati: any = PayService.I18n.json.Pagamenti.Servizi.Filtro.Risultati;
+    let text = PayService.I18n.json.Pagamenti.Servizi.Filtro.NessunRisultato;
+    if (N === 1) {
+      if (M === 1) {
+        text = risultati.SS.toString();
+      }
+      if (M > 1) {
+        text = risultati.SP.split('{{value}}').join(M.toString());
+      }
+    }
+    if (N > 1) {
+      if (M === 1) {
+        text = risultati.PS.split('{{value}}').join(N.toString());
+      }
+      if (M > 1) {
+        text = risultati.PP.split('{{valueN}}').join(N.toString()).split('{{valueM}}').join(M.toString());
+      }
+    }
+    return text;
   }
 
   /**
@@ -987,7 +1031,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.ShoppingCart = [];
     PayService.Cart = [];
     PayService.MapHeading(router, translate);
-    PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[translate.currentLang], 0);
+    // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[translate.currentLang], 0);
   }
 
   static SetCreditoreAttivoAndDomainTarget(dominio: string) {
@@ -1009,6 +1053,14 @@ export class PayService implements OnInit, OnDestroy {
       });
     }
     return inCfg;
+  }
+
+  public static ResetBehaviors(behaviors: BehaviorSubject<any>[]) {
+    setTimeout(() => {
+      behaviors.forEach((b: BehaviorSubject<any>) => {
+        b.next(null);
+      });
+    });
   }
 
 }

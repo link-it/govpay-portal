@@ -1,0 +1,33 @@
+<div class="container py-5" *ngIf="!Pay.AssessoratoDetail">
+  <div class="row mb-5">
+    <div class="col-12">
+      <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="Pay.MapResultsTitle(_servizi?_servizi[Pay.ALPHA_3_CODE].N:0, _servizi?_servizi[Pay.ALPHA_3_CODE].M:0)"></pay-title-deco>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-12">
+      <mat-form-field class="w-100">
+        <input #filtro matInput [placeholder]="Pay.I18n.json.Pagamenti.Servizi.Filtro.Placeholder" [(value)]="__filterText" (keydown)="_keyDown($event)" autocomplete="off">
+        <mat-icon [ngClass]="filtro.value?'action':''" matSuffix (click)="__matFilterIcon(filtro)">{{ filtro.value?'close':'search' }}</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row" *ngIf="_servizi">
+    <ng-template [ngIf]="!filtro.value.trim()">
+      <div class="col-6 col-md-3" *ngFor="let qs of _servizi[Pay.ALPHA_3_CODE].groups; let i = index">
+        <pay-quadro [quadro-class]="'quadro'" [logo-class]="'cover logo'" [titolo]="qs.group" [source]="qs"
+                    [image-src]="qs.backgroundSrc" (click)="_onQuadroClick(qs, i)"></pay-quadro>
+      </div>
+    </ng-template>
+    <ng-template [ngIf]="filtro.value.trim()">
+      <div class="col-12">
+        <!--<pay-simple-item group-content *ngFor="let fs of _servizi[Pay.ALPHA_3_CODE].flat" [primaryText]="fs.category" (click)="_onGroupItemClick(fs)"></pay-simple-item>-->
+        <pay-group *ngFor="let gs of _servizi[Pay.ALPHA_3_CODE].groups|serviceGroupFilter:filtro.value:_servizi[Pay.ALPHA_3_CODE].dictionary; let i = index"
+                   [groupIcon]="'group_work'" [title]="gs.group" [id]="i" [open]="true">
+          <pay-simple-item group-content *ngFor="let se of gs.items" [primaryText]="se.name" [metadata]="se.category" (click)="_onQuadroClick(gs, i, filtro.value)"></pay-simple-item>
+        </pay-group>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<pay-servizi-assessorato *ngIf="Pay.AssessoratoDetail" [assessorato]="_assessorato" (on-close)="__closeAssessorato()"></pay-servizi-assessorato>

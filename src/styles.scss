@@ -11,60 +11,128 @@ $custom-typography: mat-typography-config(
   $body-1: mat-typography-level(16px, 100, 400),
   $input: mat-typography-level(inherit, 1.6, 400)
 );
-//$mat-light-theme-foreground: (
-//  text: rgba(33, 33, 33, 1),
-//  slider-off: rgba(33, 33, 33, .2)
-//);
-//$dark-primary-text: map-get($mat-light-theme-foreground, text);
 @include mat-core($custom-typography);
 
-$link-palette: (
-  50: #e0edf9,
-  100: #b3d1f0,
-  200: #80b3e6,
-  300: #4d94db,
-  400: #267dd4,
-  500: #362D81,
-  600: #005ec7,
-  700: #0053c0,
-  800: #0049b9,
-  900: #0038ad,
-  A100: #d7e1ff,
-  A200: #a4baff,
-  A400: #7194ff,
-  A700: #5881ff,
+$link-accent: (
+  50: #e5ecff,
+  100: #bfd0ff,
+  200: #94b1ff,
+  300: #6991ff,
+  400: #497aff,
+  500: #2962ff,
+  600: #245aff,
+  700: #1f50ff,
+  800: #1946ff,
+  900: #0f34ff,
+  A100: #ffffff,
+  A200: #f7f8ff,
+  A400: #c4ccff,
+  A700: #abb5ff,
   contrast: (
-    50: #000000,
-    100: #000000,
-    200: #000000,
-    300: #000000,
-    400: #ffffff,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-    A100: #000000,
-    A200: #000000,
-    A400: #000000,
-    A700: #000000,
+    50: rgba(33, 33, 33, 1),
+    100: rgba(33, 33, 33, 1),
+    200: rgba(33, 33, 33, 1),
+    300: rgba(33, 33, 33, 1),
+    400: rgba(33, 33, 33, 1),
+    500: rgba(33, 33, 33, 1),
+    600: rgba(33, 33, 33, .5),
+    700: rgba(33, 33, 33, .5),
+    800: rgba(33, 33, 33, .5),
+    900: rgba(33, 33, 33, .5),
+    A100: rgba(33, 33, 33, 1),
+    A200: rgba(33, 33, 33, 1),
+    A400: rgba(33, 33, 33, 1),
+    A700: rgba(33, 33, 33, .5)
   )
 );
 
-$palette: mat-palette($link-palette);
-$link-theme: mat-light-theme($palette, $palette);
+$link-primary: (
+  50: #f7fbff,
+  100: #ebf5fe,
+  200: #ddeffd,
+  300: #cfe8fc,
+  400: #c5e3fc,
+  500: #bbdefb,
+  600: #b5dafa,
+  700: #acd5fa,
+  800: #a4d1f9,
+  900: #96c8f8,
+  A100: #ffffff,
+  A200: #ffffff,
+  A400: #ffffff,
+  A700: #ffffff,
+  contrast: (
+    50: rgba(33, 33, 33, 1),
+    100: rgba(33, 33, 33, 1),
+    200: rgba(33, 33, 33, 1),
+    300: rgba(33, 33, 33, 1),
+    400: rgba(33, 33, 33, 1),
+    500: rgba(33, 33, 33, 1),
+    600: rgba(33, 33, 33, .5),
+    700: rgba(33, 33, 33, .5),
+    800: rgba(33, 33, 33, .5),
+    900: rgba(33, 33, 33, .5),
+    A100: rgba(33, 33, 33, 1),
+    A200: rgba(33, 33, 33, 1),
+    A400: rgba(33, 33, 33, 1),
+    A700: rgba(33, 33, 33, .5)
+  )
+);
+
+$link-warn: (
+  50 : #fdeaea,
+  100 : #facbcb,
+  200 : #f7a9a8,
+  300 : #f48785,
+  400 : #f16d6a,
+  500 : #ef5350,
+  600 : #ed4c49,
+  700 : #eb4240,
+  800 : #e83937,
+  900 : #e42927,
+  A100 : #ffffff,
+  A200 : #ffeded,
+  A400 : #ffbbba,
+  A700 : #ffa2a1,
+  contrast: (
+    50: rgba(33, 33, 33, 1),
+    100: rgba(33, 33, 33, 1),
+    200: rgba(33, 33, 33, 1),
+    300: rgba(33, 33, 33, 1),
+    400: rgba(33, 33, 33, 1),
+    500: rgba(33, 33, 33, 1),
+    600: rgba(33, 33, 33, .5),
+    700: rgba(33, 33, 33, .5),
+    800: rgba(33, 33, 33, .5),
+    900: rgba(33, 33, 33, .5),
+    A100: rgba(33, 33, 33, 1),
+    A200: rgba(33, 33, 33, 1),
+    A400: rgba(33, 33, 33, 1),
+    A700: rgba(33, 33, 33, .5)
+  )
+);
+
+$_primary: mat-palette($link-primary, 500);
+$_accent: mat-palette($link-accent, 500);
+$_warn: mat-palette($link-warn);
+
+$link-theme: mat-light-theme($_primary, $_accent, $_warn);
+$foreground: map-get($link-theme, foreground);
+$foreground: map_merge($foreground, (divider: rgba(33, 33, 33, .2)));
+$link-theme: map_merge($link-theme, (foreground: $foreground));
 @include angular-material-theme($link-theme);
 
-$background-color: #362D81;
+$background-color: #BBDEFB;
 // $background-2nd-color: #...;
 $background-3rd-color: #F5F5F5;
 $background-4th-color: rgba(255, 255, 255, .75);
-$background-5th-color: rgba(0, 0, 0, .04);
+$background-5th-color: rgba(0, 0, 0, .05);
 $background-nth-color: #fff;
 
-$hover-color: mat-color($link-palette, 50);
-$text-color: #212121;
+$hover-color: mat-color($link-accent, 500);
+$text-color: rgba(33, 33, 33, 1);
 $text-2nd-color: rgba(33, 33, 33, .5);
+$text-3rd-color: rgba(33, 33, 33, .6);
 
 $reverse-text-color: #ffffff;
 
@@ -111,10 +179,11 @@ p {
 
 a {
   font-family: "Titillium Web", sans-serif;
-  color: $background-color;
+  color: $hover-color;
   text-decoration: none;
 }
 
+.route-link,
 a:hover {
   color: $text-color;
   text-decoration: none;
@@ -126,13 +195,13 @@ button:focus {
 }
 
 .grecaptcha-badge {
-  z-index: 1;
+  z-index: -1;
 }
 
 .active-route,
 .active-route:hover,
 .route-link:hover {
-  color: $background-color;
+  color: $hover-color;
 }
 
 .route-link-disabled,
@@ -147,6 +216,16 @@ button:focus {
 section {
   padding-top: 3rem;
   padding-bottom: 3rem;
+}
+
+.cover {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.pre-line {
+  white-space: pre-line;
 }
 
 .language-bar img.logo-creditore {
@@ -249,7 +328,7 @@ mat-sidenav-container.mat-drawer-container {
   font-weight: 600;
   padding: 0 1rem;
   line-height: 1.5;
-  color: $reverse-text-color;
+  color: $text-color;
   background-color: $background-color;
 }
 
@@ -306,7 +385,7 @@ mat-sidenav-container.mat-drawer-container {
   font-family: 'Titillium Web', sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
-  color: $reverse-text-color;
+  color: $text-color;
   background-color: $background-color;
 }
 .header-bar .logged-user {
@@ -317,6 +396,23 @@ mat-sidenav-container.mat-drawer-container {
 .header-bar .logged-user svg {
   width: 22px;
   height: 22px;
+  min-width: 22px;
+}
+
+.header-bar .icon-group {
+  position: relative;
+}
+
+.header-bar .icon-group .icon-label {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 12px;
+  color: $reverse-text-color;
+  background-color: $hover-color;
+  padding: 0 2px;
+  border-radius: 2px;
+  pointer-events: none;
 }
 
 .language-bar .dropdown-toggle::after {
@@ -346,7 +442,7 @@ mat-sidenav-container.mat-drawer-container {
 .header-bar p {
   font-size: 1.5rem;
   padding: .875rem 1rem .875rem 0;
-  color: $reverse-text-color;
+  color: $text-color;
 }
 
 .header-bar .icon-label {
@@ -366,7 +462,7 @@ mat-sidenav-container.mat-drawer-container {
   font-family: 'Titillium Web', sans-serif;
   font-weight: 400;
   line-height: 1rem;
-  color: $reverse-text-color;
+  color: $hover-color;
 }
 
 .etichetta {
@@ -405,12 +501,12 @@ pay-choice-dialog .choice-group h1 {
   font-size: 2rem;
   font-weight: 600;
   margin: 0;
-  color: $reverse-text-color;
+  color: $text-color;
 }
 
 pay-choice-dialog .choice-logo p {
   font-size: .75rem;
-  color: $reverse-text-color;
+  color: $text-color;
 }
 
 pay-choice-dialog .choice-logo img.access-panel {
@@ -427,18 +523,18 @@ pay-choice-dialog .mat-form-field-appearance-legacy .mat-form-field-label,
 pay-choice-dialog .mat-form-field.mat-focused.mat-primary .mat-select-arrow,
 pay-choice-dialog .mat-select-arrow,
 pay-choice-dialog .mat-select-value {
-  color: $reverse-text-color;
+  color: $text-color;
 }
 
 pay-choice-dialog .mat-form-field.mat-focused .mat-form-field-label {
-  color: $reverse-text-color !important;
+  color: $text-color !important;
 }
 
 pay-choice-dialog .mat-form-field.mat-focused .mat-form-field-ripple,
 pay-choice-dialog .mat-focused .mat-form-field-ripple,
 pay-choice-dialog .mat-focused .mat-form-field-underline,
 pay-choice-dialog .mat-form-field-appearance-legacy .mat-form-field-underline {
-  background-color: $background-nth-color;
+  background-color: $text-color;
 }
 
 pay-spid-login {
@@ -448,7 +544,7 @@ pay-spid-login {
 mat-list-item a,
 mat-list-item a:hover {
   width: 100%;
-  color: $text-color;
+  color: $hover-color;
 }
 
 button.mat-button,
@@ -456,17 +552,18 @@ button.mat-flat-button,
 pay-icon-button .cart-button button.cart-button,
 pay-icon-button .flat-button button.flat-button,
 pay-icon-button .icon-button button.icon-button {
-  text-transform: uppercase;
+  text-transform: none;
   padding: .75rem .9375rem;
-  border-radius: 0;
+  border-radius: 28px;
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.5;
   color: $reverse-text-color;
+  transition: background-color .25s linear;
 }
 
 button.mat-button {
-  color: $text-color;
+  color: $reverse-text-color;
 }
 
 .mat-simple-snackbar-action button {
@@ -493,8 +590,13 @@ button.mat-flat-button:hover {
   background-color: $text-color;
 }
 
+pay-cart .icon-button button.icon-button,
+pay-dettaglio-servizio .icon-button button.icon-button,
+pay-ricevuta-pagamento .icon-button button.icon-button,
 pay-card .icon-button button.icon-button {
-  margin-top: 1.25rem;
+  position: fixed;
+  right: 3rem;
+  bottom: 3rem;
 }
 
 pay-title-deco .title-deco .art-deco {
@@ -508,38 +610,117 @@ pay-title-deco .title-deco .art-deco {
   color: $text-color;
 }
 
-pay-quadro-servizio .quadro-servizio {
-  font-family: 'Titillium Web', sans-serif;
-  padding: 1rem;
+pay-quadro .quadro {
   background-color: $background-nth-color;
 }
 
-pay-quadro-servizio .quadro-servizio:hover {
-  background-color: $hover-color;
-  cursor: pointer;
-}
-
-pay-quadro-servizio .quadro-servizio .gruppo {
-  font-size: 1rem;
+pay-quadro .quadro .titolo {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.5rem;
   font-weight: 400;
   color: $text-color;
+  line-height: 1.5;
+  padding: .75rem;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-pay-quadro-servizio .quadro-servizio .titolo {
-  font-size: 2rem;
-  font-weight: 400;
-  color: $text-color;
-  line-height: 1.3;
-  padding-top: 3rem;
-  margin: 0 0 .5rem 0;
+pay-quadro .quadro .logo {
+  background-color: lightslategray;
+  width: 100%;
 }
 
-pay-quadro-servizio .quadro-servizio .meta {
+pay-quadro .quadro .cover.logo:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+
+pay-group {
+  border-color: mat-color($foreground, divider);
+  margin-bottom: .5rem;
+}
+
+pay-group:hover {
+  border-color: $background-color;
+}
+
+pay-group .group {
+  padding: 0;
+}
+
+pay-group .collapse-area {
+  padding: 0 .875rem;
+}
+
+pay-group .collapse-content {
+  padding: 1.125rem 0 0 0;
   margin: 0;
 }
 
-pay-quadro-servizio.quadro-hidden {
-  display: none;
+pay-group p.group-title {
+  cursor: pointer;
+  margin: 0 0 0 .5rem;
+}
+
+pay-group button.trigger-icon span.mat-button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1 !important;
+}
+
+
+pay-simple-item {
+  position: relative;
+  background-color: $background-nth-color;
+  margin-bottom: .5rem;
+}
+
+pay-simple-item:only-child,
+pay-simple-item:last-child {
+  margin-bottom: 0;
+}
+
+pay-simple-item:hover {
+  background-color: $background-color;
+}
+
+pay-simple-item .main-data .primary-text,
+pay-simple-item .main-data .secondary-text {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+}
+
+pay-simple-item .main-data .secondary-text {
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
+
+pay-simple-item .main-data .primary-text {
+  padding-left: .75rem;
+  padding-right: 0;
+}
+
+pay-simple-item p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  word-break: break-all;
+}
+
+pay-simple-item .secondary-text p {
+  font-weight: 600;
+  text-align: right;
+}
+
+pay-simple-item .meta-data {
+  padding: 0 .75rem .75rem;
+}
+
+pay-simple-item .meta-data p {
+  color: $text-3rd-color;
 }
 
 mat-option .mat-option-text {
@@ -552,10 +733,14 @@ mat-option .mat-option-text {
 
 p.main-text {
   font-family: 'Titillium Web', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.3;
-  margin: 0 0 .5rem 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.meta-column p.main-text {
+  color: $text-3rd-color;
 }
 
 p.meta-text {
@@ -567,20 +752,14 @@ p.meta-text {
   word-break: break-all;
 }
 
-pay-item {
-  background-color: $reverse-text-color;
-  margin-bottom: .5rem;
-}
-
-pay-item .secondary-column p.main-text,
-pay-item .secondary-column p.meta-text {
+pay-item .secondary-column p.main-text {
   text-align: right;
 }
 
 pay-item .action-menu-icon,
 pay-item .primary-icon {
   color: $reverse-text-color;
-  background-color: $background-color;
+  background-color: $hover-color;
 }
 
 pay-item .action-menu-icon:hover,
@@ -590,7 +769,7 @@ pay-item .primary-icon:hover {
 }
 
 pay-item .touch-device {
-  background: $background-color;
+  background: $hover-color;
 }
 
 pay-item .touch-device mat-icon {
@@ -617,13 +796,21 @@ pay-item .expanding-container p:only-child {
 }
 
 pay-cart .cart-footer {
-  background-color: $text-color;
+  background-color: $background-5th-color;
   padding: .5rem 0;
 }
 
 pay-cart .cart-footer .main-text {
-  color: $reverse-text-color;
+  color: $text-color;
   margin: 0 0 0 0;
+}
+
+pay-cart .cart-footer .total .col-7 {
+  padding-left: .75rem;
+}
+
+pay-cart .cart-footer .total .col {
+  padding-right: .75rem;
 }
 
 // JSON schema form
@@ -648,14 +835,14 @@ label.mat-form-field-label:first-letter {
   color: rgba(0, 0, 0, 0.54);
 }
 
-.mat-focused .mat-form-field-ripple,
-.mat-focused .mat-form-field-underline {
-  background-color: $background-color;
-}
+//.mat-focused .mat-form-field-ripple,
+//.mat-focused .mat-form-field-underline {
+//  background-color: $background-color;
+//}
 
-.mat-focused.mat-form-field-appearance-legacy .mat-form-field-underline {
-  height: 2px;
-}
+//.mat-focused.mat-form-field-appearance-legacy .mat-form-field-underline {
+//  height: 2px;
+//}
 
 .mat-menu-panel,
 .mat-select-panel {
@@ -663,6 +850,7 @@ label.mat-form-field-label:first-letter {
 }
 
 @media (min-width: 768px) {
+
   section {
     padding-top: 6rem;
     padding-bottom: 6rem;
@@ -671,6 +859,14 @@ label.mat-form-field-label:first-letter {
   pay-choice-dialog .choice-group h1 {
     font-size: 3rem;
     margin: 0;
+  }
+
+}
+
+@media (min-width: 1600px) {
+
+  .side-nav {
+    position: absolute !important;
   }
 
 }

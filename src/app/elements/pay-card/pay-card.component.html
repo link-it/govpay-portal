@@ -31,7 +31,8 @@
           {{ _requiredError }}
         </mat-error>
       </mat-form-field>
-      <pay-icon-button button-class="icon-button" [type]="submit" icon="shopping_cart" [disabled]="!_fg.valid">{{ _submitLabel }}</pay-icon-button>
+      <pay-icon-button button-class="icon-button" [button-color]="'accent'" [type]="submit"
+                       icon="shopping_cart" [disabled]="!_fg.valid">{{ _submitLabel }}</pay-icon-button>
     </form>
   </div>
 </div>

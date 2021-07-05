@@ -3,8 +3,8 @@
     <div class="col-12 col-md-2"></div>
     <div class="col-12 col-md-8">
       <pay-title-deco class="mb-5" art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Cart.Pagamenti.Titolo"></pay-title-deco>
-      <pay-item *ngFor="let p of Pay.ShoppingCart" [item]="p" [titolo]="p.titolo" [meta-data]="p.metadati" [importo]="p.importo"
-                [use-action-menu]="true" [currency-format]="pay.currencyFormat.bind(pay)" [mobile-breakpoint]="Pay.MobileBreakPointNotice">
+      <pay-item *ngFor="let p of Pay.ShoppingCart" [item]="p" [mainText]="p.titolo" [metadata]="p.metadati" [use-action-menu]="true"
+                [secondaryText]="pay.currencyFormat(p.importo)" [mobile-breakpoint]="Pay.MobileBreakPointNotice">
         <button actions mat-menu-item color="accent" (click)="_menuItemClick(p, 'edit')" *ngIf="p.editable">{{ Pay.I18n.json.Common.Modifica }}</button>
         <button actions mat-menu-item color="accent" (click)="_menuItemClick(p, 'delete')">{{ Pay.I18n.json.Common.Elimina }}</button>
         <button actions mat-menu-item color="accent" (click)="_clickStampa(p)">{{ Pay.I18n.json.Cart.Pagamenti.Stampa }}</button>
@@ -17,7 +17,7 @@
     <div class="col-12 col-md-8">
       <div class="col">
         <div class="row cart-footer">
-          <div class="d-flex col px-0">
+          <div class="total d-flex col px-0">
             <div class="col-7">
               <p class="main-text">{{ Pay.I18n.json.Cart.Pagamenti.Totale }}</p>
             </div>
@@ -33,12 +33,13 @@
   </div>
   <div class="row">
     <div class="col-12 col-md-2"></div>
-    <div class="col-12 col-md-8 d-block d-sm-flex align-items-sm-center">
-      <pay-icon-button class="m-0 mr-sm-4" [src-icon]="Pay.LogoPagoPA" (ib-click)="_ibClick()" *ngIf="Pay.ShoppingCart.length !== 0">
-        {{ Pay.I18n.json.Cart.Pagamenti.Paga }}
-      </pay-icon-button>
+    <div class="col-12 col-md-8">
       <button mat-button color="accent" class="mt-3 mt-sm-0" (click)="__backToPayments()">{{ Pay.I18n.json.Cart.Pagamenti.Indietro }}</button>
     </div>
     <div class="col-12 col-md-2"></div>
   </div>
 </div>
+<pay-icon-button class="m-0 mr-sm-4" [src-icon]="Pay.LogoPagoPA" (ib-click)="_ibClick()" *ngIf="Pay.ShoppingCart.length !== 0"
+                 button-class="icon-button" [button-color]="'accent'">
+  {{ Pay.I18n.json.Cart.Pagamenti.Paga }}
+</pay-icon-button>

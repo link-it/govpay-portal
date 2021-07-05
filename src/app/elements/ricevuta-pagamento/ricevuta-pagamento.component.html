@@ -23,7 +23,8 @@
           </div>
           <div class="row">
             <div class="col-12 px-0">
-              <pay-icon-button type="submit" [disabled]="!_fg.valid">{{ Pay.I18n.json.Ricevuta.Form.Submit }}</pay-icon-button>
+              <pay-icon-button type="submit" [disabled]="!_fg.valid" button-class="icon-button"
+                               [button-color]="'accent'">{{ Pay.I18n.json.Ricevuta.Form.Submit }}</pay-icon-button>
             </div>
           </div>
         </div>

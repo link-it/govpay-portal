@@ -18,11 +18,9 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
   @HostBinding('class.show-more') _expanded: boolean = false;
   @ViewChild('item', { read: ElementRef }) _host: ElementRef;
 
-  @Input('titolo') _titolo: string = '';
-  @Input('meta-titolo') _metaTitolo: string = '';
-  @Input('importo') _importo: number = 0;
-  @Input('meta-importo') _metaImporto: string = '';
-  @Input('meta-data') _metaData: string = '';
+  @Input('mainText') _mainTitle: string = '';
+  @Input('secondaryText') _secondaryTitle: string = '';
+  @Input('metadata') _metaData: string = '';
 
   @Input('use-action-menu') _actionMenu: boolean = false;
   @Input('disable-gesture') _disableGesture: boolean = false;
@@ -32,9 +30,6 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
   @Input('primary-icon') _primaryIcon: string = '';
   @Input('primary-icon-off') _primaryIconOff: string = '';
 
-  @Input('currency-format') _currencyFormat = function(value) {
-    return value;
-  };
   @Input('item') _item: any;
   @Input('mobile-breakpoint') _breakpoint: number;
 

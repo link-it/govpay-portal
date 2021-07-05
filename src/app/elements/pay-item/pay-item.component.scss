@@ -2,6 +2,7 @@
   position: relative;
   display: block;
   font-size: 1rem;
+  margin-bottom: .5rem;
 }
 
 .action-menu-icon,
@@ -22,7 +23,11 @@
 }
 
 :host .item .item-trigger{
-  padding: 1rem;
+  padding: .75rem .75rem 0;
+}
+
+:host .item-trigger .row {
+  padding: 0 0 .75rem 0;
 }
 
 :host(.in) .item {

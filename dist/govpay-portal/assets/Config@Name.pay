@@ -2,8 +2,7 @@
 
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '01234567890', logo: "logo.png" },
-      { label: 'Comune Alternativo', value: '12345678901', logo: "" }
+      { label: 'Comune Dimostrativo', value: '80012000826', logo: "logo.png" }
     ]
   }
 

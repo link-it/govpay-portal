@@ -139,7 +139,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
       // receipt
       this.pay.getRPP(target.rawData.rpp, false, false);
     }
-    PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+    // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
   }
 
   __setUIDKey(item: any): string {

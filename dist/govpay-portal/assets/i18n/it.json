@@ -19,7 +19,7 @@
       "MenuItems": [
         {
           "Label": "Pagamenti",
-          "Link": "/pagamenti"
+          "Link": "/pagamento-servizio"
         },
         {
           "Label": "Archivio pagamenti",
@@ -64,11 +64,20 @@
       },
       "Servizi": {
         "Titolo": "Paga un servizio",
-        "Filtro": "Filtra la lista..."
+        "Filtro": {
+          "Risultati": {
+            "SS": "Ho trovato un servizio in un assessorato",
+            "SP": "Ho trovato un servizio in {{value}} assessorati",
+            "PS": "Ho trovato {{value}} servizi in un assessorato",
+            "PP": "Ho trovato {{valueN}} servizi in {{valueM}} assessorati",
+            "ServiziAssessorato": "È presente {{value}} servizio|Sono presenti {{value}} servizi"
+          },
+          "NessunRisultato": "Nessun risultato.",
+          "Placeholder": "Cerca un servizio..."
+        }
       }
     },
     "Cart": {
-      "Badge": "{{value}} Pagamento|{{value}} Pagamenti",
       "Titolo": "Carrello",
       "Pagamenti": {
         "Titolo": "Elenco pagamenti",

@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy, Component, ViewChild } from '@angular/core';
+import { OnInit, OnDestroy, Component, ViewChild, AfterViewInit } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
@@ -9,6 +9,7 @@ import { Standard } from '../classes/standard';
 import { JsonSchemaFormComponent } from 'angular7-json-schema-form';
 
 import * as moment from 'moment';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 
 const Debug: boolean = false;
 
@@ -17,7 +18,7 @@ const Debug: boolean = false;
   templateUrl: './dettaglio-servizio.component.html',
   styleUrls: ['./dettaglio-servizio.component.scss']
 })
-export class DettaglioServizioComponent implements OnInit, OnDestroy {
+export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('jsf', { read: JsonSchemaFormComponent }) _jsf: JsonSchemaFormComponent;
 
   Pay = PayService;
@@ -44,6 +45,10 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    updateLayoutNow.next(true);
   }
 
   ngOnDestroy() {
@@ -136,7 +141,7 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
           rawData: Object.assign({}, PayService.ExtraState)
         })
       );
-      PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+      // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
     } else {
       PayService.ShoppingCart.forEach((p: Standard) => {
         if (p.uid === _response['numeroAvviso']) {
@@ -152,7 +157,7 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
         }
       });
     }
-    PayService.EDIT_MODE = false;
+    PayService.EditMode = false;
     this.pay.router.navigateByUrl('/carrello');
   }
 

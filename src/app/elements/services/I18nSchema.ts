@@ -1,8 +1,5 @@
 export class I18n {
   jsonSchema = {
-    Cart: {
-      BadgeSchema: {}
-    },
     Posizione: {
       Debiti: {
         TitoloSchema: {}
@@ -12,6 +9,9 @@ export class I18n {
       Pagamenti: {
         TitoloSchema: {}
       }
+    },
+    Assessorato: {
+      TitoloSchema: {}
     }
   };
 
@@ -66,11 +66,21 @@ export class I18n {
       },
       Servizi: {
         Titolo: '',
-        Filtro: ''
+        Filtro: {
+          Risultati: {
+            SS: '',
+            SP: '',
+            PS: '',
+            PP: '',
+            ServiziAssessorato: ''
+          },
+          NessunRisultato: '',
+          Placeholder: ''
+        }
       }
     },
     Cart: {
-      Badge: '',
+      // Badge: '',
       Titolo: '',
       Pagamenti: {
         Titolo: '',

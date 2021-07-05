@@ -57,7 +57,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
       this._removeElement(target.uid);
     }
     if (icon == 'edit') {
-      PayService.EDIT_MODE = true;
+      PayService.EditMode = true;
       this.router.navigateByUrl('/dettaglio-servizio', { state: target });
     }
   }
@@ -67,7 +67,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
     PayService.ShoppingCart = PayService.ShoppingCart.filter((item: Standard) => {
       return (item.uid !== uid);
     });
-    PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+    // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
   }
 
   _skipMailRicevuta() {
@@ -123,6 +123,6 @@ export class CartComponent implements OnInit, AfterContentChecked {
   }
 
   __backToPayments() {
-    this.router.navigateByUrl('/pagamenti');
+    this.router.navigateByUrl('/pagamento-servizio');
   }
 }

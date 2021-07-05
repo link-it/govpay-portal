@@ -1,45 +1,32 @@
-import { Component, OnInit, AfterContentChecked, OnDestroy, AfterViewInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
 import { Standard } from '../classes/standard';
-import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs/index';
 import { PayCardComponent } from '../pay-card/pay-card.component';
 
 import * as moment from 'moment';
-
-declare let Masonry: any;
 declare let $: any;
 
 @Component({
   selector: 'pay-pagamenti',
-  templateUrl: './pagamenti.component.html',
-  styleUrls: ['./pagamenti.component.css']
+  templateUrl: './pagamento-bollettino.component.html',
+  styleUrls: ['./pagamento-bollettino.component.css']
 })
-export class PagamentiComponent implements OnInit, AfterContentChecked, AfterViewInit, OnDestroy {
+export class PagamentoBollettinoComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('pc') _paycard: PayCardComponent;
   Pay = PayService;
 
-  _validateSub: Subscription;
   _timer: any;
-  _msnry: any;
-  _servizi: any[] = [];
   _validatoreNumeroAvviso: RegExp = /\d{18}/;
 
   constructor(public pay: PayService, protected translate: TranslateService, protected dialog: MatDialog) {
     if (PayService.CREDITORI && PayService.CREDITORI.length === 0) {
       console.log('Configurazione non corretta. Elenco creditori non impostato.');
     }
-    this._validateSub = validateNow.subscribe((selfValidation: boolean) => {
-      if (selfValidation) {
-        this._elencoServizi();
-      }
-    });
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
       setTimeout(() => {
-        this._loadMasonry();
       });
     });
   }
@@ -50,14 +37,11 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
       this.pay.sessione().then(() => {
       });
     }
-    this._elencoServizi();
   }
 
   ngOnDestroy() {
+    this.__resetPayCard();
     PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = null;
-    if (this._validateSub) {
-      this._validateSub.unsubscribe();
-    }
   }
 
   ngAfterViewInit() {
@@ -77,10 +61,6 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
         }
       }
     }
-  }
-
-  ngAfterContentChecked() {
-    // this._isLogged = this.pay.isAuthenticated();
   }
 
   _checkBollettino(event) {
@@ -163,7 +143,6 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
                   rawData: _response
                 })
               );
-              PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
               this.__resetPayCard();
               this.pay.router.navigateByUrl('/carrello');
             } else {
@@ -177,56 +156,6 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
         this.pay.onError(error);
       }
     );
-  }
-
-  /**
-   * Elenco servizi
-   * @private
-   */
-  _elencoServizi() {
-    this.pay.updateSpinner(true);
-    this.pay.elencoServizi(PayService.CreditoreAttivo.value,true).subscribe(
-      (result) => {
-        if(result.body) {
-          const _response = result.body;
-          this._servizi = this._mapServizio(_response['risultati']);
-          serviziChange.next(true);
-          this._loadMasonry();
-        }
-        this.pay.updateSpinner(false);
-      },
-      (error) => {
-        this._servizi = [];
-        serviziChange.next(true);
-        this._loadMasonry();
-        this.pay.updateSpinner(false);
-        this.pay.onError(error);
-      }
-    );
-  }
-
-  _mapServizio(services: any[]): any {
-    return services.map((ser: any) => {
-      if (ser.form) {
-        if (ser.form['definizione']) {
-          try {
-            ser.jsfDef = JSON.parse(PayService.DecodeB64(ser.form['definizione']));
-          } catch (e) {
-            console.log(e);
-            ser.jsfDef = '';
-          }
-        }
-        if (ser.form['impaginazione']) {
-          try {
-            ser.detail = JSON.parse(PayService.DecodeB64(ser.form['impaginazione']));
-          } catch (e) {
-            console.log(e);
-            ser.detail = '';
-          }
-        }
-      }
-      return ser;
-    });
   }
 
   _notifyMismatch(message: string) {
@@ -261,55 +190,9 @@ export class PagamentiComponent implements OnInit, AfterContentChecked, AfterVie
     return msg;
   }
 
-  __matFilterIcon(filtro: any) {
-    if (filtro.value) {
-      filtro.value='';
-      $('.grid-item').removeClass('quadro-hidden');
-      this._msnry.layout();
-    }
-  }
-
-  _keyDown(event: any) {
-    clearTimeout(this._timer);
-    this._timer = setTimeout(() => {
-      const _queryFilter = (event.target as HTMLInputElement).value.toString();
-      const quadros = $('.grid-item');
-      quadros.each((index, item: any) => {
-        const $item = $(item);
-        $item.removeClass('quadro-hidden');
-        if ($item.text().toLowerCase().indexOf(_queryFilter.toLowerCase()) === -1) {
-          $item.addClass('quadro-hidden');
-        }
-      });
-      this._msnry.layout();
-    }, 300);
-  }
-
-  _onQuadroClick(quadro: any) {
-    this.__resetPayCard();
-    this.pay.router.navigateByUrl('/dettaglio-servizio', { state: quadro });
-  }
-
-  _loadMasonry() {
-    if (this._servizi.length !== 0 && this.pay.router.url === '/pagamenti') {
-      setTimeout(() => {
-        this._msnry = new Masonry('.servizi-container', {
-          itemSelector: '.grid-item',
-          columnWidth: '.grid-sizer',
-          percentPosition: true,
-          horizontalOrder: true,
-          gutter: 32
-        });
-      });
-    }
-  }
-
   __resetPayCard() {
     if (this._paycard) {
       this._paycard.reset();
     }
   }
 }
-
-export let validateNow: BehaviorSubject<boolean> = new BehaviorSubject(false);
-export let serviziChange: BehaviorSubject<boolean> = new BehaviorSubject(false);

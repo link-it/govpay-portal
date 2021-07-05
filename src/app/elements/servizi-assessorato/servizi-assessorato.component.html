@@ -1,0 +1,25 @@
+<div class="container py-5">
+  <div class="row mb-5">
+    <div class="col-12">
+      <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="__mapResults()"></pay-title-deco>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-12">
+      <mat-form-field class="w-100">
+        <input #filtro matInput [placeholder]="Pay.I18n.json.Pagamenti.Servizi.Filtro.Placeholder" autocomplete="off">
+        <mat-icon [ngClass]="filtro.value?'action':''" matSuffix (click)="__matFilterIcon(filtro)">{{ filtro.value?'close':'search' }}</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row" *ngIf="_serviziAssessorato">
+    <div class="col-12">
+      <pay-simple-item group-content *ngFor="let fs of _serviziAssessorato[Pay.ALPHA_3_CODE].flat; let i = index" [primaryText]="fs.name" [metadata]="fs.category"
+                       (click)="_onItemClick(fs, i, -1)"></pay-simple-item>
+      <pay-group *ngFor="let a of _serviziAssessorato[Pay.ALPHA_3_CODE].groups|serviceGroupFilter:filtro.value:_serviziAssessorato[Pay.ALPHA_3_CODE].dictionary; let i = index"
+                 [groupIcon]="'group_work'" [title]="a.group" [id]="i" [open]="true">
+        <pay-simple-item group-content *ngFor="let se of a.items; let j = index" [primaryText]="se.name" [metadata]="se.category" (click)="_onItemClick(se, i, j)"></pay-simple-item>
+      </pay-group>
+    </div>
+  </div>
+</div>

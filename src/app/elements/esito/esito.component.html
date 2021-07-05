@@ -14,8 +14,8 @@
       <p class="pb-5 m-0" *ngIf="_status === STATUS_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Eseguito }}</p>
       <p class="pb-5 m-0" *ngIf="_status === STATUS_NON_ESEGUITO">{{ Pay.I18n.json.Esito.Pagamenti.Dettaglio.Fallito }}</p>
       <pay-item *ngFor="let p of _payments" [primary-icon]="p.primaryIcon" [primary-icon-off]="p.primaryIconOff" [item]="p"
-                [titolo]="p.titolo" [meta-titolo]="p.sottotitolo" [importo]="p.importo" [meta-importo]="p.metadati" (on-icon-click)="_toggleCartClick($event)"
-                [currency-format]="pay.currencyFormat.bind(pay)" [mobile-breakpoint]="Pay.MobileBreakPointNotice"></pay-item>
+                [mainText]="p.titolo" [metadata]="p.metadati" [secondaryText]="pay.currencyFormat(p.importo)"
+                (on-icon-click)="_toggleCartClick($event)" [mobile-breakpoint]="Pay.MobileBreakPointNotice"></pay-item>
     </div>
     <div class="col-12 col-md-2"></div>
   </div>

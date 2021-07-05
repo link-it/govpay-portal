@@ -21,17 +21,23 @@ import { AuthGuardService } from './elements/services/auth-gard.service';
 
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { TranslateLoaderExt } from './elements/classes/translate-loader-ext';
-import { MatBadgeModule, MatButtonModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule,
-  MatInputModule, MatListModule, MatMenuModule, MatSidenavModule } from '@angular/material';
+import {
+  MatBadgeModule, MatButtonModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule,
+  MatInputModule, MatListModule, MatMenuModule, MatSidenavModule, MatTabsModule
+} from '@angular/material';
 import { HeaderBarComponent } from './elements/header-bar/header-bar.component';
 import { LanguageBarComponent } from './elements/language-bar/language-bar.component';
 import { SpidLoginComponent } from './elements/spid-login/spid-login.component';
 import { ExternalLoginComponent } from './elements/external-login/external-login.component';
-import { PagamentiComponent } from './elements/pagamenti/pagamenti.component';
+import { PagamentoServizioComponent } from './elements/pagamento-servizio/pagamento-servizio.component';
+import { PagamentoBollettinoComponent } from './elements/pagamento-bollettino/pagamento-bollettino.component';
 import { TitleDecoComponent } from './elements/title-deco/title-deco.component';
 import { IconButtonComponent } from './elements/icon-button/icon-button.component';
-import { QuadroServizioComponent } from './elements/quadro-servizio/quadro-servizio.component';
+import { QuadroComponent } from './elements/quadro/quadro.component';
 import { DettaglioServizioComponent } from './elements/dettaglio-servizio/dettaglio-servizio.component';
+import { ServiziAssessoratoComponent } from './elements/servizi-assessorato/servizi-assessorato.component';
+import { GroupComponent } from './elements/components/group.component';
+import { SimpleItemComponent } from './elements/components/simple-item.component';
 import { PayCardComponent } from './elements/pay-card/pay-card.component';
 import { CartComponent } from './elements/cart/cart.component';
 import { PayItemComponent } from './elements/pay-item/pay-item.component';
@@ -41,7 +47,9 @@ import { ArchivioComponent } from './elements/archivio/archivio.component';
 import { YesnoDialogComponent } from './elements/yesno-dialog/yesno-dialog.component';
 import { EsitoComponent } from './elements/esito/esito.component';
 import { ChoiceDialogComponent } from './elements/choice-dialog/choice-dialog.component';
+import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
 import { ReuseStrategy } from './elements/services/reuse-strategy';
+import { ServiceFilterPipe, ServiceGroupFilterPipe } from './elements/services/service-filters';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateLoaderExt(http, './assets/i18n/', '.json');
@@ -51,7 +59,8 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent,
     AuthGuardPipe,
-    PagamentiComponent,
+    PagamentoServizioComponent,
+    PagamentoBollettinoComponent,
     RicevutaPagamentoComponent,
     DettaglioServizioComponent,
     PosizioneDebitoriaComponent,
@@ -62,13 +71,18 @@ export function createTranslateLoader(http: HttpClient) {
     ExternalLoginComponent,
     TitleDecoComponent,
     IconButtonComponent,
-    QuadroServizioComponent,
+    QuadroComponent,
     PayCardComponent,
     CartComponent,
     PayItemComponent,
     YesnoDialogComponent,
     EsitoComponent,
-    ChoiceDialogComponent
+    ChoiceDialogComponent,
+    NavBarComponent,
+    ServiziAssessoratoComponent,
+    GroupComponent,
+    SimpleItemComponent,
+    ServiceGroupFilterPipe, ServiceFilterPipe
   ],
   imports: [
     BrowserModule,
@@ -98,6 +112,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatDialogModule,
     MatBadgeModule,
     MatMenuModule,
+    MatTabsModule,
     MaterialDesignFrameworkModule,
     ZXingScannerModule
   ],

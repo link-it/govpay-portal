@@ -5,7 +5,9 @@ import { PayService } from './elements/services/pay.service';
 import { Language } from './elements/classes/language';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { serviziChange, validateNow } from './elements/pagamenti/pagamenti.component';
+import { updateLayoutNow, validateNow } from './elements/pagamento-servizio/pagamento-servizio.component';
+import { MatSidenav } from '@angular/material';
+import { Subscription } from 'rxjs/index';
 
 @Component({
   selector: 'pay-root',
@@ -13,6 +15,7 @@ import { serviziChange, validateNow } from './elements/pagamenti/pagamenti.compo
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterContentChecked {
+  @ViewChild('sidenav') sidenav: MatSidenav;
   @HostBinding('class.partners') get cfgPartners(): boolean {
     return (this._configPartners);
   }
@@ -24,7 +27,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _gh: number = 0;
   _lb: number = 0;
   // protected _isLogged: boolean = false;
-  _showCart: boolean = true;
+  // _showCart: boolean = true;
+  _mode: string = 'over';
   _isLoading: boolean = false;
   _languages: Language[] = [];
   _language: string = '';
@@ -32,23 +36,25 @@ export class AppComponent implements OnInit, AfterContentChecked {
   __IAMLoginUrl: string = '';
 
   _configPartners: boolean = false;
+  _updateLayoutSub: Subscription;
 
   @HostListener('window:resize') onResize() {
     this._updateLayout();
   }
   @ViewChild('headerBar', { read: ElementRef }) private _headerBar: ElementRef;
   @ViewChild('languageBar', { read: ElementRef }) private _languageBar: ElementRef;
+  @ViewChild('tabBar', { read: ElementRef }) private _tabBar: ElementRef;
   @ViewChild('gestore', { read: ElementRef }) private _gestore: ElementRef;
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
 
   constructor(public router: Router, public pay: PayService, public translate: TranslateService) {
-    translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      PayService.TranslateDynamicObject(translate, pay);
-    });
-    serviziChange.subscribe((hasChanged: boolean) => {
-      if (hasChanged) {
+    this._updateLayoutSub = updateLayoutNow.subscribe((refresh: boolean) => {
+      if (refresh) {
         this._updateLayout();
       }
+    });
+    translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      PayService.TranslateDynamicObject(translate, pay);
     });
     let _toPublicAccessSection: boolean = true;
     if(location.search) {
@@ -109,15 +115,22 @@ export class AppComponent implements OnInit, AfterContentChecked {
       this._lb = this._languageBar.nativeElement.clientHeight;
       this._gh = this._gestore.nativeElement.clientHeight;
       if (this._headerBar && this._globalContent) {
+        const _tbh = this._tabBar?this._tabBar.nativeElement.clientHeight:0;
         this._hbh = this._headerBar.nativeElement.clientHeight;
-        this._gch = window.innerHeight - this._hbh - this._lb;
+        this._gch = window.innerHeight - this._hbh - this._lb - _tbh;
         this._mlh = window.innerHeight - this._hbh - this._gh;
+      }
+    }
+    this._mode = (window.innerWidth > 1600)?'side':'over';
+    if (this.sidenav) {
+      if (this._mode === 'side' && !this.sidenav.opened) {
+        this.sidenav.open();
       }
     }
   }
 
   _checkCartIcon() {
-    this._showCart = !(window.innerWidth < PayService.MobileBreakPointNotice);
+    // this._showCart = !(window.innerWidth < PayService.MobileBreakPointNotice);
   }
 
   _initLanguages() {
@@ -176,10 +189,10 @@ export class AppComponent implements OnInit, AfterContentChecked {
       case 'close':
         switch (url) {
           case '/dettaglio-servizio':
-            if (!PayService.EDIT_MODE) {
-              this.pay.router.navigateByUrl('/pagamenti');
+            if (!PayService.EditMode) {
+              this.pay.router.navigateByUrl('/pagamento-servizio');
             } else {
-              PayService.EDIT_MODE = false;
+              PayService.EditMode = false;
               this.pay.router.navigateByUrl('/carrello');
             }
             break;
@@ -188,6 +201,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
             break;
           default:
         }
+      break;
+      case 'arrow_back':
+        PayService.StaticRouteBehavior.next({ detail: PayService.AssessoratoDetail });
       break;
       default:
         this._updateLayout();
@@ -198,6 +214,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _sideNavItemClick(sidenav: any, url: string) {
     if (sidenav.mode !== 'side') {
       sidenav.toggle();
+      PayService.TabsBehavior.next({ update: true });
     }
     if (!url) {
       this.pay.updateSpinner(true);
@@ -218,10 +235,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
       'route-link-disabled': (url === '/carrello' && PayService.ShoppingCart.length === 0),
       'route-link': true
     };
-  }
-
-  _showBadgeCart(link: any): boolean {
-    return (window.innerWidth < PayService.MobileBreakPointNotice && link == '/carrello' && PayService.Cart.length !== 0);
   }
 
   __exit(): any {
@@ -246,7 +259,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   __toPayments() {
-    this.pay.router.navigateByUrl('/pagamenti');
+    this.pay.router.navigateByUrl('/pagamento-servizio');
   }
 
   __toPublicAccess() {

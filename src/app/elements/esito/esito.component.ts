@@ -181,7 +181,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
         break;
       default:
     }
-    PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+    // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
   }
 
   __mobileToastCart(add: boolean) {
@@ -222,8 +222,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
         uid: p.numeroAvviso,
         titolo: p.causale,
-        sottotitolo: _iuv,
-        metadati: PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(_statoAvviso[p.numeroAvviso].stato)],
+        metadati: `${_iuv}, ${PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(_statoAvviso[p.numeroAvviso].stato)]}`,
         importo: p.importo,
         stato: PayService.STATI_VERIFICA_PENDENZA[p.stato.toUpperCase()],
         editable: _editable,
