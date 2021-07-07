@@ -7,6 +7,7 @@ import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 
 import * as moment from 'moment';
 import { Subscription } from 'rxjs/index';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 
 @Component({
   selector: 'pay-esito',
@@ -39,9 +40,11 @@ export class EsitoComponent implements OnInit, OnDestroy {
       if (this._payments.length !== 0) {
         this._payments = this.__loopFix(this._payments, true);
       }
-    }); }
+    });
+  }
 
   ngOnInit() {
+    updateLayoutNow.next(true);
     this._sessione = false;
     this._POLLING_TIMEOUT = -1;
     const _idSessione: string = this.activateRoute.snapshot.queryParamMap.get('idSession');

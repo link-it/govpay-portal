@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/index';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 
 @Component({
   selector: 'pay-archivio',
@@ -50,10 +51,12 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
           PayService.TranslateDynamicObject(this.translate, this.pay);
         }
         this.pay.updateSpinner(false);
+        updateLayoutNow.next(true);
       },
       (error) => {
         this.pay.updateSpinner(false);
         this.pay.onError(error);
+        updateLayoutNow.next(true);
       });
   }
 

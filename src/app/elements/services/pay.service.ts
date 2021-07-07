@@ -950,13 +950,6 @@ export class PayService implements OnInit, OnDestroy {
     PayService.TabsBehavior.next({ update: true, tabs: tabs });
   }
 
-  static MapAssessoratoTitle(varianti: any, index: number) {
-    PayService.LINGUE.forEach((lingua: any) => {
-      const _el: any = varianti[lingua.alpha3Code].groups[index];
-      PayService.I18n.jsonSchema.Assessorato.TitoloSchema[lingua.alpha3Code] = _el.group;
-    });
-  }
-
   static MapResultsTitle(N: number, M: number): string {
     const risultati: any = PayService.I18n.json.Common.Filtro.Risultati;
     let text = PayService.I18n.json.Common.Filtro.NessunRisultato;

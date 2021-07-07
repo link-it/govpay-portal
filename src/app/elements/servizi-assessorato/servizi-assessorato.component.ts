@@ -67,13 +67,22 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
       const _flat: any[] = [];
       groupServices.items.forEach((subservice: any) => {
         const service: any = subservice.source;
+        if (lingua.alpha3Code !== 'ita') {
+          if (!service.jsfDef['layout_'+lingua.alpha3Code]) {
+            service.jsfDef['layout_'+lingua.alpha3Code] = service.jsfDef['layout_ita'];
+          }
+          if (!service.detail[lingua.alpha3Code]) {
+            service.detail[lingua.alpha3Code] = service.jsfDef['layout_ita'];
+          }
+        }
+        const srv: any = service.detail[lingua.alpha3Code];
         const _mappedService: any = {
-          category: service.detail[lingua.alpha3Code].category || '',
-          searchTerms: service.detail[lingua.alpha3Code].search_terms || '',
-          name: service.detail[lingua.alpha3Code].name || '',
+          category: srv.category || '',
+          searchTerms: srv.search_terms || '',
+          name: srv.name || '',
           source: service
         };
-        const subgroup: string = service.detail[lingua.alpha3Code].subgroup;
+        const subgroup: string = srv.subgroup;
         if (subgroup) {
           if (!groups.hasOwnProperty(subgroup)) {
             groups[subgroup] = [];

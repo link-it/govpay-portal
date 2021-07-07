@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { PayService } from '../services/pay.service';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class RicevutaPagamentoComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    updateLayoutNow.next(true);
   }
 
   ngOnChanges(changes: SimpleChanges) {

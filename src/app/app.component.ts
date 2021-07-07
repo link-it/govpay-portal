@@ -216,7 +216,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _sideNavItemClick(sidenav: any, url: string) {
     if (sidenav.mode !== 'side') {
       sidenav.toggle();
-      PayService.TabsBehavior.next({ update: true });
     }
     if (!url) {
       this.pay.updateSpinner(true);
@@ -230,6 +229,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
           this.__exit();
       });
     }
+    updateLayoutNow.next(true);
   }
 
   _classRoute(url: string): any {

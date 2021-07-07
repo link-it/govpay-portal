@@ -117,6 +117,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
 
   _setupGroups(decodedServices: any[]): any[] {
     const servicesByLanguage: any = {};
+    let mismatch: boolean = false;
     PayService.LINGUE.forEach((lingua: any) => {
       if (!servicesByLanguage.hasOwnProperty(lingua.alpha3Code)) {
         servicesByLanguage[lingua.alpha3Code] = { N: 0, M: 0, groups: [] };
@@ -124,27 +125,34 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       let sCount: number = 0;
       const groups: any = {};
       const imgs: any = {};
+      const maps: any = {};
       const _flat: any[] = [];
       decodedServices.forEach((service: any) => {
-        const _mappedService: any = {
-          background: service.detail[lingua.alpha3Code].group_icon || '',
-          subgroup: service.detail[lingua.alpha3Code].subgroup || '',
-          category: service.detail[lingua.alpha3Code].category || '',
-          searchTerms: service.detail[lingua.alpha3Code].search_terms || '',
-          name: service.detail[lingua.alpha3Code].name || '',
-          source: service
-        };
-        const group: string = service.detail[lingua.alpha3Code].group;
-        if (group) {
-          if (!groups.hasOwnProperty(group)) {
-            groups[group] = [];
-            imgs[group] = _mappedService.background;
-          }
-          groups[group].push(_mappedService);
-        } /*else {
-          _flat.push(_mappedService);
-        }*/
-        sCount++;
+        if (!service.detail.ita || !service.jsfDef.layout_ita) {
+          mismatch = true;
+        } else {
+          const srv: any = service.detail[lingua.alpha3Code] || service.detail['ita'];
+          const _mappedService: any = {
+            background: srv.group_icon || '',
+            subgroup: srv.subgroup || '',
+            category: srv.category || '',
+            searchTerms: srv.search_terms || '',
+            name: srv.name || '',
+            source: service
+          };
+          const group: string = srv.group;
+          if (group) {
+            if (!groups.hasOwnProperty(group)) {
+              groups[group] = [];
+              imgs[group] = _mappedService.background;
+              maps[group] = this.__mapGroupSchemaLanguages(service.detail);
+            }
+            groups[group].push(_mappedService);
+          } /*else {
+            _flat.push(_mappedService);
+          }*/
+          sCount++;
+        }
       });
       servicesByLanguage[lingua.alpha3Code] = {
         N: sCount,
@@ -154,6 +162,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         groups: Object.keys(groups).map((kg: string) => {
           return {
             group: kg,
+            titoloSchemaMap: maps[kg],
             backgroundSrc: imgs[kg],
             items: groups[kg]
           };
@@ -161,7 +170,19 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       };
     });
 
+    if (mismatch) {
+      console.log('La versione italiana della struttura dati non è disponibile per alcuni servizi.');
+    }
     return servicesByLanguage;
+  }
+
+  __mapGroupSchemaLanguages(detail: any): any {
+    const el: any = {};
+    PayService.LINGUE.forEach((lingua: any) => {
+      el[lingua.alpha3Code] = detail[lingua.alpha3Code].group;
+    });
+
+    return el;
   }
 
   __matFilterIcon(filtro: any) {
@@ -197,7 +218,8 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   _onQuadroClick(quadro: any, index: number, filtro: string = '') {
     this.__filterText = filtro;
     this._assessorato = { group: quadro.group, items: this._servizi[PayService.ALPHA_3_CODE].dictionary[quadro.group] };
-    PayService.MapAssessoratoTitle(this._servizi, index);
+    PayService.I18n.jsonSchema.Assessorato.TitoloSchema = quadro.titoloSchemaMap;
+    // PayService.MapAssessoratoTitle(this._servizi, quadro.group);
     PayService.Header.Titolo = quadro.group;
     PayService.Header.LeftIcon = 'arrow_back';
     PayService.AssessoratoDetail = true;
