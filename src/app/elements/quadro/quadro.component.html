@@ -1,4 +1,4 @@
 <div class="{{ _quadroClass }}" role="button">
   <div class="{{ _logoClass }}" [ngStyle]="{'background-image': 'url(' + _src + ')'}"></div>
-  <p class="titolo">{{ _titolo }}</p>
+  <p class="titolo" [attr.title]="_titolo">{{ _titolo }}</p>
 </div>

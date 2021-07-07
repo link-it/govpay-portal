@@ -65,18 +65,7 @@ export class I18n {
         }
       },
       Servizi: {
-        Titolo: '',
-        Filtro: {
-          Risultati: {
-            SS: '',
-            SP: '',
-            PS: '',
-            PP: '',
-            ServiziAssessorato: ''
-          },
-          NessunRisultato: '',
-          Placeholder: ''
-        }
+        Titolo: ''
       }
     },
     Cart: {
@@ -229,6 +218,18 @@ export class I18n {
         Eseguito: '',
         NonEseguito: '',
         EseguitoParziale: ''
+      },
+      Filtro: {
+        NessunaCorrispondenza: '',
+        Risultati: {
+          SS: '',
+          SP: '',
+          PS: '',
+          PP: '',
+          ServiziAssessorato: ''
+        },
+        NessunRisultato: '',
+        Placeholder: ''
       }
     }
   };

@@ -5,6 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   pure: false
 })
 export class ServiceGroupFilterPipe implements PipeTransform {
+
   transform(items: any[], _value: string, dictionary: any): any {
     if (!items) {
       return items;

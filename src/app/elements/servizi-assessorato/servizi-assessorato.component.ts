@@ -1,16 +1,19 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/index';
 import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
+import { SimpleItemComponent } from '../components/simple-item.component';
 
 @Component({
   selector: 'pay-servizi-assessorato',
   templateUrl: './servizi-assessorato.component.html',
   styleUrls: ['./servizi-assessorato.component.scss']
 })
-export class ServiziAssessoratoComponent implements OnInit, OnDestroy, OnChanges {
+export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked, OnDestroy, OnChanges {
+  @ViewChildren('psi') psi: QueryList<SimpleItemComponent>;
+  @ViewChild('filtro', { read: ElementRef }) _filtro: ElementRef;
   Pay = PayService;
 
   @Input('assessorato') _assessorato: any;
@@ -20,6 +23,9 @@ export class ServiziAssessoratoComponent implements OnInit, OnDestroy, OnChanges
   _timer: any;
   _srSubcrition: Subscription;
 
+  __title: string = '';
+  __filterTitle: string = '';
+
   constructor(public pay: PayService, protected translate: TranslateService) {
     this._srSubcrition = PayService.StaticRouteBehavior.subscribe((value: any) => {
       if (value && value.detail) {
@@ -28,6 +34,7 @@ export class ServiziAssessoratoComponent implements OnInit, OnDestroy, OnChanges
     });
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
       setTimeout(() => {
+        this.__mapTitle();
       });
     });
   }
@@ -41,7 +48,12 @@ export class ServiziAssessoratoComponent implements OnInit, OnDestroy, OnChanges
   ngOnChanges(changes: SimpleChanges) {
     if (changes._assessorato && changes._assessorato.currentValue) {
       this._serviziAssessorato = this._setupGroups(changes._assessorato.currentValue);
+      this.__mapTitle();
     }
+  }
+
+  ngAfterContentChecked() {
+    this.__title = this.__filterTitle;
   }
 
   _setupGroups(groupServices: any): any[] {
@@ -102,11 +114,28 @@ export class ServiziAssessoratoComponent implements OnInit, OnDestroy, OnChanges
 
   __matFilterIcon(filtro: any) {
     filtro.value = '';
+    this.__mapTitle();
   }
 
-  __mapResults(): string {
-    return TranslateLoaderExt.Pluralization(PayService.I18n.json.Pagamenti.Servizi.Filtro.Risultati.ServiziAssessorato, this._serviziAssessorato[PayService.ALPHA_3_CODE].N);
+  _keyDown(event: any) {
+    clearTimeout(this._timer);
+    this._timer = setTimeout(() => {
+      this.__mapTitle();
+    }, 300);
   }
+
+  __mapTitle() {
+    if (this._serviziAssessorato && this._filtro && !this._filtro.nativeElement.value) {
+      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, this._serviziAssessorato[PayService.ALPHA_3_CODE].N);
+    }
+    if (this._filtro && this._filtro.nativeElement.value) {
+      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, this.psi.length);
+    }
+  }
+
+  // __mapResults(): string {
+  //   return TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, this._serviziAssessorato[PayService.ALPHA_3_CODE].N);
+  // }
 
   close() {
     this._assessorato = null;

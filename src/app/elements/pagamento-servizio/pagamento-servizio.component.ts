@@ -1,7 +1,9 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, ViewChildren, QueryList, AfterContentChecked } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs/index';
+import { SimpleItemComponent } from '../components/simple-item.component';
+import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 
 declare let $: any;
 
@@ -10,7 +12,8 @@ declare let $: any;
   templateUrl: './pagamento-servizio.component.html',
   styleUrls: ['./pagamento-servizio.component.css']
 })
-export class PagamentoServizioComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
+  @ViewChildren('psi') psi: QueryList<SimpleItemComponent>;
   @ViewChild('filtro', { read: ElementRef }) _filtro: ElementRef;
   Pay = PayService;
 
@@ -19,6 +22,8 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, OnDest
   _servizi: any;
   _assessorato: any;
 
+  __title: string = '';
+  __filterTitle: string = '';
   __filterText: string = '';
 
   constructor(public pay: PayService, protected translate: TranslateService) {
@@ -32,6 +37,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, OnDest
     });
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
       setTimeout(() => {
+        this.__mapTitle();
       });
     });
   }
@@ -54,6 +60,10 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, OnDest
   ngAfterViewInit() {
   }
 
+  ngAfterContentChecked() {
+    this.__title = this.__filterTitle;
+  }
+
   /**
    * Elenco servizi
    * @private
@@ -67,11 +77,13 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, OnDest
           const _decodedServices: any[] = this._decodeServices(_response['risultati']);
           this._servizi = this._setupGroups(_decodedServices);
         }
+        this.__mapTitle();
         this.pay.updateSpinner(false);
         updateLayoutNow.next(true);
       },
       (error) => {
         this._servizi = [];
+        this.__mapTitle();
         updateLayoutNow.next(true);
         this.pay.updateSpinner(false);
         this.pay.onError(error);
@@ -154,18 +166,33 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, OnDest
 
   __matFilterIcon(filtro: any) {
     filtro.value = '';
+    this.__mapTitle();
   }
 
   _keyDown(event: any) {
     clearTimeout(this._timer);
     this._timer = setTimeout(() => {
-      const _queryFilter = (event.target as HTMLInputElement).value.toString();
+      this.__mapTitle();
     }, 300);
+  }
+
+  __mapTitle() {
+    if (this._servizi && this._filtro && !this._filtro.nativeElement.value) {
+      this.__filterTitle = PayService.MapResultsTitle(this._servizi[PayService.ALPHA_3_CODE].N, this._servizi[PayService.ALPHA_3_CODE].M);
+    }
+    if (this._filtro && this._filtro.nativeElement.value) {
+      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, this.psi.length);
+    }
   }
 
   // _onGroupItemClick(item: any) {
   //   this.pay.router.navigateByUrl('/dettaglio-servizio', { state: item });
   // }
+
+  _onItemClick(item: any) {
+    PayService.TabsBehavior.next({ update: true });
+    this.pay.router.navigateByUrl('/dettaglio-servizio', { state: item.source });
+  }
 
   _onQuadroClick(quadro: any, index: number, filtro: string = '') {
     this.__filterText = filtro;

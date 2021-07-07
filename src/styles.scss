@@ -153,6 +153,10 @@ $sidenavWidth: 310px;
   overflow-y: hidden !important;
 }
 
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: $hover-color;
+}
+
 html, body {
   font-family: 'Titillium Web', sans-serif;
   font-weight: 400;
@@ -415,6 +419,11 @@ mat-sidenav-container.mat-drawer-container {
   pointer-events: none;
 }
 
+.header-bar .icon-group button:disabled + .icon-label {
+  color: $text-2nd-color;
+  background-color: $background-3rd-color;
+}
+
 .language-bar .dropdown-toggle::after {
   font-family: 'Material Icons';
   position: relative;
@@ -537,6 +546,10 @@ pay-choice-dialog .mat-form-field-appearance-legacy .mat-form-field-underline {
   background-color: $text-color;
 }
 
+pay-external-login a.ext-button * {
+  color: $text-color;
+}
+
 pay-spid-login {
   margin-left: 1rem;
 }
@@ -608,6 +621,11 @@ pay-title-deco .title-deco .art-deco {
   font-size: 1.5rem;
   font-weight: 400;
   color: $text-color;
+}
+
+pay-group:last-child,
+.quadro-servizio {
+  margin-bottom: 3rem;
 }
 
 pay-quadro .quadro {

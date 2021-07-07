@@ -63,18 +63,7 @@
         }
       },
       "Servizi": {
-        "Titolo": "Paga un servizio",
-        "Filtro": {
-          "Risultati": {
-            "SS": "Ho trovato un servizio in un assessorato",
-            "SP": "Ho trovato un servizio in {{value}} assessorati",
-            "PS": "Ho trovato {{value}} servizi in un assessorato",
-            "PP": "Ho trovato {{valueN}} servizi in {{valueM}} assessorati",
-            "ServiziAssessorato": "È presente {{value}} servizio|Sono presenti {{value}} servizi"
-          },
-          "NessunRisultato": "Nessun risultato.",
-          "Placeholder": "Cerca un servizio..."
-        }
+        "Titolo": "Paga un servizio"
       }
     },
     "Cart": {
@@ -226,6 +215,18 @@
         "Eseguito": "Eseguito",
         "NonEseguito": "Non eseguito",
         "EseguitoParziale": "Eseguito parziale"
+      },
+      "Filtro": {
+        "NessunaCorrispondenza": "Nessuna corrispondenza.",
+        "Risultati": {
+          "SS": "È presente un servizio in un assessorato",
+          "SP": "È presente un servizio in {{value}} assessorati",
+          "PS": "Sono presenti {{value}} servizi in un assessorato",
+          "PP": "Sono presenti {{valueN}} servizi in {{valueM}} assessorati",
+          "ServiziAssessorato": "È presente {{value}} servizio|Sono presenti {{value}} servizi"
+        },
+        "NessunRisultato": "Nessun risultato.",
+        "Placeholder": "Cerca un servizio..."
       }
     }
   }

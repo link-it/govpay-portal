@@ -958,8 +958,8 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   static MapResultsTitle(N: number, M: number): string {
-    const risultati: any = PayService.I18n.json.Pagamenti.Servizi.Filtro.Risultati;
-    let text = PayService.I18n.json.Pagamenti.Servizi.Filtro.NessunRisultato;
+    const risultati: any = PayService.I18n.json.Common.Filtro.Risultati;
+    let text = PayService.I18n.json.Common.Filtro.NessunRisultato;
     if (N === 1) {
       if (M === 1) {
         text = risultati.SS.toString();

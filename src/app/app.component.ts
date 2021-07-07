@@ -50,7 +50,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
   constructor(public router: Router, public pay: PayService, public translate: TranslateService) {
     this._updateLayoutSub = updateLayoutNow.subscribe((refresh: boolean) => {
       if (refresh) {
-        this._updateLayout();
+        setTimeout(() => {
+          this._updateLayout();
+        });
       }
     });
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -206,9 +208,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
         PayService.StaticRouteBehavior.next({ detail: PayService.AssessoratoDetail });
       break;
       default:
-        this._updateLayout();
         sidenav.toggle();
     }
+    updateLayoutNow.next(true);
   }
 
   _sideNavItemClick(sidenav: any, url: string) {

@@ -10,7 +10,7 @@
       </div>
       <ng-content select="[add-on]"></ng-content>
       <span class="icon-group">
-        <button mat-icon-button *ngIf="_showRightIcon">
+        <button mat-icon-button *ngIf="_showRightIcon" [disabled]="_disableIconRight">
           <mat-icon (click)="_onIconRight()">{{ _iconRight }} </mat-icon>
         </button>
         <span class="icon-label">{{ _label }}</span>

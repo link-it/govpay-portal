@@ -32,7 +32,7 @@ export class AuthGuardService implements CanActivate, OnDestroy {
       router.navigateByUrl('/');
       return false;
     }
-    if (state.url === '/pagamento-servizio' && !PayService.CreditoreAttivo) {
+    if ((state.url === '/pagamento-servizio' || state.url === '/bollettino') && !PayService.CreditoreAttivo) {
       router.navigateByUrl('/');
       return false;
     }
