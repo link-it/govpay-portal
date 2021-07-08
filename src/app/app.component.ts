@@ -128,6 +128,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
       if (this._mode === 'side' && !this.sidenav.opened) {
         this.sidenav.open();
       }
+      if (this._mode === 'over' && this.sidenav.opened) {
+        this.sidenav.close();
+      }
     }
   }
 
@@ -203,14 +206,15 @@ export class AppComponent implements OnInit, AfterContentChecked {
             break;
           default:
         }
+        updateLayoutNow.next(true);
       break;
       case 'arrow_back':
         PayService.StaticRouteBehavior.next({ detail: PayService.AssessoratoDetail });
+        updateLayoutNow.next(true);
       break;
       default:
         sidenav.toggle();
     }
-    updateLayoutNow.next(true);
   }
 
   _sideNavItemClick(sidenav: any, url: string) {
