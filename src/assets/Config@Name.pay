@@ -32,9 +32,14 @@
         Full: 'background.jpg'
       },
       Partners: [],
+      MainIcon: {
+        Logo: '',
+        Url: ''
+      },
       Configurazione: {
         Menu: {
           Infos: true,
+          MainIcon: false,
           Partners: false,
           Govpay: true
         },

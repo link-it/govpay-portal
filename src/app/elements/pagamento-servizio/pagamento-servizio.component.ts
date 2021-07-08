@@ -4,6 +4,7 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs/index';
 import { SimpleItemComponent } from '../components/simple-item.component';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
+import { Language } from '../classes/language';
 
 declare let $: any;
 
@@ -226,8 +227,11 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
     PayService.TabsBehavior.next({ update: true });
   }
 
-  __closeAssessorato(filtro: any) {
+  __closeAssessorato() {
     PayService.AssessoratoDetail = false;
+    setTimeout(() => {
+      this.__mapTitle();
+    });
   }
 
 }

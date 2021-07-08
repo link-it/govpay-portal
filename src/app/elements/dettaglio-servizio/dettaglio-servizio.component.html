@@ -20,7 +20,7 @@
       <pay-title-deco art-class="title-deco mb-5" [simple]="true" [titolo]="Pay.I18n.json.DettaglioServizio.Form.Titolo"></pay-title-deco>
       <json-schema-form #jsf [options]="_formOptions" [framework]="'material-design'" [schema]="_jsonSchema" [data]="_jsonData" [UISchema]="_jsonUISchema"
                         [layout]="_jsonLayout" (isValid)="_isValid($event)"></json-schema-form>
-      <pay-icon-button button-class="icon-button" [icon]="'check'" (ib-click)="_generaPendenza(jsf, true)"
+      <pay-icon-button button-class="icon-button" [icon]="'verified'" (ib-click)="_generaPendenza(jsf, true)"
                        [disabled]="!_jsFormValid" *ngIf="_decodedForm.detail['requireUserConfirm']" [button-color]="'accent'">
         {{ Pay.I18n.json.DettaglioServizio.Form.Verifica }}
       </pay-icon-button>

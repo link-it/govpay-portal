@@ -1,5 +1,21 @@
 <mat-dialog-content>
-  <p class="text-break" *ngFor="let m of _dialogData?.message">{{ m }}</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <p class="text-break" *ngFor="let m of _dialogData?.message">{{ m }}</p>
+      </div>
+    </div>
+    <ng-template [ngIf]="_hasReport">
+      <div class="row report-line" *ngFor="let r of _dialogData.report">
+        <div class="col-8">
+          <p class="text-break">{{ r.key }}</p>
+        </div>
+        <div class="col-4">
+          <p class="text-right">{{ r.value }}</p>
+        </div>
+      </div>
+    </ng-template>
+  </div>
 </mat-dialog-content>
 <div class="d-block text-right pt-4">
   <button mat-button color="accent" type="button" (click)="_closeDialog(true)">{{ _dialogData?.NOLabel }}</button>

@@ -41,9 +41,14 @@
           Url: 'http://#'
         }
       ],
+      MainIcon: {
+        Logo: 'partner-logo.png',
+        Url: 'http://#'
+      },
       Configurazione: {
         Menu: {
           Infos: false,
+          MainIcon: true,
           Partners: true,
           Govpay: true
         },

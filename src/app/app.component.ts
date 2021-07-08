@@ -8,6 +8,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { updateLayoutNow, validateNow } from './elements/pagamento-servizio/pagamento-servizio.component';
 import { MatSidenav } from '@angular/material';
 import { Subscription } from 'rxjs/index';
+import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'pay-root',
@@ -38,11 +39,14 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _configPartners: boolean = false;
   _updateLayoutSub: Subscription;
 
+  __once: boolean = true;
+
   @HostListener('window:resize') onResize() {
     this._updateLayout();
   }
   @ViewChild('headerBar', { read: ElementRef }) private _headerBar: ElementRef;
   @ViewChild('languageBar', { read: ElementRef }) private _languageBar: ElementRef;
+  @ViewChild('tabBar') private _navTabBar: NavBarComponent;
   @ViewChild('tabBar', { read: ElementRef }) private _tabBar: ElementRef;
   @ViewChild('gestore', { read: ElementRef }) private _gestore: ElementRef;
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
@@ -104,7 +108,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   ngOnInit() {
     this._configPartners = !!(PayService.Gestore.Configurazione.Menu.Partners);
-    this._checkCartIcon();
   }
 
   ngAfterContentChecked() {
@@ -112,30 +115,35 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   _updateLayout() {
-    this._checkCartIcon();
     if (this._languageBar && this._gestore) {
       this._lb = this._languageBar.nativeElement.clientHeight;
       this._gh = this._gestore.nativeElement.clientHeight;
       if (this._headerBar && this._globalContent) {
-        const _tbh = this._tabBar?this._tabBar.nativeElement.clientHeight:0;
+        const _tbh: number = this._tabBar?this._tabBar.nativeElement.clientHeight:0;
+        const _offset: number = (this._mode === 'side')?this._lb:0;
         this._hbh = this._headerBar.nativeElement.clientHeight;
         this._gch = window.innerHeight - this._hbh - this._lb - _tbh;
-        this._mlh = window.innerHeight - this._hbh - this._gh;
+        this._mlh = window.innerHeight - this._hbh - this._gh - _offset;
       }
     }
     this._mode = (window.innerWidth > 1600)?'side':'over';
     if (this.sidenav) {
       if (this._mode === 'side' && !this.sidenav.opened) {
+        this.__once = false;
         this.sidenav.open();
       }
       if (this._mode === 'over' && this.sidenav.opened) {
+        this.__once = false;
         this.sidenav.close();
       }
     }
   }
 
-  _checkCartIcon() {
-    // this._showCart = !(window.innerWidth < PayService.MobileBreakPointNotice);
+  __isOpen() {
+    if (!this.__once && this._navTabBar) {
+      this.__once = true;
+      this._navTabBar.refreshInkBar();
+    }
   }
 
   _initLanguages() {

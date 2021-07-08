@@ -19,7 +19,7 @@
   <p add-on *ngIf="Pay.CreditoreAttivo && Pay.CREDITORI.length === 1" class="language-bar-title w-100 m-0 multiline-text">{{ Pay.I18n.json.Header.LanguageBar.Titolo }}</p>
 </pay-language-bar>
 <mat-sidenav-container *ngIf="Pay.CreditoreAttivo">
-  <mat-sidenav #sidenav class="side-nav" [mode]="_mode">
+  <mat-sidenav #sidenav class="side-nav" [mode]="_mode" (openedChange)="__isOpen()">
     <div #gestore class="gestore">
       <img class="sidenav-background-gestore" *ngIf="Pay.Gestore && Pay.Gestore.Background" [src]="'assets/images/'+Pay.Gestore?.Background.Small">
       <img class="sidenav-logo-gestore" *ngIf="Pay.Gestore && Pay.Gestore.Logo.Small" [src]="'assets/images/'+Pay.Gestore?.Logo.Small">
@@ -41,7 +41,11 @@
       <mat-list-item role="listitem" (click)="_sideNavItemClick(sidenav, '')" *ngIf="Pay.User && (Pay.SPID['ACCESS'] || Pay.IAM['ACCESS']) && Pay.I18n.json.Account">
         <span class="action">{{ Pay.I18n.json.SideNav.Logout }}</span>
       </mat-list-item>
+      <div class="flex-grow-1"></div>
       <div class="logo-govpay">
+        <a *ngIf="Pay.Gestore?.Configurazione.Menu.MainIcon" [href]="Pay.Gestore?.MainIcon.Url" target="_blank">
+          <img class="main-icon" [src]="'assets/images/'+Pay.Gestore?.MainIcon.Logo">
+        </a>
         <div class="flex-row partners-group" *ngIf="Pay.Gestore?.Configurazione.Menu.Partners">
           <a *ngFor="let partner of Pay.Gestore?.Partners" [href]="partner.Url" target="_blank"><img [src]="'assets/images/'+partner.Logo.Menu"></a>
         </div>

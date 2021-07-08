@@ -94,14 +94,25 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     const _response = response.body;
     const _message: string[] = [ PayService.I18n.json.DettaglioServizio.Dialog.Avviso ];
     _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.Causale}: ${_response['causale']}`);
-    _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza}: ${this.pay.currencyFormat(_response['importo'])}`);
+    const _report: any[] = [];
+    if (_response.datiAllegati && _response.datiAllegati.descrizioneImporto) {
+      _response.datiAllegati.descrizioneImporto.forEach((item: any) => {
+        _report.push({ key: item.voce, value: this.pay.currencyFormat(item.importo) });
+      });
+    }
+    if (_report.length !== 0) {
+      _report.push({ key: PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza, value: this.pay.currencyFormat(_response['importo']) });
+    } else {
+     _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza}: ${this.pay.currencyFormat(_response['importo'])}`);
+    }
     const config: MatDialogConfig = new MatDialogConfig();
     config.width = (window.innerWidth < 768)?'80%':'50%';
     config.data = {
       icon: 'shopping_cart',
       YESLabel: PayService.I18n.json.DettaglioServizio.Dialog.Submit,
       NOLabel: PayService.I18n.json.DettaglioServizio.Dialog.Close,
-      message: _message
+      message: _message,
+      report: _report
     };
     const dialogApp = this.dialog.open(YesnoDialogComponent, config);
     dialogApp.afterClosed().subscribe((yesNo: any) => {

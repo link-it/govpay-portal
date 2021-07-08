@@ -157,6 +157,15 @@ $sidenavWidth: 310px;
   color: $hover-color;
 }
 
+.mat-tab-link {
+  text-transform: uppercase;
+}
+
+.mat-tab-link.mat-tab-label-active {
+  font-weight: 600;
+  opacity: 1;
+}
+
 html, body {
   font-family: 'Titillium Web', sans-serif;
   font-weight: 400;
@@ -322,14 +331,10 @@ mat-sidenav-container.mat-drawer-container {
   overflow-y: auto;
 }
 
-.side-nav-menu mat-list-item:last-of-type {
-  flex-grow: 1;
-}
-
 .side-nav-title {
   font-family: 'Titillium Web', sans-serif;
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 400;
   padding: 0 1rem;
   line-height: 1.5;
   color: $text-color;
@@ -343,6 +348,7 @@ mat-sidenav-container.mat-drawer-container {
 .side-nav .sidenav-background-gestore {
   width: 100%;
   max-height: 240px;
+  background-color: $background-color;
 }
 
 .side-nav .sidenav-logo-gestore {
@@ -363,7 +369,7 @@ mat-sidenav-container.mat-drawer-container {
 
 .side-nav .logo-govpay .partners-group img {
   width: auto;
-  height: 2rem;
+  height: 3rem;
 }
 
 .side-nav .sidenav-logo-gestore {
@@ -375,6 +381,12 @@ mat-sidenav-container.mat-drawer-container {
   display: block;
   max-width: 9rem;
   max-height: 4.8125rem;
+}
+
+.side-nav .logo-govpay img.main-icon {
+  display: block;
+  max-height: 4rem;
+  margin-bottom: 1.5rem;
 }
 
 .language-bar {
@@ -603,9 +615,11 @@ button.mat-flat-button:hover {
   background-color: $text-color;
 }
 
-pay-cart .icon-button button.icon-button,
+pay-yesno-dialog .row.report-line:last-of-type p {
+  font-weight: 600;
+}
+
 pay-dettaglio-servizio .icon-button button.icon-button,
-pay-ricevuta-pagamento .icon-button button.icon-button,
 pay-card .icon-button button.icon-button {
   position: fixed;
   right: 3rem;
@@ -774,6 +788,10 @@ pay-item .secondary-column p.main-text {
   text-align: right;
 }
 
+pay-cart pay-item .secondary-column p.main-text {
+  font-weight: 600;
+}
+
 pay-item .action-menu-icon,
 pay-item .primary-icon {
   color: $reverse-text-color;
@@ -821,6 +839,10 @@ pay-cart .cart-footer {
 pay-cart .cart-footer .main-text {
   color: $text-color;
   margin: 0 0 0 0;
+}
+
+pay-cart .cart-footer .main-text.currency-value {
+  font-weight: 600;
 }
 
 pay-cart .cart-footer .total .col-7 {

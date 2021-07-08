@@ -63,18 +63,7 @@
         }
       },
       "Servizi": {
-        "Titolo": "Pay a service",
-        "Filtro": {
-          "Risultati": {
-            "SS": "One service found in one department",
-            "SP": "One service found in {{value}} departments",
-            "PS": "{{value}} services found in one department",
-            "PP": "{{valueN}} services found in {{valueM}} departments",
-            "ServiziAssessorato": "{{value}} service found|{{value}} services found"
-          },
-          "NessunRisultato": "No results.",
-          "Placeholder": "Search a service..."
-        }
+        "Titolo": "Pay a service"
       }
     },
     "Cart": {
@@ -226,6 +215,18 @@
         "Eseguito": "Paid",
         "NonEseguito": "Not paid",
         "EseguitoParziale": "Partially paid"
+      },
+      "Filtro": {
+        "NessunaCorrispondenza": "No matches.",
+        "Risultati": {
+          "SS": "One service found in one department",
+          "SP": "One service found in {{value}} departments",
+          "PS": "{{value}} services found in one department",
+          "PP": "{{valueN}} services found in {{valueM}} departments",
+          "ServiziAssessorato": "{{value}} service found|{{value}} services found"
+        },
+        "NessunRisultato": "No results.",
+        "Placeholder": "Search a service..."
       }
     }
   }

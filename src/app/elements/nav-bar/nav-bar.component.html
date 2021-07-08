@@ -1,4 +1,4 @@
-<nav mat-tab-nav-bar color="accent" backgroundColor="primary" mat-align-tabs="center" *ngIf="_hasTab">
+<nav #tnb mat-tab-nav-bar color="accent" backgroundColor="primary" mat-align-tabs="center" *ngIf="_hasTab">
   <a mat-tab-link *ngFor="let tab of _tabs" [routerLink]="tab.url" queryParamsHandling="merge" [disabled]="false"
      routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" (click)="_onTabMenu(tab.path)">{{ tab.label }}</a>
 </nav>
