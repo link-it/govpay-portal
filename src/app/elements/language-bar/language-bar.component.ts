@@ -30,7 +30,7 @@ export class LanguageBarComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this._translations.map(lang => {
           if (lang.defaultLanguage) {
-            this._currentLanguage = lang.alpha3Code.toUpperCase();
+            this._currentLanguage = lang.alpha3Code;
           }
         });
       });
@@ -39,7 +39,7 @@ export class LanguageBarComponent implements OnInit, AfterViewInit {
 
   _changeLanguage(_language: Language) {
     if(this._showLanguageMenu) {
-      this._currentLanguage = _language.alpha3Code.toUpperCase();
+      this._currentLanguage = _language.alpha3Code;
       this._changeLang.emit({ language: _language });
     }
   }

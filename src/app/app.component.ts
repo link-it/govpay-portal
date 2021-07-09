@@ -63,26 +63,38 @@ export class AppComponent implements OnInit, AfterContentChecked {
       PayService.TranslateDynamicObject(translate, pay);
     });
     let _toPublicAccessSection: boolean = true;
-    if(location.search) {
-      const _params: any = {};
-      location.search.substr(1).split('&').forEach((p) => {
-        const kv = p.split('=');
-        _params[kv[0]] = kv[1];
-      });
-      if(_params) {
-        if ((_params['idSession'] && _params['idDominio']) || _params['idDominio']) {
-          _toPublicAccessSection = false;
-          PayService.SetCreditoreAttivoAndDomainTarget(_params['idDominio']);
-          if (PayService.CreditoreAttivo) {
-            _toPublicAccessSection = !_params['idSession'];
-            if (!_params['idSession'] && _params['numeroAvviso']) {
-              _toPublicAccessSection = true;
-              PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
-                 Numero: _params['numeroAvviso'],
-              Creditore: _params['idDominio'],
-              };
-              if(PayService.UUID_CHECK && _params['UUID']) {
-                PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
+    const jumpToService: any  = PayService.Jump.exec(location.pathname || '');
+    if(jumpToService && jumpToService.length === 3) {
+      _toPublicAccessSection = false;
+      const dominio: string = jumpToService[1];
+      const codice: string = jumpToService[2];
+      PayService.SetCreditoreAttivoAndDomainTarget(dominio);
+      if (PayService.CreditoreAttivo) {
+        PayService.TabsBehavior.next({ update: true });
+        this.pay.router.navigateByUrl('/dettaglio-servizio', { state: { Codice: codice, Creditore: dominio } });
+      }
+    } else {
+      if(location.search) {
+        const _params: any = {};
+        location.search.substr(1).split('&').forEach((p) => {
+          const kv = p.split('=');
+          _params[kv[0]] = kv[1];
+        });
+        if(_params) {
+          if ((_params['idSession'] && _params['idDominio']) || _params['idDominio']) {
+            _toPublicAccessSection = false;
+            PayService.SetCreditoreAttivoAndDomainTarget(_params['idDominio']);
+            if (PayService.CreditoreAttivo) {
+              _toPublicAccessSection = !_params['idSession'];
+              if (!_params['idSession'] && _params['numeroAvviso']) {
+                _toPublicAccessSection = true;
+                PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
+                   Numero: _params['numeroAvviso'],
+                Creditore: _params['idDominio'],
+                };
+                if(PayService.UUID_CHECK && _params['UUID']) {
+                  PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
+                }
               }
             }
           }
@@ -167,7 +179,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
       });
 
       this.translate.addLangs(_codeLangs);
-      this._language = _currentLanguage.alpha3Code.toUpperCase();
+      this._language = _currentLanguage.alpha3Code;
       PayService.ALPHA_3_CODE = _currentLanguage.alpha3Code;
       if (this.translate.currentLang !== _currentLanguage.alpha2Code) {
         this._doTranslate();
@@ -184,7 +196,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   _languageHandler(event: any) {
     if (event.language.alpha2Code !== this.translate.currentLang) {
-      this._language = event.language.alpha3Code.toUpperCase();
+      this._language = event.language.alpha3Code;
       this._doTranslate();
       this.translate.use(event.language.alpha2Code);
     }

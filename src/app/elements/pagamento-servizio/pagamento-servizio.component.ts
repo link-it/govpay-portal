@@ -4,7 +4,6 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs/index';
 import { SimpleItemComponent } from '../components/simple-item.component';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
-import { Language } from '../classes/language';
 
 declare let $: any;
 
@@ -49,7 +48,11 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       this.pay.sessione().then(() => {
       });
     }
-    this._elencoServizi();
+    if (PayService.Cache.TipiPendenza.length === 0) {
+      this._elencoServizi();
+    } else {
+      this._servizi = this._setupGroups(PayService.Cache.TipiPendenza);
+    }
   }
 
   ngOnDestroy() {
@@ -75,7 +78,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       (result) => {
         if(result.body) {
           const _response = result.body;
-          const _decodedServices: any[] = this._decodeServices(_response['risultati']);
+          const _decodedServices: any[] = PayService.DecodeServices(_response['risultati']);
           this._servizi = this._setupGroups(_decodedServices);
         }
         this.__mapTitle();
@@ -90,30 +93,6 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         this.pay.onError(error);
       }
     );
-  }
-
-  _decodeServices(services: any[]): any[] {
-    return services.map((ser: any) => {
-      if (ser.form) {
-        if (ser.form['definizione']) {
-          try {
-            ser.jsfDef = JSON.parse(PayService.DecodeB64(ser.form['definizione']));
-          } catch (e) {
-            console.log(e);
-            ser.jsfDef = '';
-          }
-        }
-        if (ser.form['impaginazione']) {
-          try {
-            ser.detail = JSON.parse(PayService.DecodeB64(ser.form['impaginazione']));
-          } catch (e) {
-            console.log(e);
-            ser.detail = '';
-          }
-        }
-      }
-      return ser;
-    });
   }
 
   _setupGroups(decodedServices: any[]): any[] {

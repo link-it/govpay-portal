@@ -55,9 +55,11 @@ export class PayService implements OnInit, OnDestroy {
   public static I18n: I18n = new I18n();
   public static MenuItems: any[] = [];
   public static ExtraState: any;
+  public static Cache: any = { TipiPendenza: [] };
   public static AssessoratoDetail: boolean = false;
   public static MobileBreakPointNotice: number = 768;
   public static EditMode: boolean = false;
+  public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
 
   public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
   public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -309,9 +311,32 @@ export class PayService implements OnInit, OnDestroy {
           this.router.navigateByUrl('/');
           return false;
         }
-        // Solo /pagamenti controlla la sessione
+        // Solo /pagamento-servizio controlla la sessione
         // ma è di accesso pubblico
         return true;
+      });
+  }
+
+  jumpService(creditore: string, codice: string): Promise<boolean> {
+    return this.elencoServizi(creditore)
+      .toPromise()
+      .then(response => {
+        this.updateSpinner(false);
+        PayService.Cache.TipiPendenza = PayService.DecodeServices(response.body?response.body['risultati']:[]);
+        PayService.ExtraState = PayService.Cache.TipiPendenza.filter((el: any) => {
+          return (el.idTipoPendenza === codice);
+        })[0];
+        if (!PayService.ExtraState) {
+          this.router.navigateByUrl('/');
+          return false;
+        }
+        return true;
+      })
+      .catch(error => {
+        PayService.Cache.TipiPendenza = [];
+        this.updateSpinner(false);
+        this.router.navigateByUrl('/');
+        return false;
       });
   }
 
@@ -1053,6 +1078,30 @@ export class PayService implements OnInit, OnDestroy {
       behaviors.forEach((b: BehaviorSubject<any>) => {
         b.next(null);
       });
+    });
+  }
+
+  public static DecodeServices(services: any[]): any[] {
+    return services.map((ser: any) => {
+      if (ser.form) {
+        if (ser.form['definizione']) {
+          try {
+            ser.jsfDef = JSON.parse(PayService.DecodeB64(ser.form['definizione']));
+          } catch (e) {
+            console.log(e);
+            ser.jsfDef = '';
+          }
+        }
+        if (ser.form['impaginazione']) {
+          try {
+            ser.detail = JSON.parse(PayService.DecodeB64(ser.form['impaginazione']));
+          } catch (e) {
+            console.log(e);
+            ser.detail = '';
+          }
+        }
+      }
+      return ser;
     });
   }
 

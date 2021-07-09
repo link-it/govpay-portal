@@ -77,17 +77,17 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
         }
         const srv: any = service.detail[lingua.alpha3Code];
         const _mappedService: any = {
+          subgroup: srv.subgroup || '',
           category: srv.category || '',
           searchTerms: srv.search_terms || '',
           name: srv.name || '',
           source: service
         };
-        const subgroup: string = srv.subgroup;
-        if (subgroup) {
-          if (!groups.hasOwnProperty(subgroup)) {
-            groups[subgroup] = [];
+        if (_mappedService.subgroup) {
+          if (!groups.hasOwnProperty(_mappedService.subgroup)) {
+            groups[_mappedService.subgroup] = [];
           }
-          groups[subgroup].push(_mappedService);
+          groups[_mappedService.subgroup].push(_mappedService);
         } else {
           _flat.push(_mappedService);
         }
