@@ -1,0 +1,66 @@
+/* titillium-web-regular - latin */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../webfonts/titillium-web-v8-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Titillium Web Regular'), local('TitilliumWeb-Regular'),
+  url('../webfonts/titillium-web-v8-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../webfonts/titillium-web-v8-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../webfonts/titillium-web-v8-latin-regular.woff') format('woff'), /* Modern Browsers */
+  url('../webfonts/titillium-web-v8-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../webfonts/titillium-web-v8-latin-regular.svg#TitilliumWeb') format('svg'); /* Legacy iOS */
+}
+
+/* titillium-web-600 - latin */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../webfonts/titillium-web-v8-latin-600.eot'); /* IE9 Compat Modes */
+  src: local('Titillium Web SemiBold'), local('TitilliumWeb-SemiBold'),
+  url('../webfonts/titillium-web-v8-latin-600.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../webfonts/titillium-web-v8-latin-600.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../webfonts/titillium-web-v8-latin-600.woff') format('woff'), /* Modern Browsers */
+  url('../webfonts/titillium-web-v8-latin-600.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../webfonts/titillium-web-v8-latin-600.svg#TitilliumWeb') format('svg'); /* Legacy iOS */
+}
+
+/* Material icons */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../webfonts/MaterialIcons-Regular.woff2') format('woff2'),
+  url('../webfonts/MaterialIcons-Regular.woff') format('woff');
+}
+
+.material-icons {
+  font-family: 'Material Icons' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fontawesome */
+@font-face {
+  font-family: 'Font Awesome 5 Brands';
+  src: url('../webfonts/fontawesome-webfont.eot');
+  src: url('../webfonts/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../webfonts/fontawesome-webfont.woff2') format('woff2'),
+  url('../webfonts/fontawesome-webfont.woff') format('woff'),
+  url('../webfonts/fontawesome-webfont.ttf') format('truetype'),
+  url('../webfonts/fontawesome-webfont.svg#nowaymedium') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
