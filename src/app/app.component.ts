@@ -65,11 +65,11 @@ export class AppComponent implements OnInit, AfterContentChecked {
     let _toPublicAccessSection: boolean = true;
     const jumpToService: any  = PayService.Jump.exec(location.pathname || '');
     if(jumpToService && jumpToService.length === 3) {
-      _toPublicAccessSection = false;
       const dominio: string = jumpToService[1];
       const codice: string = jumpToService[2];
       PayService.SetCreditoreAttivoAndDomainTarget(dominio);
       if (PayService.CreditoreAttivo) {
+        _toPublicAccessSection = false;
         PayService.TabsBehavior.next({ update: true });
         this.pay.router.navigateByUrl('/dettaglio-servizio', { state: { Codice: codice, Creditore: dominio } });
       }
