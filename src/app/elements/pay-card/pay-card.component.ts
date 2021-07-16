@@ -114,9 +114,8 @@ export class PayCardComponent {
   }
 
   reset() {
-    if (this._fg && this._avviso) {
+    if (this._fg) {
       this._fg.reset();
-      this._avviso.setErrors(null);
     }
   }
 }

@@ -92,8 +92,8 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
 
   _verify(response: any) {
     const _response = response.body;
-    const _message: string[] = [ PayService.I18n.json.DettaglioServizio.Dialog.Avviso ];
-    _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.Causale}: ${_response['causale']}`);
+    const _message: string[] = [];
+    _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.Causale}: ${_response['causale']} ${PayService.I18n.json.DettaglioServizio.Dialog.Avviso}`);
     const _report: any[] = [];
     if (_response.datiAllegati && _response.datiAllegati.descrizioneImporto) {
       _response.datiAllegati.descrizioneImporto.forEach((item: any) => {
@@ -108,7 +108,7 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     const config: MatDialogConfig = new MatDialogConfig();
     config.width = (window.innerWidth < 768)?'80%':'50%';
     config.data = {
-      icon: 'shopping_cart',
+      icon: '',
       YESLabel: PayService.I18n.json.DettaglioServizio.Dialog.Submit,
       NOLabel: PayService.I18n.json.DettaglioServizio.Dialog.Close,
       message: _message,

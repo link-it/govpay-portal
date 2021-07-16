@@ -32,14 +32,9 @@
         Full: 'background.jpg'
       },
       Partners: [],
-      MainIcon: {
-        Logo: '',
-        Url: ''
-      },
       Configurazione: {
         Menu: {
           Infos: true,
-          MainIcon: false,
           Partners: false,
           Govpay: true
         },
@@ -94,7 +89,10 @@
     },
     DOMINI: _elencoDomini(),
     LINGUE: _traduzioni(),
-    GESTORE: _assetsGestore()
+    GESTORE: _assetsGestore(),
+    COLLAPSIBLE_SECTIONS: {
+      InformazioniDettaglioServizio: true
+    }
   };
 
   _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);

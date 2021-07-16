@@ -40,6 +40,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   _updateLayoutSub: Subscription;
 
   __once: boolean = true;
+  __gestoreBkg: any;
 
   @HostListener('window:resize') onResize() {
     this._updateLayout();
@@ -120,6 +121,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   ngOnInit() {
     this._configPartners = !!(PayService.Gestore.Configurazione.Menu.Partners);
+    if (PayService.Gestore && PayService.Gestore.Background) {
+      this.__gestoreBkg = { 'background-image': 'url(\'assets/images/'+PayService.Gestore.Background.Small+'\')' };
+    }
   }
 
   ngAfterContentChecked() {

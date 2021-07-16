@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.label-field {
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0;
+  margin: 0;
+}
+
+.valore-field a,
+.valore-field {
+  line-height: 1.25;
+  word-break: break-all;
+}
+
+p.valore-field:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+
+  .label-group {
+    max-width: 130px;
+    min-width: 130px;
+    width: 130px;
+  }
+
+  .label-field:hover {
+    position: absolute;
+    top: -.25rem;
+    left: -.5rem;
+    background-color: rgb(245, 245, 245);
+    color: rgba(33, 33, 33, .5);
+    box-shadow: 0 0 8px rgba(0, 0, 0, .2);
+    z-index: 2;
+    padding: .25rem .5rem;
+    border-radius: 4px;
+  }
+
+}

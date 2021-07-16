@@ -41,6 +41,7 @@ import { SimpleItemComponent } from './elements/components/simple-item.component
 import { PayCardComponent } from './elements/pay-card/pay-card.component';
 import { CartComponent } from './elements/cart/cart.component';
 import { PayItemComponent } from './elements/pay-item/pay-item.component';
+import { FieldGroupComponent } from './elements/field-group/field-group.component';
 import { RicevutaPagamentoComponent } from './elements/ricevuta-pagamento/ricevuta-pagamento.component';
 import { PosizioneDebitoriaComponent } from './elements/posizione-debitoria/posizione-debitoria.component';
 import { ArchivioComponent } from './elements/archivio/archivio.component';
@@ -75,6 +76,7 @@ export function createTranslateLoader(http: HttpClient) {
     PayCardComponent,
     CartComponent,
     PayItemComponent,
+    FieldGroupComponent,
     YesnoDialogComponent,
     EsitoComponent,
     ChoiceDialogComponent,

@@ -123,7 +123,7 @@ $link-theme: map_merge($link-theme, (foreground: $foreground));
 @include angular-material-theme($link-theme);
 
 $background-color: #BBDEFB;
-// $background-2nd-color: #...;
+$background-2nd-color: #E3F2FD;
 $background-3rd-color: #F5F5F5;
 $background-4th-color: rgba(255, 255, 255, .75);
 $background-5th-color: rgba(0, 0, 0, .05);
@@ -164,6 +164,41 @@ $sidenavWidth: 310px;
 .mat-tab-link.mat-tab-label-active {
   font-weight: 600;
   opacity: 1;
+}
+
+.mat-option {
+  white-space: normal;
+  display: block;
+  line-height: 1.4;
+  height: auto;
+}
+
+.mat-option:hover:not(.mat-option-disabled),
+.mat-option:focus:not(.mat-option-disabled),
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: $text-color;
+  background-color: $background-2nd-color;
+}
+
+.mat-option.mat-active {
+  background: transparent;
+  color: $text-color;
+}
+
+mat-option .mat-option-text {
+  font-size: 1rem;
+  white-space: normal;
+  padding: .5rem 0;
+}
+
+.mat-select-panel .mat-option {
+  line-height: 1.4 !important;
+  height: unset !important;
+}
+
+.mat-checkbox-indeterminate.mat-primary .mat-checkbox-background,
+.mat-checkbox-checked.mat-primary .mat-checkbox-background {
+  background-color: $hover-color;
 }
 
 html, body {
@@ -242,11 +277,12 @@ section {
 }
 
 .language-bar img.logo-creditore {
-  width: 48px;
+  width: auto;
   height: 48px;
   max-width: 48px;
   max-height: 48px;
   margin: 0 15px 0 -15px;
+  padding: 4px;
 }
 
 .language-bar .dropdown-menu {
@@ -263,8 +299,11 @@ section {
   padding: .75rem 1.5rem;
   white-space: normal;
   color: $text-color;
+  cursor: default;
 }
 
+pay-spid-login .dropdown-item:hover,
+pay-spid-login .dropdown-item:active,
 .language-bar p.dropdown-item:hover,
 .mat-menu-item:hover:not([disabled]),
 .mat-menu-item.cdk-program-focused:not([disabled]),
@@ -273,7 +312,7 @@ section {
 .language-bar p.dropdown-item.active,
 .language-bar p.dropdown-item:active {
   color: $text-color;
-  background-color: $background-5th-color;
+  background-color: $background-2nd-color;
 }
 
 .language-bar p.dropdown-item.active-item,
@@ -343,13 +382,15 @@ mat-sidenav-container.mat-drawer-container {
 
 .side-nav .gestore {
   position: relative;
+  background-color: $background-color;
+  height: 160px;
 }
 
-.side-nav .sidenav-background-gestore {
-  width: 100%;
-  max-height: 240px;
-  background-color: $background-color;
-}
+//.side-nav .sidenav-background-gestore {
+//  width: 100%;
+//  max-height: 160px;
+//  background-color: $background-color;
+//}
 
 .side-nav .sidenav-logo-gestore {
   position: absolute;
@@ -369,7 +410,7 @@ mat-sidenav-container.mat-drawer-container {
 
 .side-nav .logo-govpay .partners-group img {
   width: auto;
-  height: 3rem;
+  height: 2rem;
 }
 
 .side-nav .sidenav-logo-gestore {
@@ -488,8 +529,23 @@ mat-sidenav-container.mat-drawer-container {
   color: $hover-color;
 }
 
-.etichetta {
+pay-field-group:only-child,
+pay-field-group:last-child {
+  margin-bottom: 0;
+}
+
+pay-field-group .label-field {
+//.etichetta {
   color: $text-2nd-color;
+}
+
+pay-field-group .valore-field {
+  line-height: 1.4;
+}
+
+pay-field-group .routable span.valore-field {
+//.valore p a {
+  word-break: break-all;
 }
 
 pay-choice-dialog {
@@ -576,12 +632,11 @@ mat-list-item a:hover {
 
 button.mat-button,
 button.mat-flat-button,
-pay-icon-button .cart-button button.cart-button,
-pay-icon-button .flat-button button.flat-button,
-pay-icon-button .icon-button button.icon-button {
+button.mat-flat-button.mat-accent {
+  display: inline-block;
   text-transform: none;
   padding: .75rem .9375rem;
-  border-radius: 28px;
+  border-radius: 0;
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.5;
@@ -598,21 +653,6 @@ button.mat-button {
   color: $reverse-text-color !important;
 }
 
-pay-icon-button .cart-button button.cart-button {
-  display: block;
-  text-transform: none;
-  font-weight: 400;
-  padding: 1.25rem .9375rem;
-}
-
-pay-icon-button .cart-button button.cart-button:hover {
-  background-color: transparent;
-}
-
-pay-icon-button img.src-icon {
-  height: 20px;
-}
-
 button.mat-flat-button:hover {
   background-color: $text-color;
 }
@@ -621,15 +661,24 @@ pay-yesno-dialog .row.report-line:last-of-type p {
   font-weight: 600;
 }
 
-pay-dettaglio-servizio .icon-button button.icon-button,
-pay-card .icon-button button.icon-button {
-  position: fixed;
-  right: 3rem;
-  bottom: 3rem;
-}
-
 pay-title-deco .title-deco .art-deco {
   background-color: $background-color;
+}
+
+pay-title-deco .title-deco.collapsible-title:after,
+pay-title-deco[aria-expanded="false"] .title-deco.collapsible-title:after,
+pay-title-deco[aria-expanded="true"] .title-deco.collapsible-title:after {
+  content: "expand_less";
+  font-family: 'Material Icons';
+  font-size: 1.5rem;
+  position: absolute;
+  right: 0;
+  top: calc(50% - 12px);
+}
+
+pay-title-deco .title-deco.collapsible-title:after,
+pay-title-deco[aria-expanded="false"] .title-deco.collapsible-title:after {
+  content: "expand_more";
 }
 
 .title-deco .label {
@@ -677,7 +726,7 @@ pay-group {
 }
 
 pay-group:hover {
-  border-color: $background-color;
+  border-color: $hover-color;
 }
 
 pay-group .group {
@@ -718,7 +767,7 @@ pay-simple-item:last-child {
 }
 
 pay-simple-item:hover {
-  background-color: $background-color;
+  background-color: $background-2nd-color;
 }
 
 pay-simple-item .main-data .primary-text,
@@ -788,9 +837,6 @@ p.meta-text {
 
 pay-item .secondary-column p.main-text {
   text-align: right;
-}
-
-pay-cart pay-item .secondary-column p.main-text {
   font-weight: 600;
 }
 
@@ -835,7 +881,7 @@ pay-item .expanding-container p:only-child {
 
 pay-cart .cart-footer {
   background-color: $background-5th-color;
-  padding: .5rem 0;
+  padding: .875rem 0;
 }
 
 pay-cart .cart-footer .main-text {

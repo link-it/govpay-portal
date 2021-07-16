@@ -34,10 +34,9 @@
   <div class="row">
     <div class="col-12 col-md-2"></div>
     <div class="col-12 col-md-8 d-block d-sm-flex align-items-sm-center">
-      <pay-icon-button class="m-0 mr-sm-4" [src-icon]="Pay.LogoPagoPA" (ib-click)="_ibClick()" *ngIf="Pay.ShoppingCart.length !== 0"
-                       button-class="icon-button" [button-color]="'accent'">
+      <button mat-flat-button class="m-0 mr-sm-4" (click)="_ibClick()" *ngIf="Pay.ShoppingCart.length !== 0" [color]="'accent'">
         {{ Pay.I18n.json.Cart.Pagamenti.Paga }}
-      </pay-icon-button>
+      </button>
       <button mat-button color="accent" class="mt-3 mt-sm-0" (click)="__backToPayments()">{{ Pay.I18n.json.Cart.Pagamenti.Indietro }}</button>
     </div>
     <div class="col-12 col-md-2"></div>

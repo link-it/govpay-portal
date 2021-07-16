@@ -70,7 +70,7 @@
       "Titolo": "Carrello",
       "Pagamenti": {
         "Titolo": "Elenco pagamenti",
-        "Paga": "Paga ora",
+        "Paga": "Paga con pagoPA",
         "Indietro": "Torna ai pagamenti",
         "Stampa": "Stampa bollettino",
         "Totale": "Totale",

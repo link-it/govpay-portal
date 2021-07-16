@@ -70,7 +70,7 @@
       "Titolo": "Cart",
       "Pagamenti": {
         "Titolo": "Payments list",
-        "Paga": "Pay now",
+        "Paga": "Pay with pagoPA",
         "Indietro": "Back to payments",
         "Stampa": "Print notice",
         "Totale": "Total",

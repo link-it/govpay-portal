@@ -42,6 +42,7 @@ export class PayService implements OnInit, OnDestroy {
   public static UUID_CHECK: string = '';
   public static ALPHA_3_CODE: string = '';
   public static Gestore: any;
+  public static CollapsibleSections: any;
   public static RouteConfig: any;
   public static QueryProfile: string = '';
   public static LogoPagoPA: string = 'assets/pagopa.svg';
@@ -185,6 +186,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.PAY_RESPONSE_URL = PayConfig['PAY_RESPONSE_URL'];
     PayService.UUID_CHECK = PayConfig['UUID_CHECK'];
     PayService.Gestore = PayConfig['GESTORE'];
+    PayService.CollapsibleSections = PayConfig['COLLAPSIBLE_SECTIONS'];
     PayService.RouteConfig = PayConfig['ROUTING'];
   }
 
@@ -1103,6 +1105,10 @@ export class PayService implements OnInit, OnDestroy {
       }
       return ser;
     });
+  }
+
+  public static MdBlock(): boolean {
+    return (window.innerWidth >= 768);
   }
 
 }
