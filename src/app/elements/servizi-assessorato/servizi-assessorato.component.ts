@@ -93,11 +93,15 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
         }
         sCount++;
       });
+      const gKeys: string[] = Object.keys(groups).sort();
+      gKeys.forEach((kg) => {
+        PayService.SortBy(groups[kg], 'name');
+      });
       servicesByLanguage[lingua.alpha3Code] = {
         N: sCount,
         dictionary: groups,
         flat: _flat,
-        groups: Object.keys(groups).map((kg: string) => {
+        groups: gKeys.map((kg: string) => {
           return {
             group: kg,
             items: groups[kg]

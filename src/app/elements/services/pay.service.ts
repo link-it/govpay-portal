@@ -58,6 +58,7 @@ export class PayService implements OnInit, OnDestroy {
   public static ExtraState: any;
   public static Cache: any = { TipiPendenza: [] };
   public static AssessoratoDetail: boolean = false;
+  public static ActionDetail: boolean = false;
   public static MobileBreakPointNotice: number = 768;
   public static EditMode: boolean = false;
   public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
@@ -902,9 +903,11 @@ export class PayService implements OnInit, OnDestroy {
 
   static MapHeading(router: Router, translate: TranslateService) {
     let tabs: boolean = false;
+    PayService.ActionDetail = false;
     switch(router.url.split('?')[0]) {
       case '/pagamento-servizio':
         if (PayService.AssessoratoDetail) {
+          PayService.ActionDetail = true;
           PayService.Header.LeftIcon = 'arrow_back';
           PayService.Header.Titolo = PayService.I18n.jsonSchema.Assessorato.TitoloSchema[PayService.ALPHA_3_CODE];
         } else {
@@ -928,6 +931,7 @@ export class PayService implements OnInit, OnDestroy {
         } else {
           PayService.Header.Titolo = PayService.I18n.json.Header.Titolo;
         }
+        PayService.ActionDetail = true;
         PayService.Header.LeftIcon = 'close';
         break;
       case '/carrello':
@@ -936,6 +940,7 @@ export class PayService implements OnInit, OnDestroy {
         break;
       case '/ricevuta':
         PayService.Header.Titolo = PayService.I18n.json.Ricevuta.Titolo;
+        PayService.ActionDetail = true;
         PayService.Header.LeftIcon = 'close';
         break;
       case '/riepilogo':
@@ -1111,4 +1116,15 @@ export class PayService implements OnInit, OnDestroy {
     return (window.innerWidth >= 768);
   }
 
+  public static SortBy(items: any[], property: string) {
+    items.sort((a: any, b: any) => {
+      if (a[property] < b[property]) {
+        return -1;
+      }
+      if (a[property] > b[property]) {
+        return 1;
+      }
+      return 0;
+    });
+  }
 }

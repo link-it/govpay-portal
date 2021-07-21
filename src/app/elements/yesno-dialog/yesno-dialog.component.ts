@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 export class YesnoDialogComponent implements OnInit {
 
   _hasReport: boolean = false;
-  _dialogData: any = { YESLabel: '', NOLabel: '', icon: '', message: [], report: [] };
+  _dialogData: any = { YESLabel: '', NOLabel: '', icon: '', message: [], bottomMessage: [], report: [] };
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialogRef<YesnoDialogComponent>) {
     this._dialogData = data;

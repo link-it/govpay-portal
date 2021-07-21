@@ -1,6 +1,6 @@
-import { OnInit, OnDestroy, Component, ViewChild, AfterViewInit } from '@angular/core';
+import { OnInit, OnDestroy, Component, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { PayService } from '../services/pay.service';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/index';
@@ -20,7 +20,19 @@ const Debug: boolean = false;
 })
 export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('jsf', { read: JsonSchemaFormComponent }) _jsf: JsonSchemaFormComponent;
-
+  @HostListener('window:resize') onResize() {
+    if (this._dialogApp) {
+      const config: MatDialogConfig = new MatDialogConfig();
+      config.width = '50%';
+      if (window.innerWidth < 768) {
+        config.width = '80%';
+      }
+      if (window.innerWidth < 480) {
+        config.width = '100%';
+      }
+      this._dialogApp.updateSize(config.width, 'auto');
+    }
+  }
   Pay = PayService;
 
   _jsFormValid: boolean;
@@ -33,6 +45,8 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
   _jsonSchema;
   _jsonUISchema;
   _jsonData;
+
+  _dialogApp: any;
 
   protected _langSubscription: Subscription;
 
@@ -92,8 +106,9 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
 
   _verify(response: any) {
     const _response = response.body;
+    const _bottomMessage: string[] = [ PayService.I18n.json.DettaglioServizio.Dialog.Avviso ];
     const _message: string[] = [];
-    _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.Causale}: ${_response['causale']} ${PayService.I18n.json.DettaglioServizio.Dialog.Avviso}`);
+    _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.Causale}: ${_response['causale']}`);
     const _report: any[] = [];
     if (_response.datiAllegati && _response.datiAllegati.descrizioneImporto) {
       _response.datiAllegati.descrizioneImporto.forEach((item: any) => {
@@ -106,16 +121,24 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
      _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza}: ${this.pay.currencyFormat(_response['importo'])}`);
     }
     const config: MatDialogConfig = new MatDialogConfig();
-    config.width = (window.innerWidth < 768)?'80%':'50%';
+    config.width = '50%';
+    config.maxWidth = '100vw';
+    if (window.innerWidth < 768) {
+      config.width = '80%';
+    }
+    if (window.innerWidth < 480) {
+      config.width = '100%';
+    }
     config.data = {
       icon: '',
       YESLabel: PayService.I18n.json.DettaglioServizio.Dialog.Submit,
       NOLabel: PayService.I18n.json.DettaglioServizio.Dialog.Close,
       message: _message,
+      bottomMessage: _bottomMessage,
       report: _report
     };
-    const dialogApp = this.dialog.open(YesnoDialogComponent, config);
-    dialogApp.afterClosed().subscribe((yesNo: any) => {
+    this._dialogApp = this.dialog.open(YesnoDialogComponent, config);
+    this._dialogApp.afterClosed().subscribe((yesNo: any) => {
       if (!yesNo['cancel']) {
         this._addToCart(response);
       }

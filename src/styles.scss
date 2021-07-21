@@ -657,7 +657,7 @@ button.mat-flat-button:hover {
   background-color: $text-color;
 }
 
-pay-yesno-dialog .row.report-line:last-of-type p {
+pay-yesno-dialog .row.report-line.last p {
   font-weight: 600;
 }
 
@@ -790,7 +790,9 @@ pay-simple-item p {
   font-size: 1rem;
   line-height: 1.5;
   margin: 0;
-  word-break: break-all;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 pay-simple-item .secondary-text p {

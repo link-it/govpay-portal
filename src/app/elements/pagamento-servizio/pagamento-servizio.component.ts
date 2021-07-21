@@ -134,12 +134,16 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           sCount++;
         }
       });
+      const gKeys: string[] = Object.keys(groups).sort();
+      gKeys.forEach((kg) => {
+        PayService.SortBy(groups[kg], 'name');
+      });
       servicesByLanguage[lingua.alpha3Code] = {
         N: sCount,
-        M: Object.keys(groups).length,
+        M: gKeys.length,
         dictionary: groups,
         flat: _flat,
-        groups: Object.keys(groups).map((kg: string) => {
+        groups: gKeys.map((kg: string) => {
           return {
             group: kg,
             titoloSchemaMap: maps[kg],
@@ -202,11 +206,13 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
     // PayService.MapAssessoratoTitle(this._servizi, quadro.group);
     PayService.Header.Titolo = quadro.group;
     PayService.Header.LeftIcon = 'arrow_back';
+    PayService.ActionDetail = true;
     PayService.AssessoratoDetail = true;
     PayService.TabsBehavior.next({ update: true });
   }
 
   __closeAssessorato() {
+    PayService.ActionDetail = false;
     PayService.AssessoratoDetail = false;
     setTimeout(() => {
       this.__mapTitle();

@@ -56,7 +56,7 @@
   <mat-sidenav-content>
     <pay-header-bar #headerBar [title]="Pay.Header.Titolo" (click-left-icon)="_leftIconClickHandler($event, sidenav)" (click-right-icon)="_rightIconClickHandler()"
                     [left-icon]="Pay.Header.LeftIcon" right-icon="shopping_cart" [right-icon-label]="Pay.ShoppingCart.length" [disable-right-icon]="Pay.ShoppingCart.length === 0"
-                    header-theme="header-bar" [show-right-icon]="true" [show-left-icon]="_mode === 'over' || Pay.AssessoratoDetail">
+                    header-theme="header-bar" [show-right-icon]="true" [show-left-icon]="_mode === 'over' || Pay.ActionDetail">
       <div add-on class="d-flex align-items-center flex-nowrap logged-user" *ngIf="Pay.User && (Pay.SPID['ACCESS'] || Pay.IAM['ACCESS']) && Pay.I18n.json.Account">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.6 587.6" preserveAspectRatio="xMinYMin">
             <style>.spidIco0{fill:#333}.spidIco1{fill:#BBDEFB}</style>

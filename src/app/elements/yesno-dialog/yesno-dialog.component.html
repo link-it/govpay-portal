@@ -6,7 +6,7 @@
       </div>
     </div>
     <ng-template [ngIf]="_hasReport">
-      <div class="row report-line" *ngFor="let r of _dialogData.report">
+      <div *ngFor="let r of _dialogData.report; let last = last" [class]="last?'row report-line last':'row report-line'">
         <div class="col-8 pl-0">
           <p class="text-break">{{ r.key }}</p>
         </div>
@@ -15,6 +15,11 @@
         </div>
       </div>
     </ng-template>
+    <div class="row" *ngIf="_dialogData?.bottomMessage.length !== 0">
+      <div class="col-12 px-0">
+        <p class="text-break" *ngFor="let m of _dialogData?.bottomMessage">{{ m }}</p>
+      </div>
+    </div>
   </div>
 </mat-dialog-content>
 <div class="d-block text-right pt-4">
