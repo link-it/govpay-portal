@@ -139,7 +139,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
         const _offset: number = (this._mode === 'side')?this._lb:0;
         this._hbh = this._headerBar.nativeElement.clientHeight;
         this._gch = window.innerHeight - this._hbh - this._lb - _tbh;
-        this._mlh = window.innerHeight - this._hbh - this._gh - _offset;
+        this._mlh = window.innerHeight - this._gh - _offset;
       }
     }
     this._mode = (window.innerWidth > 1600)?'side':'over';

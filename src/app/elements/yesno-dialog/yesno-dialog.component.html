@@ -1,31 +1,22 @@
 <mat-dialog-content>
   <div class="container">
     <div class="row">
-      <div class="col-12 px-0">
+      <div class="col-12 px-0 messages">
         <p class="text-break" *ngFor="let m of _dialogData?.message">{{ m }}</p>
       </div>
     </div>
     <ng-template [ngIf]="_hasReport">
-      <div *ngFor="let r of _dialogData.report; let last = last" [class]="last?'row report-line last':'row report-line'">
-        <div class="col-8 pl-0">
-          <p class="text-break">{{ r.key }}</p>
-        </div>
-        <div class="col-4 pr-0">
-          <p class="text-right">{{ r.value }}</p>
-        </div>
+      <div class="d-block pt-5">
+        <pay-simple-item *ngFor="let r of _dialogData.report; let last = last" [primaryText]="r.key" [secondaryText]="r.value"
+                         [class]="last?'row report-line last':'row report-line'"></pay-simple-item>
       </div>
     </ng-template>
-    <div class="row" *ngIf="_dialogData?.bottomMessage.length !== 0">
-      <div class="col-12 px-0">
-        <p class="text-break" *ngFor="let m of _dialogData?.bottomMessage">{{ m }}</p>
-      </div>
-    </div>
   </div>
 </mat-dialog-content>
-<div class="d-block text-right pt-4">
-  <button mat-button color="accent" type="button" (click)="_closeDialog(true)">{{ _dialogData?.NOLabel }}</button>
-  <button mat-button class="ml-3" color="accent" type="button" (click)="_closeDialog()" *ngIf="_dialogData.YESLabel">
+<div class="d-block pt-5">
+  <button mat-flat-button color="accent" type="button" (click)="_closeDialog()" *ngIf="_dialogData.YESLabel">
     <i class="material-icons mr-3" *ngIf="_dialogData.icon">{{ _dialogData?.icon }}</i>
     {{ _dialogData?.YESLabel }}
   </button>
+  <button mat-button color="accent" type="button" class="ml-3" (click)="_closeDialog(true)">{{ _dialogData?.NOLabel }}</button>
 </div>

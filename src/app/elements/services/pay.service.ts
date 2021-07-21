@@ -889,7 +889,7 @@ export class PayService implements OnInit, OnDestroy {
       if (!PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang]) {
         PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang] = _language.Archivio.Pagamenti.Titolo.substring(0);
       }
-      PayService.I18n.json.Account = PayService.User?PayService.User.anagrafica['anagrafica']:'';
+      PayService.I18n.json.Account = (PayService.User && PayService.User.anagrafica)?PayService.User.anagrafica['anagrafica']:'';
       // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang], PayService.ShoppingCart.length);
       PayService.I18n.json.Posizione.Debiti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang], PayService.PosizioneDebitoria.length);
       PayService.I18n.json.Archivio.Pagamenti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang], PayService.ArchivioPagamenti.length);

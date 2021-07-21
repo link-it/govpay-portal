@@ -209,6 +209,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
     PayService.ActionDetail = true;
     PayService.AssessoratoDetail = true;
     PayService.TabsBehavior.next({ update: true });
+    $('.global-container').scrollTop(0);
   }
 
   __closeAssessorato() {
@@ -216,6 +217,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
     PayService.AssessoratoDetail = false;
     setTimeout(() => {
       this.__mapTitle();
+      $('.global-container').scrollTop(0);
     });
   }
 

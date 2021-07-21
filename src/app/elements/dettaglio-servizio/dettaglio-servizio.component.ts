@@ -28,7 +28,7 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
         config.width = '80%';
       }
       if (window.innerWidth < 480) {
-        config.width = '100%';
+        config.width = 'calc(100% - 30px)';
       }
       this._dialogApp.updateSize(config.width, 'auto');
     }
@@ -106,35 +106,32 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
 
   _verify(response: any) {
     const _response = response.body;
-    const _bottomMessage: string[] = [ PayService.I18n.json.DettaglioServizio.Dialog.Avviso ];
     const _message: string[] = [];
     _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.Causale}: ${_response['causale']}`);
+    _message.push(PayService.I18n.json.DettaglioServizio.Dialog.Avviso);
     const _report: any[] = [];
     if (_response.datiAllegati && _response.datiAllegati.descrizioneImporto) {
       _response.datiAllegati.descrizioneImporto.forEach((item: any) => {
         _report.push({ key: item.voce, value: this.pay.currencyFormat(item.importo) });
       });
     }
-    if (_report.length !== 0) {
-      _report.push({ key: PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza, value: this.pay.currencyFormat(_response['importo']) });
-    } else {
-     _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza}: ${this.pay.currencyFormat(_response['importo'])}`);
-    }
+    _report.push({ key: PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza, value: this.pay.currencyFormat(_response['importo']) });
+
     const config: MatDialogConfig = new MatDialogConfig();
+    config.panelClass = 'yesno-dialog-container';
     config.width = '50%';
     config.maxWidth = '100vw';
     if (window.innerWidth < 768) {
       config.width = '80%';
     }
     if (window.innerWidth < 480) {
-      config.width = '100%';
+      config.width = 'calc(100% - 30px)';
     }
     config.data = {
       icon: '',
       YESLabel: PayService.I18n.json.DettaglioServizio.Dialog.Submit,
       NOLabel: PayService.I18n.json.DettaglioServizio.Dialog.Close,
       message: _message,
-      bottomMessage: _bottomMessage,
       report: _report
     };
     this._dialogApp = this.dialog.open(YesnoDialogComponent, config);

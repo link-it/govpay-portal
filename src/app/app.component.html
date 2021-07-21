@@ -5,7 +5,7 @@
 <pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [language-list]="_languages" language-bar-theme="language-bar"
                   (on-change-language)="_languageHandler($event)" [current-language]="_language"
                   [style.paddingRight.px]="!Pay.CreditoreAttivo?15:null" [style.zIndex]="!Pay.CreditoreAttivo?2:null">
-  <img add-on *ngIf="Pay.CreditoreAttivo && Pay.CreditoreAttivo.logo" [src]="'assets/images/domini/'+Pay.CreditoreAttivo.logo" class="d-none d-md-inline logo-creditore">
+  <img add-on *ngIf="Pay.CreditoreAttivo && Pay.CreditoreAttivo.logo" [src]="'assets/images/domini/'+Pay.CreditoreAttivo.logo" class="d-inline logo-creditore">
   <div add-on class="my-1 py-2 dropdown w-100" *ngIf="Pay.CREDITORI.length > 1 && Pay.CreditoreAttivo">
     <a class="dropdown-toggle" href="#" id="creditori" role="button" data-toggle="dropdown"
        aria-haspopup="true" aria-expanded="false">{{ Pay.CreditoreAttivo?.label }}</a>
@@ -20,11 +20,11 @@
 </pay-language-bar>
 <mat-sidenav-container *ngIf="Pay.CreditoreAttivo">
   <mat-sidenav #sidenav class="side-nav" [mode]="_mode" (openedChange)="__isOpen()">
-    <div #gestore class="gestore cover" [ngStyle]="__gestoreBkg">
-      <img class="sidenav-logo-gestore" *ngIf="Pay.Gestore && Pay.Gestore.Logo.Small" [src]="'assets/images/'+Pay.Gestore?.Logo.Small">
-    </div>
-    <div class="side-nav-title d-flex align-items-center" [style.height.px]="_hbh">
-      <span class="text-truncate">{{ Pay.I18n.json.SideNav.Titolo }}</span>
+    <div #gestore class="gestore cover d-flex align-items-end" [ngStyle]="__gestoreBkg">
+      <div class="side-nav-title">
+        <img class="sidenav-logo-gestore" *ngIf="Pay.Gestore && Pay.Gestore.Logo.Small" [src]="'assets/images/'+Pay.Gestore?.Logo.Small">
+        <p>{{ Pay.I18n.json.SideNav.Titolo }}</p>
+      </div>
     </div>
     <mat-list role="list" class="side-nav-menu d-flex flex-column" [style.height.px]="_mlh">
       <mat-list-item role="listitem" *ngFor="let _item of Pay.MenuItems|AuthGuard:!!Pay.User"
@@ -58,7 +58,7 @@
                     [left-icon]="Pay.Header.LeftIcon" right-icon="shopping_cart" [right-icon-label]="Pay.ShoppingCart.length" [disable-right-icon]="Pay.ShoppingCart.length === 0"
                     header-theme="header-bar" [show-right-icon]="true" [show-left-icon]="_mode === 'over' || Pay.ActionDetail">
       <div add-on class="d-flex align-items-center flex-nowrap logged-user" *ngIf="Pay.User && (Pay.SPID['ACCESS'] || Pay.IAM['ACCESS']) && Pay.I18n.json.Account">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.6 587.6" preserveAspectRatio="xMinYMin">
+        <svg class="d-none d-sm-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.6 587.6" preserveAspectRatio="xMinYMin">
             <style>.spidIco0{fill:#333}.spidIco1{fill:#BBDEFB}</style>
             <path id="XMLID_3_" class="spidIco0" d="M587.6 293.8c0 162.3-131.5 293.8-293.8 293.8C131.6 587.6 0 456.1 0 293.8S131.6 0 293.8 0c162.3 0 293.8 131.5 293.8 293.8"/>
             <path id="XMLID_2_" class="spidIco1" d="M294.6 319c-24.4 0-44.5-8.2-60.3-24.8-15.8-16.5-23.7-37-23.7-61.4 0-24.5 7.9-44.8 23.6-61 15.7-16.2 35.7-24.3 60.2-24.3 24.4 0 44.3 8.2 59.6 24.9 15.3 16.6 23 37 23 61.5 0 24.3-7.7 44.6-23 60.8-15.3 16.1-35 24.3-59.4 24.3"/>

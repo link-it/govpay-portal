@@ -127,6 +127,7 @@ $background-2nd-color: #E3F2FD;
 $background-3rd-color: #F5F5F5;
 $background-4th-color: rgba(255, 255, 255, .75);
 $background-5th-color: rgba(0, 0, 0, .05);
+$background-6th-color: rgba(33, 33, 33, .05);
 $background-nth-color: #fff;
 
 $hover-color: mat-color($link-accent, 500);
@@ -199,6 +200,17 @@ mat-option .mat-option-text {
 .mat-checkbox-indeterminate.mat-primary .mat-checkbox-background,
 .mat-checkbox-checked.mat-primary .mat-checkbox-background {
   background-color: $hover-color;
+}
+
+mat-list.mat-list-base {
+  padding-top: 1.5rem;
+}
+
+.mat-list-base .mat-list-item,
+.mat-list-base .mat-list-option {
+  height: auto !important;
+  font-size: 1rem;
+  margin-bottom: 1rem;
 }
 
 html, body {
@@ -371,31 +383,26 @@ mat-sidenav-container.mat-drawer-container {
 }
 
 .side-nav-title {
+  padding: 3rem 1rem;
+}
+
+.side-nav-title p {
   font-family: 'Titillium Web', sans-serif;
   font-size: 1.5rem;
   font-weight: 400;
-  padding: 0 1rem;
   line-height: 1.5;
   color: $text-color;
-  background-color: $background-color;
+  margin: 1.5rem 0 0;
 }
 
 .side-nav .gestore {
-  position: relative;
   background-color: $background-color;
-  height: 160px;
+  min-height: 224px;
 }
 
-//.side-nav .sidenav-background-gestore {
-//  width: 100%;
-//  max-height: 160px;
-//  background-color: $background-color;
-//}
-
 .side-nav .sidenav-logo-gestore {
-  position: absolute;
-  bottom: 3rem;
-  left: 15px;
+  width: auto;
+  height: 3rem
 }
 
 .side-nav .logo-govpay {
@@ -410,7 +417,7 @@ mat-sidenav-container.mat-drawer-container {
 
 .side-nav .logo-govpay .partners-group img {
   width: auto;
-  height: 2rem;
+  height: 2.5rem;
 }
 
 .side-nav .sidenav-logo-gestore {
@@ -535,7 +542,6 @@ pay-field-group:last-child {
 }
 
 pay-field-group .label-field {
-//.etichetta {
   color: $text-2nd-color;
 }
 
@@ -544,7 +550,6 @@ pay-field-group .valore-field {
 }
 
 pay-field-group .routable span.valore-field {
-//.valore p a {
   word-break: break-all;
 }
 
@@ -609,11 +614,10 @@ pay-choice-dialog .mat-form-field.mat-focused .mat-form-field-label {
   color: $text-color !important;
 }
 
-pay-choice-dialog .mat-form-field.mat-focused .mat-form-field-ripple,
-pay-choice-dialog .mat-focused .mat-form-field-ripple,
-pay-choice-dialog .mat-focused .mat-form-field-underline,
-pay-choice-dialog .mat-form-field-appearance-legacy .mat-form-field-underline {
-  background-color: $text-color;
+.mat-form-field.mat-focused .mat-form-field-ripple,
+.mat-focused .mat-form-field-ripple,
+.mat-focused .mat-form-field-underline {
+  background-color: $hover-color;
 }
 
 pay-external-login a.ext-button * {
@@ -657,7 +661,28 @@ button.mat-flat-button:hover {
   background-color: $text-color;
 }
 
-pay-yesno-dialog .row.report-line.last p {
+.yesno-dialog-container .mat-dialog-container {
+  background-color: $background-3rd-color;
+}
+
+.yesno-dialog-container .messages p:last-child,
+.yesno-dialog-container .messages p:only-child {
+  margin: 0;
+}
+
+.report-line .secondary-text p {
+  white-space: nowrap;
+}
+
+.yesno-dialog-container pay-simple-item:hover {
+  background-color: $background-nth-color;
+}
+
+.row.report-line.last {
+  background-color: $background-6th-color;
+}
+
+.row.report-line.last p {
   font-weight: 600;
 }
 
@@ -925,14 +950,9 @@ label.mat-form-field-label:first-letter {
   color: rgba(0, 0, 0, 0.54);
 }
 
-//.mat-focused .mat-form-field-ripple,
-//.mat-focused .mat-form-field-underline {
-//  background-color: $background-color;
-//}
-
-//.mat-focused.mat-form-field-appearance-legacy .mat-form-field-underline {
-//  height: 2px;
-//}
+.mat-focused.mat-form-field-appearance-legacy .mat-form-field-underline {
+  height: 2px;
+}
 
 .mat-menu-panel,
 .mat-select-panel {
