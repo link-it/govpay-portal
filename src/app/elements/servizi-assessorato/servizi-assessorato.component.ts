@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/index';
 import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { SimpleItemComponent } from '../components/simple-item.component';
+import { ServiceFilterPipe, ServiceGroupFilterPipe } from '../services/service-filters';
 
 @Component({
   selector: 'pay-servizi-assessorato',
@@ -13,6 +14,7 @@ import { SimpleItemComponent } from '../components/simple-item.component';
 })
 export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked, OnDestroy, OnChanges {
   @ViewChildren('psi') psi: QueryList<SimpleItemComponent>;
+  @ViewChildren('psiflat') psiflat: QueryList<SimpleItemComponent>;
   @ViewChild('filtro', { read: ElementRef }) _filtro: ElementRef;
   Pay = PayService;
 
@@ -80,7 +82,9 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
           subgroup: srv.subgroup || '',
           category: srv.category || '',
           searchTerms: srv.search_terms || '',
+          code: srv.code || '',
           name: srv.name || '',
+          title: `${(srv.code?srv.code + ' - ':'')}${srv.name}`,
           source: service
         };
         if (_mappedService.subgroup) {
@@ -95,7 +99,7 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
       });
       const gKeys: string[] = Object.keys(groups).sort();
       gKeys.forEach((kg) => {
-        PayService.SortBy(groups[kg], 'name');
+        PayService.SortBy(groups[kg], 'code', 'name');
       });
       servicesByLanguage[lingua.alpha3Code] = {
         N: sCount,
@@ -134,7 +138,7 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
     clearTimeout(this._timer);
     this._timer = setTimeout(() => {
       this.__mapTitle();
-    }, 300);
+    }, 50);
   }
 
   __mapTitle() {
@@ -142,7 +146,7 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
       this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, this._serviziAssessorato[PayService.ALPHA_3_CODE].N);
     }
     if (this._filtro && this._filtro.nativeElement.value) {
-      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, this.psi.length);
+      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, (this.psi.length + this.psiflat.length));
     }
   }
 

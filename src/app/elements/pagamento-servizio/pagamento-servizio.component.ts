@@ -86,7 +86,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         updateLayoutNow.next(true);
       },
       (error) => {
-        this._servizi = [];
+        this._servizi = PayService.LINGUE.forEach((lingua: any) => {
+          return { N: 0, M: 0, dictionary: {}, flat: [], groups: [] };
+        });
         this.__mapTitle();
         updateLayoutNow.next(true);
         this.pay.updateSpinner(false);
@@ -117,7 +119,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
             subgroup: srv.subgroup || '',
             category: srv.category || '',
             searchTerms: srv.search_terms || '',
+            code: srv.code || '',
             name: srv.name || '',
+            title: `${(srv.code?srv.code + ' - ':'')}${srv.name}`,
             source: service
           };
           const group: string = srv.group;
@@ -136,7 +140,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       });
       const gKeys: string[] = Object.keys(groups).sort();
       gKeys.forEach((kg) => {
-        PayService.SortBy(groups[kg], 'name');
+        PayService.SortBy(groups[kg], 'code', 'name');
       });
       servicesByLanguage[lingua.alpha3Code] = {
         N: sCount,

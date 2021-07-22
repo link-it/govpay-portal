@@ -922,12 +922,20 @@ export class PayService implements OnInit, OnDestroy {
         break;
       case '/dettaglio-servizio':
         if (PayService.ExtraState) {
+          let title: string[];
           if (PayService.ExtraState instanceof Standard) {
             const raw: any = (PayService.ExtraState as Standard).rawData;
-            PayService.Header.Titolo = raw['detail'][PayService.ALPHA_3_CODE]['name'];
+            title = [ raw['detail'][PayService.ALPHA_3_CODE]['name'] ];
+            if (raw['detail'][PayService.ALPHA_3_CODE]['code']) {
+              title.unshift(raw['detail'][PayService.ALPHA_3_CODE]['code']);
+            }
           } else {
-            PayService.Header.Titolo = PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['name'];
+            title = [ PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['name'] ];
+            if (PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['code']) {
+              title.unshift(PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['code']);
+            }
           }
+          PayService.Header.Titolo = { mobile: title[0], desktop: title.join(' - ') };
         } else {
           PayService.Header.Titolo = PayService.I18n.json.Header.Titolo;
         }
@@ -1112,17 +1120,29 @@ export class PayService implements OnInit, OnDestroy {
     });
   }
 
+  public static SmBlock(): boolean {
+    return (window.innerWidth >= 576);
+  }
+
   public static MdBlock(): boolean {
     return (window.innerWidth >= 768);
   }
 
-  public static SortBy(items: any[], property: string) {
+  public static SortBy(items: any[], property: string, secProperty: string = '') {
     items.sort((a: any, b: any) => {
-      if (a[property] < b[property]) {
+      if (property && a[property] < b[property]) {
         return -1;
       }
-      if (a[property] > b[property]) {
+      if (property && a[property] > b[property]) {
         return 1;
+      }
+      if (secProperty) {
+        if (a[secProperty] < b[secProperty]) {
+          return -1;
+        }
+        if (a[secProperty] > b[secProperty]) {
+          return 1;
+        }
       }
       return 0;
     });

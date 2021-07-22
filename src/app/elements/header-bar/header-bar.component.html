@@ -5,8 +5,8 @@
         <mat-icon class="{{ _iconClass }} material-icons action" aria-label="menu">{{ _iconLeft }}</mat-icon>
       </button>
       <div class="mr-auto text-truncate">
-        <a class="w-100 single-line-text" [href]="_href" *ngIf="_href!='#'" [attr.title]="_title">{{ _title }}</a>
-        <p class="w-100 m-0 single-line-text" *ngIf="_href=='#'" [attr.title]="_title">{{ _title }}</p>
+        <a class="w-100 single-line-text" [href]="_href" *ngIf="_href!='#'" [attr.title]="_titleString">{{ _titleString }}</a>
+        <p class="w-100 m-0 single-line-text" *ngIf="_href=='#'" [attr.title]="_titleString">{{ _titleString }}</p>
       </div>
       <ng-content select="[add-on]"></ng-content>
       <span class="icon-group">

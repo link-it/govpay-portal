@@ -13,7 +13,7 @@ export class ServiceGroupFilterPipe implements PipeTransform {
     const value: string = (_value || '').toLowerCase();
     return items.filter(g => {
       g.items = dictionary[g.group].filter(se => {
-        return (se.searchTerms.toLowerCase().indexOf(value) !== -1 || se.name.toLowerCase().indexOf(value) !== -1 ||
+        return (se.searchTerms.toLowerCase().indexOf(value) !== -1 || se.title.toLowerCase().indexOf(value) !== -1 ||
           se.subgroup.toLowerCase().indexOf(value) !== -1 || se.category.toLowerCase().indexOf(value) !== -1);
       });
       return (g.group.toLowerCase().indexOf(value) !== -1 || g.items.length !== 0);
@@ -32,7 +32,7 @@ export class ServiceFilterPipe implements PipeTransform {
     }
     const value: string = _value.toLowerCase();
     return items.filter(se => {
-      return (se.searchTerms !== -1 || se.name.toLowerCase().indexOf(value) !== -1 ||
+      return (se.searchTerms.toLowerCase().indexOf(value) !== -1 || se.title.toLowerCase().indexOf(value) !== -1 ||
         se.subgroup.toLowerCase().indexOf(value) !== -1 || se.category.toLowerCase().indexOf(value) !== -1);
     });
   }
