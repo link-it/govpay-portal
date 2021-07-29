@@ -284,17 +284,12 @@ section {
   background-position: center center;
 }
 
-.pre-line {
-  white-space: pre-line;
-}
-
 .language-bar img.logo-creditore {
   width: auto;
   height: 48px;
   max-width: 48px;
   max-height: 48px;
   margin: 0 15px 0 -15px;
-  padding: 4px;
 }
 
 .language-bar .dropdown-menu {
@@ -545,12 +540,9 @@ pay-field-group .label-field {
   color: $text-2nd-color;
 }
 
-pay-field-group .valore-field {
-  line-height: 1.4;
-}
-
+pay-field-group .valore-field a,
 pay-field-group .routable span.valore-field {
-  word-break: break-all;
+  word-break: break-word;
 }
 
 pay-choice-dialog {
@@ -926,6 +918,78 @@ pay-cart .cart-footer .total .col-7 {
 
 pay-cart .cart-footer .total .col {
   padding-right: .75rem;
+}
+
+// Markdown
+.markdown-section h1,
+.markdown-section h2 {
+  font-size: 1.25rem;
+  line-height: 1.25;
+  font-weight: 400;
+  margin-bottom: 2rem;
+}
+
+.markdown-section h1:not(:first-child):not(:first-of-type) {
+  padding-top: 2rem;
+}
+
+.markdown-section h2 {
+  padding-top: .5rem;
+}
+
+.markdown-section h3 {
+  text-transform: uppercase;
+}
+
+.markdown-section ul {
+  margin: 0;
+  padding: 0;
+}
+
+.markdown-section ol {
+  margin: 0 0 0 1rem;
+  padding: 0;
+}
+
+.markdown-section ul {
+  margin: 0 0 0 1.4rem;
+  list-style: square;
+}
+
+.markdown-section h3,
+.markdown-section p,
+.markdown-section li {
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+
+  .markdown-section h1,
+  .markdown-section h2 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+    margin-bottom: 2rem;
+  }
+
+  .markdown-section h2 {
+    padding-top: 2rem;
+  }
+
+  .markdown-section h3 {
+    padding-top: .5rem;
+  }
+
+  .markdown-section h3,
+  .markdown-section p,
+  .markdown-section li {
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 400;
+    margin-bottom: 1rem;
+  }
 }
 
 // JSON schema form

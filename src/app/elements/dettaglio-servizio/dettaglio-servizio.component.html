@@ -4,11 +4,10 @@
       <pay-title-deco *ngIf="!Pay.MdBlock() && Pay.CollapsibleSections?.InformazioniDettaglioServizio" art-class="title-deco collapsible-title mb-5" [simple]="true"
                       [titolo]="Pay.I18n.json.DettaglioServizio.Titolo" data-toggle="collapse" data-target="#infoCollapse"
                       role="button"></pay-title-deco>
-      <pay-title-deco *ngIf="Pay.MdBlock()" art-class="title-deco mb-5" [simple]="true"
-                      [titolo]="Pay.I18n.json.DettaglioServizio.Titolo"></pay-title-deco>
+      <pay-title-deco *ngIf="Pay.MdBlock()" art-class="title-deco mb-5" [simple]="true" [titolo]="Pay.I18n.json.DettaglioServizio.Titolo"></pay-title-deco>
       <div id="infoCollapse" [class]="(!Pay.MdBlock() && Pay.CollapsibleSections?.InformazioniDettaglioServizio)?'collapse pb-5 pb-md-5':'pb-5 pb-md-5'">
         <img class="w-100 mb-4" [src]="_decodedForm['detail']['img']">
-        <p class="mb-5 pre-line">{{ _decodedForm['detail'][Pay.ALPHA_3_CODE]['long_description'] }}</p>
+        <div class="mb-5 markdown-section" [payMarked]="_decodedForm['detail'][Pay.ALPHA_3_CODE]['long_description']"></div>
         <div class="container-fluid px-0">
           <div class="row">
             <div class="col-12">

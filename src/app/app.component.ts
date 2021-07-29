@@ -142,7 +142,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
         this._mlh = window.innerHeight - this._gh - _offset;
       }
     }
-    this._mode = (window.innerWidth > 1600)?'side':'over';
+    // this._mode = (window.innerWidth > 1600)?'side':'over';
     if (this.sidenav) {
       if (this._mode === 'side' && !this.sidenav.opened) {
         this.__once = false;

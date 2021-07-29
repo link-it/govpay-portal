@@ -34,6 +34,7 @@ import { Component, Input, OnInit } from '@angular/core';
       line-height: 1rem;
       text-align: center;
       border-radius: 0;
+      white-space: nowrap;
     }
 
     .ext-button:hover {

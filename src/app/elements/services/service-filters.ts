@@ -1,4 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, SecurityContext } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Pipe({
   name: 'serviceGroupFilter',
@@ -35,5 +36,16 @@ export class ServiceFilterPipe implements PipeTransform {
       return (se.searchTerms.toLowerCase().indexOf(value) !== -1 || se.title.toLowerCase().indexOf(value) !== -1 ||
         se.subgroup.toLowerCase().indexOf(value) !== -1 || se.category.toLowerCase().indexOf(value) !== -1);
     });
+  }
+}
+
+@Pipe({
+  name: 'sanitize'
+})
+export class SanitizeHTMLPipe implements PipeTransform {
+  constructor(private sanitizer: DomSanitizer) {}
+
+  transform(value) {
+    return this.sanitizer.sanitize(SecurityContext.HTML, value);
   }
 }

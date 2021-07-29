@@ -7,11 +7,12 @@ import { Subscription } from 'rxjs/index';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { Standard } from '../classes/standard';
 import { JsonSchemaFormComponent } from 'angular7-json-schema-form';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
+import { Notifier } from '../field-group/field-group.component';
 
 import * as moment from 'moment';
-import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
-
 const Debug: boolean = false;
+declare let $: any;
 
 @Component({
   selector: 'pay-dettaglio-servizio',
@@ -62,6 +63,9 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
   }
 
   ngAfterViewInit() {
+    $('#infoCollapse').on('shown.bs.collapse', () => {
+      Notifier.next(true);
+    });
     updateLayoutNow.next(true);
   }
 

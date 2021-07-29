@@ -1,6 +1,6 @@
 <div [class]="'d-flex flex-wrap mb-3'+(cssClass?' '+cssClass:'')">
   <div [class]="(!noWrap?'col-12 col-'+bp+'-4':'col-4')+' pl-0 label-group'" *ngIf="label && !fillMode">
-    <p class="label-field">{{ label }}</p>
+    <p #lf class="label-field">{{ label }}</p>
   </div>
   <div [class]="(!noWrap?'col-'+bp+'':'col')+' px-0'">
     <div class="{{download?'field-offset':'d-block'}}" *ngIf="!listMode">

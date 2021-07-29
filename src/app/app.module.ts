@@ -50,7 +50,8 @@ import { EsitoComponent } from './elements/esito/esito.component';
 import { ChoiceDialogComponent } from './elements/choice-dialog/choice-dialog.component';
 import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
 import { ReuseStrategy } from './elements/services/reuse-strategy';
-import { ServiceFilterPipe, ServiceGroupFilterPipe } from './elements/services/service-filters';
+import { SanitizeHTMLPipe, ServiceFilterPipe, ServiceGroupFilterPipe } from './elements/services/service-filters';
+import { MarkedDirective } from './elements/services/markdown';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateLoaderExt(http, './assets/i18n/', '.json');
@@ -84,7 +85,8 @@ export function createTranslateLoader(http: HttpClient) {
     ServiziAssessoratoComponent,
     GroupComponent,
     SimpleItemComponent,
-    ServiceGroupFilterPipe, ServiceFilterPipe
+    MarkedDirective,
+    ServiceGroupFilterPipe, ServiceFilterPipe, SanitizeHTMLPipe
   ],
   imports: [
     BrowserModule,
