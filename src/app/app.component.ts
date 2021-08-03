@@ -227,8 +227,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
   __exit(): any {
     this.pay.clearUser();
     this.Pay.ResetCart(this.router, this.translate);
-    PayService.CreditoreAttivo = null;
-    this.pay.router.navigateByUrl('/');
+    PayService.I18n.json.Account = '';
+    this.__toCerts();
   }
 
   __onActiveChange(creditore: any) {
