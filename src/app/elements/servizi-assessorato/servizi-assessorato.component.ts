@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/index';
@@ -65,7 +65,8 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
         servicesByLanguage[lingua.alpha3Code] = { N: 0, M: 0, groups: [] };
       }
       let sCount: number = 0;
-      const groups: any = {};
+      const _groups: any = {};
+      const _ranking: any[] = [];
       const _flat: any[] = [];
       groupServices.items.forEach((subservice: any) => {
         const service: any = subservice.source;
@@ -80,6 +81,7 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
         const srv: any = service.detail[lingua.alpha3Code];
         const _mappedService: any = {
           subgroup: srv.subgroup || '',
+          group_rank: srv.group_rank || Number.MAX_VALUE,
           category: srv.category || '',
           searchTerms: srv.search_terms || '',
           code: srv.code || '',
@@ -88,27 +90,30 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
           source: service
         };
         if (_mappedService.subgroup) {
-          if (!groups.hasOwnProperty(_mappedService.subgroup)) {
-            groups[_mappedService.subgroup] = [];
+          if (!_groups.hasOwnProperty(_mappedService.subgroup)) {
+            _groups[_mappedService.subgroup] = [];
           }
-          groups[_mappedService.subgroup].push(_mappedService);
+          _ranking.push({ subgroup: _mappedService.subgroup, group_rank: _mappedService.group_rank, code: _mappedService.code, name: _mappedService.name });
+          _groups[_mappedService.subgroup].push(_mappedService);
         } else {
           _flat.push(_mappedService);
         }
         sCount++;
       });
-      const gKeys: string[] = Object.keys(groups).sort();
+      PayService.SortBy(_ranking, PayService.ImpostazioniOrdinamento['SOTTOGRUPPI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['SOTTOGRUPPI']['ASCENDENTE']);
+      const gKeys: string[] = _ranking.map((rank: any) => rank.subgroup).filter(function(item, idx, array) {  return (array.indexOf(item) === idx); });
       gKeys.forEach((kg) => {
-        PayService.SortBy(groups[kg], 'code', 'name');
+        PayService.SortBy(_groups[kg], PayService.ImpostazioniOrdinamento['ELEMENTI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['ELEMENTI']['ASCENDENTE']);
       });
+      PayService.SortBy(_flat, PayService.ImpostazioniOrdinamento['ELEMENTI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['ELEMENTI']['ASCENDENTE']);
       servicesByLanguage[lingua.alpha3Code] = {
         N: sCount,
-        dictionary: groups,
+        dictionary: _groups,
         flat: _flat,
         groups: gKeys.map((kg: string) => {
           return {
             group: kg,
-            items: groups[kg]
+            items: _groups[kg]
           };
         })
       };

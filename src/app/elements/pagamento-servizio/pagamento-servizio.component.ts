@@ -18,6 +18,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   Pay = PayService;
 
   _validateSub: Subscription;
+  _spidSession: Subscription;
   _timer: any;
   _servizi: any;
   _assessorato: any;
@@ -27,6 +28,11 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   __filterText: string = '';
 
   constructor(public pay: PayService, protected translate: TranslateService) {
+    this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
+      if (exit && this._filtro) {
+        this._filtro.nativeElement.value = '';
+      }
+    });
     if (PayService.CREDITORI && PayService.CREDITORI.length === 0) {
       console.log('Configurazione non corretta. Elenco creditori non impostato.');
     }
@@ -58,6 +64,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   ngOnDestroy() {
     if (this._validateSub) {
       this._validateSub.unsubscribe();
+    }
+    if (this._spidSession) {
+      this._spidSession.unsubscribe();
     }
   }
 
@@ -105,9 +114,10 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         servicesByLanguage[lingua.alpha3Code] = { N: 0, M: 0, groups: [] };
       }
       let sCount: number = 0;
-      const groups: any = {};
-      const imgs: any = {};
-      const maps: any = {};
+      const _groups: any = {};
+      const _imgs: any = {};
+      const _maps: any = {};
+      const _ranking: any[] = [];
       const _flat: any[] = [];
       decodedServices.forEach((service: any) => {
         if (!service.detail.ita || !service.jsfDef.layout_ita) {
@@ -117,6 +127,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           const _mappedService: any = {
             background: srv.group_icon || '',
             subgroup: srv.subgroup || '',
+            group_rank: srv.group_rank || Number.MAX_VALUE,
             category: srv.category || '',
             searchTerms: srv.search_terms || '',
             code: srv.code || '',
@@ -126,33 +137,36 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           };
           const group: string = srv.group;
           if (group) {
-            if (!groups.hasOwnProperty(group)) {
-              groups[group] = [];
-              imgs[group] = _mappedService.background;
-              maps[group] = this.__mapGroupSchemaLanguages(service.detail);
+            if (!_groups.hasOwnProperty(group)) {
+              _groups[group] = [];
+              _ranking.push({ group: group, group_rank: _mappedService.group_rank, code: _mappedService.code, name: _mappedService.name });
+              _imgs[group] = _mappedService.background;
+              _maps[group] = this.__mapGroupSchemaLanguages(service.detail);
             }
-            groups[group].push(_mappedService);
+            _groups[group].push(_mappedService);
           } /*else {
             _flat.push(_mappedService);
           }*/
           sCount++;
         }
       });
-      const gKeys: string[] = Object.keys(groups).sort();
+      PayService.SortBy(_ranking, PayService.ImpostazioniOrdinamento['GRUPPI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['GRUPPI']['ASCENDENTE']);
+      const gKeys: string[] = _ranking.map((rank: any) => rank.group).filter(function(item, idx, array) {  return (array.indexOf(item) === idx); });
       gKeys.forEach((kg) => {
-        PayService.SortBy(groups[kg], 'code', 'name');
+        PayService.SortBy(_groups[kg], PayService.ImpostazioniOrdinamento['ELEMENTI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['ELEMENTI']['ASCENDENTE']);
       });
+      // PayService.SortBy(_flat, PayService.ImpostazioniOrdinamento['ELEMENTI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['ELEMENTI']['ASCENDENTE']);
       servicesByLanguage[lingua.alpha3Code] = {
         N: sCount,
         M: gKeys.length,
-        dictionary: groups,
+        dictionary: _groups,
         flat: _flat,
         groups: gKeys.map((kg: string) => {
           return {
             group: kg,
-            titoloSchemaMap: maps[kg],
-            backgroundSrc: imgs[kg],
-            items: groups[kg]
+            titoloSchemaMap: _maps[kg],
+            backgroundSrc: _imgs[kg],
+            items: _groups[kg]
           };
         })
       };

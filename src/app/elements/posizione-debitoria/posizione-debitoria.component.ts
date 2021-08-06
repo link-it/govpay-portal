@@ -25,7 +25,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnInit() {
-    this.getPendenze();
+    this.getPendenze(PayService.QUERY_NON_ESEGUITA);
   }
 
   ngAfterViewInit() {
@@ -74,24 +74,26 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         item = item.rawData;
       }
       let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.I18n.json.Common.SenzaScadenza;
-      const _meta: string[] = [];
-      _meta.push(`${PayService.I18n.json.Common.Scadenza}: ${_ds}`);
-      if (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.ESEGUITA) {
-        _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
-        _meta.push(`${PayService.I18n.json.Common.Pagamento}: ${_ds}`);
-      }
-      let _iuvOrAvviso: string = `${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`;
-      if (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.ESEGUITA) {
-        _iuvOrAvviso = (item.numeroAvviso)?`${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`:`${PayService.I18n.json.Common.IUV}: ${item.iuvPagamento}`;
-      }
-      _meta.push(_iuvOrAvviso);
-      if(item.dominio && item.dominio.ragioneSociale) {
-        _meta.push(`${PayService.I18n.json.Common.Beneficiario}: ${item.dominio.ragioneSociale}`);
-      }
+      let _meta: string[] = [`${PayService.I18n.json.Common.Scadenza}: ${_ds}`];
+      // _meta.push(`${PayService.I18n.json.Common.Scadenza}: ${_ds}`);
+      // if (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.ESEGUITA) {
+      //   _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
+      //   _meta.push(`${PayService.I18n.json.Common.Pagamento}: ${_ds}`);
+      // }
+      // let _iuvOrAvviso: string = `${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`;
+      // if (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.ESEGUITA) {
+      //   _iuvOrAvviso = (item.numeroAvviso)?`${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`:`${PayService.I18n.json.Common.IUV}: ${item.iuvPagamento}`;
+      // }
+      // _meta.push(_iuvOrAvviso);
+      // if(item.dominio && item.dominio.ragioneSociale) {
+      //   _meta.push(`${PayService.I18n.json.Common.Beneficiario}: ${item.dominio.ragioneSociale}`);
+      // }
       let _statoPendenza = PayService.STATI_PENDENZA[item.stato.toUpperCase()];
-      if ((PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.NON_ESEGUITA) &&
-          item.dataValidita && (moment(new Date()) > moment(item.dataValidita))) {
+      if ((PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.NON_ESEGUITA) && item.dataValidita &&
+          (moment(new Date()) > moment(item.dataValidita))) {
         _statoPendenza = PayService.STATI_PENDENZA.IN_RITARDO;
+        _ds = moment(item.dataValidita).format(this.pay.getDateFormatByLanguage());
+        _meta =[`${PayService.I18n.json.Common.Scadenza}: ${_ds}`];
       }
       const _std = new Standard();
         // Restore previous uid(s) for cart component ref elements

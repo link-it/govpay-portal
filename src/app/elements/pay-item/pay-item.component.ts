@@ -27,6 +27,7 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
 
   @Input('expanding-mode') _expandMode: boolean = false;
 
+  @Input('disabled-icon') _disabledIcon: boolean = false;
   @Input('primary-icon') _primaryIcon: string = '';
   @Input('primary-icon-off') _primaryIconOff: string = '';
 
@@ -103,14 +104,16 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
 
   _onIconClick(event, type: string) {
     event.stopImmediatePropagation();
-    const click = { type: 'icon-click', target: this._item, toggle: false, icon: this[type] };
-    if (this[type + 'Off']) {
-      const _transit = this[type];
-      this[type] = this[type + 'Off'];
-      this[type + 'Off'] = _transit;
-      click.toggle = true;
-      click.icon = _transit;
+    if (!this._disabledIcon) {
+      const click = { type: 'icon-click', target: this._item, toggle: false, icon: this[type] };
+      if (this[type + 'Off']) {
+        const _transit = this[type];
+        this[type] = this[type + 'Off'];
+        this[type + 'Off'] = _transit;
+        click.toggle = true;
+        click.icon = _transit;
+      }
+      this._iconClick.emit(click);
     }
-    this._iconClick.emit(click);
   }
 }

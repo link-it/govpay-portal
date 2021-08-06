@@ -194,6 +194,7 @@
       "IUV": "Payment ID",
       "Beneficiario": "Payee",
       "Pagamento": "Paid on",
+      "Importo": "Amount",
       "Scadenza": "By",
       "SenzaScadenza": "No expiration date",
       "NotAvailable": "Not available",

@@ -62,6 +62,7 @@ export class PayService implements OnInit, OnDestroy {
   public static MobileBreakPointNotice: number = 768;
   public static EditMode: boolean = false;
   public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
+  public static ImpostazioniOrdinamento: any;
 
   public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
   public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -91,6 +92,8 @@ export class PayService implements OnInit, OnDestroy {
     NON_ESEGUITO: 'non_eseguito',
     ESEGUITO_PARZIALE: 'eseguito_parziale'
   };
+  // FILTRI STATI PENDENZE
+  public static QUERY_NON_ESEGUITA: string = 'stato=NON_ESEGUITA';
   // STATI PENDENZE
   public static STATI_PENDENZA: any = {
     ESEGUITA: 'eseguita',
@@ -138,6 +141,8 @@ export class PayService implements OnInit, OnDestroy {
   /* - esito.component.ts - */
 
   spinner: boolean = false;
+  spidSessionExpired: BehaviorSubject<boolean> = new BehaviorSubject(null);
+
   // AVVISO_PAGAMENTO: any = { Numero: '', Dominio: null, Pagamenti: [] };
 
   // Pagamento diretto via query string parameters { Numero: 'numeroAvviso', Creditore: 'idDominio', UUID: 'String' };
@@ -189,6 +194,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.Gestore = PayConfig['GESTORE'];
     PayService.CollapsibleSections = PayConfig['COLLAPSIBLE_SECTIONS'];
     PayService.RouteConfig = PayConfig['ROUTING'];
+    PayService.ImpostazioniOrdinamento = PayConfig['ORDINAMENTO'];
   }
 
   // static StatiPendenza(): any[] {
@@ -817,7 +823,10 @@ export class PayService implements OnInit, OnDestroy {
       _msg = PayService.I18n.json.Common.CodeException;
       console.log(e);
     }
-
+    if (error.status === 403 && PayService.User) {
+      this.resetSessionState();
+      this.spidSessionExpired.next(true);
+    }
     this.alert(_msg, true, _hasMapCode);
   }
 
@@ -855,6 +864,13 @@ export class PayService implements OnInit, OnDestroy {
 
   clearUser() {
     PayService.User = undefined;
+  }
+
+  resetSessionState() {
+    PayService.ShoppingCart = [];
+    PayService.ActionDetail = false;
+    PayService.AssessoratoDetail = false;
+    this.clearUser();
   }
 
   isAuthenticated(): boolean {
@@ -1128,23 +1144,27 @@ export class PayService implements OnInit, OnDestroy {
     return (window.innerWidth >= 768);
   }
 
-  public static SortBy(items: any[], property: string, secProperty: string = '') {
-    items.sort((a: any, b: any) => {
-      if (property && a[property] < b[property]) {
-        return -1;
+  public static SortBy(items: any[], properties: string[], asc: boolean = true, cycle: number = 0) {
+    (items || []).sort((a: any, b: any) => {
+      let cmp: number = PayService.__CompareSortBy(a, b, properties[cycle], asc);
+      while (cmp === 0 && (cycle + 1) < properties.length) {
+        cycle++;
+        cmp = PayService.__CompareSortBy(a, b, properties[cycle], asc);
+      }
+      cycle = 0;
+      return cmp;
+    });
+  }
+
+  protected static __CompareSortBy(a: any, b: any, property: string, asc: boolean): number {
+    if (property && a[property] && b[property]) {
+      if (a[property] < b[property]) {
+        return asc?-1:1;
       }
       if (property && a[property] > b[property]) {
-        return 1;
+        return asc?1:-1;
       }
-      if (secProperty) {
-        if (a[secProperty] < b[secProperty]) {
-          return -1;
-        }
-        if (a[secProperty] > b[secProperty]) {
-          return 1;
-        }
-      }
-      return 0;
-    });
+    }
+    return 0;
   }
 }

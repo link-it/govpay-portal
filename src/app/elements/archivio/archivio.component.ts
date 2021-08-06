@@ -88,16 +88,19 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
          PayService.STATI_PAGAMENTO[item.stato.toUpperCase()] === PayService.STATI_PAGAMENTO.IN_CORSO) {
         _showReceipt = false;
       }
-      return new Standard({
+      const obj = new Standard({
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
         titolo: item.nome,
-        sottotitolo: `${PayService.I18n.json.Common.Pagamento}: ${_drp}`,
         importo: item.importo,
-        stato: PayService.STATI_PAGAMENTO[item.stato.toUpperCase()],
-        primaryIcon: (_showReceipt)?'receipt':'',
+        stato: PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(item.stato)],
+        primaryIcon: 'receipt',
+        disabled: !_showReceipt,
         rawData: item
       });
+      obj.sottotitolo = `${_drp}, ${PayService.I18n.json.Common.Importo}: ${obj.valuta}`;
+
+      return obj;
     });
-    return _buffer.filter(item => PayService.STATI_PAGAMENTO[item.stato.toUpperCase()] !== PayService.STATI_PAGAMENTO.FALLITO);
+    return _buffer.filter(item => PayService.STATI_PAGAMENTO[item.rawData.stato.toUpperCase()] !== PayService.STATI_PAGAMENTO.FALLITO);
   }
 }

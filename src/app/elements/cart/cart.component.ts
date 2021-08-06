@@ -44,7 +44,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
       const _props: AvvisoTpl[] = [];
       const atp: AvvisoTpl = new AvvisoTpl();
       atp.avviso = target.rawData['numeroAvviso'];
-      atp.creditore = target.rawData['idDominio'];
+      atp.creditore = target.editable?target.rawData['idDominio']:target.rawData['Dominio']['idDominio'];
       _props.push(atp);
       this.pay.pdf(_props, _query, false);
     }).catch((error) => {

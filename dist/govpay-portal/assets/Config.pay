@@ -109,6 +109,20 @@
     GESTORE: _assetsGestore(),
     COLLAPSIBLE_SECTIONS: {
       InformazioniDettaglioServizio: true
+    },
+    ORDINAMENTO: {
+      GRUPPI: {
+        PROPRIETA: [ 'group_rank', 'group' ],
+        ASCENDENTE: true
+      },
+      SOTTOGRUPPI: {
+        PROPRIETA: [ 'subgroup' ],
+        ASCENDENTE: true
+      },
+      ELEMENTI: {
+        PROPRIETA: [ 'name' ],
+        ASCENDENTE: true
+      }
     }
   };
 

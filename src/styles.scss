@@ -628,7 +628,8 @@ mat-list-item a:hover {
 
 button.mat-button,
 button.mat-flat-button,
-button.mat-flat-button.mat-accent {
+button.mat-flat-button.mat-accent,
+pay-icon-button .icon-button button.icon-button {
   display: inline-block;
   text-transform: none;
   padding: .75rem .9375rem;
@@ -637,6 +638,8 @@ button.mat-flat-button.mat-accent {
   font-weight: 600;
   line-height: 1.5;
   color: $reverse-text-color;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: background-color .25s linear;
 }
 
@@ -651,6 +654,21 @@ button.mat-button {
 
 button.mat-flat-button:hover {
   background-color: $text-color;
+}
+
+pay-icon-button .cart-button button.cart-button {
+  display: block;
+  text-transform: none;
+  font-weight: 400;
+  padding: 1.25rem .9375rem;
+}
+
+pay-icon-button .cart-button button.cart-button:hover {
+  background-color: transparent;
+}
+
+pay-icon-button img.src-icon {
+  height: 20px;
 }
 
 .yesno-dialog-container .mat-dialog-container {

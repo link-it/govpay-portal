@@ -3,6 +3,7 @@ export class Standard {
   uid: string = null;
   rawData: any = null;
   editable: boolean = false;
+  disabled: boolean = false;
   primaryIcon: string = '';
   primaryIconOff: string = '';
 

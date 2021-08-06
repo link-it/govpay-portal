@@ -38,6 +38,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   _configPartners: boolean = false;
   _updateLayoutSub: Subscription;
+  _spidSession: Subscription;
 
   __once: boolean = true;
   __gestoreBkg: any;
@@ -53,6 +54,11 @@ export class AppComponent implements OnInit, AfterContentChecked {
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
 
   constructor(public router: Router, public pay: PayService, public translate: TranslateService) {
+    this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
+      if (exit) {
+        this.__toPublicExit();
+      }
+    });
     this._updateLayoutSub = updateLayoutNow.subscribe((refresh: boolean) => {
       if (refresh) {
         setTimeout(() => {

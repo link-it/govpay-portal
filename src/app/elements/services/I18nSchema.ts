@@ -197,6 +197,7 @@ export class I18n {
       IUV: '',
       Beneficiario: '',
       Pagamento: '',
+      Importo: '',
       Scadenza: '',
       SenzaScadenza: '',
       NotAvailable: '',

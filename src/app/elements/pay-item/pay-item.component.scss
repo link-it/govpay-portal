@@ -41,6 +41,7 @@
   top: 0;
   bottom: 0;
   right: 0;
+  width: 56px;
 }
 
 :host(.show-more) .touch-device {
@@ -50,6 +51,17 @@
 
 :host(.in) .touch-device {
   pointer-events: auto;
+}
+
+.primary-icon.disabled,
+.touch-device.disabled {
+  pointer-events: none;
+}
+
+.primary-icon.disabled,
+.touch-device.disabled {
+  background-color: gray;
+  pointer-events: none;
 }
 
 .trigger {
