@@ -71,6 +71,7 @@
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
       ACCESS: true,
+      AUTHN_CONTEXT_CLASS_REF: '',
       SERVICE_TARGET: 'http://localhost:4200/',
       TEST_PROVIDER: 'https://spidtest.govcloud.it',
       ACTION_FORM_URL: 'https://dev.govcloud.it/Shibboleth.sso/Login'

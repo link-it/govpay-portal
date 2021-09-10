@@ -79,6 +79,7 @@
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
       ACCESS: true,
+      AUTHN_CONTEXT_CLASS_REF: '',
       SERVICE_TARGET: 'https://pescasseroli.comune.msspid.io/servizi/userinfo',
       TEST_PROVIDER: 'https://spidtest.govcloud.it',
       ACTION_FORM_URL: 'https://pescasseroli.comune.msspid.io/servizispid/Login'

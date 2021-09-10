@@ -846,5 +846,7 @@
     <input type="hidden" name="SAMLDS" [value]="_SAMLDS" formControlName="samlds"/>
     <input type="hidden" name="target" [value]="_target" formControlName="target"/>
     <input type="hidden" name="entityID" [value]="_entityID" formControlName="entityID"/>
+    <input type="hidden" name="authnContextClassRef" [value]="_authnContextClassRef"
+           formControlName="authnContextClassRef" *ngIf="_authnContextClassRef"/>
   </form>
 </div>

@@ -31,6 +31,7 @@ export class SpidLoginComponent implements OnInit {
   @Input('register-url') _registerURL: string = 'https://spid.register.it';
   @Input('tim-url') _timURL: string = 'https://login.id.tim.it/affwebservices/public/saml2sso';
   @Input('spid-test-url') _spidTestURL: string = '';
+  @Input('spid-accf') _authnContextClassRef: string = '';
 
   @Input('info') _info: string = '';
   @Input('info-url') _infoUrl: string = 'https://www.spid.gov.it';
@@ -51,6 +52,9 @@ export class SpidLoginComponent implements OnInit {
   constructor(protected http: HttpClient) { }
 
   ngOnInit() {
+    if (this._authnContextClassRef) {
+      this._fg.addControl('authnContextClassRef', new FormControl(this._authnContextClassRef));
+    }
   }
 
   _onSubmit(id: string, url: string) {
