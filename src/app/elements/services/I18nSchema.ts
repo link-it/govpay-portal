@@ -200,6 +200,7 @@ export class I18n {
       Importo: '',
       Scadenza: '',
       SenzaScadenza: '',
+      Data: '',
       NotAvailable: '',
       Modifica: '',
       Elimina: '',

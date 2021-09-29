@@ -474,13 +474,12 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   /**
-   * Procedura download ricevuta
+   * Procedura download ricevuta pagamenti
    * Get RPP detail
    * @param {string} url
-   * @param {boolean} archive
    * @param {boolean} open
    */
-  getRPP(url: string, archive: boolean = false, open: boolean = true) {
+  getRPP(url: string, open: boolean = true) {
     this.updateSpinner(true);
     this.richiestaRPP(url, open).subscribe(
       (result) => {
@@ -488,14 +487,9 @@ export class PayService implements OnInit, OnDestroy {
           if (result.body) {
             if (result.body['risultati'] && result.body['risultati']['length'] != 0) {
               const _data = {url: [], type: []};
-              let _risultati = [];
-              if(!archive) {
-                _risultati = result.body['risultati'].filter((r) => {
-                  return (r.rt && parseInt(r.rt['datiPagamento']['codiceEsitoPagamento'], 10) === 0);
-                });
-              } else {
-                _risultati = result.body['risultati'] || [];
-              }
+              const _risultati: any[] = (result.body['risultati'] || []).filter((r) => {
+                return (r.rt && parseInt(r.rt['datiPagamento']['codiceEsitoPagamento'], 10) === 0);
+              });
               _risultati.forEach(item => {
                 let urlRicevuta = '/' + item['rpt']['dominio']['identificativoDominio'];
                 urlRicevuta += '/' + item['rpt']['datiVersamento']['identificativoUnivocoVersamento'];
@@ -525,6 +519,26 @@ export class PayService implements OnInit, OnDestroy {
         this.updateSpinner(false);
         this.onError(error);
       });
+  }
+
+  /**
+   * Procedura download ricevuta archivio
+   * @param {any} item
+   * @param {boolean} open
+   */
+  getRicevutaArchivio(item: any, open: boolean = true) {
+    const _data = { url: [], type: [] };
+    let urlRicevuta = '/' + item['rpt']['dominio']['identificativoDominio'];
+    urlRicevuta += '/' + item['rpt']['datiVersamento']['identificativoUnivocoVersamento'];
+    urlRicevuta += '/' + item['rpt']['datiVersamento']['codiceContestoPagamento'];
+    urlRicevuta += '/rt';
+    _data.url.push(urlRicevuta);
+    _data.type.push('application/pdf');
+    if (urlRicevuta.indexOf('undefined') === -1 && urlRicevuta.indexOf('null') === -1) {
+      this.getReceipt(_data.url[0], open);
+    } else {
+      this.alert(PayService.I18n.json.Common.WarningRicevuta);
+    }
   }
 
   /**
@@ -740,6 +754,25 @@ export class PayService implements OnInit, OnDestroy {
    */
   pagamenti(query?: string): Observable<any> {
     let url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_PAGAMENTI;
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
+
+  /**
+   * Archivio pagamenti GET
+   * @param {string} query
+   * @returns {Observable<any>}
+   */
+  archivioPagamenti(query?: string): Observable<any> {
+    let url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_RPP;
     if (query) {
       url += '?' + query;
     }

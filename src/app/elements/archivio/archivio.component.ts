@@ -44,7 +44,7 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   getPagamenti(query?: string) {
     this.pay.updateSpinner(true);
-    this.pay.pagamenti(query).subscribe(
+    this.pay.archivioPagamenti(query).subscribe(
       (result) => {
         if(result.body) {
           PayService.ArchivioPagamenti = this._refreshData(result.body.risultati);
@@ -65,8 +65,8 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param event
    * @private
    */
-  protected _onIconReceipt(event) {
-    this.pay.getRPP(event.target.rawData.rpp, true, false);
+  protected _onIconReceipt(event: any) {
+    this.pay.getRicevutaArchivio(event.target.rawData, false);
   }
 
   /**
@@ -82,25 +82,28 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
       if (_useRawData) {
         item = item.rawData;
       }
-      const _drp = (item.dataRichiestaPagamento)?moment(item.dataRichiestaPagamento).format(this.pay.getDateFormatByLanguage(true)):PayService.I18n.json.Common.NotAvailable;
+      const _drp = (item.rpt.dataOraMessaggioRichiesta)?moment(item.rpt.dataOraMessaggioRichiesta).format(this.pay.getDateFormatByLanguage(true)):PayService.I18n.json.Common.NotAvailable;
+      const rt: any = item.rt;
       let _showReceipt = true;
-      if(PayService.STATI_PAGAMENTO[item.stato.toUpperCase()] === PayService.STATI_PAGAMENTO.FALLITO ||
-         PayService.STATI_PAGAMENTO[item.stato.toUpperCase()] === PayService.STATI_PAGAMENTO.IN_CORSO) {
+      let statusCode: string = PayService.STATI_PAGAMENTO.IN_CORSO;
+      if(!rt) {
         _showReceipt = false;
+      } else {
+        statusCode = PayService.STATUS_CODE[parseInt(rt.datiPagamento.codiceEsitoPagamento, 10)];
       }
       const obj = new Standard({
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-        titolo: item.nome,
-        importo: item.importo,
-        stato: PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(item.stato)],
+        titolo: item.pendenza.causale,
+        importo: item.rpt.datiVersamento.importoTotaleDaVersare,
+        stato: PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(statusCode)],
         primaryIcon: 'receipt',
         disabled: !_showReceipt,
         rawData: item
       });
-      obj.sottotitolo = `${_drp}, ${PayService.I18n.json.Common.Importo}: ${obj.valuta}`;
+      obj.sottotitolo = `${PayService.I18n.json.Common.Data}: ${_drp}, ${PayService.I18n.json.Common.Importo}: ${obj.valuta}`;
 
       return obj;
     });
-    return _buffer.filter(item => PayService.STATI_PAGAMENTO[item.rawData.stato.toUpperCase()] !== PayService.STATI_PAGAMENTO.FALLITO);
+    return _buffer;
   }
 }

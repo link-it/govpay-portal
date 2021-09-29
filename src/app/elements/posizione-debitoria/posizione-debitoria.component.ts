@@ -142,7 +142,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         break;
       default:
       // receipt
-      this.pay.getRPP(target.rawData.rpp, false, false);
+      this.pay.getRPP(target.rawData.rpp, false);
     }
     // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
   }
