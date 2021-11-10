@@ -1,7 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { PayService } from '../services/pay.service';
+import { Standard } from '../classes/standard';
 
 import * as moment from 'moment';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs/index';
+import { TranslateLoaderExt } from '../classes/translate-loader-ext';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 
 @Component({
   selector: 'pay-posizione-debitoria',
@@ -11,21 +16,26 @@ import * as moment from 'moment';
 export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   Pay = PayService;
+  _langSubscription: Subscription;
 
-  constructor(public pay: PayService) {
-    // this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
-    //   // console.log('Posizione debitoria language changed', event);
-    // });
+  constructor(public pay: PayService, public translate: TranslateService) {
+    this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      PayService.PosizioneDebitoria = this._refreshData();
+    });
   }
 
   ngOnInit() {
+    this.getPendenze(PayService.QUERY_NON_ESEGUITA);
   }
 
   ngAfterViewInit() {
   }
 
   ngOnDestroy() {
-    // this._langSubscription.unsubscribe();
+    PayService.PosizioneDebitoria = [];
+    if (this._langSubscription) {
+      this._langSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -33,55 +43,21 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
    * @param {string} query
    */
   getPendenze(query?: string) {
-    // this.pay.updateSpinner(true);
-    // this.pay.pendenze(query).subscribe(
-    //   (result) => {
-    //     if(result.body) {
-    //       this._globalContainer.scrollTop = 0;
-    //       this._paginator.length = result.body.numRisultati;
-    //       this._elencoPosizioni = this._refreshData(result.body.risultati);
-    //      }
-    //     this.pay.updateSpinner(false);
-    //   },
-    //   (error) => {
-    //     this.pay.updateSpinner(false);
-    //     this.pay.onError(error);
-    //   });
-  }
-
-  _cartToggleHandler(event) {
-    // if (event.method === 'add') {
-    //   this._cart.push(event.item);
-    //   this._cartIds.push(event.item.uid);
-    // } else {
-    //   this._cartIds.splice(this._cartIds.indexOf(event.item.uid), 1);
-    //   this._cart = this._cart.filter(ce => {
-    //     return ce.uid !== event.item.uid;
-    //   });
-    // }
-  }
-
-  _cartSubmit(_cart) {
-    // const _localeNumberFormat = this.pay.getNumberFormatByLanguage();
-    // this.pay.AVVISO_PAGAMENTO.Pagamenti = [];
-    // this.pay.AVVISO_PAGAMENTO.Pagamenti = _cart.map(si => {
-    //   if (si.localeNumberFormat !== _localeNumberFormat) {
-    //     si = si.rawData;
-    //   }
-    //   const _std = new Standard({
-    //     localeNumberFormat: _localeNumberFormat,
-    //     titolo: si.titolo,
-    //     sottotitolo: si.sottotitolo,
-    //     importo: si.importo,
-    //     uid: si.uid,
-    //     rawData: si.rawData
-    //   });
-    //   this._addCollapsedData(_std, si.rawData);
-    //   return _std;
-    // });
-    // this.pay.AVVISO_PAGAMENTO.Numero = (_cart.length == 1)?_cart[0].rawData.numeroAvviso:'';
-    //
-    // this.router.navigateByUrl('/pagamento');
+    this.pay.updateSpinner(true);
+    this.pay.pendenze(query).subscribe(
+      (result) => {
+        if(result.body) {
+          PayService.PosizioneDebitoria = this._refreshData(result.body.risultati);
+          PayService.TranslateDynamicObject(this.translate, this.pay);
+         }
+        this.pay.updateSpinner(false);
+        updateLayoutNow.next(true);
+      },
+      (error) => {
+        this.pay.updateSpinner(false);
+        this.pay.onError(error);
+        updateLayoutNow.next(true);
+      });
   }
 
   /**
@@ -90,92 +66,97 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
    * @returns {any[]}
    * @private
    */
-  // protected _refreshData(list?: any[]): any[] {
-  //   const _useRawData: boolean = !list;
-  //   let _tempRawUid: string;
-  //   list = list || this._elencoPosizioni;
-  //   const _buffer = list.map(item => {
-  //     if (_useRawData) {
-  //       if (this._cartIds.length != 0) {
-  //         // Previous uid(s) for cart component ref elements
-  //         _tempRawUid = item.uid;
-  //       }
-  //       item = item.rawData;
-  //     }
-  //     let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.senza_scadenza;
-  //     let _meta = new Dato({ label: PayService.SHARED_LABELS.scadenza + ': ' + _ds });
-  //     if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA) {
-  //       _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
-  //       _meta = new Dato({ label: PayService.SHARED_LABELS.pagamento + ': ' + _ds });
-  //     }
-  //     let _statoPendenza = PayService.STATI_PENDENZA[item.stato];
-  //     if ((PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.NON_ESEGUITA) &&
-  //         item.dataValidita && (moment(new Date()) > moment(item.dataValidita))) {
-  //       _statoPendenza = PayService.STATI_PENDENZA.IN_RITARDO;
-  //     }
-  //     if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.NON_ESEGUITA) {
-  //       const _si = new ShoppingInfo({
-  //         // Restore previous uid(s) for cart component ref elements
-  //         uid: _tempRawUid?_tempRawUid:this.setUIDKey(item),
-  //         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-  //         titolo: new Dato({ label: item.causale || item.descrizione}),
-  //         sottotitolo: _meta,
-  //         importo: parseFloat(item.importo),
-  //         stato: _statoPendenza,
-  //         rawData: item
-  //       });
-  //       _si.collapsingInfo = [];
-  //       this._addCollapsedData(_si, item);
-  //       if (PayService.STATI_PENDENZA[item.stato] == PayService.STATI_PENDENZA.NON_ESEGUITA && item.idPendenza) {
-  //         (this._cartIds.indexOf(_si.uid) == -1)?_si.addToCart():_si.removeFromCart();
-  //       }
-  //       return _si;
-  //     } else {
-  //       const _std = new Standard({
-  //         // Restore previous uid(s) for cart component ref elements
-  //         uid: _tempRawUid?_tempRawUid:this.setUIDKey(item),
-  //         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-  //         titolo: new Dato({ label: item.causale || item.descrizione }),
-  //         sottotitolo: _meta,
-  //         importo: parseFloat(item.importo),
-  //         stato: _statoPendenza,
-  //         icon: (PayService.STATI_PENDENZA[item.stato] !== PayService.STATI_PENDENZA.SCADUTA)?'receipt':'',
-  //         rawData: item
-  //       });
-  //       this._addCollapsedData(_std, item);
-  //       return _std;
-  //     }
-  //   });
-  //
-  //   return _buffer;
-  // }
+   _refreshData(list?: any[]): any[] {
+    const _useRawData: boolean = !list;
+    list = list || PayService.PosizioneDebitoria;
+    const _buffer = list.map(item => {
+      if (_useRawData) {
+        item = item.rawData;
+      }
+      let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.I18n.json.Common.SenzaScadenza;
+      let _meta: string[] = [`${PayService.I18n.json.Common.Scadenza}: ${_ds}`];
+      // _meta.push(`${PayService.I18n.json.Common.Scadenza}: ${_ds}`);
+      // if (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.ESEGUITA) {
+      //   _ds = (item.dataPagamento)?moment(item.dataPagamento).format(this.pay.getDateFormatByLanguage()):undefined;
+      //   _meta.push(`${PayService.I18n.json.Common.Pagamento}: ${_ds}`);
+      // }
+      // let _iuvOrAvviso: string = `${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`;
+      // if (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.ESEGUITA) {
+      //   _iuvOrAvviso = (item.numeroAvviso)?`${PayService.I18n.json.Common.NumeroAvviso}: ${item.numeroAvviso}`:`${PayService.I18n.json.Common.IUV}: ${item.iuvPagamento}`;
+      // }
+      // _meta.push(_iuvOrAvviso);
+      // if(item.dominio && item.dominio.ragioneSociale) {
+      //   _meta.push(`${PayService.I18n.json.Common.Beneficiario}: ${item.dominio.ragioneSociale}`);
+      // }
+      let _statoPendenza = PayService.STATI_PENDENZA[item.stato.toUpperCase()];
+      if ((PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.NON_ESEGUITA) && item.dataValidita &&
+          (moment(new Date()) > moment(item.dataValidita))) {
+        _statoPendenza = PayService.STATI_PENDENZA.IN_RITARDO;
+        _ds = moment(item.dataValidita).format(this.pay.getDateFormatByLanguage());
+        _meta =[`${PayService.I18n.json.Common.Scadenza}: ${_ds}`];
+      }
+      const _std = new Standard();
+        // Restore previous uid(s) for cart component ref elements
+        _std.uid = this.__setUIDKey(item);
+        const inCart: boolean = (PayService.Cart.indexOf(_std.uid) !== -1);
+        _std.localeNumberFormat = this.pay.getNumberFormatByLanguage();
+        _std.titolo = (item.causale || item.descrizione);
+        _std.sottotitolo = _meta.join(', ');
+        _std.importo = parseFloat(item.importo);
+        _std.stato = _statoPendenza;
+        _std.rawData = item;
+      if (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.NON_ESEGUITA) {
+        _std.primaryIcon = inCart?'remove_shopping_cart':'shopping_cart';
+        _std.primaryIconOff = inCart?'shopping_cart':'remove_shopping_cart';
+      } else {
+        _std.primaryIcon = (PayService.STATI_PENDENZA[item.stato.toUpperCase()] !== PayService.STATI_PENDENZA.SCADUTA)?'receipt':'';
+      }
+      return _std;
+    });
 
-  // protected _addCollapsedData(std, item) {
-  //   let _iuvOrAvviso: Dato = new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso });
-  //   std.collapsingInfo = [];
-  //   if (PayService.STATI_PENDENZA[item.stato] === PayService.STATI_PENDENZA.ESEGUITA) {
-  //     _iuvOrAvviso = (item.numeroAvviso)?new Dato({ label: PayService.SHARED_LABELS.avviso + ': ' + item.numeroAvviso }):new Dato({ label: PayService.SHARED_LABELS.iuv + ': ' + item.iuvPagamento });
-  //   }
-  //   std.collapsingInfo.push(_iuvOrAvviso);
-  //   if(item.dominio && item.dominio.ragioneSociale) {
-  //     std.collapsingInfo.push(new Dato({ label: PayService.SHARED_LABELS.beneficiario + ': ' + item.dominio.ragioneSociale }));
-  //   }
-  // }
+    return _buffer;
+  }
 
   /**
    * OnIconReceipt click
    * @param event
    * @private
    */
-  // protected _onIconReceipt(event) {
-  //   this.pay.getRPP(event.rawData.rpp);
-  // }
+  _onIcon(event: any) {
+    const target: any = event.target;
+    switch (event.icon) {
+      case 'shopping_cart':
+        if(PayService.Cart.indexOf(target.uid) === -1) {
+          PayService.Cart.push(target.uid);
+          PayService.ShoppingCart.push(target);
+          this.__mobileToastCart(true);
+        }
+        break;
+      case 'remove_shopping_cart':
+        const _cartIndex: number = PayService.Cart.indexOf(target.uid);
+        if(_cartIndex !== -1) {
+          PayService.ShoppingCart = PayService.ShoppingCart.filter((p: Standard) => p.uid !== target.uid);
+          PayService.Cart.splice(_cartIndex, 1);
+          this.__mobileToastCart(false);
+        }
+        break;
+      default:
+      // receipt
+      this.pay.getRPP(target.rawData.rpp, false);
+    }
+    // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+  }
 
-  // protected setUIDKey(item: any): string {
-  //   if (item.idA2A && item.idPendenza) {
-  //     return item.idA2A + '-' + item.idPendenza;
-  //   }
-  //   return undefined;
-  //   return '';
-  // }
+  __setUIDKey(item: any): string {
+    if (item.idA2A && item.idPendenza) {
+      return item.idA2A + '-' + item.idPendenza;
+    }
+    return '';
+  }
+
+  __mobileToastCart(add: boolean) {
+    if(window.innerWidth <= PayService.MobileBreakPointNotice) {
+      this.pay.alert(add?PayService.I18n.json.Cart.Pagamenti.Inserimento:PayService.I18n.json.Cart.Pagamenti.Rimozione);
+    }
+  }
 }

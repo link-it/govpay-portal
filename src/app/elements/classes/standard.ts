@@ -3,6 +3,7 @@ export class Standard {
   uid: string = null;
   rawData: any = null;
   editable: boolean = false;
+  disabled: boolean = false;
   primaryIcon: string = '';
   primaryIconOff: string = '';
 
@@ -11,6 +12,9 @@ export class Standard {
   metadati: string = '';
   importo: number = 0;
   stato: string = null;
+
+  expandMode: boolean = false;
+  collapsingInfo: any[] = [];
 
   localeNumberFormat: string = 'it-IT';
   readonly valuta: string = this.currencyFormat(this.importo, this.localeNumberFormat);

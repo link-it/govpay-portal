@@ -1,0 +1,18 @@
+<div class="container py-5">
+  <div class="row mb-5">
+    <div class="col-12 col-md-2"></div>
+    <div class="col-12 col-md-8">
+      <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Pagamenti.Bollettino.Titolo"></pay-title-deco>
+    </div>
+    <div class="col-12 col-md-2"></div>
+  </div>
+  <div class="row pb-5 mb-md-5">
+    <div class="col-12 col-md-2"></div>
+    <div class="col-12 col-md-8">
+      <pay-card #pc [placeholder]="Pay.I18n.json.Pagamenti.Bollettino.Form.Avviso" [camera-select]="Pay.I18n.json.Pagamenti.Bollettino.Form.Fotocamera"
+                [submit]="Pay.I18n.json.Pagamenti.Bollettino.Submit" [required-error]="Pay.I18n.json.Pagamenti.Bollettino.Form.Errors.Required"
+                (on-submit)="_checkBollettino($event)" [validator]="_validatoreNumeroAvviso"></pay-card>
+    </div>
+    <div class="col-12 col-md-2"></div>
+  </div>
+</div>

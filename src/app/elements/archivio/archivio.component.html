@@ -3,7 +3,10 @@
     <div class="col-12 col-md-2"></div>
     <div class="col-12 col-md-8">
       <pay-title-deco class="mb-5" art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Archivio.Pagamenti.Titolo"></pay-title-deco>
-      <pay-item *ngFor="let sp of Pay.ArchivioPagamenti" primary-icon="receipt" [mobile-breakpoint]="Pay.MobileBreakPointNotice" [currency-format]="pay.currencyFormat.bind(pay)"></pay-item>
+      <pay-item *ngFor="let sp of Pay.ArchivioPagamenti" [primary-icon]="sp.primaryIcon" [mainText]="sp.titolo" [metadata]="sp.sottotitolo"
+                [secondaryText]="sp.stato" [item]="sp" [primary-icon]="sp.primaryIcon" [disabled-icon]="sp.disabled"
+                [mobile-breakpoint]="Pay.MobileBreakPointNotice" (on-icon-click)="_onIconReceipt($event)"
+                [disable-gesture]="sp.primaryIcon===''"></pay-item>
     </div>
     <div class="col-12 col-md-2"></div>
   </div>

@@ -1,20 +1,20 @@
 <div class="{{ _headerClass }} w-100">
   <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <div class="container-fluid">
-          <div class="row align-items-center">
-            <button mat-icon-button class="mr-3" (click)="_onIconLeft()" *ngIf="_showLeftIcon">
-              <mat-icon class="{{ _iconClass }} material-icons action" aria-label="menu">{{ _iconLeft }}</mat-icon>
-            </button>
-            <div class="mr-auto text-truncate">
-              <a class="w-100 multiline-text" [href]="_href" *ngIf="_href!='#'">{{ _title }}</a>
-              <p class="w-100 m-0 multiline-text" *ngIf="_href=='#'">{{ _title }}</p>
-            </div>
-            <pay-icon-button button-class="cart-button" (ib-click)="_onIconRight()" [icon]="_iconRight" *ngIf="_showRightIcon">{{ _label }}</pay-icon-button>
-          </div>
-        </div>
+    <div class="d-flex align-items-center flex-nowrap ml-n2 ml-sm-n3">
+      <button mat-icon-button class="mr-3" (click)="_onIconLeft()" *ngIf="_showLeftIcon">
+        <mat-icon class="{{ _iconClass }} material-icons action" aria-label="menu">{{ _iconLeft }}</mat-icon>
+      </button>
+      <div class="mr-auto text-truncate">
+        <a class="w-100 single-line-text" [href]="_href" *ngIf="_href!='#'" [attr.title]="_titleString">{{ _titleString }}</a>
+        <p class="w-100 m-0 single-line-text" *ngIf="_href=='#'" [attr.title]="_titleString">{{ _titleString }}</p>
       </div>
+      <ng-content select="[add-on]"></ng-content>
+      <span class="icon-group">
+        <button mat-icon-button *ngIf="_showRightIcon" [disabled]="_disableIconRight">
+          <mat-icon (click)="_onIconRight()" aria-label="carrello">{{ _iconRight }}</mat-icon>
+        </button>
+        <span class="icon-label">{{ _label }}</span>
+      </span>
     </div>
   </div>
 </div>

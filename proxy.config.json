@@ -1,12 +1,12 @@
 {
   "/govpay/frontend/api/pagamento/rs/public/v2/*": {
-    "target": "https://demo.govcloud.it",
+    "target": "https://dev.govcloud.it",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/govpay/frontend/api/pagamento/rs/spid/v2/*": {
-    "target": "https://demo.govcloud.it",
+    "target": "https://dev.govcloud.it",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

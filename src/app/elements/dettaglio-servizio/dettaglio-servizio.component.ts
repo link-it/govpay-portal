@@ -1,25 +1,39 @@
-import { OnInit, OnDestroy, Component, ViewChild } from '@angular/core';
+import { OnInit, OnDestroy, Component, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { PayService } from '../services/pay.service';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/index';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { Standard } from '../classes/standard';
 import { JsonSchemaFormComponent } from 'angular7-json-schema-form';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
+import { Notifier } from '../field-group/field-group.component';
 
 import * as moment from 'moment';
-
 const Debug: boolean = false;
+declare let $: any;
 
 @Component({
   selector: 'pay-dettaglio-servizio',
   templateUrl: './dettaglio-servizio.component.html',
   styleUrls: ['./dettaglio-servizio.component.scss']
 })
-export class DettaglioServizioComponent implements OnInit, OnDestroy {
+export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('jsf', { read: JsonSchemaFormComponent }) _jsf: JsonSchemaFormComponent;
-
+  @HostListener('window:resize') onResize() {
+    if (this._dialogApp) {
+      const config: MatDialogConfig = new MatDialogConfig();
+      config.width = '50%';
+      if (window.innerWidth < 768) {
+        config.width = '80%';
+      }
+      if (window.innerWidth < 480) {
+        config.width = 'calc(100% - 30px)';
+      }
+      this._dialogApp.updateSize(config.width, 'auto');
+    }
+  }
   Pay = PayService;
 
   _jsFormValid: boolean;
@@ -33,6 +47,8 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
   _jsonUISchema;
   _jsonData;
 
+  _dialogApp: any;
+
   protected _langSubscription: Subscription;
 
   constructor(protected dialog: MatDialog, public pay: PayService, public translate: TranslateService) {
@@ -44,6 +60,13 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    $('#infoCollapse').on('shown.bs.collapse', () => {
+      Notifier.next(true);
+    });
+    updateLayoutNow.next(true);
   }
 
   ngOnDestroy() {
@@ -87,19 +110,36 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
 
   _verify(response: any) {
     const _response = response.body;
-    const _message: string[] = [ PayService.I18n.json.DettaglioServizio.Dialog.Avviso ];
+    const _message: string[] = [];
     _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.Causale}: ${_response['causale']}`);
-    _message.push(`${PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza}: ${this.pay.currencyFormat(_response['importo'])}`);
+    _message.push(PayService.I18n.json.DettaglioServizio.Dialog.Avviso);
+    const _report: any[] = [];
+    if (_response.datiAllegati && _response.datiAllegati.descrizioneImporto) {
+      _response.datiAllegati.descrizioneImporto.forEach((item: any) => {
+        _report.push({ key: item.voce, value: this.pay.currencyFormat(item.importo) });
+      });
+    }
+    _report.push({ key: PayService.I18n.json.DettaglioServizio.Dialog.ImportoPendenza, value: this.pay.currencyFormat(_response['importo']) });
+
     const config: MatDialogConfig = new MatDialogConfig();
-    config.width = (window.innerWidth < 768)?'80%':'50%';
+    config.panelClass = 'yesno-dialog-container';
+    config.width = '50%';
+    config.maxWidth = '100vw';
+    if (window.innerWidth < 768) {
+      config.width = '80%';
+    }
+    if (window.innerWidth < 480) {
+      config.width = 'calc(100% - 30px)';
+    }
     config.data = {
-      icon: 'shopping_cart',
+      icon: '',
       YESLabel: PayService.I18n.json.DettaglioServizio.Dialog.Submit,
       NOLabel: PayService.I18n.json.DettaglioServizio.Dialog.Close,
-      message: _message
+      message: _message,
+      report: _report
     };
-    const dialogApp = this.dialog.open(YesnoDialogComponent, config);
-    dialogApp.afterClosed().subscribe((yesNo: any) => {
+    this._dialogApp = this.dialog.open(YesnoDialogComponent, config);
+    this._dialogApp.afterClosed().subscribe((yesNo: any) => {
       if (!yesNo['cancel']) {
         this._addToCart(response);
       }
@@ -131,12 +171,12 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
           sottotitolo: '',
           metadati: (_terminePagamento || PayService.I18n.json.Common.SenzaScadenza),
           importo: _response['importo'],
-          stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato']],
+          stato: PayService.STATI_VERIFICA_PENDENZA[_response['stato'].toUpperCase()],
           editable: true,
           rawData: Object.assign({}, PayService.ExtraState)
         })
       );
-      PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+      // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
     } else {
       PayService.ShoppingCart.forEach((p: Standard) => {
         if (p.uid === _response['numeroAvviso']) {
@@ -146,13 +186,13 @@ export class DettaglioServizioComponent implements OnInit, OnDestroy {
           p.sottotitolo = '';
           p.metadati = (_terminePagamento || PayService.I18n.json.Common.SenzaScadenza);
           p.importo = _response['importo'];
-          p.stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato']];
+          p.stato = PayService.STATI_VERIFICA_PENDENZA[_response['stato'].toUpperCase()];
           p.editable = true;
           p.rawData = Object.assign({}, PayService.ExtraState);
         }
       });
     }
-    PayService.EDIT_MODE = false;
+    PayService.EditMode = false;
     this.pay.router.navigateByUrl('/carrello');
   }
 

@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { timeout, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { MatPaginatorIntl, MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { DateAdapter, MatPaginatorIntl, MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { I18n } from './I18nSchema';
@@ -23,12 +23,16 @@ declare let JSZip;
 })
 export class PayService implements OnInit, OnDestroy {
 
+  public static DateAdapter: any;
+
   public static RECAPTCHA_V3_SITE_KEY: any;
   public static SPID: any;
+  public static IAM: any;
   public static ROOT_SERVICE: string = '';
   public static HOSTNAME: string = '';
-  public static SPID_HOSTNAME: string = '';
-  public static SPID_ROOT_SERVICE: string = '';
+  public static AUTH_HOSTNAME: string = '';
+  public static AUTH_ROOT_SERVICE: string = '';
+  public static AUTH_LOGOUT_URL: string = '';
   public static CREDITORI: Creditore[] = [];
   public static LINGUE: any[] = [];
   public static IS_SINGLE: boolean = true;
@@ -37,21 +41,31 @@ export class PayService implements OnInit, OnDestroy {
   public static PAY_RESPONSE_URL: string = '';
   public static UUID_CHECK: string = '';
   public static ALPHA_3_CODE: string = '';
+  public static Gestore: any;
+  public static CollapsibleSections: any;
+  public static RouteConfig: any;
   public static QueryProfile: string = '';
   public static LogoPagoPA: string = 'assets/pagopa.svg';
-  public static LogoGovpay: string = 'assets/govpay.svg';
-  public static LogoReverseGovpay: string = 'assets/govpay-reverse.svg';
   public static ShoppingCart: Standard[] = [];
   public static Cart: string[] = [];
+  public static SpidDomainTarget: string = '';
   public static CreditoreAttivo: Creditore;
   public static PosizioneDebitoria: any[] = [];
   public static ArchivioPagamenti: any[] = [];
-  public static Header: any = { Titolo: '', IsModal: false };
+  public static Header: any = { Titolo: '', LeftIcon: 'menu' };
   public static I18n: I18n = new I18n();
+  public static MenuItems: any[] = [];
   public static ExtraState: any;
+  public static Cache: any = { TipiPendenza: [] };
+  public static AssessoratoDetail: boolean = false;
+  public static ActionDetail: boolean = false;
   public static MobileBreakPointNotice: number = 768;
-  public static EDIT_MODE: boolean = false;
+  public static EditMode: boolean = false;
+  public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
+  public static ImpostazioniOrdinamento: any;
 
+  public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
+  public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
 
   // URL Services
   public static URL_SERVIZI: string = '/domini/{idDominio}/tipiPendenza';
@@ -78,16 +92,18 @@ export class PayService implements OnInit, OnDestroy {
     NON_ESEGUITO: 'non_eseguito',
     ESEGUITO_PARZIALE: 'eseguito_parziale'
   };
-  // STATI PENDENZE <rimuovere>
-    /*public static STATI_PENDENZA: any = {
-      ESEGUITA: 'eseguita',
-      DUPLICATA: 'duplicata',
-      NON_ESEGUITA: 'non_eseguita',
-      ESEGUITA_PARZIALE: 'eseguita_parziale',
-      ANNULLATA: 'annullata',
-      SCADUTA: 'scaduta',
-      IN_RITARDO: 'in_ritardo'
-    };*/
+  // FILTRI STATI PENDENZE
+  public static QUERY_NON_ESEGUITA: string = 'stato=NON_ESEGUITA';
+  // STATI PENDENZE
+  public static STATI_PENDENZA: any = {
+    ESEGUITA: 'eseguita',
+    DUPLICATA: 'duplicata',
+    NON_ESEGUITA: 'non_eseguita',
+    ESEGUITA_PARZIALE: 'eseguita_parziale',
+    ANNULLATA: 'annullata',
+    SCADUTA: 'scaduta',
+    IN_RITARDO: 'in_ritardo'
+  };
   public static STATUS_CODE: any = {
     0: 'ESEGUITO',
     1: 'NON_ESEGUITO',
@@ -125,7 +141,9 @@ export class PayService implements OnInit, OnDestroy {
   /* - esito.component.ts - */
 
   spinner: boolean = false;
-  AVVISO_PAGAMENTO: any = { Numero: '', Dominio: null, Pagamenti: [] };
+  spidSessionExpired: BehaviorSubject<boolean> = new BehaviorSubject(null);
+
+  // AVVISO_PAGAMENTO: any = { Numero: '', Dominio: null, Pagamenti: [] };
 
   // Pagamento diretto via query string parameters { Numero: 'numeroAvviso', Creditore: 'idDominio', UUID: 'String' };
   public static QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO: any;
@@ -136,16 +154,16 @@ export class PayService implements OnInit, OnDestroy {
   // protected _langSubscription: Subscription;
 
   constructor(private message: MatSnackBar, private http: HttpClient, public router: Router,
-              private paginator: MatPaginatorIntl, public translate: TranslateService) {
+              private paginator: MatPaginatorIntl, public translate: TranslateService,
+              private dateAdapter: DateAdapter<any>) {
+    PayService.DateAdapter = dateAdapter;
     this.initConfig();
   }
 
   ngOnInit() {
-    // PayService.TranslateDynamicObject(this.translate, this);
   }
 
   ngOnDestroy() {
-    // this._langSubscription.unsubscribe();
   }
 
   initConfig() {
@@ -157,18 +175,26 @@ export class PayService implements OnInit, OnDestroy {
     }
     PayService.RECAPTCHA_V3_SITE_KEY = PayConfig.RECAPTCHA_V3_SITE_KEY;
     PayService.SPID = PayConfig['SPID_SETTINGS'];
+    PayService.IAM = PayConfig['IAM_SETTINGS'];
     PayService.ROOT_SERVICE = PayConfig['PUBLIC_ROOT_SERVICE'];
     PayService.HOSTNAME = PayConfig['REVERSE_PROXY'];
-    PayService.SPID_HOSTNAME = PayConfig['AUTH_HOST'];
-    PayService.SPID_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
+    PayService.AUTH_HOSTNAME = PayConfig['AUTH_HOST'];
+    PayService.AUTH_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
+    PayService.AUTH_LOGOUT_URL = PayConfig['AUTH_LOGOUT_URL'];
     PayService.CREDITORI = PayConfig['DOMINI'];
-    PayService.CreditoreAttivo = (PayConfig['DOMINI'].length == 1)?PayConfig['DOMINI'][0]:null;
+    if (PayService.CREDITORI.length == 1) {
+      PayService.SetCreditoreAttivoAndDomainTarget(PayService.CREDITORI[0].value);
+    }
     PayService.LINGUE = PayConfig['LINGUE'];
     PayService.IS_SINGLE = (PayConfig['DOMINI'].length == 1);
     PayService.TIME_OUT_POLLING = PayConfig['TIME_OUT_POLL'];
     PayService.POLLING_INTERVAL = PayConfig['POLLING_INTERVAL'];
     PayService.PAY_RESPONSE_URL = PayConfig['PAY_RESPONSE_URL'];
     PayService.UUID_CHECK = PayConfig['UUID_CHECK'];
+    PayService.Gestore = PayConfig['GESTORE'];
+    PayService.CollapsibleSections = PayConfig['COLLAPSIBLE_SECTIONS'];
+    PayService.RouteConfig = PayConfig['ROUTING'];
+    PayService.ImpostazioniOrdinamento = PayConfig['ORDINAMENTO'];
   }
 
   // static StatiPendenza(): any[] {
@@ -209,21 +235,21 @@ export class PayService implements OnInit, OnDestroy {
     }
   }
 
-  getDateFormatByLanguage(): string {
-    return PayService.DateFormatByLanguage(this.translate);
+  getDateFormatByLanguage(timestamp: boolean = false): string {
+    return PayService.DateFormatByLanguage(this.translate, timestamp);
   }
 
-  static DateFormatByLanguage(translate: TranslateService): string {
+  static DateFormatByLanguage(translate: TranslateService, timestamp: boolean = false): string {
     let currentFormat = '';
     switch (translate.currentLang) {
       case 'en':
-        currentFormat = 'YYYY/MM/DD';
+        currentFormat = timestamp?'YYYY/MM/DD, HH:mm:ss':'YYYY/MM/DD';
         break;
       case 'it':
-        currentFormat = 'DD/MM/YYYY';
+        currentFormat = timestamp?'DD/MM/YYYY, HH:mm:ss':'DD/MM/YYYY';
         break;
       default:
-        currentFormat = 'DD/MM/YYYY';
+        currentFormat = timestamp?'DD/MM/YYYY, HH:mm:ss':'DD/MM/YYYY';
     }
     return currentFormat;
   }
@@ -264,11 +290,11 @@ export class PayService implements OnInit, OnDestroy {
     return '';
   }
 
-  resetAvvisoPagamento() {
-    this.AVVISO_PAGAMENTO.Pagamenti = [];
-    this.AVVISO_PAGAMENTO.Numero = '';
-    this.AVVISO_PAGAMENTO.Dominio = null;
-  }
+  // resetAvvisoPagamento() {
+  //   this.AVVISO_PAGAMENTO.Pagamenti = [];
+  //   this.AVVISO_PAGAMENTO.Numero = '';
+  //   this.AVVISO_PAGAMENTO.Dominio = null;
+  // }
 
   /**
    * REST SERVICES
@@ -280,7 +306,7 @@ export class PayService implements OnInit, OnDestroy {
    * @returns {Promise<any>}
    */
   sessione(url: string = ''): Promise<boolean> {
-    return this.http.get(PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_LOGGED_IN)
+    return this.http.get(PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_LOGGED_IN)
       .toPromise()
       .then(response => {
         this.cacheUser(response);
@@ -294,9 +320,32 @@ export class PayService implements OnInit, OnDestroy {
           this.router.navigateByUrl('/');
           return false;
         }
-        // Solo /pagamenti controlla la sessione
+        // Solo /pagamento-servizio controlla la sessione
         // ma è di accesso pubblico
         return true;
+      });
+  }
+
+  jumpService(creditore: string, codice: string): Promise<boolean> {
+    return this.elencoServizi(creditore)
+      .toPromise()
+      .then(response => {
+        this.updateSpinner(false);
+        PayService.Cache.TipiPendenza = PayService.DecodeServices(response.body?response.body['risultati']:[]);
+        PayService.ExtraState = PayService.Cache.TipiPendenza.filter((el: any) => {
+          return (el.idTipoPendenza === codice);
+        })[0];
+        if (!PayService.ExtraState) {
+          this.router.navigateByUrl('/');
+          return false;
+        }
+        return true;
+      })
+      .catch(error => {
+        PayService.Cache.TipiPendenza = [];
+        this.updateSpinner(false);
+        this.router.navigateByUrl('/');
+        return false;
       });
   }
 
@@ -310,7 +359,7 @@ export class PayService implements OnInit, OnDestroy {
   pagaPendenze(body: any, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_PAGAMENTI;
     if(query) {
@@ -334,7 +383,7 @@ export class PayService implements OnInit, OnDestroy {
   sessionePagamento(sessione: string, open: boolean = true): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_SESSIONE_PAGAMENTO.split('{idSession}').join(sessione);
     return this.http.get(url, {observe: 'response'})
@@ -356,7 +405,7 @@ export class PayService implements OnInit, OnDestroy {
   elencoServizi(creditore: string, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_SERVIZI.split('{idDominio}').join(creditore);
     if(query) {
@@ -382,7 +431,7 @@ export class PayService implements OnInit, OnDestroy {
   richiestaAvviso(creditore: string, numeroAvviso: string, open: boolean = true, query: string = ''): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_AVVISO.split('{idDominio}').join(creditore).split('{numeroAvviso}').join(numeroAvviso);
     if(query) {
@@ -409,7 +458,7 @@ export class PayService implements OnInit, OnDestroy {
   richiestaPendenza(creditore: string, tipoPendenza: string, body: any = null, query: string = '', open: boolean = true): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_PENDENZA.split('{idDominio}').join(creditore).split('{idTipoPendenza}').join(encodeURI(tipoPendenza));
     if(query) {
@@ -425,13 +474,12 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   /**
-   * Procedura download ricevuta
+   * Procedura download ricevuta pagamenti
    * Get RPP detail
    * @param {string} url
-   * @param {boolean} archive
    * @param {boolean} open
    */
-  getRPP(url: string, archive: boolean = false, open: boolean = true) {
+  getRPP(url: string, open: boolean = true) {
     this.updateSpinner(true);
     this.richiestaRPP(url, open).subscribe(
       (result) => {
@@ -439,14 +487,9 @@ export class PayService implements OnInit, OnDestroy {
           if (result.body) {
             if (result.body['risultati'] && result.body['risultati']['length'] != 0) {
               const _data = {url: [], type: []};
-              let _risultati = [];
-              if(!archive) {
-                _risultati = result.body['risultati'].filter((r) => {
-                  return (r.rt && parseInt(r.rt['datiPagamento']['codiceEsitoPagamento'], 10) === 0);
-                });
-              } else {
-                _risultati = result.body['risultati'] || [];
-              }
+              const _risultati: any[] = (result.body['risultati'] || []).filter((r) => {
+                return (r.rt && parseInt(r.rt['datiPagamento']['codiceEsitoPagamento'], 10) === 0);
+              });
               _risultati.forEach(item => {
                 let urlRicevuta = '/' + item['rpt']['dominio']['identificativoDominio'];
                 urlRicevuta += '/' + item['rpt']['datiVersamento']['identificativoUnivocoVersamento'];
@@ -457,9 +500,9 @@ export class PayService implements OnInit, OnDestroy {
               });
               if (_data.url.length != 0) {
                 if (_data.url.length > 1) {
-                  this.multiService(_data.url, _data.type);
+                  this.multiService(_data.url, _data.type, open);
                 } else {
-                  this.getReceipt(_data.url[0]);
+                  this.getReceipt(_data.url[0], open);
                 }
               }
             } else {
@@ -479,6 +522,26 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   /**
+   * Procedura download ricevuta archivio
+   * @param {any} item
+   * @param {boolean} open
+   */
+  getRicevutaArchivio(item: any, open: boolean = true) {
+    const _data = { url: [], type: [] };
+    let urlRicevuta = '/' + item['rpt']['dominio']['identificativoDominio'];
+    urlRicevuta += '/' + item['rpt']['datiVersamento']['identificativoUnivocoVersamento'];
+    urlRicevuta += '/' + item['rpt']['datiVersamento']['codiceContestoPagamento'];
+    urlRicevuta += '/rt';
+    _data.url.push(urlRicevuta);
+    _data.type.push('application/pdf');
+    if (urlRicevuta.indexOf('undefined') === -1 && urlRicevuta.indexOf('null') === -1) {
+      this.getReceipt(_data.url[0], open);
+    } else {
+      this.alert(PayService.I18n.json.Common.WarningRicevuta);
+    }
+  }
+
+  /**
    * Richiesta rpp
    * @param {string} rppUrl
    * @param {boolean} open
@@ -487,7 +550,7 @@ export class PayService implements OnInit, OnDestroy {
   protected richiestaRPP(rppUrl: string, open: boolean = true): Observable<any> {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += rppUrl;
     return this.http.get(url, {observe: 'response'})
@@ -512,7 +575,7 @@ export class PayService implements OnInit, OnDestroy {
       headers = headers.set('Accept', contents[index]);
       let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
       if (!open) {
-        url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+        url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
       }
       url += PayService.URL_RPP + service;
       const method = this.http.get(url, { headers: headers, observe: 'response', responseType: 'blob' });
@@ -558,7 +621,7 @@ export class PayService implements OnInit, OnDestroy {
   protected ricevuta(ricevutaUrl: string, open: boolean = true) {
     let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
     if (!open) {
-      url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+      url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
     }
     url += PayService.URL_RPP + ricevutaUrl;
     let _headers = new HttpHeaders();
@@ -587,7 +650,7 @@ export class PayService implements OnInit, OnDestroy {
       headers = headers.set('Accept', 'application/pdf');
       let url = PayService.HOSTNAME + PayService.ROOT_SERVICE;
       if (!open) {
-        url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE;
+        url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE;
       }
       url += PayService.URL_AVVISO.split('{idDominio}').join(prop.creditore).split('{numeroAvviso}').join(prop.avviso);
       if (recaptcha) {
@@ -654,54 +717,73 @@ export class PayService implements OnInit, OnDestroy {
    * Logout User
    * @returns {Observable<any>}
    */
-  // logout(): Observable<any> {
-  //   const url = PayService.SPID['LOGOUT_URL'] || '';
-  //   return this.http.get(url)
-  //     .pipe(
-  //       timeout(PayService.TIMEOUT),
-  //       map((response: HttpResponse<any>) => {
-  //         return response;
-  //       })
-  //     );
-  // }
+  logout(): Observable<any> {
+    const url: string = PayService.AUTH_LOGOUT_URL;
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
 
   /**
    * Pendenze
    * @param {string} query
    * @returns {Observable<any>}
    */
-  // pendenze(query?: string): Observable<any> {
-  //   let url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_PENDENZE;
-  //   if (query) {
-  //     url += '?' + query;
-  //   }
-  //   return this.http.get(url, {observe: 'response'})
-  //     .pipe(
-  //       timeout(PayService.TIMEOUT),
-  //       map((response: HttpResponse<any>) => {
-  //         return response;
-  //       })
-  //     );
-  // }
+  pendenze(query?: string): Observable<any> {
+    let url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_PENDENZE;
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
 
   /**
    * Pagamenti GET
    * @param {string} query
    * @returns {Observable<any>}
    */
-  // pagamenti(query?: string): Observable<any> {
-  //   let url = PayService.SPID_HOSTNAME + PayService.SPID_ROOT_SERVICE + PayService.URL_PAGAMENTI;
-  //   if (query) {
-  //     url += '?' + query;
-  //   }
-  //   return this.http.get(url, {observe: 'response'})
-  //     .pipe(
-  //       timeout(PayService.TIMEOUT),
-  //       map((response: HttpResponse<any>) => {
-  //         return response;
-  //       })
-  //     );
-  // }
+  pagamenti(query?: string): Observable<any> {
+    let url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_PAGAMENTI;
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
+
+  /**
+   * Archivio pagamenti GET
+   * @param {string} query
+   * @returns {Observable<any>}
+   */
+  archivioPagamenti(query?: string): Observable<any> {
+    let url = PayService.AUTH_HOSTNAME + PayService.AUTH_ROOT_SERVICE + PayService.URL_RPP;
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response;
+        })
+      );
+  }
 
   /**
    * On error handler
@@ -774,7 +856,10 @@ export class PayService implements OnInit, OnDestroy {
       _msg = PayService.I18n.json.Common.CodeException;
       console.log(e);
     }
-
+    if (error.status === 403 && PayService.User) {
+      this.resetSessionState();
+      this.spidSessionExpired.next(true);
+    }
     this.alert(_msg, true, _hasMapCode);
   }
 
@@ -807,18 +892,26 @@ export class PayService implements OnInit, OnDestroy {
    */
   cacheUser(user: any) {
     PayService.User = user;
+    PayService.TranslateDynamicObject(this.translate, this);
   }
 
   clearUser() {
     PayService.User = undefined;
   }
 
+  resetSessionState() {
+    PayService.ShoppingCart = [];
+    PayService.ActionDetail = false;
+    PayService.AssessoratoDetail = false;
+    this.clearUser();
+  }
+
   isAuthenticated(): boolean {
-    return !!PayService.User && PayService.SPID['ACCESS'];
+    return !!PayService.User && (PayService.SPID['ACCESS'] || PayService.IAM['ACCESS']);
   }
 
   hasAuthentication(): boolean {
-    return PayService.SPID['ACCESS'];
+    return (PayService.SPID['ACCESS'] || PayService.IAM['ACCESS']);
   }
 
   static ResetState() {
@@ -832,22 +925,25 @@ export class PayService implements OnInit, OnDestroy {
    * @constructor
    */
   static TranslateDynamicObject(_translate: TranslateService, _pay: PayService) {
+    PayService.DateAdapter.setLocale(_translate.currentLang);
     PayService.ALPHA_3_CODE = PayService.LINGUE.filter((l: Language) => (l.alpha2Code === _translate.currentLang))[0].alpha3Code;
     _translate.get('Language').subscribe((_language: any) => {
       PayService.I18n.json = Object.assign({}, _language);
-      if (!PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang]) {
-        PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang] = _language.Cart.Badge.substring(0);
-      }
+      // if (!PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang]) {
+      //   PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang] = _language.Cart.Badge.substring(0);
+      // }
       if (!PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang]) {
         PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang] = _language.Posizione.Debiti.Titolo.substring(0);
       }
       if (!PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang]) {
         PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang] = _language.Archivio.Pagamenti.Titolo.substring(0);
       }
-      PayService.I18n.json.Account = PayService.User?PayService.User.anagrafica['anagrafica']:'';
-      PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang], PayService.ShoppingCart.length);
+      PayService.I18n.json.Account = (PayService.User && PayService.User.anagrafica)?PayService.User.anagrafica['anagrafica']:'';
+      // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang], PayService.ShoppingCart.length);
       PayService.I18n.json.Posizione.Debiti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Posizione.Debiti.TitoloSchema[_translate.currentLang], PayService.PosizioneDebitoria.length);
       PayService.I18n.json.Archivio.Pagamenti.Titolo = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Archivio.Pagamenti.TitoloSchema[_translate.currentLang], PayService.ArchivioPagamenti.length);
+
+      PayService.MenuItems = (PayService.I18n.json.SideNav.MenuItems || []).slice(0);
 
       PayService.MapHeading(_pay.router, _translate);
       _pay.updateSpinner(false);
@@ -855,47 +951,70 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   static MapHeading(router: Router, translate: TranslateService) {
+    let tabs: boolean = false;
+    PayService.ActionDetail = false;
     switch(router.url.split('?')[0]) {
-      case '/pagamenti':
+      case '/pagamento-servizio':
+        if (PayService.AssessoratoDetail) {
+          PayService.ActionDetail = true;
+          PayService.Header.LeftIcon = 'arrow_back';
+          PayService.Header.Titolo = PayService.I18n.jsonSchema.Assessorato.TitoloSchema[PayService.ALPHA_3_CODE];
+        } else {
+          tabs = true;
+          PayService.Header.Titolo = PayService.I18n.json.Pagamenti.Titolo;
+          PayService.Header.LeftIcon = 'menu';
+        }
+        break;
+      case '/bollettino':
         PayService.Header.Titolo = PayService.I18n.json.Pagamenti.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       case '/dettaglio-servizio':
         if (PayService.ExtraState) {
+          let title: string[];
           if (PayService.ExtraState instanceof Standard) {
             const raw: any = (PayService.ExtraState as Standard).rawData;
-            PayService.Header.Titolo = raw['detail'][PayService.ALPHA_3_CODE]['name'];
+            title = [ raw['detail'][PayService.ALPHA_3_CODE]['name'] ];
+            if (raw['detail'][PayService.ALPHA_3_CODE]['code']) {
+              title.unshift(raw['detail'][PayService.ALPHA_3_CODE]['code']);
+            }
           } else {
-            PayService.Header.Titolo = PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['name'];
+            title = [ PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['name'] ];
+            if (PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['code']) {
+              title.unshift(PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['code']);
+            }
           }
+          PayService.Header.Titolo = { mobile: title[0], desktop: title.join(' - ') };
         } else {
           PayService.Header.Titolo = PayService.I18n.json.Header.Titolo;
         }
-        PayService.Header.IsModal = true;
+        PayService.ActionDetail = true;
+        PayService.Header.LeftIcon = 'close';
         break;
       case '/carrello':
         PayService.Header.Titolo = PayService.I18n.json.Cart.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       case '/ricevuta':
         PayService.Header.Titolo = PayService.I18n.json.Ricevuta.Titolo;
-        PayService.Header.IsModal = true;
+        PayService.ActionDetail = true;
+        PayService.Header.LeftIcon = 'close';
         break;
       case '/riepilogo':
         PayService.Header.Titolo = PayService.I18n.json.Posizione.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       case '/archivio':
         PayService.Header.Titolo = PayService.I18n.json.Archivio.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       case '/esito-pagamento':
         PayService.Header.Titolo = PayService.I18n.json.Esito.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
         break;
       default:
         PayService.Header.Titolo = PayService.I18n.json.Header.Titolo;
-        PayService.Header.IsModal = false;
+        PayService.Header.LeftIcon = 'menu';
     }
     if (PayService.ShoppingCart.length !== 0) {
       PayService.ShoppingCart.forEach((item: Standard) => {
@@ -906,10 +1025,40 @@ export class PayService implements OnInit, OnDestroy {
         const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
         const _avviso: string = _ird['numeroAvviso']?`${PayService.I18n.json.Common.NumeroAvviso}: ${_ird['numeroAvviso']}`:'';
 
-        item.sottotitolo = !_editable?_avviso:'';
-        item.metadati = _terminePagamento;
+        item.sottotitolo = '';
+        const _meta: string[] = [];
+        if (!_editable && _avviso) {
+          _meta.push(_avviso);
+        }
+        if (_terminePagamento) {
+          _meta.push(_terminePagamento);
+        }
+        item.metadati = _meta.join(', ');
       });
     }
+    PayService.TabsBehavior.next({ update: true, tabs: tabs });
+  }
+
+  static MapResultsTitle(N: number, M: number): string {
+    const risultati: any = PayService.I18n.json.Common.Filtro.Risultati;
+    let text = PayService.I18n.json.Common.Filtro.NessunRisultato;
+    if (N === 1) {
+      if (M === 1) {
+        text = risultati.SS.toString();
+      }
+      if (M > 1) {
+        text = risultati.SP.split('{{value}}').join(M.toString());
+      }
+    }
+    if (N > 1) {
+      if (M === 1) {
+        text = risultati.PS.split('{{value}}').join(N.toString());
+      }
+      if (M > 1) {
+        text = risultati.PP.split('{{valueN}}').join(N.toString()).split('{{valueM}}').join(M.toString());
+      }
+    }
+    return text;
   }
 
   /**
@@ -964,7 +1113,91 @@ export class PayService implements OnInit, OnDestroy {
     PayService.ShoppingCart = [];
     PayService.Cart = [];
     PayService.MapHeading(router, translate);
-    PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[translate.currentLang], 0);
+    // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[translate.currentLang], 0);
   }
 
+  static SetCreditoreAttivoAndDomainTarget(dominio: string) {
+    PayService.CreditoreAttivo = undefined;
+    PayService.CREDITORI.forEach((cr: Creditore) => {
+      if (cr.value === dominio) {
+        PayService.CreditoreAttivo = cr;
+        PayService.SpidDomainTarget = (cr.value)?`${PayService.SPID['SERVICE_TARGET']}?idDominio=${cr.value}`:PayService.SPID['SERVICE_TARGET'];
+      }
+    });
+  }
+
+  static RouteConfigExists(route: string, router: Router): boolean {
+    let inCfg: boolean = false;
+    if (router && route) {
+      router.config.some((cfg: any) => {
+        inCfg = (route === cfg.path);
+        return inCfg;
+      });
+    }
+    return inCfg;
+  }
+
+  public static ResetBehaviors(behaviors: BehaviorSubject<any>[]) {
+    setTimeout(() => {
+      behaviors.forEach((b: BehaviorSubject<any>) => {
+        b.next(null);
+      });
+    });
+  }
+
+  public static DecodeServices(services: any[]): any[] {
+    return services.map((ser: any) => {
+      if (ser.form) {
+        if (ser.form['definizione']) {
+          try {
+            ser.jsfDef = JSON.parse(PayService.DecodeB64(ser.form['definizione']));
+          } catch (e) {
+            console.log(e);
+            ser.jsfDef = '';
+          }
+        }
+        if (ser.form['impaginazione']) {
+          try {
+            ser.detail = JSON.parse(PayService.DecodeB64(ser.form['impaginazione']));
+          } catch (e) {
+            console.log(e);
+            ser.detail = '';
+          }
+        }
+      }
+      return ser;
+    });
+  }
+
+  public static SmBlock(): boolean {
+    return (window.innerWidth >= 576);
+  }
+
+  public static MdBlock(): boolean {
+    return (window.innerWidth >= 768);
+  }
+
+  public static SortBy(items: any[], properties: string[], asc: boolean = true, cycle: number = 0) {
+    (items || []).sort((a: any, b: any) => {
+      let cmp: number = PayService.__CompareSortBy(a, b, properties[cycle], asc);
+      while (cmp === 0 && (cycle + 1) < properties.length) {
+        cycle++;
+        cmp = PayService.__CompareSortBy(a, b, properties[cycle], asc);
+      }
+      cycle = 0;
+      return cmp;
+    });
+  }
+
+  protected static __CompareSortBy(a: any, b: any, property: string, asc: boolean): number {
+    if (property && a[property] && b[property]) {
+      if (a[property] < b[property]) {
+        return asc?-1:1;
+      }
+      if (property && a[property] > b[property]) {
+        return asc?1:-1;
+      }
+    }
+    return 0;
+  }
 }

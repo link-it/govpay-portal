@@ -1,53 +1,78 @@
+<pay-choice-dialog *ngIf="!Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)" [config]="Pay.Gestore?.Configurazione" [partners]="Pay.Gestore?.Partners"
+                   [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [title]="Pay.I18n.json.Header.Erogatore.Titolo"
+                   [logo]="Pay.Gestore?.ProgettoGovPay.AccessPanel" [logo-gestore]="Pay.Gestore?.Logo.Full" [background]="Pay.Gestore?.Background.Full"
+                   [main-info]="Pay.I18n.json.Gestore.Ragione" [sub-info]="Pay.I18n.json.Gestore.Sede"></pay-choice-dialog>
 <pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [language-list]="_languages" language-bar-theme="language-bar"
-                  (on-change-language)="_languageHandler($event)" [current-language]="_language">
+                  (on-change-language)="_languageHandler($event)" [current-language]="_language"
+                  [style.paddingRight.px]="!Pay.CreditoreAttivo?15:null" [style.zIndex]="!Pay.CreditoreAttivo?2:null">
+  <img add-on *ngIf="Pay.CreditoreAttivo && Pay.CreditoreAttivo.logo" [src]="'assets/images/domini/'+Pay.CreditoreAttivo.logo" [alt]="Pay.CreditoreAttivo.AltText" class="d-inline logo-creditore">
   <div add-on class="my-1 py-2 dropdown w-100" *ngIf="Pay.CREDITORI.length > 1 && Pay.CreditoreAttivo">
     <a class="dropdown-toggle" href="#" id="creditori" role="button" data-toggle="dropdown"
        aria-haspopup="true" aria-expanded="false">{{ Pay.CreditoreAttivo?.label }}</a>
-    <div class="dropdown-menu mat-elevation-z4" aria-labelledby="creditori">
+    <div class="dropdown-menu" aria-labelledby="creditori">
       <p *ngFor="let cr of Pay.CREDITORI" (click)="__onActiveChange(cr)"
          [class]="'dropdown-item m-0' + ((Pay.CreditoreAttivo && Pay.CreditoreAttivo.value === cr.value)?' active-item':' action')">
         {{ cr.label }}
       </p>
     </div>
   </div>
-  <p add-on *ngIf="Pay.CREDITORI.length === 1" class="language-bar-title w-100 m-0 multiline-text">{{ Pay.I18n.json.Header.LanguageBar.Titolo }}</p>
-  <pay-spid-login [label]="Pay.I18n.json.Spid.Label" [info]="Pay.I18n.json.Spid.Info" [ask]="Pay.I18n.json.Spid.Ask" [help]="Pay.I18n.json.Spid.Help"
-                  [action]="Pay.SPID['ACTION_FORM_URL']" [spid-test-url]="Pay.SPID['TEST_PROVIDER']" [response-target]="Pay.SPID['SERVICE_TARGET']"
-                  *ngIf="!Pay.User && Pay.SPID['ACCESS']"></pay-spid-login>
+  <p add-on *ngIf="Pay.CreditoreAttivo && Pay.CREDITORI.length === 1" class="language-bar-title w-100 m-0 multiline-text">{{ Pay.I18n.json.Header.LanguageBar.Titolo }}</p>
 </pay-language-bar>
-<pay-choice-dialog *ngIf="Pay.CREDITORI.length > 1 && !Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)"
-                   [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [title]="Pay.I18n.json.Header.Erogatore.Titolo"
-                   [logo]="Pay.LogoReverseGovpay" [style.top.px]="_mst"></pay-choice-dialog>
 <mat-sidenav-container *ngIf="Pay.CreditoreAttivo">
-  <mat-sidenav #sidenav class="side-nav" mode="over">
-    <div class="side-nav-title d-flex align-items-center" [style.height.px]="_hbh">
-      <span class="text-truncate">{{ Pay.I18n.json.SideNav.Titolo }}</span>
+  <mat-sidenav #sidenav class="side-nav" [mode]="_mode" (openedChange)="__isOpen()">
+    <div #gestore class="gestore cover d-flex align-items-end" [ngStyle]="__gestoreBkg">
+      <div class="side-nav-title">
+        <img class="sidenav-logo-gestore" *ngIf="Pay.Gestore && Pay.Gestore.Logo.Small" [src]="'assets/images/'+Pay.Gestore?.Logo.Small" [alt]="Pay.Gestore?.Logo.AltText">
+        <p>{{ Pay.I18n.json.SideNav.Titolo }}</p>
+      </div>
     </div>
-    <mat-list role="list" class="side-nav-menu d-flex flex-column" [style.height.px]="_gch">
-      <mat-list-item role="listitem" *ngFor="let _item of Pay.I18n.json.SideNav.MenuItems | AuthGuard"
+    <mat-list role="list" class="side-nav-menu d-flex flex-column" [style.height.px]="_mlh">
+      <mat-list-item role="listitem" *ngFor="let _item of Pay.MenuItems|AuthGuard:!!Pay.User"
                      (click)="_sideNavItemClick(sidenav, _item.Link)">
         <a [routerLink]="_item.Link" routerLinkActive="active-route" [ngClass]="_classRoute(_item.Link)">
-          <span *ngIf="!_showBadgeCart(_item.Link)">{{ _item.Label }}</span>
-          <span *ngIf="_showBadgeCart(_item.Link)" [matBadge]="Pay.Cart['length']" [matBadgeOverlap]="false">{{ _item.Label }}</span>
+          <span>{{ _item.Label }}</span>
         </a>
       </mat-list-item>
-      <mat-divider class="my-3" *ngIf="Pay.SPID['Access'] && Pay.I18n.json.Account"></mat-divider>
-      <mat-list-item role="listitem" (click)="_sideNavItemClick(sidenav, '/profilo')" *ngIf="Pay.SPID['Access'] && Pay.I18n.json.Account">
-        <a [routerLink]="'/profilo'">{{ Pay.I18n.json.SideNav.Account }}</a>
+      <mat-divider class="my-3" *ngIf="Pay.User && (Pay.SPID['ACCESS'] || Pay.IAM['ACCESS']) && Pay.I18n.json.Account"></mat-divider>
+      <mat-list-item role="listitem" *ngIf="Pay.User && (Pay.SPID['ACCESS'] || Pay.IAM['ACCESS']) && Pay.I18n.json.Account">
+        {{ Pay.I18n.json.Account }}
       </mat-list-item>
-      <mat-list-item role="listitem" (click)="_sideNavItemClick(sidenav, Pay.I18n.json.SideNav.Logout)" *ngIf="Pay.SPID['Access'] && Pay.I18n.json.Account">
-        <a [href]="pay.logout()">{{ Pay.I18n.json.SideNav.Logout }}</a>
+      <mat-list-item role="listitem" (click)="_sideNavItemClick(sidenav, '')" *ngIf="Pay.User && (Pay.SPID['ACCESS'] || Pay.IAM['ACCESS']) && Pay.I18n.json.Account">
+        <span class="action">{{ Pay.I18n.json.SideNav.Logout }}</span>
       </mat-list-item>
+      <div class="flex-grow-1"></div>
       <div class="logo-govpay">
-        <p class="mb-2">Powered by</p>
-        <img [src]="Pay.LogoGovpay">
+        <div class="flex-row partners-group" *ngIf="Pay.Gestore?.Configurazione.Menu.Partners">
+          <a *ngFor="let partner of Pay.Gestore?.Partners" [href]="partner.Url" target="_blank"><img [src]="'assets/images/'+partner.Logo.Menu" [alt]="partner.Logo.AltText"></a>
+        </div>
+        <p *ngIf="Pay.Gestore?.Configurazione.Menu.Infos">{{ Pay.I18n.json.Gestore.Ragione }}</p>
+        <p *ngIf="Pay.Gestore?.Configurazione.Menu.Infos">{{ Pay.I18n.json.Gestore.Sede }}</p>
+        <a [href]="Pay.Gestore?.ProgettoGovPay.Menu.Url" target="_blank">
+          <img class="govpay-prj" *ngIf="Pay.Gestore?.Configurazione.Menu.Govpay" [src]="'assets/images/'+Pay.Gestore?.ProgettoGovPay.Menu.Logo" [alt]="Pay.Gestore?.ProgettoGovPay.Menu.AltText">
+        </a>
       </div>
     </mat-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <pay-header-bar #headerBar [title]="Pay.Header.Titolo" (click-left-icon)="_leftIconClickHandler($event, sidenav)" (click-right-icon)="_rightIconClickHandler()"
-                    [left-icon]="Pay.Header.IsModal?'close':'menu'" right-icon="shopping_cart" [right-icon-label]="Pay.I18n.json.Cart.Badge"
-                    header-theme="header-bar" [show-right-icon]="_showCart"></pay-header-bar>
+                    [left-icon]="Pay.Header.LeftIcon" right-icon="shopping_cart" [right-icon-label]="Pay.ShoppingCart.length" [disable-right-icon]="Pay.ShoppingCart.length === 0"
+                    header-theme="header-bar" [show-right-icon]="true" [show-left-icon]="_mode === 'over' || Pay.ActionDetail" [breakpoint-title]="Pay.SmBlock">
+      <div add-on class="d-flex align-items-center flex-nowrap logged-user" *ngIf="Pay.User && (Pay.SPID['ACCESS'] || Pay.IAM['ACCESS']) && Pay.I18n.json.Account">
+        <svg class="d-none d-sm-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.6 587.6" preserveAspectRatio="xMinYMin">
+            <style>.spidIco0{fill:#333}.spidIco1{fill:#BBDEFB}</style>
+            <path id="XMLID_3_" class="spidIco0" d="M587.6 293.8c0 162.3-131.5 293.8-293.8 293.8C131.6 587.6 0 456.1 0 293.8S131.6 0 293.8 0c162.3 0 293.8 131.5 293.8 293.8"/>
+            <path id="XMLID_2_" class="spidIco1" d="M294.6 319c-24.4 0-44.5-8.2-60.3-24.8-15.8-16.5-23.7-37-23.7-61.4 0-24.5 7.9-44.8 23.6-61 15.7-16.2 35.7-24.3 60.2-24.3 24.4 0 44.3 8.2 59.6 24.9 15.3 16.6 23 37 23 61.5 0 24.3-7.7 44.6-23 60.8-15.3 16.1-35 24.3-59.4 24.3"/>
+            <path id="XMLID_1_" class="spidIco1" d="M210.6 439.1c0-24.5 7.9-44.8 23.5-61 15.7-16.2 35.7-24.3 60.4-24.3 24.4 0 44.3 8.2 59.5 24.9 15.3 16.7 23 37.1 23 61.5"/>
+      </svg>
+        <span class="d-none d-sm-inline px-3 text-nowrap">{{ Pay.I18n.json.Account }}</span>
+      </div>
+      <pay-spid-login add-on [label]="Pay.I18n.json.Spid.Label" [info]="Pay.I18n.json.Spid.Info" [ask]="Pay.I18n.json.Spid.Ask" [help]="Pay.I18n.json.Spid.Help"
+                      [action]="Pay.SPID['ACTION_FORM_URL']" [spid-test-url]="Pay.SPID['TEST_PROVIDER']" [response-target]="Pay.SpidDomainTarget"
+                      [spid-accf]="Pay.SPID.AUTHN_CONTEXT_CLASS_REF" *ngIf="!Pay.User && !Pay.IAM['ACCESS'] && Pay.SPID['ACCESS']"></pay-spid-login>
+      <pay-external-login add-on *ngIf="!Pay.User && !Pay.SPID['ACCESS'] && Pay.IAM['ACCESS'] && __IAMLoginUrl"
+                          [url]="__IAMLoginUrl" [label]="Pay.I18n.json.Iam.Label"></pay-external-login>
+    </pay-header-bar>
+    <pay-nav-bar #tabBar></pay-nav-bar>
     <div #globalContent class="global-container" [style.height.px]="_gch">
       <router-outlet></router-outlet>
     </div>

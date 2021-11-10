@@ -1,12 +1,14 @@
-import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked, HostListener } from '@angular/core';
+import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked, HostListener, HostBinding } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PayService } from './elements/services/pay.service';
 import { Language } from './elements/classes/language';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { serviziChange, validateNow } from './elements/pagamenti/pagamenti.component';
-import { Creditore } from './elements/classes/creditore';
+import { updateLayoutNow, validateNow } from './elements/pagamento-servizio/pagamento-servizio.component';
+import { MatSidenav } from '@angular/material';
+import { Subscription } from 'rxjs/index';
+import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'pay-root',
@@ -14,54 +16,95 @@ import { Creditore } from './elements/classes/creditore';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterContentChecked {
-
+  @ViewChild('sidenav') sidenav: MatSidenav;
+  @HostBinding('class.partners') get cfgPartners(): boolean {
+    return (this._configPartners);
+  }
   Pay = PayService;
 
   _gch: number = window.innerHeight;
+  _mlh: number = window.innerHeight;
   _hbh: number = 64;
-  _mst: number = 0;
+  _gh: number = 0;
+  _lb: number = 0;
   // protected _isLogged: boolean = false;
-  _showCart: boolean = true;
+  // _showCart: boolean = true;
+  _mode: string = 'over';
   _isLoading: boolean = false;
   _languages: Language[] = [];
   _language: string = '';
+
+  __IAMLoginUrl: string = '';
+
+  _configPartners: boolean = false;
+  _updateLayoutSub: Subscription;
+  _spidSession: Subscription;
+
+  __once: boolean = true;
+  __gestoreBkg: any;
 
   @HostListener('window:resize') onResize() {
     this._updateLayout();
   }
   @ViewChild('headerBar', { read: ElementRef }) private _headerBar: ElementRef;
   @ViewChild('languageBar', { read: ElementRef }) private _languageBar: ElementRef;
+  @ViewChild('tabBar') private _navTabBar: NavBarComponent;
+  @ViewChild('tabBar', { read: ElementRef }) private _tabBar: ElementRef;
+  @ViewChild('gestore', { read: ElementRef }) private _gestore: ElementRef;
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
 
   constructor(public router: Router, public pay: PayService, public translate: TranslateService) {
+    this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
+      if (exit) {
+        this.__toPublicExit();
+      }
+    });
+    this._updateLayoutSub = updateLayoutNow.subscribe((refresh: boolean) => {
+      if (refresh) {
+        setTimeout(() => {
+          this._updateLayout();
+        });
+      }
+    });
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
       PayService.TranslateDynamicObject(translate, pay);
     });
-    serviziChange.subscribe((hasChanged: boolean) => {
-      if (hasChanged) {
-        this._updateLayout();
+    let _toPublicAccessSection: boolean = true;
+    const jumpToService: any  = PayService.Jump.exec(location.pathname || '');
+    if(jumpToService && jumpToService.length === 3) {
+      const dominio: string = jumpToService[1];
+      const codice: string = jumpToService[2];
+      PayService.SetCreditoreAttivoAndDomainTarget(dominio);
+      if (PayService.CreditoreAttivo) {
+        _toPublicAccessSection = false;
+        PayService.TabsBehavior.next({ update: true });
+        this.pay.router.navigateByUrl('/dettaglio-servizio', { state: { Codice: codice, Creditore: dominio } });
       }
-    });
-    if(location.search) {
-      const _params: any = {};
-      location.search.substr(1).split('&').forEach((p) => {
-        const kv = p.split('=');
-        _params[kv[0]] = kv[1];
-      });
-      if(_params) {
-        if (_params['idSession'] && _params['idDominio']) {
-          this._setCreditoreAttivo(_params['idDominio']);
-        }
-        if (_params['numeroAvviso'] && _params['idDominio']) {
-          this._setCreditoreAttivo(_params['idDominio']);
-          PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
-             Numero: _params['numeroAvviso'],
-          Creditore: _params['idDominio'],
-          };
-          if(PayService.UUID_CHECK && _params['UUID']) {
-            PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
+    } else {
+      if(location.search) {
+        const _params: any = {};
+        location.search.substr(1).split('&').forEach((p) => {
+          const kv = p.split('=');
+          _params[kv[0]] = kv[1];
+        });
+        if(_params) {
+          if ((_params['idSession'] && _params['idDominio']) || _params['idDominio']) {
+            _toPublicAccessSection = false;
+            PayService.SetCreditoreAttivoAndDomainTarget(_params['idDominio']);
+            if (PayService.CreditoreAttivo) {
+              _toPublicAccessSection = !_params['idSession'];
+              if (!_params['idSession'] && _params['numeroAvviso']) {
+                _toPublicAccessSection = true;
+                PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
+                   Numero: _params['numeroAvviso'],
+                Creditore: _params['idDominio'],
+                };
+                if(PayService.UUID_CHECK && _params['UUID']) {
+                  PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
+                }
+              }
+            }
           }
-          this.__directPayment();
         }
       }
     }
@@ -76,12 +119,17 @@ export class AppComponent implements OnInit, AfterContentChecked {
       }
       PayService.MapHeading(this.router, this.translate);
     });
-
+    this.__checkIAMLogin();
+    if (PayService.CreditoreAttivo && _toPublicAccessSection) {
+      this.__toPublicAccess();
+    }
   }
 
   ngOnInit() {
-    this._mst = (PayService.CREDITORI.length > 1 && this._languages.length == 1)?0:48;
-    this._checkCartIcon();
+    this._configPartners = !!(PayService.Gestore.Configurazione.Menu.Partners);
+    if (PayService.Gestore && PayService.Gestore.Background) {
+      this.__gestoreBkg = { 'background-image': 'url(\'assets/images/'+PayService.Gestore.Background.Small+'\')' };
+    }
   }
 
   ngAfterContentChecked() {
@@ -89,18 +137,35 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   _updateLayout() {
-    this._checkCartIcon();
-    if (this._languageBar) {
-      this._mst = this._languageBar.nativeElement.clientHeight;
+    if (this._languageBar && this._gestore) {
+      this._lb = this._languageBar.nativeElement.clientHeight;
+      this._gh = this._gestore.nativeElement.clientHeight;
       if (this._headerBar && this._globalContent) {
+        const _tbh: number = this._tabBar?this._tabBar.nativeElement.clientHeight:0;
+        const _offset: number = (this._mode === 'side')?this._lb:0;
         this._hbh = this._headerBar.nativeElement.clientHeight;
-        this._gch = window.innerHeight - this._hbh - this._mst;
+        this._gch = window.innerHeight - this._hbh - this._lb - _tbh;
+        this._mlh = window.innerHeight - this._gh - _offset;
+      }
+    }
+    // this._mode = (window.innerWidth > 1600)?'side':'over';
+    if (this.sidenav) {
+      if (this._mode === 'side' && !this.sidenav.opened) {
+        this.__once = false;
+        this.sidenav.open();
+      }
+      if (this._mode === 'over' && this.sidenav.opened) {
+        this.__once = false;
+        this.sidenav.close();
       }
     }
   }
 
-  _checkCartIcon() {
-    this._showCart = !(window.innerWidth < PayService.MobileBreakPointNotice);
+  __isOpen() {
+    if (!this.__once && this._navTabBar) {
+      this.__once = true;
+      this._navTabBar.refreshInkBar();
+    }
   }
 
   _initLanguages() {
@@ -124,10 +189,12 @@ export class AppComponent implements OnInit, AfterContentChecked {
       });
 
       this.translate.addLangs(_codeLangs);
-      this._language = _currentLanguage.alpha3Code.toUpperCase();
+      this._language = _currentLanguage.alpha3Code;
       PayService.ALPHA_3_CODE = _currentLanguage.alpha3Code;
+      if (this.translate.currentLang !== _currentLanguage.alpha2Code) {
+        this._doTranslate();
+      }
       this.translate.use(_currentLanguage.alpha2Code);
-      this._doTranslate();
     } catch (e) {
       console.log('Verificare configurazione lingue');
     }
@@ -139,7 +206,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   _languageHandler(event: any) {
     if (event.language.alpha2Code !== this.translate.currentLang) {
-      this._language = event.language.alpha3Code.toUpperCase();
+      this._language = event.language.alpha3Code;
       this._doTranslate();
       this.translate.use(event.language.alpha2Code);
     }
@@ -157,10 +224,10 @@ export class AppComponent implements OnInit, AfterContentChecked {
       case 'close':
         switch (url) {
           case '/dettaglio-servizio':
-            if (!PayService.EDIT_MODE) {
-              this.pay.router.navigateByUrl('/pagamenti');
+            if (!PayService.EditMode) {
+              this.pay.router.navigateByUrl('/pagamento-servizio');
             } else {
-              PayService.EDIT_MODE = false;
+              PayService.EditMode = false;
               this.pay.router.navigateByUrl('/carrello');
             }
             break;
@@ -169,9 +236,13 @@ export class AppComponent implements OnInit, AfterContentChecked {
             break;
           default:
         }
+        updateLayoutNow.next(true);
+      break;
+      case 'arrow_back':
+        PayService.StaticRouteBehavior.next({ detail: PayService.AssessoratoDetail });
+        updateLayoutNow.next(true);
       break;
       default:
-        this._updateLayout();
         sidenav.toggle();
     }
   }
@@ -181,8 +252,18 @@ export class AppComponent implements OnInit, AfterContentChecked {
       sidenav.toggle();
     }
     if (!url) {
-      console.log('log out');
+      this.pay.updateSpinner(true);
+      this.pay.logout().subscribe(
+      () => {
+          this.pay.updateSpinner(false);
+          this.__exit();
+      },
+      () => {
+          this.pay.updateSpinner(false);
+          this.__exit();
+      });
     }
+    updateLayoutNow.next(true);
   }
 
   _classRoute(url: string): any {
@@ -192,16 +273,10 @@ export class AppComponent implements OnInit, AfterContentChecked {
     };
   }
 
-  _showBadgeCart(link: any): boolean {
-    return (window.innerWidth < PayService.MobileBreakPointNotice && link == '/carrello' && PayService.Cart.length !== 0);
-  }
-
-  _setCreditoreAttivo(dominio: string) {
-    PayService.CREDITORI.forEach((cr: Creditore) => {
-      if (cr.value === dominio) {
-        PayService.CreditoreAttivo = cr;
-      }
-    });
+  __exit(): any {
+    this.pay.clearUser();
+    this.Pay.ResetCart(this.router, this.translate);
+    this.__toPublicExit();
   }
 
   __onActiveChange(creditore: any) {
@@ -213,23 +288,59 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   __onChange(creditore: any) {
-    PayService.CreditoreAttivo = creditore || null;
+    PayService.SetCreditoreAttivoAndDomainTarget(creditore.value || '');
+    this.__checkIAMLogin();
     this.Pay.ResetCart(this.router, this.translate);
-    this.pay.router.navigateByUrl('/pagamenti');
+    this.__toPublicAccess();
   }
 
-  __directPayment() {
-    this.pay.router.navigateByUrl('/pagamenti');
+  __toPayments() {
+    this.pay.router.navigateByUrl('/pagamento-servizio');
+  }
+
+  __toPublicAccess() {
+    if (PayService.RouteConfig['PUBLIC_ACCESS'] && PayService.RouteConfigExists(PayService.RouteConfig['PUBLIC_ACCESS'], this.router)) {
+      this.pay.router.navigateByUrl('/'+PayService.RouteConfig['PUBLIC_ACCESS']);
+    } else {
+      this.__toPayments();
+    }
+  }
+
+  __toPublicExit() {
+    if (PayService.RouteConfig['PUBLIC_EXIT'] && PayService.RouteConfigExists(PayService.RouteConfig['PUBLIC_EXIT'], this.router)) {
+      this.pay.router.navigateByUrl('/'+PayService.RouteConfig['PUBLIC_EXIT']);
+    } else {
+      PayService.CreditoreAttivo = null;
+      this.pay.router.navigateByUrl('/');
+    }
+  }
+
+  __checkIAMLogin() {
+    this.__IAMLoginUrl = PayService.IAM['LOGIN_URL'];
+    if (PayService.CreditoreAttivo && PayService.IAM['ACCESS']) {
+      const q: string = `idDominio=${PayService.CreditoreAttivo.value}`;
+      if (PayService.IAM['LOGIN_URL'].indexOf('?') !== -1) {
+        const uaq: string[] = PayService.IAM['LOGIN_URL'].split('?');
+        uaq[1] += `&${q}`;
+        this.__IAMLoginUrl = uaq.join('?');
+      } else {
+        this.__IAMLoginUrl = `${PayService.IAM['LOGIN_URL']}?${q}`;
+      }
+    }
   }
 
 }
 
 @Pipe({name: 'AuthGuard'})
 export class AuthGuardPipe implements PipeTransform {
-  transform(values: any[]): any[] {
+  transform(values: any[], user: boolean): any[] {
     return values.filter((item: any) => {
       if (item.Link === '/archivio' || item.Link === '/riepilogo') {
-        return !!(PayService.SPID['Access'] && PayService.I18n.json.Account);
+        if (user) {
+          return !!((PayService.SPID['ACCESS'] || PayService.IAM['ACCESS']) && PayService.I18n.json.Account);
+        } else {
+          return false;
+        }
       }
 
       return true;

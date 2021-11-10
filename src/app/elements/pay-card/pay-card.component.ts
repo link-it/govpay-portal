@@ -17,6 +17,7 @@ export class PayCardComponent {
   @Input('camera-select') _cameraSelect: string = '';
   @Input('placeholder') _avvisoPH: string = '';
   @Input('required-error') _requiredError: string = '';
+  @Input('validator') _regex: RegExp;
 
   @Input('submit') _submitLabel: string = '';
   @Output('on-submit') _submit: EventEmitter<any> = new EventEmitter();
@@ -51,8 +52,7 @@ export class PayCardComponent {
   _clearOrScan(event, notice: any) {
     if (notice.value) {
       notice.value = '';
-      this._avviso.setErrors(null);
-      this._fg.reset();
+      this.reset();
     } else {
       this._onScan(event);
     }
@@ -110,6 +110,12 @@ export class PayCardComponent {
       setTimeout(() => {
         this.scanner.startScan(this._desiredDevice);
       });
+    }
+  }
+
+  reset() {
+    if (this._fg) {
+      this._fg.reset();
     }
   }
 }

@@ -1,8 +1,5 @@
 export class I18n {
   jsonSchema = {
-    Cart: {
-      BadgeSchema: {}
-    },
     Posizione: {
       Debiti: {
         TitoloSchema: {}
@@ -12,10 +9,17 @@ export class I18n {
       Pagamenti: {
         TitoloSchema: {}
       }
+    },
+    Assessorato: {
+      TitoloSchema: {}
     }
   };
 
   json = {
+    Gestore: {
+      Ragione: '',
+      Sede: ''
+    },
     Header: {
       Titolo: '',
       LanguageBar: {
@@ -40,6 +44,9 @@ export class I18n {
       Ask: '',
       Help: ''
     },
+    Iam: {
+      Label: ''
+    },
     Pagamenti: {
       Titolo: '',
       Bollettino: {
@@ -58,16 +65,16 @@ export class I18n {
         }
       },
       Servizi: {
-        Titolo: '',
-        Filtro: ''
+        Titolo: ''
       }
     },
     Cart: {
-      Badge: '',
+      // Badge: '',
       Titolo: '',
       Pagamenti: {
         Titolo: '',
         Paga: '',
+        Indietro: '',
         Stampa: '',
         Totale: '',
         Inserimento: '',
@@ -119,6 +126,7 @@ export class I18n {
         Dettaglio: {
           Eseguito: '',
           Fallito: '',
+          Errore: '',
           InCorso: {
             Titolo: '',
             Ok: '',
@@ -187,8 +195,12 @@ export class I18n {
       AlertAction: '',
       NumeroAvviso: '',
       IUV: '',
+      Beneficiario: '',
+      Pagamento: '',
+      Importo: '',
       Scadenza: '',
       SenzaScadenza: '',
+      Data: '',
       NotAvailable: '',
       Modifica: '',
       Elimina: '',
@@ -208,6 +220,18 @@ export class I18n {
         Eseguito: '',
         NonEseguito: '',
         EseguitoParziale: ''
+      },
+      Filtro: {
+        NessunaCorrispondenza: '',
+        Risultati: {
+          SS: '',
+          SP: '',
+          PS: '',
+          PP: '',
+          ServiziAssessorato: ''
+        },
+        NessunRisultato: '',
+        Placeholder: ''
       }
     }
   };

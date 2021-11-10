@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "scripts": {
     "ng": "ng",
-    "start-proxy": "ng serve --aot=true --sourceMap=true --proxy-config proxy.config.json",
+    "start-proxy": "ng serve --port=4000 --aot=true --sourceMap=true --proxy-config proxy.config.json",
     "dist": "npm run build && npm run clean",
     "clean": "rm -r ./dist/govpay-portal/assets/css && rm -r ./dist/govpay-portal/assets/fonts",
     "build": "ng build --prod=true --aot=true --build-optimizer=true --output-hashing=none",
@@ -34,7 +34,7 @@
     "hammerjs": "^2.0.8",
     "jquery": "^3.5.1",
     "jszip": "^3.4.0",
-    "masonry-layout": "4.2.2",
+    "marked": "^2.1.3",
     "moment": "^2.25.3",
     "popper.js": "^1.16.1",
     "rxjs": "~6.3.3",

@@ -21,16 +21,17 @@ export class SpidLoginComponent implements OnInit {
   @Input('action') _action: string = '';
   @Input('method') _method: string = 'get';
 
-  @Input('aruba-url') _arubaURL: string = 'https://sp.agenziaentrate.gov.it/rp/aruba/s3';
-  @Input('infocert-url') _infocertURL: string = 'https://sp.agenziaentrate.gov.it/rp/infocert/s3';
-  @Input('intesa-url') _intesaURL: string = 'https://sp.agenziaentrate.gov.it/rp/intesa/s3';
-  @Input('lepida-url') _lepidaURL: string = 'https://sp.agenziaentrate.gov.it/rp/lepida/s3';
-  @Input('namirial-url') _namirialURL: string = 'https://sp.agenziaentrate.gov.it/rp/namirial/s3';
-  @Input('poste-url') _posteURL: string = 'https://sp.agenziaentrate.gov.it/rp/poste/s3';
-  @Input('sielte-url') _sielteURL: string = 'https://sp.agenziaentrate.gov.it/rp/sielte/s3';
-  @Input('register-url') _registerURL: string = 'https://sp.agenziaentrate.gov.it/rp/register/s3';
-  @Input('tim-url') _timURL: string = 'https://sp.agenziaentrate.gov.it/rp/titt/s3';
+  @Input('aruba-url') _arubaURL: string = 'https://loginspid.aruba.it';
+  @Input('infocert-url') _infocertURL: string = 'https://identity.infocert.it';
+  @Input('intesa-url') _intesaURL: string = 'https://spid.intesa.it';
+  @Input('lepida-url') _lepidaURL: string = 'https://id.lepida.it/idp/shibboleth';
+  @Input('namirial-url') _namirialURL: string = 'https://idp.namirialtsp.com/idp';
+  @Input('poste-url') _posteURL: string = 'https://posteid.poste.it';
+  @Input('sielte-url') _sielteURL: string = 'https://identity.sieltecloud.it';
+  @Input('register-url') _registerURL: string = 'https://spid.register.it';
+  @Input('tim-url') _timURL: string = 'https://login.id.tim.it/affwebservices/public/saml2sso';
   @Input('spid-test-url') _spidTestURL: string = '';
+  @Input('spid-accf') _authnContextClassRef: string = '';
 
   @Input('info') _info: string = '';
   @Input('info-url') _infoUrl: string = 'https://www.spid.gov.it';
@@ -51,6 +52,9 @@ export class SpidLoginComponent implements OnInit {
   constructor(protected http: HttpClient) { }
 
   ngOnInit() {
+    if (this._authnContextClassRef) {
+      this._fg.addControl('authnContextClassRef', new FormControl(this._authnContextClassRef));
+    }
   }
 
   _onSubmit(id: string, url: string) {

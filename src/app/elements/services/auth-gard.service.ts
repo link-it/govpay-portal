@@ -28,7 +28,17 @@ export class AuthGuardService implements CanActivate, OnDestroy {
         return this.pay.sessione(state.url);
       }
     }
-    if (state.url === '/dettaglio-servizio' && !PayService.ExtraState) {
+    if (state.url === '/dettaglio-servizio') {
+      if (!PayService.ExtraState) {
+        router.navigateByUrl('/');
+        return false;
+      }
+      if (PayService.ExtraState && PayService.ExtraState.Codice && PayService.ExtraState.Creditore) {
+        this.pay.updateSpinner(true);
+        return this.pay.jumpService(PayService.ExtraState.Creditore, PayService.ExtraState.Codice);
+      }
+    }
+    if ((state.url === '/pagamento-servizio' || state.url === '/bollettino') && !PayService.CreditoreAttivo) {
       router.navigateByUrl('/');
       return false;
     }
@@ -39,9 +49,6 @@ export class AuthGuardService implements CanActivate, OnDestroy {
 
     return true;
 
-    // if (!this.pay.isAuthenticated() && PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
-    //   return true;
-    // }
   }
 
 }

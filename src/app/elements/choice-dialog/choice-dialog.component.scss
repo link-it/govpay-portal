@@ -1,0 +1,48 @@
+:host(.partners) .background-gestore {
+  min-height: 400px;
+}
+
+:host(.partners) section {
+  padding-top: 3rem;
+  padding-bottom: 1.5rem;
+}
+
+:host(.partners) .choice-group form {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+:host(.partners) .choice-group {
+  min-height: 396px;
+}
+
+:host(.partners) .partners-group img {
+  width: auto;
+  height: 2rem;
+  margin: 0 1rem 1.5rem 0;
+}
+
+.choice-group form {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.background-cover {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.background-gestore {
+  min-height: 427px;
+}
+
+.logo-gestore {
+  height: 74px;
+  margin-bottom: 6rem;
+}
+
+:host(.partners) .logo-gestore {
+  height: 3rem;
+  margin-bottom: 3.75rem;
+}

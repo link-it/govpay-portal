@@ -1,10 +1,10 @@
 import { AfterContentChecked, Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { Standard } from '../classes/standard';
-import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { AvvisoTpl } from '../classes/avviso-tpl';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 
 @Component({
   selector: 'pay-cart',
@@ -19,6 +19,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
   constructor(public pay: PayService, protected router: Router, protected translate: TranslateService) { }
 
   ngOnInit() {
+    updateLayoutNow.next(true);
   }
 
   ngAfterContentChecked() {
@@ -43,7 +44,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
       const _props: AvvisoTpl[] = [];
       const atp: AvvisoTpl = new AvvisoTpl();
       atp.avviso = target.rawData['numeroAvviso'];
-      atp.creditore = target.rawData['idDominio'];
+      atp.creditore = target.editable?target.rawData['idDominio']:target.rawData['Dominio']['idDominio'];
       _props.push(atp);
       this.pay.pdf(_props, _query, false);
     }).catch((error) => {
@@ -57,7 +58,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
       this._removeElement(target.uid);
     }
     if (icon == 'edit') {
-      PayService.EDIT_MODE = true;
+      PayService.EditMode = true;
       this.router.navigateByUrl('/dettaglio-servizio', { state: target });
     }
   }
@@ -67,7 +68,6 @@ export class CartComponent implements OnInit, AfterContentChecked {
     PayService.ShoppingCart = PayService.ShoppingCart.filter((item: Standard) => {
       return (item.uid !== uid);
     });
-    PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
   }
 
   _skipMailRicevuta() {
@@ -122,4 +122,7 @@ export class CartComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  __backToPayments() {
+    this.router.navigateByUrl('/pagamento-servizio');
+  }
 }

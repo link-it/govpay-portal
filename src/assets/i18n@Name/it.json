@@ -1,5 +1,9 @@
 {
   "Language": {
+    "Gestore": {
+      "Ragione": "Novares SPA, partita IVA e codice fiscale: 12105121003, CCIAA Roma 1350563, capitale sociale € 000.000,00 interamente versato",
+      "Sede": "Via degli Orti di Trastevere 72, 00000 Roma, telefono: 06 98960999, PEC: novares@pec.novares.it, web: www.novares.it"
+    },
     "Header": {
       "Titolo": "Comune",
       "LanguageBar": {
@@ -15,15 +19,15 @@
       "MenuItems": [
         {
           "Label": "Pagamenti",
-          "Link": "/pagamenti"
+          "Link": "/pagamento-servizio"
+        },
+        {
+          "Label": "Archivio pagamenti",
+          "Link": "/archivio"
         },
         {
           "Label": "Posizione debitoria",
           "Link": "/riepilogo"
-        },
-        {
-          "Label": "Archivio dei pagamenti",
-          "Link": "/archivio"
         },
         {
           "Label": "Carrello",
@@ -38,17 +42,20 @@
       "Ask": "Non hai SPID?",
       "Help": "Serve aiuto?"
     },
+    "Iam": {
+      "Label": "Accedi con IAM"
+    },
     "Pagamenti": {
       "Titolo": "Pagamenti online",
       "Bollettino": {
         "Titolo": "Paga un bollettino",
-        "Note": "Dove trovo il codice dell’avviso?",
+        "Note": "Dove trovo il numero dell’avviso?",
         "Submit": "Aggiungi al carrello",
         "Dialog": {
           "Close": "Ho capito"
         },
         "Form": {
-          "Avviso": "Codice avviso",
+          "Avviso": "Numero dell'avviso",
           "Fotocamera": "Fotocamera",
           "Errors": {
             "Required": "Campo obbligatorio."
@@ -56,16 +63,15 @@
         }
       },
       "Servizi": {
-        "Titolo": "Paga un servizio",
-        "Filtro": "Filtra la lista..."
+        "Titolo": "Paga un servizio"
       }
     },
     "Cart": {
-      "Badge": "{{value}} Pagamento|{{value}} Pagamenti",
       "Titolo": "Carrello",
       "Pagamenti": {
         "Titolo": "Elenco pagamenti",
-        "Paga": "Paga ora",
+        "Paga": "Paga con pagoPA",
+        "Indietro": "Torna ai pagamenti",
         "Stampa": "Stampa bollettino",
         "Totale": "Totale",
         "Inserimento": "Pendenza inserita nel carrello",
@@ -101,7 +107,7 @@
     "Posizione": {
       "Titolo": "Posizione debitoria",
       "Debiti": {
-        "Titolo": "C'è {{value}} servizio da pagare|Ci sono {{value}} servizi da pagare"
+        "Titolo": "È presente {{value}} solo servizio|Sono presenti {{value}} servizi"
       }
     },
     "Archivio": {
@@ -117,6 +123,7 @@
         "Dettaglio": {
           "Eseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
           "Fallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
+          "Errore": "Le informazioni sul pagamento sono temporaneamente non dispnobili.",
           "InCorso": {
             "Titolo": "Recupero informazioni in corso...",
             "Ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
@@ -183,10 +190,14 @@
     },
     "Common": {
       "AlertAction": "Chiudi",
-      "NumeroAvviso": "Codice avviso",
+      "NumeroAvviso": "Numero avviso",
       "IUV": "Identificativo versamento",
+      "Beneficiario": "Beneficiario",
+      "Pagamento": "Pagata il",
+      "Importo": "Importo",
       "Scadenza": "Entro il",
       "SenzaScadenza": "Senza scadenza",
+      "Data": "Data",
       "NotAvailable": "Non disponibile",
       "Modifica": "Modifica",
       "Elimina": "Elimina",
@@ -194,11 +205,11 @@
       "DocumentoPdf": "Documento.pdf",
       "ArchivioPdf": "Archivio.zip",
       "WarningRicevuta": "Nessun documento disponibile",
-      "PendenzaInserita": "La pendenza con codice avviso {{numeroAvviso}} risulta già inserita nel carrello",
-      "PendenzaEseguita": "La pendenza con codice avviso {{numeroAvviso}} risulta già pagata il giorno {{data}}",
-      "PendenzaAnnullata": "La pendenza con codice avviso {{numeroAvviso}} è stata annullata",
-      "PendenzaSconosciuta": "Non è presente alcuna pendenza con codice avviso {{numeroAvviso}}",
-      "PendenzaScaduta": "La pendenza con codice avviso {{numeroAvviso}} è scaduta il giorno {{data}}",
+      "PendenzaInserita": "La pendenza con numero avviso {{numeroAvviso}} risulta già inserita nel carrello",
+      "PendenzaEseguita": "La pendenza con numero avviso {{numeroAvviso}} risulta già pagata il giorno {{data}}",
+      "PendenzaAnnullata": "La pendenza con numero avviso {{numeroAvviso}} è stata annullata",
+      "PendenzaSconosciuta": "Non è presente alcuna pendenza con numero avviso {{numeroAvviso}}",
+      "PendenzaScaduta": "La pendenza con numero avviso {{numeroAvviso}} è scaduta il giorno {{data}}",
       "CodiciEsito": {
         "InCorso": "In corso",
         "Annullato": "Annullato",
@@ -206,6 +217,18 @@
         "Eseguito": "Eseguito",
         "NonEseguito": "Non eseguito",
         "EseguitoParziale": "Eseguito parziale"
+      },
+      "Filtro": {
+        "NessunaCorrispondenza": "Nessuna corrispondenza.",
+        "Risultati": {
+          "SS": "È presente un servizio in un assessorato",
+          "SP": "È presente un servizio in {{value}} assessorati",
+          "PS": "Sono presenti {{value}} servizi in un assessorato",
+          "PP": "Sono presenti {{valueN}} servizi in {{valueM}} assessorati",
+          "ServiziAssessorato": "È presente {{value}} servizio|Sono presenti {{value}} servizi"
+        },
+        "NessunRisultato": "Nessun risultato.",
+        "Placeholder": "Cerca un servizio..."
       }
     }
   }

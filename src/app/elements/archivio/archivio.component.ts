@@ -1,8 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { PayService } from '../services/pay.service';
+import { Standard } from '../classes/standard';
 
 import * as moment from 'moment';
-import { Standard } from '../classes/standard';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs/index';
+import { TranslateLoaderExt } from '../classes/translate-loader-ext';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 
 @Component({
   selector: 'pay-archivio',
@@ -12,8 +16,12 @@ import { Standard } from '../classes/standard';
 export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
 
   Pay = PayService;
+  _langSubscription: Subscription;
 
-  constructor(public pay: PayService) {
+  constructor(public pay: PayService, public translate: TranslateService) {
+    this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
+      PayService.ArchivioPagamenti = this._refreshData();
+    });
   }
 
   ngOnInit() {
@@ -24,6 +32,10 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    PayService.PosizioneDebitoria = [];
+    if (this._langSubscription) {
+      this._langSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -31,20 +43,21 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {string} query
    */
   getPagamenti(query?: string) {
-    // this.pay.updateSpinner(true);
-    // this.pay.pagamenti(query).subscribe(
-    //   (result) => {
-    //     if(result.body) {
-    //       this._globalContainer.scrollTop = 0;
-    //       this._paginator.length = result.body.numRisultati;
-    //       Pay.ArchivioPagamenti = this._refreshData(result.body.risultati);
-    //     }
-    //     this.pay.updateSpinner(false);
-    //   },
-    //   (error) => {
-    //     this.pay.updateSpinner(false);
-    //     this.pay.onError(error);
-    //   });
+    this.pay.updateSpinner(true);
+    this.pay.archivioPagamenti(query).subscribe(
+      (result) => {
+        if(result.body) {
+          PayService.ArchivioPagamenti = this._refreshData(result.body.risultati);
+          PayService.TranslateDynamicObject(this.translate, this.pay);
+        }
+        this.pay.updateSpinner(false);
+        updateLayoutNow.next(true);
+      },
+      (error) => {
+        this.pay.updateSpinner(false);
+        this.pay.onError(error);
+        updateLayoutNow.next(true);
+      });
   }
 
   /**
@@ -52,8 +65,8 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param event
    * @private
    */
-  protected _onIconReceipt(event) {
-    // this.pay.getRPP(event.rawData.rpp, true);
+  protected _onIconReceipt(event: any) {
+    this.pay.getRicevutaArchivio(event.target.rawData, false);
   }
 
   /**
@@ -63,29 +76,34 @@ export class ArchivioComponent implements OnInit, AfterViewInit, OnDestroy {
    * @private
    */
   protected _refreshData(list?: any[]): Standard[] {
-    // const _useRawData: boolean = !list;
-    // list = list || this._pagamenti;
-    // const _buffer = list.map(item => {
-    //   if (_useRawData) {
-    //     item = item.rawData;
-    //   }
-    //   const _drp = (item.dataRichiestaPagamento)?moment(item.dataRichiestaPagamento).format(this.pay.getDateFormatByLanguage()):PayService.SHARED_LABELS.notAvailable;
-    //   let _showReceipt = true;
-    //   if(PayService.STATI_PAGAMENTO[item.stato] === PayService.STATI_PAGAMENTO.FALLITO ||
-    //      PayService.STATI_PAGAMENTO[item.stato] === PayService.STATI_PAGAMENTO.IN_CORSO) {
-    //     _showReceipt = false;
-    //   }
-    //   return new Standard({
-    //     localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-    //     titolo: new Dato({ label: item.nome }),
-    //     sottotitolo: new Dato({ label: PayService.SHARED_LABELS.data + ': ' + _drp }),
-    //     importo: item.importo,
-    //     stato: PayService.STATI_PAGAMENTO[item.stato],
-    //     icon: (_showReceipt)?'receipt':'',
-    //     rawData: item
-    //   });
-    // });
-    // return _buffer;
-    return [];
+    const _useRawData: boolean = !list;
+    list = list || PayService.ArchivioPagamenti;
+    const _buffer = list.map(item => {
+      if (_useRawData) {
+        item = item.rawData;
+      }
+      const _drp = (item.rpt.dataOraMessaggioRichiesta)?moment(item.rpt.dataOraMessaggioRichiesta).format(this.pay.getDateFormatByLanguage(true)):PayService.I18n.json.Common.NotAvailable;
+      const rt: any = item.rt;
+      let _showReceipt = true;
+      let statusCode: string = PayService.STATI_PAGAMENTO.IN_CORSO;
+      if(!rt) {
+        _showReceipt = false;
+      } else {
+        statusCode = PayService.STATUS_CODE[parseInt(rt.datiPagamento.codiceEsitoPagamento, 10)];
+      }
+      const obj = new Standard({
+        localeNumberFormat: this.pay.getNumberFormatByLanguage(),
+        titolo: item.pendenza.causale,
+        importo: item.rpt.datiVersamento.importoTotaleDaVersare,
+        stato: PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(statusCode)],
+        primaryIcon: 'receipt',
+        disabled: !_showReceipt,
+        rawData: item
+      });
+      obj.sottotitolo = `${PayService.I18n.json.Common.Data}: ${_drp}, ${PayService.I18n.json.Common.Importo}: ${obj.valuta}`;
+
+      return obj;
+    });
+    return _buffer;
   }
 }

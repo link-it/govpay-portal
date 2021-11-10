@@ -1,5 +1,9 @@
 {
   "Language": {
+    "Gestore": {
+      "Ragione": "Novares SPA, VAT and Tax ID: 12105121003, CCIAA Rome 1350563, Share capital € 000,000.00 fully paid",
+      "Sede": "Via degli Orti di Trastevere 72, 00000 Roma, phone: 06 98960999, PEC: novares@pec.novares.it, web: www.novares.it"
+    },
     "Header": {
       "Titolo": "Administration",
       "LanguageBar": {
@@ -15,15 +19,15 @@
       "MenuItems": [
         {
           "Label": "Payments",
-          "Link": "/pagamenti"
-        },
-        {
-          "Label": "Debt position",
-          "Link": "/riepilogo"
+          "Link": "/pagamento-servizio"
         },
         {
           "Label": "Payments history",
           "Link": "/archivio"
+        },
+        {
+          "Label": "Debt position",
+          "Link": "/riepilogo"
         },
         {
           "Label": "Cart",
@@ -37,6 +41,9 @@
       "Info": "More information",
       "Ask": "Don't you have SPID?",
       "Help": "Need help?"
+    },
+    "Iam": {
+      "Label": "Login with IAM"
     },
     "Pagamenti": {
       "Titolo": "Online payments",
@@ -56,16 +63,15 @@
         }
       },
       "Servizi": {
-        "Titolo": "Pay a service",
-        "Filtro": "Text filter..."
+        "Titolo": "Pay a service"
       }
     },
     "Cart": {
-      "Badge": "{{value}} Payment|{{value}} Payments",
       "Titolo": "Cart",
       "Pagamenti": {
         "Titolo": "Payments list",
-        "Paga": "Pay now",
+        "Paga": "Pay with pagoPA",
+        "Indietro": "Back to payments",
         "Stampa": "Print notice",
         "Totale": "Total",
         "Inserimento": "Notice added to cart",
@@ -101,7 +107,7 @@
     "Posizione": {
       "Titolo": "Debt position",
       "Debiti": {
-        "Titolo": "{{value}} notice to pay|{{value}} notices to pay"
+        "Titolo": "{{value}} notice available|{{value}} notices available"
       }
     },
     "Archivio": {
@@ -117,6 +123,7 @@
         "Dettaglio": {
           "Eseguito": "The payment required appears to have been successful. The payment receipt will be sent to the address provided.",
           "Fallito": "The payment required does NOT appear to have been successful.",
+          "Errore": "Payment information is temporarily unavailable.",
           "InCorso": {
             "Titolo": "Recovery of information in progress...",
             "Ok": "The payment process has been completed successfully. We are awaiting confirmation of payment from the pagoPA platform.",
@@ -185,8 +192,12 @@
       "AlertAction": "Close",
       "NumeroAvviso": "Notice",
       "IUV": "Payment ID",
+      "Beneficiario": "Payee",
+      "Pagamento": "Paid on",
+      "Importo": "Amount",
       "Scadenza": "By",
       "SenzaScadenza": "No expiration date",
+      "Data": "Date",
       "NotAvailable": "Not available",
       "Modifica": "Edit",
       "Elimina": "Delete",
@@ -206,6 +217,18 @@
         "Eseguito": "Paid",
         "NonEseguito": "Not paid",
         "EseguitoParziale": "Partially paid"
+      },
+      "Filtro": {
+        "NessunaCorrispondenza": "No matches.",
+        "Risultati": {
+          "SS": "One service found in one department",
+          "SP": "One service found in {{value}} departments",
+          "PS": "{{value}} services found in one department",
+          "PP": "{{valueN}} services found in {{valueM}} departments",
+          "ServiziAssessorato": "{{value}} service found|{{value}} services found"
+        },
+        "NessunRisultato": "No results.",
+        "Placeholder": "Search a service..."
       }
     }
   }

@@ -7,6 +7,7 @@ import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 
 import * as moment from 'moment';
 import { Subscription } from 'rxjs/index';
+import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 
 @Component({
   selector: 'pay-esito',
@@ -39,9 +40,11 @@ export class EsitoComponent implements OnInit, OnDestroy {
       if (this._payments.length !== 0) {
         this._payments = this.__loopFix(this._payments, true);
       }
-    }); }
+    });
+  }
 
   ngOnInit() {
+    updateLayoutNow.next(true);
     this._sessione = false;
     this._POLLING_TIMEOUT = -1;
     const _idSessione: string = this.activateRoute.snapshot.queryParamMap.get('idSession');
@@ -49,8 +52,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
     if(!_idSessione) {
       this.router.navigateByUrl('/');
     } else {
-      this.pay.updateSpinner(true);
-      this._recuperaSessionePagamento(_idSessione);
+      this.__spidSessionExists(_idSessione);
     }
   }
 
@@ -58,6 +60,14 @@ export class EsitoComponent implements OnInit, OnDestroy {
     if (this._langSubscription) {
       this._langSubscription.unsubscribe();
     }
+  }
+
+  __spidSessionExists(_idSessione) {
+    this.pay.updateSpinner(true);
+    this.pay.sessione().then(() => {
+      this.pay.updateSpinner(true);
+      this._recuperaSessionePagamento(_idSessione);
+    });
   }
 
   _recuperaSessionePagamento(_idSessione: string) {
@@ -84,7 +94,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
    */
   updateStatus(response: any, sessione: string) {
     try {
-      switch(PayService.STATI_PAGAMENTO[response.body.stato]) {
+      switch(PayService.STATI_PAGAMENTO[response.body.stato.toUpperCase()]) {
         case PayService.STATI_PAGAMENTO['ESEGUITO']:
           this._status = this.STATUS_ESEGUITO;
           this.pay.updateSpinner(false);
@@ -161,7 +171,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
               urlRicevuta += '/rt';
             }
             if (urlRicevuta) {
-              this.pay.getReceipt(urlRicevuta);
+              this.pay.getReceipt(urlRicevuta, !PayService.User);
             } else {
               this.pay.alert(PayService.I18n.json.Common.WarningRicevuta);
             }
@@ -174,7 +184,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
         break;
       default:
     }
-    PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+    // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
   }
 
   __mobileToastCart(add: boolean) {
@@ -206,8 +216,8 @@ export class EsitoComponent implements OnInit, OnDestroy {
       // const _dataValidita: string = p['dataValidita']?moment(p['dataValidita']).format(this.pay.getDateFormatByLanguage()):'';
       // const _terminePagamento: string = (_dataValidita || _dataScadenza)?`${PayService.I18n.json.Common.Scadenza} ${(_dataValidita || _dataScadenza)}`:'';
       const _iuv: string = _statoAvviso[p.numeroAvviso].iuv?`${PayService.I18n.json.Common.IUV}: ${_statoAvviso[p.numeroAvviso].iuv}`:'';
-      const _eseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato] === PayService.STATI_PAGAMENTO.ESEGUITO);
-      const _nonEseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato] === PayService.STATI_PAGAMENTO.NON_ESEGUITO);
+      const _eseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato.toUpperCase()] === PayService.STATI_PAGAMENTO.ESEGUITO);
+      const _nonEseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato.toUpperCase()] === PayService.STATI_PAGAMENTO.NON_ESEGUITO);
       const _primaryIcon: string = _eseguito?'receipt':(_nonEseguito?'shopping_cart':'');
       const _primaryIconOff: string = _nonEseguito?'remove_shopping_cart':'';
 
@@ -215,10 +225,9 @@ export class EsitoComponent implements OnInit, OnDestroy {
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
         uid: p.numeroAvviso,
         titolo: p.causale,
-        sottotitolo: _iuv,
-        metadati: PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(_statoAvviso[p.numeroAvviso].stato)],
+        metadati: `${_iuv}, ${PayService.I18n.json.Common.CodiciEsito[PayService.CamelCode(_statoAvviso[p.numeroAvviso].stato)]}`,
         importo: p.importo,
-        stato: PayService.STATI_VERIFICA_PENDENZA[p.stato],
+        stato: PayService.STATI_VERIFICA_PENDENZA[p.stato.toUpperCase()],
         editable: _editable,
         primaryIcon: _primaryIcon,
         primaryIconOff: _primaryIconOff,
@@ -231,7 +240,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
     const _map: any = {};
     _rpps.forEach((rpp: any) => {
       _map[rpp['pendenza']['numeroAvviso']] = { stato: PayService.STATI_PAGAMENTO.IN_CORSO.toUpperCase(), iuv: rpp['rpt']['datiVersamento']['identificativoUnivocoVersamento'] };
-      if (rpp.stato === 'RT_ACCETTATA_PA') {
+      if (rpp.stato.toUpperCase() === 'RT_ACCETTATA_PA') {
         const s: string = (rpp.rt)?PayService.STATUS_CODE[rpp['rt']['datiPagamento']['codiceEsitoPagamento']]:'';
         _map[rpp['pendenza']['numeroAvviso']].stato = (s || PayService.STATI_PAGAMENTO.IN_CORSO.toUpperCase());
       }
