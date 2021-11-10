@@ -25,7 +25,8 @@
     return {
       Logo: {
         Small: 'logo.png',
-        Full: 'logo.png'
+        Full: 'logo.png',
+        AltText: 'Logo'
       },
       Background: {
         Small: 'background-small.jpg',
@@ -33,19 +34,19 @@
       },
       Partners: [
         {
-          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png' },
+          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
           Url: 'http://#'
         },
         {
-          Logo: { Menu: 'partner-logo-double.png', AccessPanel: 'partner-logo-double-reverse.png' },
+          Logo: { Menu: 'partner-logo-double.png', AccessPanel: 'partner-logo-double-reverse.png', AltText: 'Logo partner double' },
           Url: 'http://#'
         },
         {
-          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png' },
+          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
           Url: 'http://#'
         },
         {
-          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png' },
+          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
           Url: 'http://#'
         }
       ],
@@ -63,11 +64,13 @@
       ProgettoGovPay: {
         Menu: {
           Logo: 'progetto-govpay.png',
-          Url: 'http://#'
+          Url: 'http://#',
+          AltText: 'Logo Progetto GovPay'
         },
         AccessPanel: {
           Logo: 'govpay-reverse.svg',
-          Url: 'http://#'
+          Url: 'http://#',
+          AltText: 'Logo GovPay'
         }
       }
     };

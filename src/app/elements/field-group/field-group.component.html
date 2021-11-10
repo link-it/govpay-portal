@@ -8,8 +8,8 @@
         <button mat-icon-button *ngIf="download" (click)="_onIconDownload()" [disableRipple]="disableRipple"><mat-icon>{{ iconDownload }}</mat-icon></button>
         <span *ngIf="!fillMode && value && !link" class="valore-field">{{ value }}</span>
         <span *ngIf="fillMode && value && !link" class="valore-field p-0">{{ value }}</span>
-        <span *ngIf="fillMode && link" class="valore-field p-0"><a [href]="link" [target]="link.indexOf('mailto:')!==-1?'_self':target">{{ value || link }}</a></span>
-        <span *ngIf="!fillMode && link" class="valore-field"><a [href]="link" [target]="link.indexOf('mailto:')!==-1?'_self':target">{{ value || link }}</a></span>
+        <span *ngIf="fillMode && link" class="valore-field p-0"><a [href]="link" [target]="link.indexOf('mailto:')!==-1?'_self':target"  tabindex="0">{{ value || link }}</a></span>
+        <span *ngIf="!fillMode && link" class="valore-field"><a [href]="link" [target]="link.indexOf('mailto:')!==-1?'_self':target"  tabindex="0">{{ value || link }}</a></span>
         <span *ngIf="!value && !link" class="valore-field">{{ altLabel }}</span>
       </p>
     </div>

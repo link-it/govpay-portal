@@ -4,7 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
   selector: 'pay-external-login',
   template: `
     <div class="{{ _btnClass }}">
-      <a class="btn ext-button" [href]="_url" role="button">
+      <a class="btn ext-button" [href]="_url" role="button" tabindex="0">
         <span class="d-inline"><!-- Login Ico-->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.6 587.6" preserveAspectRatio="xMinYMin">
             <style>.loginIco0{fill:#333}.loginIco1{fill:#BBDEFB}</style>
