@@ -33,6 +33,7 @@ export class PayService implements OnInit, OnDestroy {
   public static AUTH_HOSTNAME: string = '';
   public static AUTH_ROOT_SERVICE: string = '';
   public static AUTH_LOGOUT_URL: string = '';
+  public static AUTH_LOGOUT_URLS: any[] = [];
   public static CREDITORI: Creditore[] = [];
   public static LINGUE: any[] = [];
   public static IS_SINGLE: boolean = true;
@@ -180,7 +181,8 @@ export class PayService implements OnInit, OnDestroy {
     PayService.HOSTNAME = PayConfig['REVERSE_PROXY'];
     PayService.AUTH_HOSTNAME = PayConfig['AUTH_HOST'];
     PayService.AUTH_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
-    PayService.AUTH_LOGOUT_URL = PayConfig['AUTH_LOGOUT_URL'];
+    PayService.AUTH_LOGOUT_URL = PayConfig['AUTH_LOGOUT_URL'] || '';
+    PayService.AUTH_LOGOUT_URLS = PayConfig['AUTH_LOGOUT_URLS'] || [];
     PayService.CREDITORI = PayConfig['DOMINI'];
     if (PayService.CREDITORI.length == 1) {
       PayService.SetCreditoreAttivoAndDomainTarget(PayService.CREDITORI[0].value);
@@ -726,6 +728,22 @@ export class PayService implements OnInit, OnDestroy {
           return response;
         })
       );
+  }
+
+  logouts(): Observable<any[]> {
+    const reqs: Observable<any>[] = [];
+    PayService.AUTH_LOGOUT_URLS.forEach((url) => {
+      reqs.push(
+        this.http.get(url, { observe: 'response' })
+          .pipe(
+            timeout(PayService.TIMEOUT),
+            map((response: HttpResponse<any>) => {
+              return response;
+            })
+          )
+      );
+    });
+    return forkJoin(reqs);
   }
 
   /**

@@ -86,7 +86,10 @@
     REVERSE_PROXY: '',
     AUTH_HOST: '',
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
-    AUTH_LOGOUT_URL: 'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout',
+    AUTH_LOGOUT_URL: '',
+    AUTH_LOGOUT_URLS: [
+      'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout'
+    ],
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
       ACCESS: true,

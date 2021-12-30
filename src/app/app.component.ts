@@ -252,18 +252,41 @@ export class AppComponent implements OnInit, AfterContentChecked {
       sidenav.toggle();
     }
     if (!url) {
-      this.pay.updateSpinner(true);
-      this.pay.logout().subscribe(
-      () => {
-          this.pay.updateSpinner(false);
-          this.__exit();
-      },
-      () => {
-          this.pay.updateSpinner(false);
-          this.__exit();
-      });
+      this._newLogout();
     }
     updateLayoutNow.next(true);
+  }
+
+  _newLogout() {
+    if (PayService.AUTH_LOGOUT_URL != '') {
+      // console.log('SINGLE LOGOUT');
+      this.pay.updateSpinner(true);
+      this.pay.logout().subscribe(
+        () => {
+          this.pay.updateSpinner(false);
+          this.__exit();
+        },
+        () => {
+          this.pay.updateSpinner(false);
+          this.__exit();
+        });
+    } else {
+      if (PayService.AUTH_LOGOUT_URLS.length) {
+        // console.log('MULTIPLE LOGOUTS');
+        this.pay.updateSpinner(true);
+        this.pay.logouts().subscribe(
+          (results: Array<any>) => {
+            this.pay.updateSpinner(false);
+            this.__exit();
+          },
+          (error: any) => {
+            this.pay.updateSpinner(false);
+            this.__exit();
+          });
+      } else {
+        console.log('AUTH_LOGOUT_URL/AUTH_LOGOUT_URLS non configurato');
+      }
+    }
   }
 
   _classRoute(url: string): any {
