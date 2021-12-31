@@ -34,6 +34,8 @@ export class PayService implements OnInit, OnDestroy {
   public static AUTH_ROOT_SERVICE: string = '';
   public static AUTH_LOGOUT_URL: string = '';
   public static AUTH_LOGOUT_URLS: any[] = [];
+  public static AUTH_LOGOUT_LANDING_PAGE: string = '';
+  public static AUTH_LOGOUT_LANDING_PAGE_TARGET: string = '_blank';
   public static CREDITORI: Creditore[] = [];
   public static LINGUE: any[] = [];
   public static IS_SINGLE: boolean = true;
@@ -183,6 +185,8 @@ export class PayService implements OnInit, OnDestroy {
     PayService.AUTH_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
     PayService.AUTH_LOGOUT_URL = PayConfig['AUTH_LOGOUT_URL'] || '';
     PayService.AUTH_LOGOUT_URLS = PayConfig['AUTH_LOGOUT_URLS'] || [];
+    PayService.AUTH_LOGOUT_LANDING_PAGE = PayConfig['AUTH_LOGOUT_LANDING_PAGE'] || '';
+    PayService.AUTH_LOGOUT_LANDING_PAGE_TARGET = PayConfig['AUTH_LOGOUT_LANDING_PAGE_TARGET'] || '_blank';
     PayService.CREDITORI = PayConfig['DOMINI'];
     if (PayService.CREDITORI.length == 1) {
       PayService.SetCreditoreAttivoAndDomainTarget(PayService.CREDITORI[0].value);

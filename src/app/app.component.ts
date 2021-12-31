@@ -300,6 +300,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
     this.pay.clearUser();
     this.Pay.ResetCart(this.router, this.translate);
     this.__toPublicExit();
+    if (PayService.AUTH_LOGOUT_LANDING_PAGE != '') {
+      window.open(PayService.AUTH_LOGOUT_LANDING_PAGE, PayService.AUTH_LOGOUT_LANDING_PAGE_TARGET);
+    }
   }
 
   __onActiveChange(creditore: any) {

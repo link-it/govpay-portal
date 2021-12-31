@@ -90,6 +90,8 @@
     AUTH_LOGOUT_URLS: [
       'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout'
     ],
+    AUTH_LOGOUT_LANDING_PAGE: '',
+    AUTH_LOGOUT_LANDING_PAGE_TARGET: '_blank',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
       ACCESS: true,
