@@ -66,6 +66,7 @@ export class PayService implements OnInit, OnDestroy {
   public static EditMode: boolean = false;
   public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
   public static ImpostazioniOrdinamento: any;
+  public static ImpostazioniLayout: any;
 
   public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
   public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -201,6 +202,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.CollapsibleSections = PayConfig['COLLAPSIBLE_SECTIONS'];
     PayService.RouteConfig = PayConfig['ROUTING'];
     PayService.ImpostazioniOrdinamento = PayConfig['ORDINAMENTO'];
+    PayService.ImpostazioniLayout = PayConfig['LAYOUT'];
   }
 
   // static StatiPendenza(): any[] {

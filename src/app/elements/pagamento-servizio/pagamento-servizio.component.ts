@@ -208,6 +208,17 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
     }
   }
 
+  _mapMetaData(item: any) {
+    const attrs = (PayService.ImpostazioniLayout && PayService.ImpostazioniLayout['GROUP_METADATA']) ? PayService.ImpostazioniLayout['GROUP_METADATA'] : ['category'];
+    const values = [];
+    attrs.forEach(attr => {
+      if (item[attr]) {
+        values.push(item[attr]);
+      }
+    });
+    return values.join(', ');
+  }
+
   // _onGroupItemClick(item: any) {
   //   this.pay.router.navigateByUrl('/dettaglio-servizio', { state: item });
   // }

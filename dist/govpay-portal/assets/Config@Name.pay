@@ -107,6 +107,9 @@
         PROPRIETA: [ 'name' ],
         ASCENDENTE: true
       }
+    },
+    LAYOUT: {
+      GROUP_METADATA: [ 'category' ]
     }
   };
 
