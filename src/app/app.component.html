@@ -58,13 +58,26 @@
                     [left-icon]="Pay.Header.LeftIcon" right-icon="shopping_cart" [right-icon-label]="Pay.ShoppingCart.length" [disable-right-icon]="Pay.ShoppingCart.length === 0"
                     header-theme="header-bar" [show-right-icon]="true" [show-left-icon]="_mode === 'over' || Pay.ActionDetail" [breakpoint-title]="Pay.SmBlock">
       <div add-on class="d-flex align-items-center flex-nowrap logged-user" *ngIf="Pay.User && (Pay.SPID['ACCESS'] || Pay.IAM['ACCESS']) && Pay.I18n.json.Account">
-        <svg class="d-none d-sm-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.6 587.6" preserveAspectRatio="xMinYMin">
-            <style>.spidIco0{fill:#333}.spidIco1{fill:#BBDEFB}</style>
-            <path id="XMLID_3_" class="spidIco0" d="M587.6 293.8c0 162.3-131.5 293.8-293.8 293.8C131.6 587.6 0 456.1 0 293.8S131.6 0 293.8 0c162.3 0 293.8 131.5 293.8 293.8"/>
-            <path id="XMLID_2_" class="spidIco1" d="M294.6 319c-24.4 0-44.5-8.2-60.3-24.8-15.8-16.5-23.7-37-23.7-61.4 0-24.5 7.9-44.8 23.6-61 15.7-16.2 35.7-24.3 60.2-24.3 24.4 0 44.3 8.2 59.6 24.9 15.3 16.6 23 37 23 61.5 0 24.3-7.7 44.6-23 60.8-15.3 16.1-35 24.3-59.4 24.3"/>
-            <path id="XMLID_1_" class="spidIco1" d="M210.6 439.1c0-24.5 7.9-44.8 23.5-61 15.7-16.2 35.7-24.3 60.4-24.3 24.4 0 44.3 8.2 59.5 24.9 15.3 16.7 23 37.1 23 61.5"/>
-      </svg>
-        <span class="d-none d-sm-inline px-3 text-nowrap">{{ Pay.I18n.json.Account }}</span>
+        <div class="dropdown" data-toggle="dropdown">
+          <a id="menuAccount" class="btn dropdown-toggle" role="button">
+            <span class="d-inline"><!-- Spid Ico-->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 587.6 587.6" preserveAspectRatio="xMinYMin">
+                <style>.spidIco0{fill:#333}.spidIco1{fill:#BBDEFB}</style>
+                <path id="XMLID_3_" class="spidIco0" d="M587.6 293.8c0 162.3-131.5 293.8-293.8 293.8C131.6 587.6 0 456.1 0 293.8S131.6 0 293.8 0c162.3 0 293.8 131.5 293.8 293.8"/>
+                <path id="XMLID_2_" class="spidIco1" d="M294.6 319c-24.4 0-44.5-8.2-60.3-24.8-15.8-16.5-23.7-37-23.7-61.4 0-24.5 7.9-44.8 23.6-61 15.7-16.2 35.7-24.3 60.2-24.3 24.4 0 44.3 8.2 59.6 24.9 15.3 16.6 23 37 23 61.5 0 24.3-7.7 44.6-23 60.8-15.3 16.1-35 24.3-59.4 24.3"/>
+                <path id="XMLID_1_" class="spidIco1" d="M210.6 439.1c0-24.5 7.9-44.8 23.5-61 15.7-16.2 35.7-24.3 60.4-24.3 24.4 0 44.3 8.2 59.5 24.9 15.3 16.7 23 37.1 23 61.5"/>
+              </svg>
+            </span>
+            <span class="d-none d-sm-inline align-middle ml-3">{{ Pay.I18n.json.Account }}</span>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="menuAccount">
+            <ul class="w-100 m-0 p-0">
+              <li class="dropdown-item" (click)="_sideNavItemClick(sidenav, '')">
+                {{ Pay.I18n.json.SideNav.Logout }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
       <pay-spid-login add-on [label]="Pay.I18n.json.Spid.Label" [info]="Pay.I18n.json.Spid.Info" [ask]="Pay.I18n.json.Spid.Ask" [help]="Pay.I18n.json.Spid.Help"
                       [action]="Pay.SPID['ACTION_FORM_URL']" [spid-test-url]="Pay.SPID['TEST_PROVIDER']" [response-target]="Pay.SpidDomainTarget"

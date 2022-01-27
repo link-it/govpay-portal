@@ -24,7 +24,7 @@
         <!--<pay-simple-item group-content *ngFor="let fs of _servizi[Pay.ALPHA_3_CODE].flat" [primaryText]="fs.category" (click)="_onGroupItemClick(fs)"></pay-simple-item>-->
         <pay-group *ngFor="let gs of _servizi[Pay.ALPHA_3_CODE].groups|serviceGroupFilter:filtro.value:_servizi[Pay.ALPHA_3_CODE].dictionary; let i = index"
                    [groupIcon]="'group_work'" [title]="gs.group" [id]="i" [open]="true">
-          <pay-simple-item #psi group-content *ngFor="let se of gs.items" [primaryText]="se.title" [metadata]="se.category" (click)="_onItemClick(se)"></pay-simple-item>
+          <pay-simple-item #psi group-content *ngFor="let se of gs.items" [primaryText]="se.title" [metadata]="_mapMetaData(se)" (click)="_onItemClick(se)"></pay-simple-item>
           <p group-content class="m-0" *ngIf="gs.items.length === 0">{{Pay.I18n.json.Common.Filtro.NessunaCorrispondenza}}</p>
         </pay-group>
       </div>

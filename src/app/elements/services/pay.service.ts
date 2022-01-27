@@ -33,6 +33,9 @@ export class PayService implements OnInit, OnDestroy {
   public static AUTH_HOSTNAME: string = '';
   public static AUTH_ROOT_SERVICE: string = '';
   public static AUTH_LOGOUT_URL: string = '';
+  public static AUTH_LOGOUT_URLS: any[] = [];
+  public static AUTH_LOGOUT_LANDING_PAGE: string = '';
+  public static AUTH_LOGOUT_LANDING_PAGE_TARGET: string = '_blank';
   public static CREDITORI: Creditore[] = [];
   public static LINGUE: any[] = [];
   public static IS_SINGLE: boolean = true;
@@ -63,6 +66,7 @@ export class PayService implements OnInit, OnDestroy {
   public static EditMode: boolean = false;
   public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
   public static ImpostazioniOrdinamento: any;
+  public static ImpostazioniLayout: any;
 
   public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
   public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -180,7 +184,10 @@ export class PayService implements OnInit, OnDestroy {
     PayService.HOSTNAME = PayConfig['REVERSE_PROXY'];
     PayService.AUTH_HOSTNAME = PayConfig['AUTH_HOST'];
     PayService.AUTH_ROOT_SERVICE = PayConfig['AUTH_ROOT_SERVICE'];
-    PayService.AUTH_LOGOUT_URL = PayConfig['AUTH_LOGOUT_URL'];
+    PayService.AUTH_LOGOUT_URL = PayConfig['AUTH_LOGOUT_URL'] || '';
+    PayService.AUTH_LOGOUT_URLS = PayConfig['AUTH_LOGOUT_URLS'] || [];
+    PayService.AUTH_LOGOUT_LANDING_PAGE = PayConfig['AUTH_LOGOUT_LANDING_PAGE'] || '';
+    PayService.AUTH_LOGOUT_LANDING_PAGE_TARGET = PayConfig['AUTH_LOGOUT_LANDING_PAGE_TARGET'] || '_blank';
     PayService.CREDITORI = PayConfig['DOMINI'];
     if (PayService.CREDITORI.length == 1) {
       PayService.SetCreditoreAttivoAndDomainTarget(PayService.CREDITORI[0].value);
@@ -195,6 +202,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.CollapsibleSections = PayConfig['COLLAPSIBLE_SECTIONS'];
     PayService.RouteConfig = PayConfig['ROUTING'];
     PayService.ImpostazioniOrdinamento = PayConfig['ORDINAMENTO'];
+    PayService.ImpostazioniLayout = PayConfig['LAYOUT'];
   }
 
   // static StatiPendenza(): any[] {
@@ -726,6 +734,22 @@ export class PayService implements OnInit, OnDestroy {
           return response;
         })
       );
+  }
+
+  logouts(): Observable<any[]> {
+    const reqs: Observable<any>[] = [];
+    PayService.AUTH_LOGOUT_URLS.forEach((url) => {
+      reqs.push(
+        this.http.get(url, { observe: 'response' })
+          .pipe(
+            timeout(PayService.TIMEOUT),
+            map((response: HttpResponse<any>) => {
+              return response;
+            })
+          )
+      );
+    });
+    return forkJoin(reqs);
   }
 
   /**
