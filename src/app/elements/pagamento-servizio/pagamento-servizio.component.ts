@@ -5,7 +5,11 @@ import { BehaviorSubject, Subscription } from 'rxjs/index';
 import { SimpleItemComponent } from '../components/simple-item.component';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 
+declare let Taxonomies;
 declare let $: any;
+
+export let validateNow: BehaviorSubject<boolean> = new BehaviorSubject(false);
+export let updateLayoutNow: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
 @Component({
   selector: 'pay-pagamento-servizio',
@@ -26,6 +30,14 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   __title: string = '';
   __filterTitle: string = '';
   __filterText: string = '';
+
+  Taxonomies = Taxonomies;
+  _taxonomies = null;
+  _currentTaxonomy = null;
+  _taxonomy1 = '';
+  _taxonomy2 = '';
+  _taxonomy1Field = 'taxonomy1'; // 'taxonomy1'
+  _taxonomy2Field = 'taxonomy2'; // 'taxonomy2'
 
   constructor(public pay: PayService, protected translate: TranslateService) {
     this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
@@ -54,10 +66,18 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       this.pay.sessione().then(() => {
       });
     }
+
+    this._initTaxonomies();
+    this._resetServizi();
+  }
+
+  _resetServizi() {
     if (PayService.Cache.TipiPendenza.length === 0) {
       this._elencoServizi();
     } else {
-      this._servizi = this._setupGroups(PayService.Cache.TipiPendenza);
+      this._servizi = this._setupGroups(PayService.Cache.TipiPendenza, this._taxonomy1, this._taxonomy2);
+      this.__mapTitle();
+      updateLayoutNow.next(true);
     }
   }
 
@@ -88,7 +108,8 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         if(result.body) {
           const _response = result.body;
           const _decodedServices: any[] = PayService.DecodeServices(_response['risultati']);
-          this._servizi = this._setupGroups(_decodedServices);
+          this._servizi = this._setupGroups(_decodedServices, this._taxonomy1, this._taxonomy2);
+          // PayService.Cache.TipiPendenza = PayService.DecodeServices(_response['risultati']);
         }
         this.__mapTitle();
         this.pay.updateSpinner(false);
@@ -106,7 +127,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
     );
   }
 
-  _setupGroups(decodedServices: any[]): any[] {
+  _setupGroups(decodedServices: any[], taxonomy1: string, taxonomy2: string): any[] {
     const servicesByLanguage: any = {};
     let mismatch: boolean = false;
     PayService.LINGUE.forEach((lingua: any) => {
@@ -125,22 +146,28 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         } else {
           const srv: any = service.detail[lingua.alpha3Code] || service.detail['ita'];
           const _mappedService: any = {
-            background: srv.group_icon || '',
-            subgroup: srv.subgroup || '',
+            group: service.detail[taxonomy1] || 'default',
+            subgroup: service.detail[taxonomy2] || 'default',
             group_rank: srv.group_rank || Number.MAX_VALUE,
             category: srv.category || '',
+            metadata: srv.metadata || '',
+            taxonomy1: service.detail.taxonomy1 || 'default',
+            taxonomy2: service.detail.taxonomy2 || 'default',
             searchTerms: srv.search_terms || '',
             code: srv.code || '',
             name: srv.name || '',
             title: `${(srv.code?srv.code + ' - ':'')}${srv.name}`,
             source: service
           };
-          const group: string = srv.group;
+          const group: string = service.detail[taxonomy1] || 'default';
+          const taxonomy = this._getTaxonomy(group);
+          const taxonomyRank = taxonomy ? taxonomy.rank : Number.MAX_VALUE;
+          const taxonomyName = taxonomy ? taxonomy.name : '';
           if (group) {
             if (!_groups.hasOwnProperty(group)) {
               _groups[group] = [];
-              _ranking.push({ group: group, group_rank: _mappedService.group_rank, code: _mappedService.code, name: _mappedService.name });
-              _imgs[group] = _mappedService.background;
+              _ranking.push({ group: group, group_rank: taxonomyRank, code: _mappedService.code, name: taxonomyName});
+              _imgs[group] = this._getTaxonomyImage(group),
               _maps[group] = this.__mapGroupSchemaLanguages(service.detail);
             }
             _groups[group].push(_mappedService);
@@ -165,7 +192,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           return {
             group: kg,
             titoloSchemaMap: _maps[kg],
-            backgroundSrc: _imgs[kg],
+            backgroundSrc: this._getTaxonomyImage(kg),
             items: _groups[kg]
           };
         })
@@ -181,7 +208,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   __mapGroupSchemaLanguages(detail: any): any {
     const el: any = {};
     PayService.LINGUE.forEach((lingua: any) => {
-      el[lingua.alpha3Code] = detail[lingua.alpha3Code].group;
+      el[lingua.alpha3Code] = this._getTaxonomyTitle(detail[this._taxonomy1]);
     });
 
     return el;
@@ -201,10 +228,11 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
 
   __mapTitle() {
     if (this._servizi && this._filtro && !this._filtro.nativeElement.value) {
-      this.__filterTitle = PayService.MapResultsTitle(this._servizi[PayService.ALPHA_3_CODE].N, this._servizi[PayService.ALPHA_3_CODE].M);
+      const valueGroup = (this._servizi[PayService.ALPHA_3_CODE].N > 1) ? this._currentTaxonomy.name : this._currentTaxonomy.singularName;
+      this.__filterTitle = PayService.MapResultsTitle(this._servizi[PayService.ALPHA_3_CODE].N, this._servizi[PayService.ALPHA_3_CODE].M, valueGroup.toLowerCase());
     }
     if (this._filtro && this._filtro.nativeElement.value) {
-      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, this.psi.length);
+      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.Filtro, this.psi.length);
     }
   }
 
@@ -233,7 +261,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
     this._assessorato = { group: quadro.group, items: this._servizi[PayService.ALPHA_3_CODE].dictionary[quadro.group] };
     PayService.I18n.jsonSchema.Assessorato.TitoloSchema = quadro.titoloSchemaMap;
     // PayService.MapAssessoratoTitle(this._servizi, quadro.group);
-    PayService.Header.Titolo = quadro.group;
+    PayService.Header.Titolo = this._getTaxonomyTitle(quadro.group);
     PayService.Header.LeftIcon = 'arrow_back';
     PayService.ActionDetail = true;
     PayService.AssessoratoDetail = true;
@@ -250,7 +278,58 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
     });
   }
 
-}
+  // Taxonomy
 
-export let validateNow: BehaviorSubject<boolean> = new BehaviorSubject(false);
-export let updateLayoutNow: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  _initTaxonomies() {
+    this._taxonomies = Taxonomies[this.Pay.ALPHA_3_CODE] || null;
+    if (this._taxonomies) {
+      this._setTaxonomy(this._taxonomies[this._taxonomies.defaultTaxonomy].id);
+    } else {
+      console.log('Il file "tassonomie.pay" non è configurato correttamente');
+    }
+  }
+
+  _setTaxonomy(id) {
+    if (!this._currentTaxonomy || (this._taxonomies && this._currentTaxonomy.id !== id)) {
+      switch (id) {
+        case this._taxonomies.taxonomy1.id:
+          this._currentTaxonomy = this._taxonomies.taxonomy1;
+          this._taxonomy1 = this._taxonomy1Field;
+          this._taxonomy2 = this._taxonomy2Field;
+          break;
+        case this._taxonomies.taxonomy2.id:
+          this._currentTaxonomy = this._taxonomies.taxonomy2;
+          this._taxonomy1 = this._taxonomy2Field;
+          this._taxonomy2 = this._taxonomy1Field;
+          break;
+        default:
+          this._currentTaxonomy = this._taxonomies.taxonomy1;
+          this._taxonomy1 = this._taxonomy1Field;
+          this._taxonomy2 = this._taxonomy2Field;
+          break;
+      }
+      this._resetServizi();
+    }
+  }
+
+  _getTaxonomy(id) {
+    const idx = this._currentTaxonomy.items.findIndex(el => el.id === id);
+    return (idx !== -1) ? this._currentTaxonomy.items[idx] : null;
+  }
+
+  _getTaxonomyImage(taxonomy: string) {
+    const id = taxonomy || 'default';
+    const taxonomyData = this._getTaxonomy(id);
+    return (taxonomyData) ? taxonomyData.image : '';
+  }
+
+  _getTaxonomyTitle(elem: any | string) {
+    const id = (typeof elem === 'object') ? elem.group || 'default' : elem || 'default';
+    const taxonomyData = this._getTaxonomy(id);
+    return (taxonomyData) ? taxonomyData.name : id;
+  }
+
+  isCurrentTaxonomy(taxonomy) {
+    return (this._currentTaxonomy.id === taxonomy.id);
+  }
+}

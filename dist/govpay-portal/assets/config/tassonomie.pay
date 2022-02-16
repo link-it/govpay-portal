@@ -1,0 +1,42 @@
+(function (global) {
+
+  global.Taxonomies = {
+    showTaxonomies: false,
+    ita: {
+      taxonomy1: {
+        id: "tematiche-1",
+        name: "Aree tematiche 1",
+        singularName: "Area tematica 2",
+        icon: "label",
+        image: "badge.svg",
+        items: [
+          {
+            id: "default",
+            name: "Varie",
+            image: "/assets/images/tematiche/tematica.png",
+            rank: 10
+          }
+        ],
+        defaultItem: "default"
+      },
+      taxonomy2: {
+        id: "tematiche-2",
+        name: "Aree tematiche 2",
+        singularName: "Area tematica 2",
+        icon: "label",
+        image: "badge.svg",
+        items: [
+          {
+            id: "default",
+            name: "Varie",
+            image: "/assets/images/tematiche/tematica.png",
+            rank: 10
+          }
+        ],
+        defaultItem: "default"
+      },
+      defaultTaxonomy: "taxonomy1"
+    }
+  };
+
+})(window);

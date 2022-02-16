@@ -5,10 +5,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   template: `
     <div [id]="'group'+ID" class="container group">
       <div class="row flex-nowrap" [id]="'triggerGroup'+ID" (click)="_onToggle(_expanded)" data-toggle="collapse" [attr.data-target]="'#groupContent'+ID"
-           [attr.aria-expanded]="false" [attr.aria-controls]="'#groupContent'+ID">
+          [attr.aria-expanded]="false" [attr.aria-controls]="'#groupContent'+ID">
         <div class="col-12">
           <div class="d-flex align-items-center">
-            <i class="material-icons">{{ _groupIcon }}</i>
+            <img class="icon-image" [src]="_groupImage" *ngIf="_groupImage">
+            <i class="material-icons" *ngIf="!_groupImage">{{ _groupIcon }}</i>
             <p class="flex-grow-1 group-title">{{ _title }}</p>
             <i class="material-icons ml-auto" *ngIf="_showTrigger">{{ (_expanded || open)?'expand_less':'expand_more' }}</i>
             <button mat-icon-button class="material-icons trigger-icon" *ngIf="_triggerIcon" (click)="_onTriggerIcon($event)">
@@ -40,10 +41,15 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
       border-style: solid;
       padding: .5625rem .75rem;
     }
+    .icon-image {
+      width: 36px;
+      border-radius: 50%;
+    }
   `]
 })
 export class GroupComponent implements OnInit {
   @Input('groupIcon') _groupIcon: string = '';
+  @Input('groupImage') _groupImage: string = '';
   @Input('triggerIcon') _triggerIcon: string = '';
   @Input('title') _title: string = '';
   @Input('id') ID: string = '';

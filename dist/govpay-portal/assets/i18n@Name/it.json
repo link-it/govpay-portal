@@ -221,10 +221,11 @@
       "Filtro": {
         "NessunaCorrispondenza": "Nessuna corrispondenza.",
         "Risultati": {
-          "SS": "È presente un servizio in un assessorato",
-          "SP": "È presente un servizio in {{value}} assessorati",
-          "PS": "Sono presenti {{value}} servizi in un assessorato",
-          "PP": "Sono presenti {{valueN}} servizi in {{valueM}} assessorati",
+          "SS": "È presente un servizio in un gruppo",
+          "SP": "È presente un servizio in {{value}} gruppi",
+          "PS": "Sono presenti {{value}} servizi in un gruppo",
+          "PP": "Sono presenti {{valueN}} servizi in {{valueM}} gruppi",
+          "Filtro": "Trovato {{value}} servizio|Trovati {{value}} servizi",
           "ServiziAssessorato": "È presente {{value}} servizio|Sono presenti {{value}} servizi"
         },
         "NessunRisultato": "Nessun risultato.",

@@ -67,6 +67,7 @@ export class PayService implements OnInit, OnDestroy {
   public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
   public static ImpostazioniOrdinamento: any;
   public static ImpostazioniLayout: any;
+  public static Filtri: any[];
 
   public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
   public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -203,6 +204,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.RouteConfig = PayConfig['ROUTING'];
     PayService.ImpostazioniOrdinamento = PayConfig['ORDINAMENTO'];
     PayService.ImpostazioniLayout = PayConfig['LAYOUT'];
+    PayService.Filtri = PayConfig['FILTRI'];
   }
 
   // static StatiPendenza(): any[] {
@@ -1063,7 +1065,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.TabsBehavior.next({ update: true, tabs: tabs });
   }
 
-  static MapResultsTitle(N: number, M: number): string {
+  static MapResultsTitle(N: number, M: number, G: string): string {
     const risultati: any = PayService.I18n.json.Common.Filtro.Risultati;
     let text = PayService.I18n.json.Common.Filtro.NessunRisultato;
     if (N === 1) {
@@ -1082,6 +1084,7 @@ export class PayService implements OnInit, OnDestroy {
         text = risultati.PP.split('{{valueN}}').join(N.toString()).split('{{valueM}}').join(M.toString());
       }
     }
+    text = text.split('{{valueG}}').join(G.toString());
     return text;
   }
 

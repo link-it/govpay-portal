@@ -3,6 +3,7 @@ export class Creditore {
   label: string = '';
   value: string = '';
   logo: string = '';
+  href: string = '';
 
   constructor (_data?: any) {
 

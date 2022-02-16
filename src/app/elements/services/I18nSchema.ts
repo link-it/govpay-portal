@@ -228,6 +228,7 @@ export class I18n {
           SP: '',
           PS: '',
           PP: '',
+          Filtro: '',
           ServiziAssessorato: ''
         },
         NessunRisultato: '',

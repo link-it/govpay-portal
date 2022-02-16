@@ -10,6 +10,8 @@ import { JsonSchemaFormComponent } from 'angular7-json-schema-form';
 import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 import { Notifier } from '../field-group/field-group.component';
 
+declare let Taxonomies;
+
 import * as moment from 'moment';
 const Debug: boolean = false;
 declare let $: any;
@@ -51,12 +53,16 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
 
   protected _langSubscription: Subscription;
 
+  _taxonomies = null;
+
   constructor(protected dialog: MatDialog, public pay: PayService, public translate: TranslateService) {
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this._loadJSONAndFormOptions(true);
       PayService.TranslateDynamicObject(translate, pay);
     });
     this._loadJSONAndFormOptions();
+
+    this._initTaxonomies();
   }
 
   ngOnInit() {
@@ -299,4 +305,27 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     this._jsFormValid = valid;
   }
 
+  // Taxonomy
+
+  _initTaxonomies() {
+    this._taxonomies = Taxonomies[this.Pay.ALPHA_3_CODE] || null;
+  }
+
+  _getTaxonomy(id: string, taxonomy: string) {
+    const _taxonomy = this._taxonomies[taxonomy];
+    const idx = _taxonomy.items.findIndex(el => el.id === id);
+    return (idx !== -1) ? _taxonomy.items[idx] : null;
+  }
+
+  _getTaxonomyImage(elem: any | string, taxonomy: string) {
+    const id = (typeof elem === 'object') ? elem.group || 'default' : elem || 'default';
+    const taxonomyData = this._getTaxonomy(id, taxonomy);
+    return (taxonomyData) ? taxonomyData.image : '';
+  }
+
+  _getTaxonomyTitle(elem: any | string, taxonomy: string) {
+    const id = (typeof elem === 'object') ? elem.group || 'default' : elem || 'default';
+    const taxonomyData = this._getTaxonomy(id, taxonomy);
+    return (taxonomyData) ? taxonomyData.name : id;
+  }
 }

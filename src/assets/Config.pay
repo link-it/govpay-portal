@@ -1,9 +1,19 @@
 (function (global) {
 
+  function addScript(file) {
+    document.write('<script src="' + file + '"></script>');
+  }
+
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '80012000826', logo: "logo.png" }
-    ]
+      {
+        label: 'Comune Dimostrativo',
+        value: '80012000826',
+        logo: 'logo.png',
+        altText: 'Comune Dimostrativo',
+        href: 'https://www.comune-dimostrativo.it/'
+      }
+    ];
   }
 
   function _traduzioni() {
@@ -18,7 +28,7 @@
         alpha2Code: 'en',
         alpha3Code: 'eng'
       }
-    ]
+    ];
   }
 
   function _assetsGestore() {
@@ -88,9 +98,9 @@
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
     AUTH_LOGOUT_URL: '',
     AUTH_LOGOUT_URLS: [
-      'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout'
+      ''
     ],
-    AUTH_LOGOUT_LANDING_PAGE: '',
+    AUTH_LOGOUT_LANDING_PAGE: '/',
     AUTH_LOGOUT_LANDING_PAGE_TARGET: '_blank',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
@@ -134,11 +144,21 @@
       }
     },
     LAYOUT: {
-      GROUP_METADATA: [ 'category' ]
-    }
+      GROUP_METADATA: [ 'metadata' ],
+      DETAILS_METADATA: {
+        show_image: true,
+        show_block: false,
+        taxonomy_image: 'taxonomy2',
+        taxonomy1: 'taxonomy2',
+        taxonomy2: '',
+        metadata: true
+      }
+    },
+    FILTRI: [ 'title' ]
   };
 
-  _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
+  addScript('assets/config/tassonomie.pay');
 
+  _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
 
 })(window);

@@ -5,7 +5,7 @@
 <pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [language-list]="_languages" language-bar-theme="language-bar"
                   (on-change-language)="_languageHandler($event)" [current-language]="_language"
                   [style.paddingRight.px]="!Pay.CreditoreAttivo?15:null" [style.zIndex]="!Pay.CreditoreAttivo?2:null">
-  <img add-on *ngIf="Pay.CreditoreAttivo && Pay.CreditoreAttivo.logo" [src]="'assets/images/domini/'+Pay.CreditoreAttivo.logo" [alt]="Pay.CreditoreAttivo.AltText" class="d-inline logo-creditore">
+  <a add-on (click)="gotoUrl(Pay.CreditoreAttivo.href)"><img *ngIf="Pay.CreditoreAttivo && Pay.CreditoreAttivo.logo" [src]="'assets/images/domini/'+Pay.CreditoreAttivo.logo" [alt]="Pay.CreditoreAttivo.altText" class="d-inline logo-creditore"></a>
   <div add-on class="my-1 py-2 dropdown w-100" *ngIf="Pay.CREDITORI.length > 1 && Pay.CreditoreAttivo">
     <a class="dropdown-toggle" href="#" id="creditori" role="button" data-toggle="dropdown"
        aria-haspopup="true" aria-expanded="false">{{ Pay.CreditoreAttivo?.label }}</a>
@@ -16,7 +16,11 @@
       </p>
     </div>
   </div>
-  <p add-on *ngIf="Pay.CreditoreAttivo && Pay.CREDITORI.length === 1" class="language-bar-title w-100 m-0 multiline-text">{{ Pay.I18n.json.Header.LanguageBar.Titolo }}</p>
+  <a add-on *ngIf="Pay.CreditoreAttivo && Pay.CREDITORI.length === 1" (click)="gotoUrl(Pay.CreditoreAttivo.href)">
+    <p class="language-bar-title w-100 m-0 multiline-text">
+      {{ Pay.I18n.json.Header.LanguageBar.Titolo }}
+    </p>
+  </a>
 </pay-language-bar>
 <mat-sidenav-container *ngIf="Pay.CreditoreAttivo">
   <mat-sidenav #sidenav class="side-nav" [mode]="_mode" (openedChange)="__isOpen()">

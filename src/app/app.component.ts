@@ -54,6 +54,16 @@ export class AppComponent implements OnInit, AfterContentChecked {
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
 
   constructor(public router: Router, public pay: PayService, public translate: TranslateService) {
+    // Check param "rdrct"
+    const matches = location.href.match(/rdrct=([^&]*)/);
+    if (matches) {
+      console.log('rdrct', matches);
+      // localStorage.setItem('RDRCT', matches[1]);
+    } else {
+      // localStorage.removeItem('RDRCT');
+    }
+    // ----
+
     this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
       if (exit) {
         this.__toPublicExit();
@@ -96,8 +106,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
               if (!_params['idSession'] && _params['numeroAvviso']) {
                 _toPublicAccessSection = true;
                 PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
-                   Numero: _params['numeroAvviso'],
-                Creditore: _params['idDominio'],
+                  Numero: _params['numeroAvviso'],
+                  Creditore: _params['idDominio'],
                 };
                 if(PayService.UUID_CHECK && _params['UUID']) {
                   PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
@@ -355,6 +365,11 @@ export class AppComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  gotoUrl(url: string) {
+    if (url && url !== '') {
+      window.location.href = url;
+    }
+  }
 }
 
 @Pipe({name: 'AuthGuard'})
