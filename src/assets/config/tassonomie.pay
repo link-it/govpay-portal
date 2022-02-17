@@ -8,7 +8,7 @@
         name: "Aree tematiche 1",
         singularName: "Area tematica 2",
         icon: "label",
-        image: "badge.svg",
+        image: "/assets/images/badge.svg",
         items: [
           {
             id: "default",
@@ -24,7 +24,7 @@
         name: "Aree tematiche 2",
         singularName: "Area tematica 2",
         icon: "label",
-        image: "badge.svg",
+        image: "/assets/images/badge.svg",
         items: [
           {
             id: "default",
