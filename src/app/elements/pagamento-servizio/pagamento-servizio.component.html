@@ -15,11 +15,11 @@
   <div class="row mb-5" *ngIf="_taxonomies && Taxonomies.showTaxonomies">
     <div class="col-12">
       <button type="button" class="select-button" [class.active]="isCurrentTaxonomy(_taxonomies.taxonomy1)" (click)="_setTaxonomy(_taxonomies.taxonomy1.id)" *ngIf="_taxonomies.taxonomy1">
-        <span class="d-inline material-icons" *ngIf="_taxonomies.taxonomy1.image"><img class="icon-20" [src]="'/assets/images/' + _taxonomies.taxonomy1.image"></span>
+        <span class="d-inline material-icons" *ngIf="_taxonomies.taxonomy1.image"><img class="icon-20" [src]="_taxonomies.taxonomy1.image"></span>
         <i class="material-icons mr-1" *ngIf="!_taxonomies.taxonomy1.image">{{ _taxonomies.taxonomy1.icon }}</i> 
         <span>Mostra {{ _taxonomies.taxonomy1.name }}</span></button>
       <button type="button" class="select-button ml-3" [class.active]="isCurrentTaxonomy(_taxonomies.taxonomy2)" (click)="_setTaxonomy(_taxonomies.taxonomy2.id)" *ngIf="_taxonomies.taxonomy2">
-        <span class="d-inline material-icons" *ngIf="_taxonomies.taxonomy2.image"><img class="icon-20" [src]="'/assets/images/' + _taxonomies.taxonomy2.image"></span>
+        <span class="d-inline material-icons" *ngIf="_taxonomies.taxonomy2.image"><img class="icon-20" [src]="_taxonomies.taxonomy2.image"></span>
         <i class="material-icons mr-1" *ngIf="!_taxonomies.taxonomy2.image">{{ _taxonomies.taxonomy2.icon }}</i> 
         <span class="ml-2">Mostra {{ _taxonomies.taxonomy2.name }}</span></button>
     </div>
