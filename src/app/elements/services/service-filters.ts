@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, SecurityContext } from '@angular/core';
+import { Directive, ElementRef, Input, Pipe, PipeTransform, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 function searchValue(value: string, item: any, properties: any[]) {
@@ -55,4 +55,26 @@ export class SanitizeHTMLPipe implements PipeTransform {
   transform(value) {
     return this.sanitizer.sanitize(SecurityContext.HTML, value);
   }
+}
+
+@Pipe({
+  name: 'rawHtml'
+})
+export class RawHtmlPipe implements PipeTransform {
+  constructor(private sanitized: DomSanitizer) { }
+  transform(value) {
+    return this.sanitized.bypassSecurityTrustHtml(value);
+  }
+}
+
+@Directive({
+  // tslint:disable-next-line: directive-selector
+  selector: '[injectHTML]',
+})
+export class InjectHTMLDirective {
+  @Input() set injectHTML(content: string) {
+    this.host.nativeElement.innerHTML = content;
+  }
+
+  constructor(private host: ElementRef) { }
 }

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouteReuseStrategy } from '@angular/router';
 import { JsonSchemaFormComponent, MaterialDesignFrameworkModule } from 'angular7-json-schema-form';
@@ -41,17 +42,21 @@ import { SimpleItemComponent } from './elements/components/simple-item.component
 import { PayCardComponent } from './elements/pay-card/pay-card.component';
 import { CartComponent } from './elements/cart/cart.component';
 import { PayItemComponent } from './elements/pay-item/pay-item.component';
+import { PayItemExtComponent } from './elements/pay-item-ext/pay-item-ext.component';
 import { FieldGroupComponent } from './elements/field-group/field-group.component';
 import { RicevutaPagamentoComponent } from './elements/ricevuta-pagamento/ricevuta-pagamento.component';
 import { PosizioneDebitoriaComponent } from './elements/posizione-debitoria/posizione-debitoria.component';
+import { DettaglioPosizioneComponent } from './elements/dettaglio-posizione/dettaglio-posizione.component';
 import { ArchivioComponent } from './elements/archivio/archivio.component';
 import { YesnoDialogComponent } from './elements/yesno-dialog/yesno-dialog.component';
 import { EsitoComponent } from './elements/esito/esito.component';
 import { ChoiceDialogComponent } from './elements/choice-dialog/choice-dialog.component';
 import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
 import { ReuseStrategy } from './elements/services/reuse-strategy';
-import { SanitizeHTMLPipe, ServiceFilterPipe, ServiceGroupFilterPipe } from './elements/services/service-filters';
+import { SanitizeHTMLPipe, ServiceFilterPipe, ServiceGroupFilterPipe, RawHtmlPipe, InjectHTMLDirective } from './elements/services/service-filters';
 import { MarkedDirective } from './elements/services/markdown';
+import { GroupItemAttributeComponent } from './elements/group-item-attribute/group-item-attribute.component';
+import { ItemAttributeComponent } from './elements/item-attribute/item-attribute.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateLoaderExt(http, './assets/i18n/', '.json');
@@ -66,6 +71,7 @@ export function createTranslateLoader(http: HttpClient) {
     RicevutaPagamentoComponent,
     DettaglioServizioComponent,
     PosizioneDebitoriaComponent,
+    DettaglioPosizioneComponent,
     ArchivioComponent,
     HeaderBarComponent,
     LanguageBarComponent,
@@ -77,6 +83,7 @@ export function createTranslateLoader(http: HttpClient) {
     PayCardComponent,
     CartComponent,
     PayItemComponent,
+    PayItemExtComponent,
     FieldGroupComponent,
     YesnoDialogComponent,
     EsitoComponent,
@@ -85,8 +92,11 @@ export function createTranslateLoader(http: HttpClient) {
     ServiziAssessoratoComponent,
     GroupComponent,
     SimpleItemComponent,
+    GroupItemAttributeComponent,
+    ItemAttributeComponent,
     MarkedDirective,
-    ServiceGroupFilterPipe, ServiceFilterPipe, SanitizeHTMLPipe
+    ServiceGroupFilterPipe, ServiceFilterPipe, SanitizeHTMLPipe, RawHtmlPipe,
+    InjectHTMLDirective
   ],
   imports: [
     BrowserModule,
@@ -96,6 +106,7 @@ export function createTranslateLoader(http: HttpClient) {
     FlexLayoutModule,
     HttpClientModule,
     MatProgressSpinnerModule,
+    MatCardModule,
     MatSnackBarModule,
     TranslateModule.forRoot({
       loader: {

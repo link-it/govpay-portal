@@ -107,7 +107,20 @@
     "Posizione": {
       "Titolo": "Posizione debitoria",
       "Debiti": {
-        "Titolo": "È presente {{value}} solo servizio|Sono presenti {{value}} servizi"
+        "Titolo": "È presente {{value}} sola pendenza|Sono presenti {{value}} pendenze"
+      }
+    },
+    "DettaglioPosizione": {
+      "Titolo": "Informazioni posizione debitoria",
+      "Dialog": {
+        "Riepilogo": "Riepilogo",
+        "DatiAllegati": "Data attached",
+        "Aggiungi": "Add to cart",
+        "Rimuovi": "Remove fron cart",
+        "Scarica": "Download receipt",
+        "ImportoPendenza": "Amount due",
+        "Submit": "Add to cart",
+        "Close": "Cancel"
       }
     },
     "Archivio": {
@@ -231,6 +244,15 @@
         "NessunRisultato": "Nessun risultato.",
         "Placeholder": "Cerca un servizio..."
       }
+    },
+    "StatiPendeza": {
+      "ESEGUITA": "Eseguita",
+      "DUPLICATA": "Duplicata",
+      "NON_ESEGUITA": "Non eseguita",
+      "ESEGUITA_PARZIALE": "Eseguita parzialmente",
+      "ANNULLATA": "Annullata",
+      "SCADUTA": "Scaduta",
+      "IN_RITARDO": "In ritardo"
     }
   }
 }

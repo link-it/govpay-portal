@@ -8,7 +8,7 @@
     return [
       {
         label: 'Comune Dimostrativo',
-        value: '80012000826',
+        value: '01234567890',
         logo: 'logo.png',
         altText: 'Comune Dimostrativo',
         href: 'https://www.comune-dimostrativo.it/'
@@ -39,8 +39,8 @@
         AltText: 'Logo'
       },
       Background: {
-        Small: 'background-small.jpg',
-        Full: 'background.jpg'
+        Small: 'background-small.png',
+        Full: 'background.png'
       },
       Partners: [
         {
@@ -117,8 +117,8 @@
     UUID_CHECK: true,
     RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',
     PAY_RESPONSE_URL: 'https://localhost:4200/esito-pagamento',
-    TIME_OUT_POLL: 5, //Secs.
-    POLLING_INTERVAL: 3000, //Millisecs.
+    TIME_OUT_POLL: 5, // Secs.
+    POLLING_INTERVAL: 3000, // Millisecs.
     ROUTING: {
       PUBLIC_ACCESS: '',
       PUBLIC_EXIT: 'pagamento-servizio'

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/index';
 import { PayService } from '../services/pay.service';
@@ -14,11 +14,19 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   _hasTab: boolean = true;
 
+  _routerTab = true;
+  _currentTab = '';
+
   constructor(public router: Router) {
     this._tabsSubscriber = PayService.TabsBehavior.subscribe(
     (value: any) => {
-      if (value && value.update) {
-        this._generateTabs(value);
+      if (value) {
+        if (value.update) {
+          this._generateTabs(value);
+        }
+        if (value.currentTab) {
+          this._currentTab = value.currentTab;
+        }
       }
     });
   }
@@ -40,20 +48,41 @@ export class NavBarComponent implements OnInit, OnDestroy {
     switch (url) {
       case '/pagamento-servizio':
         this._hasTab = !!value.tabs;
+        this._routerTab = true;
+        this._tabs = [
+          { label: PayService.I18n.json.Pagamenti.Servizi.Titolo, path: 'pagamento-servizio', url: '/pagamento-servizio' },
+          { label: PayService.I18n.json.Pagamenti.Bollettino.Titolo, path: 'bollettino', url: '/bollettino' }
+        ];
         break;
       case '/bollettino':
         this._hasTab = true;
+        this._routerTab = true;
+        this._tabs = [
+          { label: PayService.I18n.json.Pagamenti.Servizi.Titolo, path: 'pagamento-servizio', url: '/pagamento-servizio' },
+          { label: PayService.I18n.json.Pagamenti.Bollettino.Titolo, path: 'bollettino', url: '/bollettino' }
+        ];
+        break;
+      case '/riepilogo':
+        this._hasTab = true;
+        this._routerTab = false;
+        this._tabs = [
+          { label: PayService.I18n.json.StatiPendeza.NON_ESEGUITA, value: PayService.STATI_PENDENZA.NON_ESEGUITA },
+          { label: PayService.I18n.json.StatiPendeza.ESEGUITA, value: PayService.STATI_PENDENZA.ESEGUITA },
+          { label: PayService.I18n.json.StatiPendeza.SCADUTA, value: PayService.STATI_PENDENZA.SCADUTA },
+          { label: PayService.I18n.json.StatiPendeza.ANNULLATA, value: PayService.STATI_PENDENZA.ANNULLATA }
+        ];
         break;
       default:
         this._hasTab = false;
     }
-    this._tabs = [
-      { label: PayService.I18n.json.Pagamenti.Servizi.Titolo, path: 'pagamento-servizio', url: '/pagamento-servizio' },
-      { label: PayService.I18n.json.Pagamenti.Bollettino.Titolo, path: 'bollettino', url: '/bollettino' }
-    ];
   }
 
-  _onTabMenu(_path: string) {}
+  _onTabMenu(value: string) {
+    if (!this._routerTab) {
+      this._currentTab = value;
+      PayService.TabsBehavior.next({ currentTab: this._currentTab });
+    }
+  }
 
   refreshInkBar() {
     if (typeof(Event) === 'function') {

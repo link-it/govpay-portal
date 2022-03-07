@@ -10,6 +10,7 @@ import { I18n } from './I18nSchema';
 import { Language } from '../classes/language';
 import { Creditore } from '../classes/creditore';
 import { Standard } from '../classes/standard';
+import { StandardExt } from '../classes/standard-ext';
 
 import * as moment from 'moment';
 import { AvvisoTpl } from '../classes/avviso-tpl';
@@ -71,6 +72,8 @@ export class PayService implements OnInit, OnDestroy {
 
   public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
   public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
+
+  public static ScrollBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
 
   // URL Services
   public static URL_SERVIZI: string = '/domini/{idDominio}/tipiPendenza';
@@ -1009,6 +1012,22 @@ export class PayService implements OnInit, OnDestroy {
             if (PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['code']) {
               title.unshift(PayService.ExtraState['detail'][PayService.ALPHA_3_CODE]['code']);
             }
+          }
+          PayService.Header.Titolo = { mobile: title[0], desktop: title.join(' - ') };
+        } else {
+          PayService.Header.Titolo = PayService.I18n.json.Header.Titolo;
+        }
+        PayService.ActionDetail = true;
+        PayService.Header.LeftIcon = 'close';
+        break;
+      case '/dettaglio-posizione':
+        if (PayService.ExtraState) {
+          let title: string[];
+          if (PayService.ExtraState instanceof StandardExt) {
+            const raw: any = (PayService.ExtraState as StandardExt).rawData;
+            title = [ raw['causale'] ];
+          } else {
+            title = [ PayService.ExtraState['causale'] ];
           }
           PayService.Header.Titolo = { mobile: title[0], desktop: title.join(' - ') };
         } else {

@@ -33,6 +33,10 @@ a {
   cursor: pointer;
 }
 
+a.route-link-disabled {
+  color: rgba(33, 33, 33, 0.5) !important;
+}
+
 a > p.multiline-text {
   text-transform: initial;
   font-weight: 600;

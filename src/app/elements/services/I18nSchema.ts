@@ -113,6 +113,19 @@ export class I18n {
         Titolo: ''
       }
     },
+    DettaglioPosizione: {
+      Titolo: '',
+      Dialog: {
+        Riepilogo: '',
+        DatiAllegati: '',
+        Aggiungi: '',
+        Rimuovi: '',
+        Scarica: '',
+        ImportoPendenza: '',
+        Submit: '',
+        Close: ''
+      }
+    },
     Archivio: {
       Titolo: '',
       Pagamenti: {
@@ -234,6 +247,15 @@ export class I18n {
         NessunRisultato: '',
         Placeholder: ''
       }
+    },
+    StatiPendeza: {
+      ESEGUITA: '',
+      DUPLICATA: '',
+      NON_ESEGUITA: '',
+      ESEGUITA_PARZIALE: '',
+      ANNULLATA: '',
+      SCADUTA: '',
+      IN_RITARDO: ''
     }
   };
 

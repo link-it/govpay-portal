@@ -1,0 +1,10 @@
+<div class="row align-items-center lh-130 mb-2 break-all" *ngIf="!_isExcluded() && attribute?.name">
+  <div class="col-lg-3 col-sm-4 color-gray text-md-right"><span>{{ attribute.label }}</span></div>
+  <div class="col-lg-9 col-sm-8">
+    <p class="m-0 word-break-all" [innerHTML]="_formatFieldValue(attribute) | rawHtml"></p>
+  </div>
+</div>
+<div class="row lh-130 mb-2 break-all" *ngIf="!_isExcluded() && !attribute?.name">
+  <div class="col-lg-3 col-sm-4 color-gray text-md-right"><span>{{ attribute }}</span></div>
+  <div class="col-lg-9 col-sm-8"><span class="m-0 word-break-all" [innerHTML]="_formatFieldValue(attribute) | rawHtml"></span></div>
+</div>

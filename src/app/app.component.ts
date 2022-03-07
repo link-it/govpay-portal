@@ -20,6 +20,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   @HostBinding('class.partners') get cfgPartners(): boolean {
     return (this._configPartners);
   }
+
   Pay = PayService;
 
   _gch: number = window.innerHeight;
@@ -146,6 +147,11 @@ export class AppComponent implements OnInit, AfterContentChecked {
     this._isLoading = this.pay.spinner;
   }
 
+  onWindowScroll($event) {
+    const value = $event.srcElement.scrollTop;
+    PayService.ScrollBehavior.next({ scroll: value });
+  }
+
   _updateLayout() {
     if (this._languageBar && this._gestore) {
       this._lb = this._languageBar.nativeElement.clientHeight;
@@ -240,6 +246,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
               PayService.EditMode = false;
               this.pay.router.navigateByUrl('/carrello');
             }
+            break;
+          case '/dettaglio-posizione':
+            this.pay.router.navigateByUrl('/riepilogo');
             break;
           case '/ricevuta':
             this.pay.router.navigateByUrl('/carrello');
