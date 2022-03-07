@@ -110,6 +110,18 @@
         "Titolo": "{{value}} notice available|{{value}} notices available"
       }
     },
+    "DettaglioPosizione": {
+      "Titolo": "Debt position information",
+      "Dialog": {
+        "Riepilogo": "Summary",
+        "DatiAllegati": "Data attached",
+        "Avviso": "Do you want to add this charge to the cart with these data just entered?",
+        "Causale": "Causal payment",
+        "ImportoPendenza": "Amount due",
+        "Submit": "Add to cart",
+        "Close": "Cancel"
+      }
+    },
     "Archivio": {
       "Titolo": "Payments history",
       "Pagamenti": {
@@ -231,6 +243,15 @@
         "NessunRisultato": "No results.",
         "Placeholder": "Search a service..."
       }
+    },
+    "StatiPendeza": {
+      "ESEGUITA": "Done",
+      "DUPLICATA": "Duplicated",
+      "NON_ESEGUITA": "Not performed",
+      "ESEGUITA_PARZIALE": "Partially performed",
+      "ANNULLATA": "Annullata",
+      "SCADUTA": "Expired",
+      "IN_RITARDO": "Late"
     }
   }
 }

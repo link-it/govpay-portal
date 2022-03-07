@@ -1,0 +1,43 @@
+{
+  "ita": [
+    {
+      "name": "Soggetto pagatore",
+      "attributes": [
+        {
+          "name": "soggettoPagatore.anagrafica",
+          "type": "string",
+          "label": "Anagrafica"
+        },
+        {
+          "name": "soggettoPagatore.identificativo",
+          "type": "string",
+          "label": "Cod. Fisc."
+        }
+      ]
+    },
+    {
+      "name": "Dati catastali",
+      "attributes": [
+        {
+          "name": "datiAllegati.assistenza",
+          "type": "link",
+          "labelInner": "Assistenza",
+          "icon": "launch",
+          "label": "Assistenza"
+        },
+        {
+          "name": "datiAllegati.datiCatasto.indirizzo",
+          "type": "string",
+          "label": "Indirizzo"
+        },
+        {
+          "name": "datiAllegati.datiCatasto.pdf",
+          "type": "button",
+          "labelInner": "Scarica (PDF)",
+          "icon": "launch",
+          "label": "Documento"
+        }
+      ]
+    }
+  ]
+}

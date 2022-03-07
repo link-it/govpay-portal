@@ -9,7 +9,21 @@
       {
         label: 'Comune Dimostrativo',
         value: '01234567890',
-        logo: 'logo.png',
+        logo: 'logo-comune-dimostrativo.png',
+        altText: 'Comune Dimostrativo',
+        href: 'https://www.comune-dimostrativo.it/'
+      },
+      {
+        label: 'Comune Alternativo',
+        value: '12345678901',
+        logo: '',
+        altText: 'Comune Dimostrativo',
+        href: 'https://www.comune-dimostrativo.it/'
+      },
+      {
+        label: 'Regione Siciliana',
+        value: '80012000826',
+        logo: '',
         altText: 'Comune Dimostrativo',
         href: 'https://www.comune-dimostrativo.it/'
       }
@@ -46,18 +60,6 @@
         {
           Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
           Url: 'http://#'
-        },
-        {
-          Logo: { Menu: 'partner-logo-double.png', AccessPanel: 'partner-logo-double-reverse.png', AltText: 'Logo partner double' },
-          Url: 'http://#'
-        },
-        {
-          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
-          Url: 'http://#'
-        },
-        {
-          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
-          Url: 'http://#'
         }
       ],
       Configurazione: {
@@ -68,7 +70,7 @@
         },
         AccessPanel: {
           Partners: true,
-          Govpay: false
+          Govpay: true
         }
       },
       ProgettoGovPay: {
@@ -94,8 +96,8 @@
 
   global.PayConfig = {
     REVERSE_PROXY: '',
-    AUTH_HOST: '',
-    AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
+    AUTH_HOST: 'https://dev.govcloud.it',
+    AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/session/v2',
     AUTH_LOGOUT_URL: '',
     AUTH_LOGOUT_URLS: [
       ''
@@ -105,10 +107,10 @@
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
       ACCESS: true,
-      AUTHN_CONTEXT_CLASS_REF: '',
-      SERVICE_TARGET: 'http://localhost:4200/',
+      SERVICE_TARGET: 'https://dev.govcloud.it/govpay/frontend/api/user/rs/spid/v1/login/gpportal',
       TEST_PROVIDER: 'https://spidtest.govcloud.it',
-      ACTION_FORM_URL: 'https://dev.govcloud.it/Shibboleth.sso/Login'
+      ACTION_FORM_URL: 'https://dev.govcloud.it/Shibboleth.sso/Login',
+      LOGOUT_URL: 'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout'
     },
     IAM_SETTINGS: {
       ACCESS: false,
@@ -116,7 +118,7 @@
     },
     UUID_CHECK: true,
     RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',
-    PAY_RESPONSE_URL: 'https://localhost:4200/esito-pagamento',
+    PAY_RESPONSE_URL: 'https://dev.govcloud.it/govpay-portal/esito-pagamento',
     TIME_OUT_POLL: 5, // Secs.
     POLLING_INTERVAL: 3000, // Millisecs.
     ROUTING: {

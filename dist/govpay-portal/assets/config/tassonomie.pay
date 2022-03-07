@@ -8,12 +8,12 @@
         name: "Aree tematiche 1",
         singularName: "Area tematica 2",
         icon: "label",
-        image: "/assets/images/badge.svg",
+        image: "./assets/images/badge.svg",
         items: [
           {
             id: "default",
             name: "Varie",
-            image: "/assets/images/tematiche/tematica.png",
+            image: "./assets/images/tematiche/tematica.png",
             rank: 10
           }
         ],
@@ -24,12 +24,12 @@
         name: "Aree tematiche 2",
         singularName: "Area tematica 2",
         icon: "label",
-        image: "/assets/images/badge.svg",
+        image: "./assets/images/badge.svg",
         items: [
           {
             id: "default",
             name: "Varie",
-            image: "/assets/images/tematiche/tematica.png",
+            image: "./assets/images/tematiche/tematica.png",
             rank: 10
           }
         ],

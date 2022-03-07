@@ -1,0 +1,19 @@
+{
+  "ita": [
+    {
+      "name": "Dettaglio",
+      "attributes": [
+        {
+          "name": "datiAllegati.causale",
+          "type": "string",
+          "label": "Causale"
+        },
+        {
+          "name": "datiAllegati.protocollo",
+          "type": "string",
+          "label": "Protocollo"
+        }
+      ]
+    }
+  ]
+}
