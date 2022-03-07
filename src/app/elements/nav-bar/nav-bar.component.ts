@@ -17,7 +17,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   _routerTab = true;
   _currentTab = '';
 
-  constructor(public router: Router) {
+  constructor(public router: Router, public pay: PayService) {
     this._tabsSubscriber = PayService.TabsBehavior.subscribe(
     (value: any) => {
       if (value) {
@@ -71,6 +71,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
           { label: PayService.I18n.json.StatiPendeza.SCADUTA, value: PayService.STATI_PENDENZA.SCADUTA },
           { label: PayService.I18n.json.StatiPendeza.ANNULLATA, value: PayService.STATI_PENDENZA.ANNULLATA }
         ];
+        if (this.pay.lastTab) { this._currentTab = this.pay.lastTab };
         break;
       default:
         this._hasTab = false;
@@ -80,6 +81,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   _onTabMenu(value: string) {
     if (!this._routerTab) {
       this._currentTab = value;
+      this.pay.lastTab = this._currentTab;
       PayService.TabsBehavior.next({ currentTab: this._currentTab });
     }
   }

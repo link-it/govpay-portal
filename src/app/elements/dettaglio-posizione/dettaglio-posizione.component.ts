@@ -182,7 +182,6 @@ export class DettaglioPosizioneComponent implements OnInit, AfterViewInit, OnDes
         }
       }
     } else {
-      console.log('getRPP', this._posizione.rpp);
       this.pay.getRPP(this._posizione.rpp, false);
     }
     this._resetData();
@@ -199,7 +198,7 @@ export class DettaglioPosizioneComponent implements OnInit, AfterViewInit, OnDes
       atp.avviso = target['numeroAvviso'];
       atp.creditore = target['dominio']['idDominio'];
       _props.push(atp);
-      this.pay.pdf(_props, _query, false);
+      this.pay.pdf(_props, _query, false, false);
     }).catch((error) => {
       this.pay.updateSpinner(false);
       this.pay.onError(error);

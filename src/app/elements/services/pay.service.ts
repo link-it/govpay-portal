@@ -161,6 +161,8 @@ export class PayService implements OnInit, OnDestroy {
   protected spinnerCount: number = 0;
   // protected _langSubscription: Subscription;
 
+  public lastTab = '';
+
   constructor(private message: MatSnackBar, private http: HttpClient, public router: Router,
               private paginator: MatPaginatorIntl, public translate: TranslateService,
               private dateAdapter: DateAdapter<any>) {

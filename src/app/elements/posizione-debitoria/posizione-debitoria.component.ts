@@ -20,7 +20,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
   _langSubscription: Subscription;
 
   _tabsSubscriber: Subscription;
-  _filter = 'NON_ESEGUITA';
+  _filter = '';
 
   constructor(public pay: PayService, public translate: TranslateService) {
     this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
@@ -35,6 +35,8 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         }
       }
     );
+
+    this._filter = this.pay.lastTab || 'NON_ESEGUITA';
     PayService.TabsBehavior.next({ currentTab: this._filter.toLowerCase() });
   }
 

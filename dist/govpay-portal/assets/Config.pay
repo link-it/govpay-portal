@@ -9,7 +9,7 @@
       {
         label: 'Comune Dimostrativo',
         value: '01234567890',
-        logo: 'logo.png',
+        logo: 'logo-comune-dimostrativo.png',
         altText: 'Comune Dimostrativo',
         href: 'https://www.comune-dimostrativo.it/'
       }

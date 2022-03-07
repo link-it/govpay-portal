@@ -64,7 +64,7 @@ export class ItemAttributeComponent implements OnInit, OnChanges {
         result = `
           <span>
             <a class="m-0 word-break-all" href="${value}" target="_blank">${label}</a>
-            <span class="material-icons ml-2 color-gray align-bottom">${icon}</span>
+            <span class="material-icons ml-2 align-bottom">${icon}</span>
           </span>`;
         break;
       case 'button':
@@ -72,8 +72,8 @@ export class ItemAttributeComponent implements OnInit, OnChanges {
         icon = attribute.icon || '';
         result = `
           <a class="select-button" href="${value}" target="_blank">
+            <span class="material-icons mr-2 align-bottom">${icon}</span>
             <span>${label}</span>
-            <span class="material-icons ml-2 color-gray align-bottom">${icon}</span>
           </a>`;
         break;
 

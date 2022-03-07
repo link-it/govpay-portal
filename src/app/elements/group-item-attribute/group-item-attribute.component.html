@@ -1,14 +1,12 @@
 <div class="w-100 mb-5">
   <pay-title-deco art-class="title-deco mb-5" [simple]="true" [titolo]="group?.name"></pay-title-deco>
-  <!-- <mat-card class="shadow no-border-radius mb-3"> -->
-    <div class="">
-      <ng-container *ngFor="let attr of group?.attributes">
-        <pay-item-attribute
-          [attribute]="attr"
-          [data]="data"
-          [hideEmpty]="false">
-        </pay-item-attribute>
-      </ng-container>
-    </div>
-  <!-- </mat-card> -->
+  <div class="">
+    <ng-container *ngFor="let attr of group?.attributes">
+      <pay-item-attribute
+        [attribute]="attr"
+        [data]="data"
+        [hideEmpty]="false">
+      </pay-item-attribute>
+    </ng-container>
+  </div>
 </div>

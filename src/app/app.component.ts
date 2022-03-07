@@ -58,7 +58,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
     // Check param "rdrct"
     const matches = location.href.match(/rdrct=([^&]*)/);
     if (matches) {
-      console.log('rdrct', matches);
       // localStorage.setItem('RDRCT', matches[1]);
     } else {
       // localStorage.removeItem('RDRCT');
@@ -278,7 +277,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   _newLogout() {
     if (PayService.AUTH_LOGOUT_URL != '') {
-      // console.log('SINGLE LOGOUT');
       this.pay.updateSpinner(true);
       this.pay.logout().subscribe(
         () => {
@@ -291,7 +289,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
         });
     } else {
       if (PayService.AUTH_LOGOUT_URLS.length) {
-        // console.log('MULTIPLE LOGOUTS');
         this.pay.updateSpinner(true);
         this.pay.logouts().subscribe(
           (results: Array<any>) => {
