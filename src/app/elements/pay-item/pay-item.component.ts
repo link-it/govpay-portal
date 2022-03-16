@@ -34,6 +34,8 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
   @Input('item') _item: any;
   @Input('mobile-breakpoint') _breakpoint: number;
 
+  @Input('loading') _loading: boolean = false;
+
   @Output('on-icon-click') _iconClick: EventEmitter<any> = new EventEmitter(null);
 
   __timer: number;

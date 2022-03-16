@@ -1,8 +1,8 @@
 {
   "Language": {
     "Gestore": {
-      "Ragione": "Novares SPA, VAT and Tax ID: 12105121003, CCIAA Rome 1350563, Share capital € 000,000.00 fully paid",
-      "Sede": "Via degli Orti di Trastevere 72, 00000 Roma, phone: 06 98960999, PEC: novares@pec.novares.it, web: www.novares.it"
+      "Ragione": "Company Name S.p.A",
+      "Sede": "Via Roma, 1, 00100 Roma, telefono: 06 1234567890, PEC: pec@pec.dominio.it, web: www.dominio.it"
     },
     "Header": {
       "Titolo": "Administration",
@@ -75,7 +75,9 @@
         "Stampa": "Print notice",
         "Totale": "Total",
         "Inserimento": "Notice added to cart",
-        "Rimozione": "Notice removed from cart"
+        "Rimozione": "Notice removed from cart",
+        "PagaDiNuovo": "Pay again",
+        "CarrelloVuoto": "Empty cart"
       }
     },
     "DettaglioServizio": {

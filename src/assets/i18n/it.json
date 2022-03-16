@@ -1,8 +1,8 @@
 {
   "Language": {
     "Gestore": {
-      "Ragione": "Novares SPA, partita IVA e codice fiscale: 12105121003, CCIAA Roma 1350563, capitale sociale € 000.000,00 interamente versato",
-      "Sede": "Via degli Orti di Trastevere 72, 00000 Roma, telefono: 06 98960999, PEC: novares@pec.novares.it, web: www.novares.it"
+      "Ragione": "Ragione Sociale S.p.A",
+      "Sede": "Via Roma, 1, 00100 Roma, telefono: 06 1234567890, PEC: pec@pec.dominio.it, web: www.dominio.it"
     },
     "Header": {
       "Titolo": "Comune",
@@ -75,7 +75,9 @@
         "Stampa": "Stampa bollettino",
         "Totale": "Totale",
         "Inserimento": "Pendenza inserita nel carrello",
-        "Rimozione": "Pendenza rimossa dal carrello"
+        "Rimozione": "Pendenza rimossa dal carrello",
+        "PagaDiNuovo": "Paga di nuovo",
+        "CarrelloVuoto": "Carrello vuoto"
       }
     },
     "DettaglioServizio": {
@@ -135,7 +137,7 @@
         "Dettaglio": {
           "Eseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
           "Fallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
-          "Errore": "Le informazioni sul pagamento sono temporaneamente non dispnobili.",
+          "Errore": "Le informazioni sul pagamento sono temporaneamente non disponibili.",
           "InCorso": {
             "Titolo": "Recupero informazioni in corso...",
             "Ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",

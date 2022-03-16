@@ -167,12 +167,12 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     PayService.ExtraState['idDominio'] = _response['dominio']['idDominio'];
     PayService.ExtraState['numeroAvviso'] = _response['numeroAvviso'];
     PayService.ExtraState['dataScadenza'] = _response['dataScadenza'];
-    if (PayService.Cart.indexOf(_response['numeroAvviso']) === -1) {
-      PayService.Cart.push(_response['numeroAvviso']);
+    if (PayService.Cart.indexOf(_response['idPendenza']) === -1 && PayService.Cart.indexOf(_response['numeroAvviso']) === -1) {
+      PayService.Cart.push(_response['idPendenza'] || _response['numeroAvviso']);
       PayService.ShoppingCart.push(
         new Standard({
           localeNumberFormat: this.pay.getNumberFormatByLanguage(),
-          uid: _response['numeroAvviso'],
+          uid: _response['idPendenza'] || _response['numeroAvviso'],
           titolo: _response['causale'],
           sottotitolo: '',
           metadati: (_terminePagamento || PayService.I18n.json.Common.SenzaScadenza),
@@ -185,9 +185,9 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
       // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
     } else {
       PayService.ShoppingCart.forEach((p: Standard) => {
-        if (p.uid === _response['numeroAvviso']) {
+        if (p.uid === _response['idPendenza'] || p.uid === _response['numeroAvviso']) {
           p.localeNumberFormat = this.pay.getNumberFormatByLanguage();
-          p.uid = _response['numeroAvviso'];
+          p.uid = _response['idPendenza'] || _response['numeroAvviso'];
           p.titolo = _response['causale'];
           p.sottotitolo = '';
           p.metadati = (_terminePagamento || PayService.I18n.json.Common.SenzaScadenza);

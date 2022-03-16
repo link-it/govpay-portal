@@ -19,12 +19,15 @@
       </div>
     </div>
     <div class="d-none d-md-flex align-items-center justify-content-center primary-icon" [ngClass]="_disabledIcon?'disabled':''" role="button"
-         (click)="_onIconClick($event, '_primaryIcon')" *ngIf="!_actionMenu && _primaryIcon && !__touchDevice">
+         (click)="_onIconClick($event, '_primaryIcon')" *ngIf="!_actionMenu && _primaryIcon && !__touchDevice && !_loading">
       <mat-icon>{{ _primaryIcon }}</mat-icon>
     </div>
-    <div class="d-none d-md-flex align-items-center justify-content-center action-menu-icon" *ngIf="_actionMenu" role="button" [matMenuTriggerFor]="menu"
+    <div class="d-none d-md-flex align-items-center justify-content-center action-menu-icon" *ngIf="_actionMenu && !_loading" role="button" [matMenuTriggerFor]="menu"
          (menuOpened)="__moreVert(true)" (menuClosed)="__moreVert(false)">
       <mat-icon>more_vert</mat-icon>
+    </div>
+    <div class="d-none d-md-flex align-items-center justify-content-center action-menu-icon disabled" role="button" *ngIf="_loading">
+      <mat-progress-spinner class="spin-center" color="white" diameter="20" mode="indeterminate"></mat-progress-spinner>
     </div>
   </div>
   <div class="trigger" *ngIf="_slideIn" (click)="_resetTouch($event)"></div>

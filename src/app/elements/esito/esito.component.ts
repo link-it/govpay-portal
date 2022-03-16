@@ -98,10 +98,12 @@ export class EsitoComponent implements OnInit, OnDestroy {
         case PayService.STATI_PAGAMENTO['ESEGUITO']:
           this._status = this.STATUS_ESEGUITO;
           this.pay.updateSpinner(false);
+          this._POLLING_TIMEOUT = -1;
           break;
         case PayService.STATI_PAGAMENTO['NON_ESEGUITO']:
           this._status = this.STATUS_NON_ESEGUITO;
           this.pay.updateSpinner(false);
+          this._POLLING_TIMEOUT = -1;
           break;
         case PayService.STATI_PAGAMENTO['IN_CORSO']:
           if(this._POLLING_TIMEOUT < this.TIME_OUT_POLLING) {
@@ -111,6 +113,9 @@ export class EsitoComponent implements OnInit, OnDestroy {
           }
           this._POLLING_TIMEOUT++;
           this.polling(sessione);
+          if (this._status === this.STATUS_TIMEOUT) {
+            this.pay.updateSpinner(false);
+          }
           break;
       }
       this._payments = this._paymentsToFix(response);
@@ -164,7 +169,7 @@ export class EsitoComponent implements OnInit, OnDestroy {
           const rpp = event.target.rawData.govpay['rpp'];
           if (rpp) {
             let urlRicevuta = '';
-            if (rpp.rt && parseInt(rpp.rt['datiPagamento']['codiceEsitoPagamento'], 10) === 0) {
+            if (rpp.rt) {
               urlRicevuta = '/' + rpp.rpt.dominio.identificativoDominio;
               urlRicevuta += '/' + rpp.rpt.datiVersamento.identificativoUnivocoVersamento;
               urlRicevuta += '/' + rpp.rpt.datiVersamento.codiceContestoPagamento;
@@ -218,8 +223,8 @@ export class EsitoComponent implements OnInit, OnDestroy {
       const _iuv: string = _statoAvviso[p.numeroAvviso].iuv?`${PayService.I18n.json.Common.IUV}: ${_statoAvviso[p.numeroAvviso].iuv}`:'';
       const _eseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato.toUpperCase()] === PayService.STATI_PAGAMENTO.ESEGUITO);
       const _nonEseguito: boolean = (PayService.STATI_PAGAMENTO[_statoAvviso[p.numeroAvviso].stato.toUpperCase()] === PayService.STATI_PAGAMENTO.NON_ESEGUITO);
-      const _primaryIcon: string = _eseguito?'receipt':(_nonEseguito?'shopping_cart':'');
-      const _primaryIconOff: string = _nonEseguito?'remove_shopping_cart':'';
+      const _primaryIcon: string = _eseguito?'receipt':(_nonEseguito?'receipt':'');
+      const _primaryIconOff: string = _nonEseguito ?'receipt':'';
 
       return new Standard({
         localeNumberFormat: this.pay.getNumberFormatByLanguage(),
@@ -247,5 +252,29 @@ export class EsitoComponent implements OnInit, OnDestroy {
     });
 
     return _map;
+  }
+
+  _isLoading() {
+    return (this._POLLING_TIMEOUT > 0);
+  }
+
+  _isPayable() {
+    let show = (this._esito === 'ERROR');
+    return show && (this._status !== this.STATUS_TIMEOUT);
+  }
+
+  _payAgain() {
+    console.log('_payAgain', this._payments);
+    this._payments.forEach((payment: any) => {
+      if (PayService.Cart.indexOf(payment.uid) === -1) {
+        PayService.Cart.push(payment.uid);
+        PayService.ShoppingCart.push(payment);
+      }
+    });
+    if (PayService.Cart.length > 0) {
+      this.pay.router.navigateByUrl('/carrello');
+    } else {
+      this.pay.alert(PayService.I18n.json.Cart.Pagamenti.CarrelloVuoto);
+    }
   }
 }

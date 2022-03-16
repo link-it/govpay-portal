@@ -78,7 +78,9 @@ export class I18n {
         Stampa: '',
         Totale: '',
         Inserimento: '',
-        Rimozione: ''
+        Rimozione: '',
+        PagaDiNuovo: '',
+        CarrelloVuoto: ''
       }
     },
     DettaglioServizio: {
