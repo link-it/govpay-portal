@@ -187,7 +187,29 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
   }
 
   _getTaxonomy(id) {
-    const taxonomy = this._taxonomies[this._taxonomy2];
+    let taxonomy = null;
+    if (this._taxonomies) {
+      taxonomy = this._taxonomies[this._taxonomy2 || 'taxonomy2'];
+    } else {
+      // Default
+      taxonomy = {
+        id: 'tematiche-2',
+        name: 'Aree tematiche 2',
+        singularName: 'Area tematica 2',
+        icon: 'label',
+        image: './assets/images/badge.svg',
+        items: [
+          {
+            id: 'default',
+            name: 'Varie',
+            image: './assets/images/tematiche/tematica.png',
+            rank: 1
+          }
+        ],
+        defaultItem: 'default'
+      };
+    }
+
     const idx = taxonomy.items.findIndex(el => el.id === id);
     return (idx !== -1) ? taxonomy.items[idx] : null;
   }

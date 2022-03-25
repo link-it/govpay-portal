@@ -1,12 +1,12 @@
 (function (global) {
 
   global.Taxonomies = {
-    showTaxonomies: false,
+    showTaxonomies: true,
     ita: {
       taxonomy1: {
         id: "tematiche-1",
         name: "Aree tematiche 1",
-        singularName: "Area tematica 2",
+        singularName: "Area tematica 1",
         icon: "label",
         image: "./assets/images/badge.svg",
         items: [

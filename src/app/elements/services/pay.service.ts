@@ -65,6 +65,7 @@ export class PayService implements OnInit, OnDestroy {
   public static ActionDetail: boolean = false;
   public static MobileBreakPointNotice: number = 768;
   public static EditMode: boolean = false;
+  public static HasServices: boolean = false;
   public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
   public static ImpostazioniOrdinamento: any;
   public static ImpostazioniLayout: any;

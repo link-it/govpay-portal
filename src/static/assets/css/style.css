@@ -18,7 +18,7 @@ body {
 
 footer .logo img,
 .logo img {
-  width: 48px;
+  width: 148px;
   height: auto;
 }
 
@@ -106,7 +106,7 @@ section {
 
 header {
   background-color: rgba(177, 216, 251, .8);
-  background-image: url('../images/tripode.svg');
+  /* background-image: url('../images/header.jpg'); */
 }
 
 .cover {
@@ -264,7 +264,7 @@ footer .social-network a:only-child {
 
 @media (min-width: 768px) {
   .logo img {
-    width: 64px;
+    width: 164px;
     height: auto;
   }
 

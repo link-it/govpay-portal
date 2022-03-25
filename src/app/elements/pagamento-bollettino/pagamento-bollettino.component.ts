@@ -37,6 +37,9 @@ export class PagamentoBollettinoComponent implements OnInit, AfterViewInit, OnDe
       this.pay.sessione().then(() => {
       });
     }
+    if (!PayService.HasServices) {
+      PayService.TabsBehavior.next({ update: true, tabs: false });
+    }
   }
 
   ngOnDestroy() {

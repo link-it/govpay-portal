@@ -39,6 +39,8 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   _taxonomy1Field = 'taxonomy1'; // 'taxonomy1'
   _taxonomy2Field = 'taxonomy2'; // 'taxonomy2'
 
+  _loading = true;
+
   constructor(public pay: PayService, protected translate: TranslateService) {
     this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
       if (exit && this._filtro) {
@@ -61,13 +63,14 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   }
 
   ngOnInit() {
+    console.log('PagamentoServizioComponent ngOnInit');
     if (this.pay.hasAuthentication() && !this.pay.isAuthenticated() && !PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
       this.pay.updateSpinner(true);
       this.pay.sessione().then(() => {
       });
     }
 
-    this._initTaxonomies();
+    // this._initTaxonomies();
     this._resetServizi();
   }
 
@@ -102,6 +105,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
    * @private
    */
   _elencoServizi() {
+    this._loading = true;
     this.pay.updateSpinner(true);
     this.pay.elencoServizi(PayService.CreditoreAttivo.value,true).subscribe(
       (result) => {
@@ -110,10 +114,17 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           const _decodedServices: any[] = PayService.DecodeServices(_response['risultati']);
           this._servizi = this._setupGroups(_decodedServices, this._taxonomy1, this._taxonomy2);
           // PayService.Cache.TipiPendenza = PayService.DecodeServices(_response['risultati']);
+          PayService.HasServices = (_decodedServices.length > 0);
+          if (!PayService.HasServices) {
+            this.pay.router.navigateByUrl('/bollettino');
+          } else {
+            PayService.TabsBehavior.next({ update: true, tabs: true });
+          }
         }
         this.__mapTitle();
-        this.pay.updateSpinner(false);
         updateLayoutNow.next(true);
+        this.pay.updateSpinner(false);
+        this._loading = false;
       },
       (error) => {
         this._servizi = PayService.LINGUE.forEach((lingua: any) => {
@@ -122,6 +133,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         this.__mapTitle();
         updateLayoutNow.next(true);
         this.pay.updateSpinner(false);
+        this._loading = false;
         this.pay.onError(error);
       }
     );
@@ -228,7 +240,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
 
   __mapTitle() {
     if (this._servizi && this._filtro && !this._filtro.nativeElement.value) {
-      const valueGroup = (this._servizi[PayService.ALPHA_3_CODE].N > 1) ? this._currentTaxonomy.name : this._currentTaxonomy.singularName;
+      const valueGroup = (this._servizi[PayService.ALPHA_3_CODE].M > 1) ? this._currentTaxonomy.name : this._currentTaxonomy.singularName;
       this.__filterTitle = PayService.MapResultsTitle(this._servizi[PayService.ALPHA_3_CODE].N, this._servizi[PayService.ALPHA_3_CODE].M, valueGroup.toLowerCase());
     }
     if (this._filtro && this._filtro.nativeElement.value) {
@@ -308,11 +320,31 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           this._taxonomy2 = this._taxonomy2Field;
           break;
       }
-      this._resetServizi();
     }
+    this._resetServizi();
   }
 
   _getTaxonomy(id) {
+    if (!this._currentTaxonomy) {
+      // Default
+      this._currentTaxonomy = {
+        id: 'tematiche-1',
+        name: 'Aree tematiche 1',
+        singularName: 'Area tematica 1',
+        icon: 'label',
+        image: './assets/images/badge.svg',
+        items: [
+          {
+            id: 'default',
+            name: 'Varie',
+            image: './assets/images/tematiche/tematica.png',
+            rank: 1
+          }
+        ],
+        defaultItem: 'default'
+      };
+    }
+
     const idx = this._currentTaxonomy.items.findIndex(el => el.id === id);
     return (idx !== -1) ? this._currentTaxonomy.items[idx] : null;
   }

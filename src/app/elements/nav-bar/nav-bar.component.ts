@@ -47,7 +47,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
     const url = this.router.url;
     switch (url) {
       case '/pagamento-servizio':
-        this._hasTab = !!value.tabs;
+        this._hasTab = !!value.tabs && PayService.HasServices;
         this._routerTab = true;
         this._tabs = [
           { label: PayService.I18n.json.Pagamenti.Servizi.Titolo, path: 'pagamento-servizio', url: '/pagamento-servizio' },
@@ -55,7 +55,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
         ];
         break;
       case '/bollettino':
-        this._hasTab = true;
+        this._hasTab = PayService.HasServices;
         this._routerTab = true;
         this._tabs = [
           { label: PayService.I18n.json.Pagamenti.Servizi.Titolo, path: 'pagamento-servizio', url: '/pagamento-servizio' },
