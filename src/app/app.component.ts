@@ -205,6 +205,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
       this.translate.addLangs(_codeLangs);
       this._language = _currentLanguage.alpha3Code;
+      PayService.ALPHA_2_CODE = _currentLanguage.alpha2Code;
       PayService.ALPHA_3_CODE = _currentLanguage.alpha3Code;
       if (this.translate.currentLang !== _currentLanguage.alpha2Code) {
         this._doTranslate();

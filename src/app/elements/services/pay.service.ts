@@ -44,6 +44,7 @@ export class PayService implements OnInit, OnDestroy {
   public static POLLING_INTERVAL: number = 3000;
   public static PAY_RESPONSE_URL: string = '';
   public static UUID_CHECK: string = '';
+  public static ALPHA_2_CODE: string = '';
   public static ALPHA_3_CODE: string = '';
   public static Gestore: any;
   public static CollapsibleSections: any;
@@ -659,7 +660,7 @@ export class PayService implements OnInit, OnDestroy {
    * @param {boolean} zip
    * @param {boolean} open
    */
-   pdf(props: AvvisoTpl[], recaptcha: string = '', zip: boolean = true, open: boolean = true) {
+  pdf(props: AvvisoTpl[], recaptcha: string = '', zip: boolean = true, open: boolean = true) {
     const methods = props.map((prop, index) => {
       let headers = new HttpHeaders();
       headers = headers.set('Content-Type', 'application/pdf');
@@ -958,7 +959,9 @@ export class PayService implements OnInit, OnDestroy {
    */
   static TranslateDynamicObject(_translate: TranslateService, _pay: PayService) {
     PayService.DateAdapter.setLocale(_translate.currentLang);
-    PayService.ALPHA_3_CODE = PayService.LINGUE.filter((l: Language) => (l.alpha2Code === _translate.currentLang))[0].alpha3Code;
+    const lang = PayService.LINGUE.filter((l: Language) => (l.alpha2Code === _translate.currentLang))[0];
+    PayService.ALPHA_2_CODE = lang.alpha2Code;
+    PayService.ALPHA_3_CODE = lang.alpha3Code;
     _translate.get('Language').subscribe((_language: any) => {
       PayService.I18n.json = Object.assign({}, _language);
       // if (!PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang]) {
@@ -1248,5 +1251,9 @@ export class PayService implements OnInit, OnDestroy {
       }
     }
     return 0;
+  }
+
+  public getFileType(name: string, type: string = 'json') {
+    return this.http.get<any>(`assets/${name}.${type}`, { headers: { 'Cache-Control': 'no-cache' } });
   }
 }

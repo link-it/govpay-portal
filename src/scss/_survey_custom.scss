@@ -1,0 +1,130 @@
+// Fix BootstrapMaterial
+
+form {
+  margin-bottom: 0 !important;
+}
+
+// SurveyJs
+
+.survey-container {
+  .sv-body__page {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .sv-question__content {
+    margin-left: 0;
+  }
+
+  .sv-footer {
+    padding: .87em 0;
+  }
+
+  .sv-body__footer {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .sv-file__choose-btn,
+  .sv-root-modern .sv-footer__complete-btn,
+  .sv-root-modern .sv-footer__next-btn,
+  .sv-root-modern .sv-footer__prev-btn,
+  .sv-root-modern .sv-footer__preview-btn,
+  .sv-root-modern .sv-footer__start-btn {
+    background-color: #2962ff;
+    border-radius: 0;
+  }
+
+  .sv-footer__complete-btn {
+    float: left;
+  }
+
+  .sv-root-modern .sv-question__erbox {
+    color: #ef5350;
+  }
+
+  .sv-root-modern .sv-file__clean-btn {
+    background-color: rgb(255, 24, 0);
+    border-radius: 0;
+  }
+
+  .sv-root-modern .sv-text:focus {
+    border-color: #2962ff;
+  }
+
+  .sv-dropdown {
+    padding: .25em 1.5em .25em 0;
+  }
+
+  .sv-text {
+    padding: .25em 0;
+  }
+
+  .sv-question__erbox {
+    color: #ef5350;
+    font-weight: 400;
+  }
+
+  .sv-question__description {
+    font-size: 12px;
+  }
+
+  [class*=" bmd-label"],
+  [class^=bmd-label] {
+    color: #212121;
+  }
+
+  .card-body {
+    padding: 0;
+  }
+
+  .card-footer {
+    padding: .75rem 0;
+    background-color: transparent;
+    border-top: none;
+  }
+
+  .sv_main.sv_main.sv_bootstrapmaterial_css input[type="button"].btn-primary {
+    background-color: #2962ff;
+    border-radius: 0;
+  }
+
+  .alert {
+    padding: 0;
+    margin-bottom: 0;
+  }
+
+  .alert-danger {
+    color: #ef5350;
+    background-color: transparent;
+    font-size: 75%;
+    border: none;
+  }
+
+  .sv_bootstrap_css {
+    .sv_qstn {
+      padding: .5em .2em 1.5em;
+    }
+  }
+
+  .sv_main.sv_main .sv_qstn_error_bottom {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  label {
+    margin-bottom: 0;
+    padding-left: .2em;
+  }
+
+  // .sv_complete_btn {
+  //   color: #ffffff;
+  //   background-color: #2962ff;
+  //   padding: 0.75rem 0.9375rem;
+
+  //   &:hover {
+  //     color: #ffffff;
+  //     background-color: #212121;
+  //   }
+  // }
+}

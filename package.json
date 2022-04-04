@@ -24,6 +24,8 @@
     "@angular/platform-browser": "^7.2.16",
     "@angular/platform-browser-dynamic": "^7.2.16",
     "@angular/router": "^7.2.16",
+    "@ngx-formly/core": "^5.11.2",
+    "@ngx-formly/material": "^5.11.2",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "@zxing/ngx-scanner": "1.3.0",
@@ -38,6 +40,9 @@
     "moment": "^2.25.3",
     "popper.js": "^1.16.1",
     "rxjs": "~6.3.3",
+    "sass": "^1.43.4",
+    "survey-angular": "^1.9.22",
+    "surveyjs-widgets": "^1.9.21",
     "zone.js": "^0.8.29"
   },
   "devDependencies": {

@@ -30,8 +30,8 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-6" *ngIf="_decodedForm['jsfDef']">
-      <pay-title-deco art-class="title-deco mb-5" [simple]="true" [titolo]="Pay.I18n.json.DettaglioServizio.Form.Titolo"></pay-title-deco>
+    <div class="col-12 col-md-6" *ngIf="_decodedForm['jsfDef'] && (_decodedForm['form']['tipo'] == 'angular2-json-schema-form')">
+      <pay-title-deco art-class="title-deco mb-5" [simple]="true" [titolo]="Pay.I18n.json.DettaglioServizio.Form.Titolo" title="angular2-json-schema-form"></pay-title-deco>
       <json-schema-form #jsf [options]="_formOptions" [framework]="'material-design'" [schema]="_jsonSchema" [data]="_jsonData" [UISchema]="_jsonUISchema"
                         [layout]="_jsonLayout" (isValid)="_isValid($event)"></json-schema-form>
       <div class="mt-5">
@@ -41,6 +41,22 @@
         <button mat-flat-button [color]="'accent'" (click)="_generaPendenza(jsf, false)" [disabled]="!_jsFormValid" *ngIf="!_decodedForm?.detail['requireUserConfirm']">
           {{ Pay.EditMode?Pay.I18n.json.DettaglioServizio.Form.Salva:Pay.I18n.json.DettaglioServizio.Dialog.Submit }}
         </button>
+      </div>
+    </div>
+    <div class="col-12 col-md-6" *ngIf="_decodedForm['jsfDef'] && (_decodedForm['form']['tipo'] == 'surveyjs')">
+      <div class="survey" *ngIf="_surveyJson">
+        <pay-title-deco art-class="title-deco mb-5" [simple]="true" [titolo]="Pay.I18n.json.DettaglioServizio.Form.Titolo" title="surveyjs"></pay-title-deco>
+        <survey [lang]="_surveyLang" [json]="_surveyJson" [edit]="_surveyEdit" (submitSurvey)="_onSubmitSurvey($event)"></survey>
+      </div>
+
+      <div class="formly mt-5" *ngIf="formlyFields">
+        <pay-title-deco art-class="title-deco mb-5" [simple]="true" [titolo]="Pay.I18n.json.DettaglioServizio.Form.Titolo + ' - Formly'"></pay-title-deco>
+        <form #formly="ngForm" [formGroup]="formlyForm" (ngSubmit)="_onSubmitFormly(formlyModel)">
+          <formly-form [form]="formlyForm" [fields]="formlyFields" [options]="formlyOptions" [model]="formlyModel"></formly-form>
+          <button type="submit" mat-flat-button [color]="'accent'" [disabled]="!formly.valid">
+            {{ Pay.I18n.json.DettaglioServizio.Form.Verifica }}
+          </button>
+        </form>
       </div>
     </div>
   </div>

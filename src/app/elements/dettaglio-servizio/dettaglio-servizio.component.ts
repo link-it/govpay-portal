@@ -1,4 +1,7 @@
 import { OnInit, OnDestroy, Component, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { PayService } from '../services/pay.service';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
 import { YesnoDialogComponent } from '../yesno-dialog/yesno-dialog.component';
@@ -9,6 +12,7 @@ import { Standard } from '../classes/standard';
 import { JsonSchemaFormComponent } from 'angular7-json-schema-form';
 import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 import { Notifier } from '../field-group/field-group.component';
+import { StylesManager, Model, SurveyNG } from 'survey-angular';
 
 declare let Taxonomies;
 
@@ -55,7 +59,23 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
 
   _taxonomies = null;
 
-  constructor(protected dialog: MatDialog, public pay: PayService, public translate: TranslateService) {
+  // Formly
+  formlyForm: FormGroup;
+  formlyModel: any = { };
+  formlyOptions: FormlyFormOptions;
+  formlyFields: FormlyFieldConfig[];
+
+  _surveyJson = null;
+  _surveyData = null;
+  _surveyEdit = false;
+  _surveyLang = 'it';
+
+  constructor(
+    protected dialog: MatDialog,
+    public pay: PayService,
+    public translate: TranslateService,
+    private formlyJsonschema: FormlyJsonschema,
+  ) {
     translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this._loadJSONAndFormOptions(true);
       PayService.TranslateDynamicObject(translate, pay);
@@ -86,19 +106,20 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     const creditore: string = PayService.CreditoreAttivo.value;
     let query = '';
     let tipoPendenza: string = '';
+    const data = form.jsf ? form.jsf.data : form;
     if (PayService.ExtraState instanceof Standard) {
       const rd: any = (PayService.ExtraState as Standard).rawData;
-      rd['jsfDef']['data'] = form.jsf.data;
+      rd['jsfDef']['data'] = data;
       tipoPendenza = rd['idTipoPendenza'];
       if (rd['idA2A'] && rd['idPendenza']) {
         query = `?idA2A=${rd['idA2A']}&idPendenza=${rd['idPendenza']}`;
       }
     } else {
       tipoPendenza = PayService.ExtraState['idTipoPendenza'];
-      PayService.ExtraState.jsfDef['data'] = form.jsf.data;
+      PayService.ExtraState.jsfDef['data'] = data;
     }
     this.pay.updateSpinner(true);
-    this.pay.richiestaPendenza(creditore, tipoPendenza, form.jsf.data, query).subscribe(
+    this.pay.richiestaPendenza(creditore, tipoPendenza, data, query).subscribe(
       (response) => {
         this.pay.updateSpinner(false);
         if (verify) {
@@ -110,6 +131,7 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
       (error) => {
         this.pay.updateSpinner(false);
         this.pay.onError(error);
+        this._surveyEdit = true;
       }
     );
   }
@@ -148,6 +170,8 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     this._dialogApp.afterClosed().subscribe((yesNo: any) => {
       if (!yesNo['cancel']) {
         this._addToCart(response);
+      } else {
+        this._surveyEdit = true;
       }
     });
   }
@@ -217,24 +241,43 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
         this._jsonData = this._decodedForm['jsfDef']['data'];
       }
       if(newLanguage) {
-        const _filledData: any = Object.assign({}, this._jsf.jsf.data);
         this._decodedForm['jsfDef'] = JSON.parse(PayService.DecodeB64(this._decodedForm['form']['definizione']));
         this._decodedForm['detail'] = JSON.parse(PayService.DecodeB64(this._decodedForm['form']['impaginazione']));
-        if (_filledData && Object.keys(_filledData).length !== 0) {
-          this._jsonData = JSON.parse(JSON.stringify(_filledData));
+        if (this._decodedForm['form']['tipo'] === 'angular2-json-schema-form') {
+          const _filledData: any = Object.assign({}, this._jsf.jsf.data);
+          if (_filledData && Object.keys(_filledData).length !== 0) {
+            this._jsonData = JSON.parse(JSON.stringify(_filledData));
+          }
         }
       }
       try {
-        if (this._decodedForm['form'] && this._decodedForm['form']['tipo'] === 'angular2-json-schema-form') {
-          if (this._decodedForm['jsfDef']) {
-            const _schema: any = Object.assign({}, this._decodedForm['jsfDef']['schema']);
-            const _uiSchema: any = Object.assign({}, this._decodedForm['jsfDef']['uiSchema']);
-            this._jsonLayout = (this._decodedForm['jsfDef']['layout_'+PayService.ALPHA_3_CODE] || this._decodedForm['jsfDef'].layout);
-            this._jsonUISchema = _uiSchema;
-            this._jsonSchema = _schema;
-            if (Debug) {
-              console.log(JSON.stringify(this._jsonSchema, null, 2));
-            }
+        if (this._decodedForm['form']) {
+          switch (this._decodedForm['form']['tipo']) {
+            case 'angular2-json-schema-form':
+              if (this._decodedForm['jsfDef']) {
+                const _schema: any = Object.assign({}, this._decodedForm['jsfDef']['schema']);
+                const _uiSchema: any = Object.assign({}, this._decodedForm['jsfDef']['uiSchema']);
+                this._jsonLayout = (this._decodedForm['jsfDef']['layout_' + PayService.ALPHA_3_CODE] || this._decodedForm['jsfDef'].layout);
+                this._jsonUISchema = _uiSchema;
+                this._jsonSchema = _schema;
+                if (Debug) {
+                  console.log(JSON.stringify(this._jsonSchema, null, 2));
+                }
+              }
+              break;
+            case 'surveyjs':
+              this._surveyLang = PayService.ALPHA_2_CODE;
+              if (this._decodedForm['jsfDef']) {
+                this._loadSurvey();
+                const _schema: any = Object.assign({}, this._decodedForm['jsfDef']['schema']);
+                // this._fromFormlyToJsonschema(_schema);
+                // this._getFormlyFile('json_/formly_test', 'json');
+                // this._surveyJson = _schema;                
+              }
+              break;
+
+            default:
+              break;
           }
         }
       } catch(e) {
@@ -327,5 +370,60 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     const id = (typeof elem === 'object') ? elem.group || 'default' : elem || 'default';
     const taxonomyData = this._getTaxonomy(id, taxonomy);
     return (taxonomyData) ? taxonomyData.name : id;
+  }
+
+  // Formly
+
+  _fromFormlyToJsonschema(schema: any) {
+    this.formlyForm = new FormGroup({});
+    this.formlyOptions = {};
+    const _formlySchema = this.formlyJsonschema.toFieldConfig(schema);
+    // console.log('_fromFormlyToJsonschema', schema, _formlySchema);
+    this.formlyFields = [_formlySchema];
+    this.formlyModel = {};
+  }
+
+  _getFormlyFile(name: string, type: string) {
+    this.pay.getFileType(name, type).subscribe(
+      (reponse) => {
+        const _formlySchema = reponse;
+        // console.log('_getFormlyFile', _formlySchema);
+        this.formlyForm = new FormGroup({});
+        this.formlyOptions = {};
+        this.formlyFields = _formlySchema;
+        this.formlyModel = {};
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  _onSubmitFormly(model) {
+    if (this.formlyForm.valid) {
+      console.log(model);
+    }
+  }
+
+  // SurveyJS
+
+  _loadSurvey() {
+    this.pay.getFileType('json_/survey').subscribe(
+      (response) => {
+        this._surveyJson = response;
+        console.log('_loadSurvey', this._surveyJson);
+      },
+      (error) => {
+        console.log('_loadSurvey error', error);
+      }
+    );
+  }
+
+  _onSubmitSurvey(data) {
+    this._surveyEdit = false;
+    this._surveyData = data;
+    // const results = JSON.stringify(data);
+    console.log('_onSubmitSurvey', data);
+    this._generaPendenza(data, true);
   }
 }

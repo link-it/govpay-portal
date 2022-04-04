@@ -63,7 +63,6 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   }
 
   ngOnInit() {
-    console.log('PagamentoServizioComponent ngOnInit');
     if (this.pay.hasAuthentication() && !this.pay.isAuthenticated() && !PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
       this.pay.updateSpinner(true);
       this.pay.sessione().then(() => {
