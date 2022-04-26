@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit, OnChanges, SimpleChanges, AfterViewInit, OnDestroy } from '@angular/core';
 
 import { PayService } from '../services/pay.service';
 
@@ -7,55 +7,69 @@ import * as widgets from 'surveyjs-widgets';
 
 import { init as initCustomWidget } from './customwidget';
 
-declare var $: any;
+import * as $ from 'jquery';
 
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'survey',
-  template: `<div class="survey-container contentcontainer codecontainer">
+  template: `<div id="survey-component" class="survey-container contentcontainer codecontainer">
     <div id="surveyElement"></div>
   </div>`,
 })
-export class SurveyComponent implements OnInit, OnChanges {
-  @Output() submitSurvey = new EventEmitter<any>();
+export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() lang: string = 'it';
   @Input() json: object;
   @Input() data: any = null;
   @Input() edit: boolean = false;
+  @Input() theme: string = 'survey'; // survey - defaultV2 - modern - bootstrapmaterial
 
+  @Output() submitSurvey = new EventEmitter<any>();
+  
   result: any;
 
   surveyModel;
 
   Pay = PayService;
 
+  _isBootstrapMaterial = false;
+
   constructor() {
-    $('body').bootstrapMaterialDesign();
-
-    // widgets.icheck(Survey);
-    // widgets.select2(Survey);
-    // widgets.inputmask(Survey);
-    // widgets.jquerybarrating(Survey);
-    // widgets.jqueryuidatepicker(Survey);
-    // widgets.nouislider(Survey);
-    // widgets.select2tagbox(Survey);
-    // // widgets.signaturepad(Survey);
-    // widgets.sortablejs(Survey);
-    // // widgets.ckeditor(Survey);
-    // widgets.autocomplete(Survey);
-    // widgets.bootstrapslider(Survey);
-    // widgets.prettycheckbox(Survey);
-    // // widgets.emotionsratings(Survey);
-    // initCustomWidget(Survey);
-
-    // Survey.Serializer.addProperty('questionbase', 'popupdescription:text');
-    // Survey.Serializer.addProperty('page', 'popupdescription:text');
-
-    Survey.StylesManager.applyTheme();
-    Survey.defaultBootstrapCss.navigationButton = 'btn btn-primary no-border-radius';
   }
 
   ngOnInit() {
+    this.initSurvey();
+  }
+
+  initSurvey() {
+    if (this._isBootstrapMaterial) {
+      const dom: any = window || {};
+      dom.jQuery = $;
+      $.noConflict();
+      require('bootstrap-material-design');
+    }
+
+    widgets.icheck(Survey);
+    widgets.select2(Survey);
+    widgets.inputmask(Survey);
+    widgets.jquerybarrating(Survey);
+    widgets.jqueryuidatepicker(Survey);
+    widgets.nouislider(Survey);
+    widgets.select2tagbox(Survey);
+    // widgets.signaturepad(Survey);
+    widgets.sortablejs(Survey);
+    // widgets.ckeditor(Survey);
+    widgets.autocomplete(Survey);
+    widgets.bootstrapslider(Survey);
+    widgets.prettycheckbox(Survey);
+    // widgets.emotionsratings(Survey);
+    initCustomWidget(Survey);
+
+    Survey.Serializer.addProperty('questionbase', 'popupdescription:text');
+    Survey.Serializer.addProperty('page', 'popupdescription:text');
+
+    Survey.StylesManager.applyTheme(this.theme);
+    Survey.defaultBootstrapCss.navigationButton = 'btn btn-primary no-border-radius';
+
     this.surveyModel = new Survey.Model(this.json);
 
     // this.surveyModel.setDesignMode(false);
@@ -68,7 +82,7 @@ export class SurveyComponent implements OnInit, OnChanges {
     // this.surveyModel.previewText = this.Pay.I18n.json.DettaglioServizio.Form.previewText;
     // this.surveyModel.editText = this.Pay.I18n.json.DettaglioServizio.Form.editText;
     this.surveyModel.startSurveyText = 'Inizia';
-    this.surveyModel.completedHtml = '<div class="px-5 py-5 text-center"><h5>Stiamo verificando i tuoi dati …</h5></div>';
+    this.surveyModel.completedHtml = '<div class="px-5 py-5 text-center"><h4>Stiamo verificando i tuoi dati …</h4></div>';
     this.surveyModel.showCompletedPage = true;
     this.surveyModel.questionDescriptionLocation = 'underInput';
     this.surveyModel.questionErrorLocation = 'bottom';
@@ -80,42 +94,126 @@ export class SurveyComponent implements OnInit, OnChanges {
     this.surveyModel.questionStartIndex = '1';
     this.surveyModel.widthMode = 'responsive';
 
-    // this.surveyModel.onAfterRenderQuestion.add((survey, options) => {
-    //   const el = options.htmlElement;
-    //   const question = options.question;
-    //   // if (question.getType() == 'text') {
-    //     const label = document.createElement('label');
-    //     label.classList.add('bmd-label-floating');
-    //     label.innerHTML = question.locTitle.textOrHtml;
-    //     el.parentNode.insertBefore(label, el);
-    //   // }
-    // });
+    if (this._isBootstrapMaterial) {
+      this.surveyModel.onAfterRenderQuestionInput.add((sender, options) => {
+        const el: any = options.htmlElement;
+        const question: any = options.question;
+        if (question.getType() === 'text') {
+          question.titleLocation = 'hidden';
+          const label: any = document.createElement('label');
+          label.classList.add('bmd-label-floating');
+          label.innerHTML = question.locTitle.textOrHtml;
+          el.parentNode.insertBefore(label, el);
+        }
+      });
+    }
 
-    this.surveyModel.onComplete.add((result, options) => {
-      this.submitSurvey.emit(result.data);
-      this.result = result.data;
+    this.surveyModel.onComplete.add((sender, options) => {
+      this.submitSurvey.emit(sender.data);
+      this.result = sender.data;
+      sender.clear(false);
+      this._setBmdFilled();
+      // this._initBoostrapMaterial();
+      // sender.mode = 'display';
     });
 
     if (this.data) { this.surveyModel.data = this.data; }
 
-    Survey.SurveyNG.render('surveyElement', { model: this.surveyModel });
+  const myCss = {
+    file: {
+      root: 'sd-file',
+      other: 'sd-input sd-comment',
+      placeholderInput: 'sd-visuallyhidden',
+      preview: 'sd-file__preview',
+      fileSign: '',
+      fileList: 'sd-file__list',
+      fileSignBottom: 'sd-file__sign',
+      fileDecorator: 'sd-file__decorator',
+      onError: 'sd-file__decorator--error',
+      fileDecoratorDrag: 'sd-file__decorator--drag',
+      fileInput: 'sd-hidden',
+      noFileChosen: 'sd-description sd-file__no-file-chosen',
+      chooseFile: 'sd-file__choose-btn',
+      chooseFileAsText: 'sd-action sd-file__choose-btn--text',
+      chooseFileAsTextDisabled: 'sd-action--disabled',
+      chooseFileAsIcon: 'sd-context-btn sd-file__choose-btn--icon',
+      chooseFileIconId: 'icon-choosefile',
+      disabled: 'sd-file__choose-btn--disabled',
+      removeButton: '',
+      removeButtonBottom: 'sd-hidden', // 'sd-context-btn sd-context-btn--negative sd-file__btn sd-file__clean-btn',
+      removeButtonIconId: 'icon-clear',
+      removeFile: 'sd-hidden',
+      removeFileSvg: '',
+      removeFileSvgIconId: 'icon-delete',
+      wrapper: 'sd-file__wrapper',
+      defaultImage: 'sd-file__default-image',
+      defaultImageIconId: 'icon-defaultfile',
+      leftIconId: 'icon-arrowleft',
+      rightIconId: 'icon-arrowright',
+      removeFileButton: 'sd-context-btn sd-context-btn--negative sd-file__remove-file-button',
+      dragAreaPlaceholder: 'sd-hidden', // 'sd-file__drag-area-placeholder',
+      imageWrapper: 'sd-file__image-wrapper',
+      single: 'sd-file--single',
+      singleImage: 'sd-file--single-image',
+      mobile: 'sd-file--mobile',
+    }
+  };
+
+    Survey.SurveyNG.render('surveyElement', {
+      model: this.surveyModel,
+      css: myCss
+    });
+  }
+
+  ngAfterViewInit() {
+    this._initBoostrapMaterial();
+  }
+
+  _initBoostrapMaterial() {
+    setTimeout(() => {
+      if (this._isBootstrapMaterial) {
+        if (typeof $('#surveyElement').bootstrapMaterialDesign === 'function') {
+          $('#surveyElement').bootstrapMaterialDesign();
+        } else {
+          console.log('bootstrapMaterialDesign non esiste');
+        }
+      }
+    });
+  }
+
+  _setBmdFilled() {
+    setTimeout(() => {
+      $('.bmd-form-group').addClass('is-filled');
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.lang) {
       this.lang = changes.lang.currentValue;
-      console.log('lang', this.lang);
       if (this.surveyModel && this.lang) {
         this.surveyModel.locale = this.lang;
         this.surveyModel.clear(true, true);
         this.surveyModel.render();
+        this._initBoostrapMaterial();
       }
     }
     if (changes.edit) {
       this.edit = changes.edit.currentValue;
       if (this.surveyModel && this.edit) {
         this.surveyModel.clear(false, true);
+        this.surveyModel.render();
+        this._initBoostrapMaterial();
+        this._setBmdFilled();
       }
     }
+    if (changes.theme) {
+      this.theme = changes.theme.currentValue;
+      this._isBootstrapMaterial = (this.theme === 'bootstrapmaterial');
+    }
+  }
+
+  ngOnDestroy(): void {
+    // remove element
+    // document.getElementById('survey-content-angular').remove();
   }
 }

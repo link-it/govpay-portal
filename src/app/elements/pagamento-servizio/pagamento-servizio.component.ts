@@ -152,7 +152,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       const _ranking: any[] = [];
       const _flat: any[] = [];
       decodedServices.forEach((service: any) => {
-        if (!service.detail.ita || !service.jsfDef.layout_ita) {
+        if ((!service.detail.ita || !service.jsfDef.layout_ita) && (service.form.tipo === 'angular2-json-schema-form')) {
           mismatch = true;
         } else {
           const srv: any = service.detail[lingua.alpha3Code] || service.detail['ita'];

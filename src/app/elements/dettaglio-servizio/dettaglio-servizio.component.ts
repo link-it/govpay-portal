@@ -12,7 +12,6 @@ import { Standard } from '../classes/standard';
 import { JsonSchemaFormComponent } from 'angular7-json-schema-form';
 import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 import { Notifier } from '../field-group/field-group.component';
-import { StylesManager, Model, SurveyNG } from 'survey-angular';
 
 declare let Taxonomies;
 
@@ -65,10 +64,12 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
   formlyOptions: FormlyFormOptions;
   formlyFields: FormlyFieldConfig[];
 
+  // SurveyJS
   _surveyJson = null;
   _surveyData = null;
   _surveyEdit = false;
   _surveyLang = 'it';
+  _surveyTheme = 'bootstrapmaterial'; // survey - defaultV2 - modern - bootstrapmaterial
 
   constructor(
     protected dialog: MatDialog,
@@ -268,11 +269,20 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
             case 'surveyjs':
               this._surveyLang = PayService.ALPHA_2_CODE;
               if (this._decodedForm['jsfDef']) {
-                this._loadSurvey();
-                const _schema: any = Object.assign({}, this._decodedForm['jsfDef']['schema']);
+                const _schema: any = Object.assign({}, this._decodedForm['jsfDef']);
+                this._surveyJson = _schema;                
+                // this.__loadSurvey();
+              }
+              break;
+            case 'formly':
+              if (this._decodedForm['jsfDef']) {
+                const _schema: any = (this._decodedForm['jsfDef']['layout_' + PayService.ALPHA_3_CODE] || this._decodedForm['jsfDef'].layout);
+                this.formlyForm = new FormGroup({});
+                this.formlyOptions = {};
+                this.formlyFields = _schema;
+                this.formlyModel = this._jsonData || {};
                 // this._fromFormlyToJsonschema(_schema);
                 // this._getFormlyFile('json_/formly_test', 'json');
-                // this._surveyJson = _schema;                
               }
               break;
 
@@ -378,7 +388,6 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     this.formlyForm = new FormGroup({});
     this.formlyOptions = {};
     const _formlySchema = this.formlyJsonschema.toFieldConfig(schema);
-    // console.log('_fromFormlyToJsonschema', schema, _formlySchema);
     this.formlyFields = [_formlySchema];
     this.formlyModel = {};
   }
@@ -387,7 +396,6 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     this.pay.getFileType(name, type).subscribe(
       (reponse) => {
         const _formlySchema = reponse;
-        // console.log('_getFormlyFile', _formlySchema);
         this.formlyForm = new FormGroup({});
         this.formlyOptions = {};
         this.formlyFields = _formlySchema;
@@ -401,20 +409,19 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
 
   _onSubmitFormly(model) {
     if (this.formlyForm.valid) {
-      console.log(model);
+      this._generaPendenza(model, true);
     }
   }
 
   // SurveyJS
 
-  _loadSurvey() {
+  __loadSurvey() {
     this.pay.getFileType('json_/survey').subscribe(
       (response) => {
         this._surveyJson = response;
-        console.log('_loadSurvey', this._surveyJson);
       },
       (error) => {
-        console.log('_loadSurvey error', error);
+        console.log('__loadSurvey error', error);
       }
     );
   }
@@ -422,8 +429,7 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
   _onSubmitSurvey(data) {
     this._surveyEdit = false;
     this._surveyData = data;
-    // const results = JSON.stringify(data);
-    console.log('_onSubmitSurvey', data);
+    // console.log('_onSubmitSurvey', data);
     this._generaPendenza(data, true);
   }
 }

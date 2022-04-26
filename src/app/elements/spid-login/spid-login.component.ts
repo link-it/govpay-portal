@@ -49,6 +49,8 @@ export class SpidLoginComponent implements OnInit {
     entityID: new FormControl()
   });
 
+  _menuMaterial = true;
+
   constructor(protected http: HttpClient) { }
 
   ngOnInit() {

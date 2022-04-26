@@ -20,6 +20,8 @@ export class LanguageBarComponent implements OnInit, AfterViewInit {
 
   @Output('on-change-language') _changeLang: EventEmitter<any> = new EventEmitter();
 
+  _menuMaterial = true;
+
   constructor() { }
 
   ngOnInit() {

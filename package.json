@@ -31,6 +31,7 @@
     "@zxing/ngx-scanner": "1.3.0",
     "angular7-json-schema-form": "1.0.4",
     "bootstrap": "^4.5.0",
+    "bootstrap-material-design": "^4.1.3",
     "core-js": "^2.6.11",
     "file-saver": "^2.0.2",
     "hammerjs": "^2.0.8",
@@ -41,8 +42,8 @@
     "popper.js": "^1.16.1",
     "rxjs": "~6.3.3",
     "sass": "^1.43.4",
-    "survey-angular": "^1.9.22",
-    "surveyjs-widgets": "^1.9.21",
+    "survey-angular": "^1.9.23",
+    "surveyjs-widgets": "^1.9.23",
     "zone.js": "^0.8.29"
   },
   "devDependencies": {
@@ -52,7 +53,7 @@
     "@angular/language-service": "^7.2.16",
     "@types/jasmine": "^2.8.16",
     "@types/jasminewd2": "^2.0.8",
-    "@types/node": "^8.10.60",
+    "@types/node": "^8.10.66",
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",

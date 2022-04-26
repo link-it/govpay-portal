@@ -38,7 +38,7 @@ export class PayItemComponent implements AfterViewInit, AfterContentChecked {
 
   @Output('on-icon-click') _iconClick: EventEmitter<any> = new EventEmitter(null);
 
-  __timer: number;
+  __timer: any;
   _touchDevice: boolean = false;
   __touchDevice: boolean = false;
   _menuOpened: boolean = false;
