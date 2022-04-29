@@ -37,6 +37,7 @@ import { PagamentoBollettinoComponent } from './elements/pagamento-bollettino/pa
 import { TitleDecoComponent } from './elements/title-deco/title-deco.component';
 import { IconButtonComponent } from './elements/icon-button/icon-button.component';
 import { QuadroComponent } from './elements/quadro/quadro.component';
+import { QuadroFlatComponent } from './elements/quadro-flat/quadro-flat.component';
 import { DettaglioServizioComponent } from './elements/dettaglio-servizio/dettaglio-servizio.component';
 import { ServiziAssessoratoComponent } from './elements/servizi-assessorato/servizi-assessorato.component';
 import { GroupComponent } from './elements/components/group.component';
@@ -131,6 +132,7 @@ export function createTranslateLoader(http: HttpClient) {
     TitleDecoComponent,
     IconButtonComponent,
     QuadroComponent,
+    QuadroFlatComponent,
     PayCardComponent,
     CartComponent,
     PayItemComponent,

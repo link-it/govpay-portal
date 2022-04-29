@@ -112,7 +112,6 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           const _response = result.body;
           const _decodedServices: any[] = PayService.DecodeServices(_response['risultati']);
           this._servizi = this._setupGroups(_decodedServices, this._taxonomy1, this._taxonomy2);
-          // PayService.Cache.TipiPendenza = PayService.DecodeServices(_response['risultati']);
           PayService.HasServices = (_decodedServices.length > 0);
           if (!PayService.HasServices) {
             this.pay.router.navigateByUrl('/bollettino');
@@ -120,7 +119,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
             PayService.TabsBehavior.next({ update: true, tabs: true });
           }
         }
-        this.__mapTitle();
+        setTimeout(() => {
+          this.__mapTitle();
+        });
         updateLayoutNow.next(true);
         this.pay.updateSpinner(false);
         this._loading = false;
@@ -129,7 +130,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         this._servizi = PayService.LINGUE.forEach((lingua: any) => {
           return { N: 0, M: 0, dictionary: {}, flat: [], groups: [] };
         });
-        this.__mapTitle();
+        setTimeout(() => {
+          this.__mapTitle();
+        });
         updateLayoutNow.next(true);
         this.pay.updateSpinner(false);
         this._loading = false;
@@ -139,6 +142,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   }
 
   _setupGroups(decodedServices: any[], taxonomy1: string, taxonomy2: string): any[] {
+    const _isFlat = PayService.ImpostazioniLayout['FLAT_VIEW'];
     const servicesByLanguage: any = {};
     let mismatch: boolean = false;
     PayService.LINGUE.forEach((lingua: any) => {
@@ -157,11 +161,11 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         } else {
           const srv: any = service.detail[lingua.alpha3Code] || service.detail['ita'];
           const _mappedService: any = {
-            group: service.detail[taxonomy1] || 'default',
+            group: _isFlat ? srv.group : service.detail[taxonomy1] || 'default',
             subgroup: service.detail[taxonomy2] || 'default',
             group_rank: srv.group_rank || Number.MAX_VALUE,
             category: srv.category || '',
-            metadata: srv.metadata || '',
+            metadata: _isFlat ? srv.short_description || srv.metadata : srv.metadata || '',
             taxonomy1: service.detail.taxonomy1 || 'default',
             taxonomy2: service.detail.taxonomy2 || 'default',
             searchTerms: srv.search_terms || '',
@@ -174,7 +178,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           const taxonomy = this._getTaxonomy(group);
           const taxonomyRank = taxonomy ? taxonomy.rank : Number.MAX_VALUE;
           const taxonomyName = taxonomy ? taxonomy.name : '';
-          if (group) {
+          if (!_isFlat) {
             if (!_groups.hasOwnProperty(group)) {
               _groups[group] = [];
               _ranking.push({ group: group, group_rank: taxonomyRank, code: _mappedService.code, name: taxonomyName});
@@ -182,9 +186,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
               _maps[group] = this.__mapGroupSchemaLanguages(service.detail);
             }
             _groups[group].push(_mappedService);
-          } /*else {
+          } else {
             _flat.push(_mappedService);
-          }*/
+          }
           sCount++;
         }
       });
@@ -193,7 +197,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       gKeys.forEach((kg) => {
         PayService.SortBy(_groups[kg], PayService.ImpostazioniOrdinamento['ELEMENTI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['ELEMENTI']['ASCENDENTE']);
       });
-      // PayService.SortBy(_flat, PayService.ImpostazioniOrdinamento['ELEMENTI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['ELEMENTI']['ASCENDENTE']);
+      PayService.SortBy(_flat, PayService.ImpostazioniOrdinamento['ELEMENTI']['PROPRIETA'], PayService.ImpostazioniOrdinamento['ELEMENTI']['ASCENDENTE']);
       servicesByLanguage[lingua.alpha3Code] = {
         N: sCount,
         M: gKeys.length,
@@ -238,9 +242,14 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   }
 
   __mapTitle() {
+    const _isFlat = PayService.ImpostazioniLayout['FLAT_VIEW'];
     if (this._servizi && this._filtro && !this._filtro.nativeElement.value) {
-      const valueGroup = (this._servizi[PayService.ALPHA_3_CODE].M > 1) ? this._currentTaxonomy.name : this._currentTaxonomy.singularName;
-      this.__filterTitle = PayService.MapResultsTitle(this._servizi[PayService.ALPHA_3_CODE].N, this._servizi[PayService.ALPHA_3_CODE].M, valueGroup.toLowerCase());
+      if (_isFlat) {
+        this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.Flat, this._servizi[PayService.ALPHA_3_CODE].N);
+      } else {
+        const valueGroup = (this._servizi[PayService.ALPHA_3_CODE].M > 1) ? this._currentTaxonomy.name : this._currentTaxonomy.singularName;
+        this.__filterTitle = PayService.MapResultsTitle(this._servizi[PayService.ALPHA_3_CODE].N, this._servizi[PayService.ALPHA_3_CODE].M, valueGroup.toLowerCase());
+      }
     }
     if (this._filtro && this._filtro.nativeElement.value) {
       this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.Filtro, this.psi.length);

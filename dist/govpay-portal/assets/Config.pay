@@ -144,6 +144,7 @@
       }
     },
     LAYOUT: {
+      FLAT_VIEW: true,
       GROUP_METADATA: [ 'metadata' ],
       DETAILS_METADATA: {
         show_image: true,

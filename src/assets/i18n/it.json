@@ -240,7 +240,8 @@
           "PS": "Sono presenti {{value}} servizi in un {{valueG}}",
           "PP": "Sono presenti {{valueN}} servizi in {{valueM}} {{valueG}}",
           "Filtro": "Trovato {{value}} servizio|Trovati {{value}} servizi",
-          "ServiziAssessorato": "È presente {{value}} servizio|Sono presenti {{value}} servizi"
+          "ServiziAssessorato": "È presente {{value}} servizio|Sono presenti {{value}} servizi",
+          "Flat": "È presente {{value}} servizio|Sono presenti {{value}} servizi"
         },
         "NessunRisultato": "Nessun risultato.",
         "Placeholder": "Cerca un servizio..."

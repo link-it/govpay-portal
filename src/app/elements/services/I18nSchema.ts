@@ -244,7 +244,8 @@ export class I18n {
           PS: '',
           PP: '',
           Filtro: '',
-          ServiziAssessorato: ''
+          ServiziAssessorato: '',
+          Flat: ''
         },
         NessunRisultato: '',
         Placeholder: ''

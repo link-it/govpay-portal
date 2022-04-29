@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  position: relative;
+  background-color: #ccc;
+
+  &:hover {
+    background-color: #eee;
+    color: #000;
+  }
+
+  .titolo {
+    display: block;
+  }
+
+  .quadro {
+    background-color: #ffffff;
+    margin-bottom: 3rem;
+
+    .titolo {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: rgba(33, 33, 33, 1);
+      line-height: 1.5;
+      padding: .0 .75rem .75rem;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .meta {
+      padding: .75rem;
+      margin: 0;
+    }
+
+    .logo {
+      background-color: lightslategray;
+      width: 100%;
+    }
+
+    .cover {
+      &.logo:before {
+        content: "";
+        display: block;
+        padding-top: 100%;
+      }
+    }
+  }
+
+  .quadro-servizio {
+    font-family: 'Titillium Web',sans-serif;
+    padding: 1rem;
+    margin-bottom: 3rem;
+    background-color: #fff;
+
+    .meta {
+      margin: 0;
+    }
+
+    .titolo {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: rgba(33, 33, 33, 1);
+      line-height: 1.5;
+      padding: .0 .75rem .75rem 0;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

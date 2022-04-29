@@ -241,7 +241,8 @@
           "PS": "{{value}} services found in one group",
           "PP": "{{valueN}} services found in {{valueM}} groups",
           "Filtro": "{{value}} service found|{{value}} services found",
-          "ServiziAssessorato": "{{value}} service found|{{value}} services found"
+          "ServiziAssessorato": "{{value}} service found|{{value}} services found",
+          "Flat": "{{value}} service found|{{value}} services found"
         },
         "NessunRisultato": "No results.",
         "Placeholder": "Search a service..."
