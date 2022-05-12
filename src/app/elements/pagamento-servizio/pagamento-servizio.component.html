@@ -26,10 +26,7 @@
   </div>
   <div class="row" [class.mt-5]="Pay.ImpostazioniLayout['FLAT_VIEW']" *ngIf="_servizi">
     <ng-container *ngIf="Pay.ImpostazioniLayout['FLAT_VIEW']">
-      <!-- <div style="height: 300px;overflow: auto;padding: 10px;border: 1px solid #333;margin-bottom: 30px;">
-        <pre>{{ _servizi[Pay.ALPHA_3_CODE].flat | json }}</pre>
-      </div> -->
-      <div class="col-6 col-md-3 quadro-servizio" *ngFor="let item of _servizi[Pay.ALPHA_3_CODE].flat|serviceFilter:filtro.value:Pay.Filtri; let i = index">
+      <div class="col-6 quadro-servizio" [ngClass]="{ 'col-md-4': _smallView, 'col-md-3': !_smallView }" *ngFor="let item of _servizi[Pay.ALPHA_3_CODE].flat|serviceFilter:filtro.value:Pay.Filtri; let i = index">
         <pay-quadro-flat #psi
           [gruppo]="item.group"
           [titolo]="item.title"
@@ -41,7 +38,7 @@
     </ng-container>
     <ng-container *ngIf="!Pay.ImpostazioniLayout['FLAT_VIEW']">
       <ng-template [ngIf]="!filtro?.value.trim()">
-        <div class="col-6 col-md-3 quadro-servizio" *ngFor="let qs of _servizi[Pay.ALPHA_3_CODE].groups; let i = index">
+        <div class="col-6 quadro-servizio" [ngClass]="{ 'col-md-4': _smallView, 'col-md-3': !_smallView }" *ngFor="let qs of _servizi[Pay.ALPHA_3_CODE].groups; let i = index">
           <pay-quadro [quadro-class]="'quadro'" [logo-class]="'cover logo'" [titolo]="_getTaxonomyTitle(qs)" [source]="qs"
                       [image-src]="qs.backgroundSrc" (click)="_onQuadroClick(qs, i)"></pay-quadro>
         </div>

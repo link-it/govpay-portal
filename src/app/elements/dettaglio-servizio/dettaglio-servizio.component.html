@@ -46,7 +46,14 @@
     <div class="col-12 col-md-6" *ngIf="_decodedForm['jsfDef'] && (_decodedForm['form']['tipo'] == 'surveyjs')">
       <div class="survey" *ngIf="_surveyJson">
         <pay-title-deco art-class="title-deco mb-5" [simple]="true" [titolo]="Pay.I18n.json.DettaglioServizio.Form.Titolo" title="surveyjs"></pay-title-deco>
-        <survey [lang]="_surveyLang" [json]="_surveyJson" [data]="_jsonData" [edit]="_surveyEdit" [theme]="_surveyTheme" (submitSurvey)="_onSubmitSurvey($event)"></survey>
+        <survey [lang]="_surveyLang"
+                [json]="_surveyJson"
+                [settings]="_settings"
+                [data]="_jsonData"
+                [edit]="_surveyEdit"
+                [theme]="_surveyTheme"
+                (submitSurvey)="_onSubmitSurvey($event)">
+        </survey>
       </div>
     </div>
     <div class="col-12 col-md-6" *ngIf="_decodedForm['jsfDef'] && (_decodedForm['form']['tipo'] == 'formly')">

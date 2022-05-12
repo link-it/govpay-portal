@@ -2,12 +2,16 @@ import { Component, Input, EventEmitter, Output, OnInit, OnChanges, SimpleChange
 
 import { PayService } from '../services/pay.service';
 
+import { CustomSurveyValidators } from './custom-validators';
+
 import * as Survey from 'survey-angular';
 import * as widgets from 'surveyjs-widgets';
 
 import { init as initCustomWidget } from './customwidget';
 
 import * as $ from 'jquery';
+
+declare let SurveyValidators;
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -22,6 +26,7 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   @Input() data: any = null;
   @Input() edit: boolean = false;
   @Input() theme: string = 'survey'; // survey - defaultV2 - modern - bootstrapmaterial
+  @Input() settings: any = null;
 
   @Output() submitSurvey = new EventEmitter<any>();
   
@@ -33,7 +38,10 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
 
   _isBootstrapMaterial = false;
 
-  constructor() {
+  constructor(
+    public pay: PayService,
+    private customSurveyValidators: CustomSurveyValidators,
+  ) {
   }
 
   ngOnInit() {
@@ -65,7 +73,17 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     initCustomWidget(Survey);
 
     Survey.Serializer.addProperty('questionbase', 'popupdescription:text');
+    Survey.Serializer.addProperty('questionbase', 'uppercase:text');
     Survey.Serializer.addProperty('page', 'popupdescription:text');
+
+    // Survey.FunctionFactory.Instance.register('CFValidator', this.customSurveyValidators.codiceFiscaleValidator.bind(this.customSurveyValidators));
+    if (SurveyValidators.length) {
+      SurveyValidators.forEach(plugin => {
+        Survey.FunctionFactory.Instance.register(plugin.name, plugin.validator);
+      });
+    } else {
+      // console.log('SurveyValidators non configurato');
+    }
 
     Survey.StylesManager.applyTheme(this.theme);
     Survey.defaultBootstrapCss.navigationButton = 'btn btn-primary no-border-radius';
@@ -88,7 +106,7 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     this.surveyModel.questionErrorLocation = 'bottom';
     this.surveyModel.clearInvisibleValues = 'none';
     // this.surveyModel.showPreviewBeforeComplete = 'showAnsweredQuestions';
-    this.surveyModel.checkErrorsMode = 'onValueChanging';
+    this.surveyModel.checkErrorsMode = 'onValueChanged';
     this.surveyModel.textUpdateMode = 'onTyping';
     this.surveyModel.autoGrowComment = true;
     this.surveyModel.questionStartIndex = '1';
@@ -99,10 +117,15 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
         const el: any = options.htmlElement;
         const question: any = options.question;
         if (question.getType() === 'text') {
+          const isRequired = options.question.getPropertyByName('isRequired');
+          const isRequiredValue = isRequired ? options.question.getPropertyValue('isRequired') : false;
           question.titleLocation = 'hidden';
           const label: any = document.createElement('label');
           label.classList.add('bmd-label-floating');
           label.innerHTML = question.locTitle.textOrHtml;
+          if (isRequiredValue) {
+            label.innerHTML += ' *';
+          }
           el.parentNode.insertBefore(label, el);
         }
       });
@@ -117,47 +140,71 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
       // sender.mode = 'display';
     });
 
+    this.surveyModel.onValueChanging.add(function (sender, options) {
+      const uppercase = options.question.getPropertyByName('uppercase');
+      const uppercaseValue = uppercase ? options.question.getPropertyValue ('uppercase') : false;
+      if (uppercaseValue && !!options.value) {
+        const type = typeof options.value;
+        switch (type) {
+          case 'string':
+            options.value = options.value.toUpperCase();
+            break;
+          // case 'object':
+          //   options.value = options.value.map((item) => {
+          //     return item.toUpperCase();
+          //   });
+          //   break;
+        }
+      }
+    });
+
+    if (this.settings && this.settings.validationUrl) {
+      this.surveyModel.onServerValidateQuestions.add(this._callBackValidation.bind(this));
+    } else {
+      // console.log('validationUrl non configurato o inesistente');
+    }
+
     if (this.data) { this.surveyModel.data = this.data; }
 
-  const myCss = {
-    file: {
-      root: 'sd-file',
-      other: 'sd-input sd-comment',
-      placeholderInput: 'sd-visuallyhidden',
-      preview: 'sd-file__preview',
-      fileSign: '',
-      fileList: 'sd-file__list',
-      fileSignBottom: 'sd-file__sign',
-      fileDecorator: 'sd-file__decorator',
-      onError: 'sd-file__decorator--error',
-      fileDecoratorDrag: 'sd-file__decorator--drag',
-      fileInput: 'sd-hidden',
-      noFileChosen: 'sd-description sd-file__no-file-chosen',
-      chooseFile: 'sd-file__choose-btn',
-      chooseFileAsText: 'sd-action sd-file__choose-btn--text',
-      chooseFileAsTextDisabled: 'sd-action--disabled',
-      chooseFileAsIcon: 'sd-context-btn sd-file__choose-btn--icon',
-      chooseFileIconId: 'icon-choosefile',
-      disabled: 'sd-file__choose-btn--disabled',
-      removeButton: '',
-      removeButtonBottom: 'sd-hidden', // 'sd-context-btn sd-context-btn--negative sd-file__btn sd-file__clean-btn',
-      removeButtonIconId: 'icon-clear',
-      removeFile: 'sd-hidden',
-      removeFileSvg: '',
-      removeFileSvgIconId: 'icon-delete',
-      wrapper: 'sd-file__wrapper',
-      defaultImage: 'sd-file__default-image',
-      defaultImageIconId: 'icon-defaultfile',
-      leftIconId: 'icon-arrowleft',
-      rightIconId: 'icon-arrowright',
-      removeFileButton: 'sd-context-btn sd-context-btn--negative sd-file__remove-file-button',
-      dragAreaPlaceholder: 'sd-hidden', // 'sd-file__drag-area-placeholder',
-      imageWrapper: 'sd-file__image-wrapper',
-      single: 'sd-file--single',
-      singleImage: 'sd-file--single-image',
-      mobile: 'sd-file--mobile',
-    }
-  };
+    const myCss = {
+      file: {
+        root: 'sd-file',
+        other: 'sd-input sd-comment',
+        placeholderInput: 'sd-visuallyhidden',
+        preview: 'sd-file__preview',
+        fileSign: '',
+        fileList: 'sd-file__list',
+        fileSignBottom: 'sd-file__sign',
+        fileDecorator: 'sd-file__decorator',
+        onError: 'sd-file__decorator--error',
+        fileDecoratorDrag: 'sd-file__decorator--drag',
+        fileInput: 'sd-hidden',
+        noFileChosen: 'sd-description sd-file__no-file-chosen',
+        chooseFile: 'sd-file__choose-btn',
+        chooseFileAsText: 'sd-action sd-file__choose-btn--text',
+        chooseFileAsTextDisabled: 'sd-action--disabled',
+        chooseFileAsIcon: 'sd-context-btn sd-file__choose-btn--icon',
+        chooseFileIconId: 'icon-choosefile',
+        disabled: 'sd-file__choose-btn--disabled',
+        removeButton: '',
+        removeButtonBottom: 'sd-hidden', // 'sd-context-btn sd-context-btn--negative sd-file__btn sd-file__clean-btn',
+        removeButtonIconId: 'icon-clear',
+        removeFile: 'sd-hidden',
+        removeFileSvg: '',
+        removeFileSvgIconId: 'icon-delete',
+        wrapper: 'sd-file__wrapper',
+        defaultImage: 'sd-file__default-image',
+        defaultImageIconId: 'icon-defaultfile',
+        leftIconId: 'icon-arrowleft',
+        rightIconId: 'icon-arrowright',
+        removeFileButton: 'sd-context-btn sd-context-btn--negative sd-file__remove-file-button',
+        dragAreaPlaceholder: 'sd-hidden', // 'sd-file__drag-area-placeholder',
+        imageWrapper: 'sd-file__image-wrapper',
+        single: 'sd-file--single',
+        singleImage: 'sd-file--single-image',
+        mobile: 'sd-file--mobile',
+      }
+    };
 
     Survey.SurveyNG.render('surveyElement', {
       model: this.surveyModel,
@@ -175,7 +222,7 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
         if (typeof $('#surveyElement').bootstrapMaterialDesign === 'function') {
           $('#surveyElement').bootstrapMaterialDesign();
         } else {
-          console.log('bootstrapMaterialDesign non esiste');
+          // console.log('bootstrapMaterialDesign non esiste');
         }
       }
     });
@@ -215,5 +262,42 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   ngOnDestroy(): void {
     // remove element
     // document.getElementById('survey-content-angular').remove();
+  }
+
+  _callBackValidation(sender, options) {
+    try {
+      PayService.GenerateRecaptchaV3Token('pagamenti').then((result) => {
+        const query = 'gRecaptchaResponse=' + result.token;
+        // this.pay.postServizio('assets/json_/validation_error.json', options.data, query).subscribe(
+        this.pay.getServizio('assets/json_/validation_error.json', query).subscribe(
+          (response: any) => {
+            if (!response.success) {
+              this.pay.alert(response.message[PayService.ALPHA_3_CODE] || response.message['default']);
+              response.errors.forEach((item: any) => {
+                options.errors[item.name] = item.message[PayService.ALPHA_3_CODE] || item.message['default'];
+              });
+            }
+            options.complete();
+          },
+          (error: any) => {
+            if (error.errors) {
+              error.errors.forEach((item: any) => {
+                options.errors[item.name] = item.message[PayService.ALPHA_3_CODE] || item.message['default'];
+              });
+              const message = error.message[PayService.ALPHA_3_CODE] || error.message['default'];
+              this.pay.alert(message);
+            } else {
+              options.errors['ERROR'] = 'ERROR';
+              this.pay.alert(PayService.I18n.json.Common.ServizioValidazioneNonDisponibile);
+            }
+            options.complete();
+          }
+        );
+      }).catch((error) => {
+        this.pay.onError(error);
+      });
+    } catch (e) {
+      console.error('try/catch', e);
+    }
   }
 }

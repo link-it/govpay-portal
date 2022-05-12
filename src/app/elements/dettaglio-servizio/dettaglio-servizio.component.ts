@@ -70,6 +70,7 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
   _surveyEdit = false;
   _surveyLang = 'it';
   _surveyTheme = 'bootstrapmaterial'; // survey - defaultV2 - modern - bootstrapmaterial
+  _settings = null;
 
   constructor(
     protected dialog: MatDialog,
@@ -268,9 +269,10 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
               break;
             case 'surveyjs':
               this._surveyLang = PayService.ALPHA_2_CODE;
+              this._settings = this._decodedForm['detail'].settings || null;
               if (this._decodedForm['jsfDef']) {
                 const _schema: any = Object.assign({}, this._decodedForm['jsfDef']);
-                this._surveyJson = _schema;                
+                this._surveyJson = _schema;
                 // this.__loadSurvey();
               }
               break;
@@ -429,7 +431,6 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
   _onSubmitSurvey(data) {
     this._surveyEdit = false;
     this._surveyData = data;
-    // console.log('_onSubmitSurvey', data);
     this._generaPendenza(data, true);
   }
 }

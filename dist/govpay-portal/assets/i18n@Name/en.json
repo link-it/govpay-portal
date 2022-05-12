@@ -224,6 +224,7 @@
       "PendenzaAnnullata": "The notice with number {{numeroAvviso}} has benn canceled",
       "PendenzaSconosciuta": "The notice with number {{numeroAvviso}} is unknown",
       "PendenzaScaduta": "The notice with number {{numeroAvviso}} has expired on {{data}}",
+      "ServizioValidazioneNonDisponibile": "Validation service not available",
       "CodiciEsito": {
         "InCorso": "In progress",
         "Annullato": "Canceled",

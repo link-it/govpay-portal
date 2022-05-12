@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, ViewChildren, QueryList, AfterContentChecked } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { PayService } from '../services/pay.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs/index';
@@ -41,7 +42,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
 
   _loading = true;
 
-  constructor(public pay: PayService, protected translate: TranslateService) {
+  _smallView = false;
+
+  constructor(private responsive: BreakpointObserver, public pay: PayService, protected translate: TranslateService) {
     this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
       if (exit && this._filtro) {
         this._filtro.nativeElement.value = '';
@@ -63,6 +66,16 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   }
 
   ngOnInit() {
+    this.responsive.observe([
+      Breakpoints.Small,
+      Breakpoints.XSmall
+    ]).subscribe(result => {
+      this._smallView = false;
+      if (result.matches) {
+        this._smallView = true;
+      }
+    });
+
     if (this.pay.hasAuthentication() && !this.pay.isAuthenticated() && !PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO) {
       this.pay.updateSpinner(true);
       this.pay.sessione().then(() => {

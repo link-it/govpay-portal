@@ -224,6 +224,7 @@
       "PendenzaAnnullata": "La pendenza con numero avviso {{numeroAvviso}} è stata annullata",
       "PendenzaSconosciuta": "Non è presente alcuna pendenza con numero avviso {{numeroAvviso}}",
       "PendenzaScaduta": "La pendenza con numero avviso {{numeroAvviso}} è scaduta il giorno {{data}}",
+      "ServizioValidazioneNonDisponibile": "Servizio di validazione non disponibile",
       "CodiciEsito": {
         "InCorso": "In corso",
         "Annullato": "Annullato",

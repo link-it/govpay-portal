@@ -159,6 +159,7 @@
   };
 
   addScript('assets/config/tassonomie.pay');
+  addScript('assets/validators/validators.pay');
 
   _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
 

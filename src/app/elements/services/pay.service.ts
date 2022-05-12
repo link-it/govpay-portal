@@ -819,6 +819,43 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   /**
+   * getServizio
+   * @param {string} url
+   * @returns {Observable<any>}
+   */
+  getServizio(url: string, query?: string): Observable<any> {
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response.body || response;
+        })
+      );
+  }
+
+  /**
+   * postServizio
+   * @param {string} url
+   * @param {any} body
+   * @returns {Observable<any>}
+   */
+  postServizio(url: string, body: any, query?: string): Observable<any> {
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.post(url, body, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response.body || response;
+        })
+      );
+  }
+
+  /**
    * On error handler
    * @param error
    * @param {string} customMessage

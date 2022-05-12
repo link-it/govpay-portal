@@ -1,5 +1,6 @@
 import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked, HostListener, HostBinding } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { filter } from 'rxjs/operators';
 import { PayService } from './elements/services/pay.service';
 import { Language } from './elements/classes/language';
@@ -16,6 +17,8 @@ import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterContentChecked {
+  @HostBinding('class.small-view') _smallView: boolean = false;
+
   @ViewChild('sidenav') sidenav: MatSidenav;
   @HostBinding('class.partners') get cfgPartners(): boolean {
     return (this._configPartners);
@@ -54,7 +57,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
   @ViewChild('gestore', { read: ElementRef }) private _gestore: ElementRef;
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
 
-  constructor(public router: Router, public pay: PayService, public translate: TranslateService) {
+  constructor(private responsive: BreakpointObserver, public router: Router, public pay: PayService, public translate: TranslateService) {
     // Check param "rdrct"
     const matches = location.href.match(/rdrct=([^&]*)/);
     if (matches) {
@@ -136,6 +139,16 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   ngOnInit() {
+    this.responsive.observe([
+      Breakpoints.Small,
+      Breakpoints.XSmall
+    ]).subscribe(result => {
+      this._smallView = false;
+      if (result.matches) {
+        this._smallView = true;
+      }
+    });
+
     this._configPartners = !!(PayService.Gestore.Configurazione.Menu.Partners);
     if (PayService.Gestore && PayService.Gestore.Background) {
       this.__gestoreBkg = { 'background-image': 'url(\'assets/images/'+PayService.Gestore.Background.Small+'\')' };

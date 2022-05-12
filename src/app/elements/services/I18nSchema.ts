@@ -228,6 +228,7 @@ export class I18n {
       PendenzaAnnullata: '',
       PendenzaSconosciuta: '',
       PendenzaScaduta: '',
+      ServizioValidazioneNonDisponibile: '',
       CodiciEsito: {
         InCorso: '',
         Annullato: '',
