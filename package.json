@@ -4,9 +4,15 @@
   "scripts": {
     "ng": "ng",
     "start-proxy": "ng serve --port=4000 --aot=true --sourceMap=true --proxy-config proxy.config.json",
+    "start-proxy-sicilia": "ng serve --port=4000 --aot=true --sourceMap=true --proxy-config sicilia-proxy.config.json",
+    "start-proxy-sicilia-prod": "ng serve --port=4000 --aot=true --sourceMap=true --proxy-config sicilia-prod-proxy.config.json",
+    "start-proxy-meg": "ng serve --port=4000 --aot=true --sourceMap=true --proxy-config meg-proxy.config.json",
+    "start-proxy-mercurio": "ng serve --port=4000 --aot=true --sourceMap=true --proxy-config mercurio-proxy.config.json",
+    "start-proxy-mercurio-proxyjs": "ng serve --port=4000 --aot=true --sourceMap=true --proxy-config proxy.js",
     "dist": "npm run build && npm run clean",
     "clean": "rm -r ./dist/govpay-portal/assets/css && rm -r ./dist/govpay-portal/assets/fonts",
     "build": "ng build --prod=true --aot=true --build-optimizer=true --output-hashing=none",
+    "build-version": "node ./builder.version.js && npm run build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -40,6 +46,7 @@
     "marked": "^2.1.3",
     "moment": "^2.25.3",
     "popper.js": "^1.16.1",
+    "replace-in-file": "^6.3.2",
     "rxjs": "~6.3.3",
     "sass": "^1.43.4",
     "select2": "^4.1.0-rc.0",

@@ -26,6 +26,8 @@ export class PayService implements OnInit, OnDestroy {
 
   public static DateAdapter: any;
 
+  public static Versione: string;
+
   public static RECAPTCHA_V3_SITE_KEY: any;
   public static SPID: any;
   public static IAM: any;

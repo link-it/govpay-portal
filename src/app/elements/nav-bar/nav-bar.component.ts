@@ -71,7 +71,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
           { label: PayService.I18n.json.StatiPendeza.SCADUTA, value: PayService.STATI_PENDENZA.SCADUTA },
           { label: PayService.I18n.json.StatiPendeza.ANNULLATA, value: PayService.STATI_PENDENZA.ANNULLATA }
         ];
-        if (this.pay.lastTab) { this._currentTab = this.pay.lastTab };
+        if (this.pay.lastTab) { this._currentTab = this.pay.lastTab; }
         break;
       default:
         this._hasTab = false;

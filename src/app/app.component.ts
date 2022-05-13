@@ -10,6 +10,7 @@ import { updateLayoutNow, validateNow } from './elements/pagamento-servizio/paga
 import { MatSidenav } from '@angular/material';
 import { Subscription } from 'rxjs/index';
 import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
+import { environment } from '../environments/environment.prod';
 
 @Component({
   selector: 'pay-root',
@@ -58,6 +59,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
 
   constructor(private responsive: BreakpointObserver, public router: Router, public pay: PayService, public translate: TranslateService) {
+    PayService.Versione = `Ver. ${environment.version}`;
+
     // Check param "rdrct"
     const matches = location.href.match(/rdrct=([^&]*)/);
     if (matches) {
