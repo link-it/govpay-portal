@@ -82,7 +82,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       });
     }
 
-    // this._initTaxonomies();
+    this._initTaxonomies();
     this._resetServizi();
   }
 

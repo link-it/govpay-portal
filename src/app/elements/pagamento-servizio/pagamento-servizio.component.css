@@ -30,9 +30,9 @@
 
 .material-icons, .material-icons img {
   vertical-align: middle;
-  line-height: 1 !important;
+  line-height: 0 !important;
   position: relative;
-  /* top: -2px; */
+  top: -2px;
 }
 
 .icon-20 {
