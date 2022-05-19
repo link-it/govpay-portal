@@ -69,8 +69,32 @@ form {
     padding-top: 0;
   }
 
-  .sv_q_file_remove_button {
-    border: 1px solid rgba(0,0,0,.54);
+  // Boolean
+
+  .sv_main.sv_main .sv-boolean__switch {
+    background-color: #2962ff;
+    // background-color: #bbdefb;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .sv_main.sv_main .sv_row .sv_qstn:first-child:last-child {
+    overflow: hidden;
+  }
+
+  .sv_main.sv_main .sv-boolean__label {
+    color: rgb(64, 64, 64);
+  }
+
+  .checkbox label,
+  label.checkbox-inline {
+    padding-left: 0;
+  }
+
+  .sv-boolean input:focus~.sv-boolean__switch {
+    outline: 1px solid #2962ff;
+    // outline: 1px solid #bbdefb;
+    outline-offset: 1px;
   }
 
   h5 {
@@ -242,6 +266,10 @@ form {
     &:hover {
       background-color: #5ccd16;
     }
+  }
+
+  .sv_q_file_remove_button {
+    border: 1px solid rgba(0,0,0,.54);
   }
 
   @import 'scss/input_custom';
