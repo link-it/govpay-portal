@@ -268,8 +268,8 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     try {
       PayService.GenerateRecaptchaV3Token('pagamenti').then((result) => {
         const query = 'gRecaptchaResponse=' + result.token;
-        // this.pay.postServizio('assets/json_/validation_error.json', options.data, query).subscribe(
-        this.pay.getServizio('assets/json_/validation_error.json', query).subscribe(
+        this.pay.postServizio(this.settings.validationUrl, options.data, query).subscribe(
+        // this.pay.getServizio('assets/json_/validation_error.json', query).subscribe(
           (response: any) => {
             if (!response.success) {
               this.pay.alert(response.message[PayService.ALPHA_3_CODE] || response.message['default']);

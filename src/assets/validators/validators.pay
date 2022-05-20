@@ -46,14 +46,13 @@ addScript('assets/validators/codicefiscale.js');
    */
   function codiceFiscaleValidator(params) {
     const cf = new CodiceFiscale();
-
-    console.log('PLUGIN _codFiscValidator', params);
+    // console.log('PLUGIN _codFiscValidator', params);
     let validated = false;
     if (params[0] && params[1] && params[2]) {
-      const cognome = cf.estrai3C(params[2]);
-      const nome = cf.estrai3C(params[1]);
+      const cognome = cf.estraiCognome(params[2]);
+      const nome = cf.estraiNome(params[1]);
       validated = (params[0].indexOf(cognome + nome) >= 0) && __validaCodiceFiscale(params[0]);
-      console.log('PLUGIN validated', validated);
+      // console.log('PLUGIN validated', cognome, nome, validated);
     }
     return validated;
   }

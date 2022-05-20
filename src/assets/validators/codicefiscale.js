@@ -57,26 +57,26 @@ function CodiceFiscale() {
 	// nome
 	this.getNome = function(){
 		return this.nome;
-	}
+	};
 	this.setNome = function(nome){
 		this.nome = nome;
-	}
+	};
 	
 	// cognome
 	this.getCognome = function(){
 		return this.cognome;
-	}
+	};
 	this.setCognome = function(cognome){
 		this.cognome = cognome;
-	}
+	};
 	
 	// sesso
 	this.getSesso = function(){
 		return this.sesso;
-	}
+	};
 	this.setSesso = function(sesso){
 		this.sesso = sesso;
-	}
+	};
 
 	// dataNascita
 	this.getDataNascita = function(){
@@ -84,20 +84,23 @@ function CodiceFiscale() {
 	}
 	this.setDataNascita = function(dataNascita){
 		this.dataNascita = dataNascita;
-	}
+	};
 
 	// comune
 	this.getComune = function(){
 		return this.comune;
-	}
+	};
 	this.setComune = function(comune){
 		this.comune = comune;
-	}
+	};
 
 	// Controlli
-	this.estrai3C = function(nome){
+	this.estraiNome = function(nome){
 		return controlla_nome(nome);
-	}
+	};
+	this.estraiCognome = function(cognome){
+		return controlla_cognome(cognome);
+	};
 
 
 	// utility

@@ -50,7 +50,7 @@
         </div>
         <p *ngIf="Pay.Gestore?.Configurazione.Menu.Infos">{{ Pay.I18n.json.Gestore.Ragione }}</p>
         <p *ngIf="Pay.Gestore?.Configurazione.Menu.Infos">{{ Pay.I18n.json.Gestore.Sede }}</p>
-        <a [href]="Pay.Gestore?.ProgettoGovPay.Menu.Url" target="_blank" [attr.title]="Pay.Versione">
+        <a [href]="Pay.Gestore?.ProgettoGovPay.Menu.Url" target="_blank">
           <img class="govpay-prj" *ngIf="Pay.Gestore?.Configurazione.Menu.Govpay" [src]="'assets/images/'+Pay.Gestore?.ProgettoGovPay.Menu.Logo" [alt]="Pay.Gestore?.ProgettoGovPay.Menu.AltText">
         </a>
         <p>{{ Pay.Versione }}</p>
