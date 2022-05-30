@@ -27,16 +27,24 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css",
+              "src/styles.scss",
+              "node_modules/survey-angular/survey.min.css",
+              "node_modules/survey-angular/modern.min.css",
+              "node_modules/survey-angular/defaultV2.min.css",
+              "node_modules/select2/dist/css/select2.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/survey-angular/survey.angular.min.js",
               "node_modules/popper.js/dist/umd/popper.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/hammerjs/hammer.min.js",
               "node_modules/jszip/dist/jszip.min.js",
               "node_modules/file-saver/dist/FileSaver.min.js",
-              "node_modules/marked/marked.min.js"
+              "node_modules/marked/marked.min.js",
+              "node_modules/select2/dist/js/select2.min.js"
             ]
           },
           "configurations": {
@@ -59,8 +67,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "5mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "6mb"
                 }
               ]
             }

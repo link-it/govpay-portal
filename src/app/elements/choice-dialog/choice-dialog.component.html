@@ -17,14 +17,33 @@
         <div class="col-12 col-md-8">
           <h1>{{ _title }}</h1>
           <form>
-            <mat-form-field class="py-md-5">
-              <mat-select [(ngModel)]="_selectedValue" name="selector" [placeholder]="_labelSelector"
-                          (selectionChange)="_choiceChange($event)">
-                <mat-option *ngFor="let el of _elements" [value]="el">
-                  {{ el.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <ng-container *ngIf="!_menuLogo">
+              <mat-form-field class="py-md-5">
+                <mat-select [(ngModel)]="_selectedValue" name="selector" [placeholder]="_labelSelector"
+                            (selectionChange)="_choiceChange($event)">
+                  <mat-option *ngFor="let el of _elements" [value]="el">
+                    {{ el.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngIf="_menuLogo">
+              <mat-form-field class="py-md-5">
+                <mat-select [(ngModel)]="_selectedValue" name="selector" [placeholder]="_labelSelector"
+                            (selectionChange)="_choiceChange($event)">
+                  <mat-select-trigger>
+                    <img height="48px" [src]="'assets/images/domini/' + _selectedValue?.logo" *ngIf="!_selectedValue?.logo">
+                    <img height="48px" [src]="'assets/images/domini/no-logo-comune.png'" *ngIf="!_selectedValue?.logo">
+                    {{ _selectedValue?.label }}
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let el of _elements" [value]="el">
+                    <img height="48px" [src]="'assets/images/domini/' + el.logo" *ngIf="el.logo">
+                    <img height="48px" [src]="'assets/images/domini/no-logo-comune.png'" *ngIf="!el.logo">
+                    {{ el.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
           </form>
         </div>
         <div class="col-12 col-md-2"></div>

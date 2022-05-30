@@ -1,5 +1,6 @@
 import { OnInit, Component, ElementRef, ViewChild, AfterContentChecked, HostListener, HostBinding } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { filter } from 'rxjs/operators';
 import { PayService } from './elements/services/pay.service';
 import { Language } from './elements/classes/language';
@@ -9,6 +10,7 @@ import { updateLayoutNow, validateNow } from './elements/pagamento-servizio/paga
 import { MatSidenav } from '@angular/material';
 import { Subscription } from 'rxjs/index';
 import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
+import { environment } from '../environments/environment.prod';
 
 @Component({
   selector: 'pay-root',
@@ -16,10 +18,13 @@ import { NavBarComponent } from './elements/nav-bar/nav-bar.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterContentChecked {
+  @HostBinding('class.small-view') _smallView: boolean = false;
+
   @ViewChild('sidenav') sidenav: MatSidenav;
   @HostBinding('class.partners') get cfgPartners(): boolean {
     return (this._configPartners);
   }
+
   Pay = PayService;
 
   _gch: number = window.innerHeight;
@@ -53,7 +58,18 @@ export class AppComponent implements OnInit, AfterContentChecked {
   @ViewChild('gestore', { read: ElementRef }) private _gestore: ElementRef;
   @ViewChild('globalContent', { read: ElementRef }) private _globalContent: ElementRef;
 
-  constructor(public router: Router, public pay: PayService, public translate: TranslateService) {
+  constructor(private responsive: BreakpointObserver, public router: Router, public pay: PayService, public translate: TranslateService) {
+    PayService.Versione = `Ver. ${environment.version}`;
+
+    // Check param "rdrct"
+    const matches = location.href.match(/rdrct=([^&]*)/);
+    if (matches) {
+      // localStorage.setItem('RDRCT', matches[1]);
+    } else {
+      // localStorage.removeItem('RDRCT');
+    }
+    // ----
+
     this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
       if (exit) {
         this.__toPublicExit();
@@ -96,8 +112,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
               if (!_params['idSession'] && _params['numeroAvviso']) {
                 _toPublicAccessSection = true;
                 PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO = {
-                   Numero: _params['numeroAvviso'],
-                Creditore: _params['idDominio'],
+                  Numero: _params['numeroAvviso'],
+                  Creditore: _params['idDominio'],
                 };
                 if(PayService.UUID_CHECK && _params['UUID']) {
                   PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
@@ -126,6 +142,16 @@ export class AppComponent implements OnInit, AfterContentChecked {
   }
 
   ngOnInit() {
+    this.responsive.observe([
+      Breakpoints.Small,
+      Breakpoints.XSmall
+    ]).subscribe(result => {
+      this._smallView = false;
+      if (result.matches) {
+        this._smallView = true;
+      }
+    });
+
     this._configPartners = !!(PayService.Gestore.Configurazione.Menu.Partners);
     if (PayService.Gestore && PayService.Gestore.Background) {
       this.__gestoreBkg = { 'background-image': 'url(\'assets/images/'+PayService.Gestore.Background.Small+'\')' };
@@ -134,6 +160,11 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked() {
     this._isLoading = this.pay.spinner;
+  }
+
+  onWindowScroll($event) {
+    const value = $event.srcElement.scrollTop;
+    PayService.ScrollBehavior.next({ scroll: value });
   }
 
   _updateLayout() {
@@ -190,6 +221,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
       this.translate.addLangs(_codeLangs);
       this._language = _currentLanguage.alpha3Code;
+      PayService.ALPHA_2_CODE = _currentLanguage.alpha2Code;
       PayService.ALPHA_3_CODE = _currentLanguage.alpha3Code;
       if (this.translate.currentLang !== _currentLanguage.alpha2Code) {
         this._doTranslate();
@@ -231,6 +263,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
               this.pay.router.navigateByUrl('/carrello');
             }
             break;
+          case '/dettaglio-posizione':
+            this.pay.router.navigateByUrl('/riepilogo');
+            break;
           case '/ricevuta':
             this.pay.router.navigateByUrl('/carrello');
             break;
@@ -259,7 +294,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   _newLogout() {
     if (PayService.AUTH_LOGOUT_URL != '') {
-      // console.log('SINGLE LOGOUT');
       this.pay.updateSpinner(true);
       this.pay.logout().subscribe(
         () => {
@@ -272,7 +306,6 @@ export class AppComponent implements OnInit, AfterContentChecked {
         });
     } else {
       if (PayService.AUTH_LOGOUT_URLS.length) {
-        // console.log('MULTIPLE LOGOUTS');
         this.pay.updateSpinner(true);
         this.pay.logouts().subscribe(
           (results: Array<any>) => {
@@ -355,6 +388,11 @@ export class AppComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  gotoUrl(url: string) {
+    if (url && url !== '') {
+      window.location.href = url;
+    }
+  }
 }
 
 @Pipe({name: 'AuthGuard'})

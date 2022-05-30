@@ -1,0 +1,51 @@
+{
+  "ita": {
+    "actions": {
+      "name": "Supporto",
+      "items":[
+        {
+          "label": "Assistenza",
+          "icon": "support_agent",
+          "url": "https://dominio.ragionesocile.it/assistenza"
+        }
+      ]
+    },
+    "attributes": [
+      {
+        "name": "iuvAvviso",
+        "type": "string",
+        "label": "IUV"
+      },
+      {
+        "name": "numeroAvviso",
+        "type": "string",
+        "label": "Numero avviso"
+      },
+      {
+        "name": "causale",
+        "type": "string",
+        "label": "Causale"
+      },
+      {
+        "name": "idPendenza",
+        "type": "string",
+        "label": "ID Pendenza"
+      },
+      {
+        "name": "idTipoPendenza",
+        "type": "string",
+        "label": "Tipo Pendenza"
+      },
+      {
+        "name": "dominio.ragioneSociale",
+        "type": "string",
+        "label": "Ente creditore"
+      },
+      {
+        "name": "dataCaricamento",
+        "type": "date",
+        "label": "Data caricamento"
+      }
+    ]
+  }
+}

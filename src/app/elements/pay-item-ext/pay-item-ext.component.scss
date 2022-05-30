@@ -1,0 +1,77 @@
+:host {
+  position: relative;
+  display: block;
+  font-size: 1rem;
+  margin-bottom: .5rem;
+}
+
+.action-menu-icon,
+.primary-icon {
+  width: 56px;
+}
+
+.expander-icon {
+  width: 40px;
+}
+
+:host .item {
+  position: relative;
+  padding: 0 .9375rem;
+  transition: all .15s linear;
+  left: 0;
+  z-index: 1;
+}
+
+:host .item .item-trigger {
+  padding: .75rem .75rem 0;
+}
+
+:host .item .item-trigger:hover {
+  background-color: #bbdefb;
+}
+
+:host .item-trigger .row {
+  padding: 0 0 .75rem;
+}
+
+:host(.in) .item {
+  left: -56px;
+  transition: all .15s linear;
+}
+
+.touch-device {
+  position: absolute;
+  padding: 0 .5rem;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 56px;
+}
+
+:host(.show-more) .touch-device {
+  opacity: 0;
+  pointer-events: none;
+}
+
+:host(.in) .touch-device {
+  pointer-events: auto;
+}
+
+.primary-icon.disabled,
+.touch-device.disabled {
+  pointer-events: none;
+}
+
+.primary-icon.disabled,
+.touch-device.disabled {
+  background-color: gray;
+  pointer-events: none;
+}
+
+.trigger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

@@ -1,9 +1,19 @@
 (function (global) {
 
+  function addScript(file) {
+    document.write('<script src="' + file + '"></script>');
+  }
+
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '80012000826', logo: "logo.png" }
-    ]
+      {
+        label: 'Comune Dimostrativo',
+        value: '80012000826',
+        logo: 'logo.png',
+        altText: 'Comune Dimostrativo',
+        href: 'https://www.comune-dimostrativo.it/'
+      }
+    ];
   }
 
   function _traduzioni() {
@@ -18,39 +28,60 @@
         alpha2Code: 'en',
         alpha3Code: 'eng'
       }
-    ]
+    ];
   }
 
   function _assetsGestore() {
     return {
       Logo: {
         Small: 'logo.png',
-        Full: 'logo.png'
+        Full: 'logo.png',
+        AltText: 'Logo'
       },
       Background: {
         Small: 'background-small.jpg',
         Full: 'background.jpg'
       },
-      Partners: [],
+      Partners: [
+        {
+          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
+          Url: 'http://#'
+        },
+        {
+          Logo: { Menu: 'partner-logo-double.png', AccessPanel: 'partner-logo-double-reverse.png', AltText: 'Logo partner double' },
+          Url: 'http://#'
+        },
+        {
+          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
+          Url: 'http://#'
+        },
+        {
+          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
+          Url: 'http://#'
+        }
+      ],
       Configurazione: {
         Menu: {
-          Infos: true,
-          Partners: false,
+          Infos: false,
+          Partners: true,
           Govpay: true
         },
         AccessPanel: {
-          Partners: false,
-          Govpay: true
+          Partners: true,
+          Govpay: false,
+          MenuLogo: false
         }
       },
       ProgettoGovPay: {
         Menu: {
-          Logo: 'govpay.svg',
-          Url: 'http://#'
+          Logo: 'progetto-govpay.png',
+          Url: 'http://#',
+          AltText: 'Logo Progetto GovPay'
         },
         AccessPanel: {
           Logo: 'govpay-reverse.svg',
-          Url: 'http://#'
+          Url: 'http://#',
+          AltText: 'Logo GovPay'
         }
       }
     };
@@ -68,6 +99,12 @@
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
     AUTH_LOGOUT_URL: 'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
+    AUTH_LOGOUT_URL: '',
+    AUTH_LOGOUT_URLS: [
+      ''
+    ],
+    AUTH_LOGOUT_LANDING_PAGE: '/',
+    AUTH_LOGOUT_LANDING_PAGE_TARGET: '_blank',
     SPID_SETTINGS: {
       ACCESS: true,
       AUTHN_CONTEXT_CLASS_REF: '',
@@ -109,11 +146,22 @@
       }
     },
     LAYOUT: {
-      GROUP_METADATA: [ 'category' ]
-    }
+      FLAT_VIEW: true,
+      GROUP_METADATA: [ 'metadata' ],
+      DETAILS_METADATA: {
+        show_image: true,
+        show_block: false,
+        taxonomy_image: 'taxonomy2',
+        taxonomy1: 'taxonomy2',
+        taxonomy2: '',
+        metadata: true
+      }
+    },
+    FILTRI: [ 'title' ]
   };
 
-  _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
+  addScript('assets/config/tassonomie.pay');
 
+  _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
 
 })(window);

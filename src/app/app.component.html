@@ -1,22 +1,26 @@
 <pay-choice-dialog *ngIf="!Pay.CreditoreAttivo" [elements]="Pay.CREDITORI" (change)="__onChange($event)" [config]="Pay.Gestore?.Configurazione" [partners]="Pay.Gestore?.Partners"
-                   [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [title]="Pay.I18n.json.Header.Erogatore.Titolo"
-                   [logo]="Pay.Gestore?.ProgettoGovPay.AccessPanel" [logo-gestore]="Pay.Gestore?.Logo.Full" [background]="Pay.Gestore?.Background.Full"
-                   [main-info]="Pay.I18n.json.Gestore.Ragione" [sub-info]="Pay.I18n.json.Gestore.Sede"></pay-choice-dialog>
+  [label-selector]="Pay.I18n.json.Header.Erogatore.Creditore" [title]="Pay.I18n.json.Header.Erogatore.Titolo"
+  [logo]="Pay.Gestore?.ProgettoGovPay.AccessPanel" [logo-gestore]="Pay.Gestore?.Logo.Full" [background]="Pay.Gestore?.Background.Full"
+  [main-info]="Pay.I18n.json.Gestore.Ragione" [sub-info]="Pay.I18n.json.Gestore.Sede"></pay-choice-dialog>
 <pay-language-bar #languageBar [show-language-menu]="_languages.length > 1" [language-list]="_languages" language-bar-theme="language-bar"
-                  (on-change-language)="_languageHandler($event)" [current-language]="_language"
-                  [style.paddingRight.px]="!Pay.CreditoreAttivo?15:null" [style.zIndex]="!Pay.CreditoreAttivo?2:null">
-  <img add-on *ngIf="Pay.CreditoreAttivo && Pay.CreditoreAttivo.logo" [src]="'assets/images/domini/'+Pay.CreditoreAttivo.logo" [alt]="Pay.CreditoreAttivo.AltText" class="d-inline logo-creditore">
+    (on-change-language)="_languageHandler($event)" [current-language]="_language"
+    [style.paddingRight.px]="!Pay.CreditoreAttivo?15:null" [style.zIndex]="!Pay.CreditoreAttivo?2:null">
+  <a add-on (click)="gotoUrl(Pay.CreditoreAttivo.href)"><img *ngIf="Pay.CreditoreAttivo && Pay.CreditoreAttivo.logo" [src]="'assets/images/domini/'+Pay.CreditoreAttivo.logo" [alt]="Pay.CreditoreAttivo.altText" class="d-inline logo-creditore"></a>
   <div add-on class="my-1 py-2 dropdown w-100" *ngIf="Pay.CREDITORI.length > 1 && Pay.CreditoreAttivo">
     <a class="dropdown-toggle" href="#" id="creditori" role="button" data-toggle="dropdown"
-       aria-haspopup="true" aria-expanded="false">{{ Pay.CreditoreAttivo?.label }}</a>
+      aria-haspopup="true" aria-expanded="false">{{ Pay.CreditoreAttivo?.label }}</a>
     <div class="dropdown-menu" aria-labelledby="creditori">
       <p *ngFor="let cr of Pay.CREDITORI" (click)="__onActiveChange(cr)"
-         [class]="'dropdown-item m-0' + ((Pay.CreditoreAttivo && Pay.CreditoreAttivo.value === cr.value)?' active-item':' action')">
+        [class]="'dropdown-item m-0' + ((Pay.CreditoreAttivo && Pay.CreditoreAttivo.value === cr.value)?' active-item':' action')">
         {{ cr.label }}
       </p>
     </div>
   </div>
-  <p add-on *ngIf="Pay.CreditoreAttivo && Pay.CREDITORI.length === 1" class="language-bar-title w-100 m-0 multiline-text">{{ Pay.I18n.json.Header.LanguageBar.Titolo }}</p>
+  <a add-on *ngIf="Pay.CreditoreAttivo && Pay.CREDITORI.length === 1" (click)="gotoUrl(Pay.CreditoreAttivo.href)">
+    <p class="language-bar-title w-100 m-0 multiline-text">
+      {{ Pay.I18n.json.Header.LanguageBar.Titolo }}
+    </p>
+  </a>
 </pay-language-bar>
 <mat-sidenav-container *ngIf="Pay.CreditoreAttivo">
   <mat-sidenav #sidenav class="side-nav" [mode]="_mode" (openedChange)="__isOpen()">
@@ -27,8 +31,7 @@
       </div>
     </div>
     <mat-list role="list" class="side-nav-menu d-flex flex-column" [style.height.px]="_mlh">
-      <mat-list-item role="listitem" *ngFor="let _item of Pay.MenuItems|AuthGuard:!!Pay.User"
-                     (click)="_sideNavItemClick(sidenav, _item.Link)">
+      <mat-list-item role="listitem" *ngFor="let _item of Pay.MenuItems|AuthGuard:!!Pay.User" (click)="_sideNavItemClick(sidenav, _item.Link)">
         <a [routerLink]="_item.Link" routerLinkActive="active-route" [ngClass]="_classRoute(_item.Link)">
           <span>{{ _item.Label }}</span>
         </a>
@@ -50,6 +53,7 @@
         <a [href]="Pay.Gestore?.ProgettoGovPay.Menu.Url" target="_blank">
           <img class="govpay-prj" *ngIf="Pay.Gestore?.Configurazione.Menu.Govpay" [src]="'assets/images/'+Pay.Gestore?.ProgettoGovPay.Menu.Logo" [alt]="Pay.Gestore?.ProgettoGovPay.Menu.AltText">
         </a>
+        <p>{{ Pay.Versione }}</p>
       </div>
     </mat-list>
   </mat-sidenav>
@@ -86,7 +90,7 @@
                           [url]="__IAMLoginUrl" [label]="Pay.I18n.json.Iam.Label"></pay-external-login>
     </pay-header-bar>
     <pay-nav-bar #tabBar></pay-nav-bar>
-    <div #globalContent class="global-container" [style.height.px]="_gch">
+    <div #globalContent class="global-container" [style.height.px]="_gch" (scroll)="onWindowScroll($event)">
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>

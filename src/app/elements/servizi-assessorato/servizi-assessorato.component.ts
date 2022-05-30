@@ -5,7 +5,8 @@ import { Subscription } from 'rxjs/index';
 import { updateLayoutNow } from '../pagamento-servizio/pagamento-servizio.component';
 import { TranslateLoaderExt } from '../classes/translate-loader-ext';
 import { SimpleItemComponent } from '../components/simple-item.component';
-import { ServiceFilterPipe, ServiceGroupFilterPipe } from '../services/service-filters';
+
+declare let Taxonomies;
 
 @Component({
   selector: 'pay-servizi-assessorato',
@@ -19,6 +20,9 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
   Pay = PayService;
 
   @Input('assessorato') _assessorato: any;
+  @Input('tassonomia') _taxonomy: any;
+  @Input('tassonomia1') _taxonomy1: any;
+  @Input('tassonomia2') _taxonomy2: any;
   @Output('on-close') _close: EventEmitter<any> = new EventEmitter();
 
   _serviziAssessorato: any;
@@ -27,6 +31,8 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
 
   __title: string = '';
   __filterTitle: string = '';
+
+  _taxonomies = null;
 
   constructor(public pay: PayService, protected translate: TranslateService) {
     this._srSubcrition = PayService.StaticRouteBehavior.subscribe((value: any) => {
@@ -39,6 +45,8 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
         this.__mapTitle();
       });
     });
+
+    this._initTaxonomies();
   }
 
   ngOnInit() {
@@ -80,9 +88,13 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
         }
         const srv: any = service.detail[lingua.alpha3Code];
         const _mappedService: any = {
-          subgroup: srv.subgroup || '',
+          group: service.detail[this._taxonomy1] || 'default',
+          subgroup: service.detail[this._taxonomy2] || 'default',
           group_rank: srv.group_rank || Number.MAX_VALUE,
           category: srv.category || '',
+          metadata: srv.metadata || '',
+          taxonomy1: service.detail.taxonomy1 || 'default',
+          taxonomy2: service.detail.taxonomy2 || 'default',
           searchTerms: srv.search_terms || '',
           code: srv.code || '',
           name: srv.name || '',
@@ -113,6 +125,7 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
         groups: gKeys.map((kg: string) => {
           return {
             group: kg,
+            backgroundSrc: this._getTaxonomyImage(kg),
             items: _groups[kg]
           };
         })
@@ -151,7 +164,7 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
       this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, this._serviziAssessorato[PayService.ALPHA_3_CODE].N);
     }
     if (this._filtro && this._filtro.nativeElement.value) {
-      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.ServiziAssessorato, (this.psi.length + this.psiflat.length));
+      this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.Filtro, (this.psi.length + this.psiflat.length));
     }
   }
 
@@ -167,4 +180,49 @@ export class ServiziAssessoratoComponent implements OnInit, AfterContentChecked,
     this._close.emit();
   }
 
+  // Taxonomy
+
+  _initTaxonomies() {
+    this._taxonomies = Taxonomies[this.Pay.ALPHA_3_CODE] || null;
+  }
+
+  _getTaxonomy(id) {
+    let taxonomy = null;
+    if (this._taxonomies) {
+      taxonomy = this._taxonomies[this._taxonomy2 || 'taxonomy2'];
+    } else {
+      // Default
+      taxonomy = {
+        id: 'tematiche-2',
+        name: 'Aree tematiche 2',
+        singularName: 'Area tematica 2',
+        icon: 'label',
+        image: './assets/images/badge.svg',
+        items: [
+          {
+            id: 'default',
+            name: 'Varie',
+            image: './assets/images/tematiche/tematica.png',
+            rank: 1
+          }
+        ],
+        defaultItem: 'default'
+      };
+    }
+
+    const idx = taxonomy.items.findIndex(el => el.id === id);
+    return (idx !== -1) ? taxonomy.items[idx] : null;
+  }
+
+  _getTaxonomyImage(elem) {
+    const id = (typeof elem === 'object') ? elem.group || 'default' : elem || 'default';
+    const taxonomyData = this._getTaxonomy(id);
+    return (taxonomyData) ? taxonomyData.image : '';
+  }
+
+  _getTaxonomyTitle(elem: any | string) {
+    const id = (typeof elem === 'object') ? elem.group || 'default' : elem || 'default';
+    const taxonomyData = this._getTaxonomy(id);
+    return (taxonomyData) ? taxonomyData.name : id;
+  }
 }

@@ -1,9 +1,26 @@
 (function (global) {
 
+  function addScript(file) {
+    document.write('<script src="' + file + '"></script>');
+  }
+
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '80012000826', logo: "logo.png" }
-    ]
+      {
+        label: 'Comune Dimostrativo',
+        value: '01234567890',
+        logo: 'logo-comune-dimostrativo.png',
+        altText: 'Comune Dimostrativo',
+        href: 'https://www.comune-dimostrativo.it/'
+      },
+      {
+        label: 'Comune Dimostrativo 9',
+        value: '99999999999',
+        logo: '',
+        altText: 'Comune Dimostrativo 9',
+        href: 'https://www.comune-dimostrativo-9.it/'
+      }
+    ];
   }
 
   function _traduzioni() {
@@ -18,7 +35,7 @@
         alpha2Code: 'en',
         alpha3Code: 'eng'
       }
-    ]
+    ];
   }
 
   function _assetsGestore() {
@@ -29,8 +46,8 @@
         AltText: 'Logo'
       },
       Background: {
-        Small: 'background-small.jpg',
-        Full: 'background.jpg'
+        Small: 'background-small.png',
+        Full: 'background.png'
       },
       Partners: [
         {
@@ -58,7 +75,8 @@
         },
         AccessPanel: {
           Partners: true,
-          Govpay: false
+          Govpay: false,
+          MenuLogo: false
         }
       },
       ProgettoGovPay: {
@@ -88,9 +106,9 @@
     AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
     AUTH_LOGOUT_URL: '',
     AUTH_LOGOUT_URLS: [
-      'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout'
+      ''
     ],
-    AUTH_LOGOUT_LANDING_PAGE: '',
+    AUTH_LOGOUT_LANDING_PAGE: '/',
     AUTH_LOGOUT_LANDING_PAGE_TARGET: '_blank',
     PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
     SPID_SETTINGS: {
@@ -107,8 +125,8 @@
     UUID_CHECK: true,
     RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',
     PAY_RESPONSE_URL: 'https://localhost:4200/esito-pagamento',
-    TIME_OUT_POLL: 5, //Secs.
-    POLLING_INTERVAL: 3000, //Millisecs.
+    TIME_OUT_POLL: 5, // Secs.
+    POLLING_INTERVAL: 3000, // Millisecs.
     ROUTING: {
       PUBLIC_ACCESS: '',
       PUBLIC_EXIT: 'pagamento-servizio'
@@ -134,11 +152,23 @@
       }
     },
     LAYOUT: {
-      GROUP_METADATA: [ 'category' ]
-    }
+      FLAT_VIEW: true,
+      GROUP_METADATA: [ 'metadata' ],
+      DETAILS_METADATA: {
+        show_image: true,
+        show_block: false,
+        taxonomy_image: 'taxonomy2',
+        taxonomy1: 'taxonomy2',
+        taxonomy2: '',
+        metadata: true
+      }
+    },
+    FILTRI: [ 'title' ]
   };
 
-  _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
+  addScript('assets/config/tassonomie.pay');
+  addScript('assets/extensions/custom-functions.pay');
 
+  _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
 
 })(window);

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { PayService } from '../services/pay.service';
 import { Standard } from '../classes/standard';
+import { StandardExt } from '../classes/standard-ext';
 
 import * as moment from 'moment';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
@@ -18,14 +19,34 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
   Pay = PayService;
   _langSubscription: Subscription;
 
+  _tabsSubscriber: Subscription;
+  _filter = '';
+
   constructor(public pay: PayService, public translate: TranslateService) {
     this._langSubscription = translate.onLangChange.subscribe((event: LangChangeEvent) => {
       PayService.PosizioneDebitoria = this._refreshData();
     });
+
+    this._tabsSubscriber = PayService.TabsBehavior.subscribe(
+      (value: any) => {
+        if (value && value.currentTab) {
+          this._filter = value.currentTab.toUpperCase();
+          this._loadPendenze();
+        }
+      }
+    );
+
+    this._filter = this.pay.lastTab || 'NON_ESEGUITA';
+    PayService.TabsBehavior.next({ currentTab: this._filter.toLowerCase() });
   }
 
   ngOnInit() {
-    this.getPendenze(PayService.QUERY_NON_ESEGUITA);
+    this._loadPendenze();
+  }
+
+  _loadPendenze() {
+    const query = `stato=${this._filter}`;
+    this.getPendenze(query);
   }
 
   ngAfterViewInit() {
@@ -35,6 +56,9 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
     PayService.PosizioneDebitoria = [];
     if (this._langSubscription) {
       this._langSubscription.unsubscribe();
+    }
+    if (this._tabsSubscriber) {
+      this._tabsSubscriber.unsubscribe();
     }
   }
 
@@ -49,7 +73,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         if(result.body) {
           PayService.PosizioneDebitoria = this._refreshData(result.body.risultati);
           PayService.TranslateDynamicObject(this.translate, this.pay);
-         }
+        }
         this.pay.updateSpinner(false);
         updateLayoutNow.next(true);
       },
@@ -66,7 +90,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
    * @returns {any[]}
    * @private
    */
-   _refreshData(list?: any[]): any[] {
+  _refreshData(list?: any[]): any[] {
     const _useRawData: boolean = !list;
     list = list || PayService.PosizioneDebitoria;
     const _buffer = list.map(item => {
@@ -74,6 +98,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         item = item.rawData;
       }
       let _ds = (item.dataScadenza)?moment(item.dataScadenza).format(this.pay.getDateFormatByLanguage()):PayService.I18n.json.Common.SenzaScadenza;
+      const _metaData1: string[] = [ item.idTipoPendenza, item.dominio.ragioneSociale ];
       let _meta: string[] = [`${PayService.I18n.json.Common.Scadenza}: ${_ds}`];
       // _meta.push(`${PayService.I18n.json.Common.Scadenza}: ${_ds}`);
       // if (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.ESEGUITA) {
@@ -95,13 +120,14 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         _ds = moment(item.dataValidita).format(this.pay.getDateFormatByLanguage());
         _meta =[`${PayService.I18n.json.Common.Scadenza}: ${_ds}`];
       }
-      const _std = new Standard();
+      const _std = new StandardExt();
         // Restore previous uid(s) for cart component ref elements
         _std.uid = this.__setUIDKey(item);
         const inCart: boolean = (PayService.Cart.indexOf(_std.uid) !== -1);
         _std.localeNumberFormat = this.pay.getNumberFormatByLanguage();
         _std.titolo = (item.causale || item.descrizione);
-        _std.sottotitolo = _meta.join(', ');
+        _std.metaData1 = _metaData1.join(' - ');
+        _std.metaData2 = _meta.join(', ');
         _std.importo = parseFloat(item.importo);
         _std.stato = _statoPendenza;
         _std.rawData = item;
@@ -109,7 +135,7 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
         _std.primaryIcon = inCart?'remove_shopping_cart':'shopping_cart';
         _std.primaryIconOff = inCart?'shopping_cart':'remove_shopping_cart';
       } else {
-        _std.primaryIcon = (PayService.STATI_PENDENZA[item.stato.toUpperCase()] !== PayService.STATI_PENDENZA.SCADUTA)?'receipt':'';
+        _std.primaryIcon = (PayService.STATI_PENDENZA[item.stato.toUpperCase()] === PayService.STATI_PENDENZA.ESEGUITA)?'receipt':'';
       }
       return _std;
     });
@@ -145,6 +171,10 @@ export class PosizioneDebitoriaComponent implements OnInit, AfterViewInit, OnDes
       this.pay.getRPP(target.rawData.rpp, false);
     }
     // PayService.I18n.json.Cart.Badge = TranslateLoaderExt.Pluralization(PayService.I18n.jsonSchema.Cart.BadgeSchema[this.translate.currentLang], PayService.ShoppingCart.length);
+  }
+
+  _onItem(event: any, item: any) {
+    this.pay.router.navigateByUrl('/dettaglio-posizione', { state: item });
   }
 
   __setUIDKey(item: any): string {

@@ -18,6 +18,7 @@ import { Component, HostBinding, Input, OnInit } from '@angular/core';
   styles: [`
     :host {
       display: block;
+      cursor: pointer;
     }
   `]
 })

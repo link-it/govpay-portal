@@ -1,16 +1,16 @@
 <div class="container py-5">
   <div class="row">
-    <div class="col-12 col-md-2"></div>
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-lg-2"></div>
+    <div class="col-12 col-lg-8">
       <pay-title-deco class="mb-5" art-class="title-deco" [simple]="true" [titolo]="Pay.I18n.json.Posizione.Debiti.Titolo"></pay-title-deco>
-      <pay-item *ngFor="let sp of Pay.PosizioneDebitoria" [mainText]="sp.titolo" [metadata]="sp.sottotitolo" [primary-icon]="sp.primaryIcon"
-                [primary-icon-off]="sp.primaryIconOff" [secondaryText]="pay.currencyFormat(sp.importo)" [item]="sp"
-                [expanding-mode]="sp.expandMode" [mobile-breakpoint]="Pay.MobileBreakPointNotice" (on-icon-click)="_onIcon($event)"
+      <pay-item-ext *ngFor="let sp of Pay.PosizioneDebitoria" [mainText]="sp.titolo" [metadata1]="sp.metaData1" [metadata2]="sp.metaData2"
+                [primary-icon]="sp.primaryIcon" [primary-icon-off]="sp.primaryIconOff" [secondaryText]="pay.currencyFormat(sp.importo)"
+                [item]="sp" [expanding-mode]="sp.expandMode" [mobile-breakpoint]="Pay.MobileBreakPointNotice"
+                (on-item-click)="_onItem($event, sp)" (on-icon-click)="_onIcon($event)"
                 [disable-gesture]="sp.primaryIcon===''">
         <p expanding-content *ngFor="let info of sp.collapsingInfo">{{ info }}</p>
-      </pay-item>
+      </pay-item-ext>
     </div>
-    <div class="col-12 col-md-2"></div>
+    <div class="col-12 col-lg-2"></div>
   </div>
 </div>
-

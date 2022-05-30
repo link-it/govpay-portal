@@ -1,8 +1,8 @@
 {
   "Language": {
     "Gestore": {
-      "Ragione": "Novares SPA, VAT and Tax ID: 12105121003, CCIAA Rome 1350563, Share capital € 000,000.00 fully paid",
-      "Sede": "Via degli Orti di Trastevere 72, 00000 Roma, phone: 06 98960999, PEC: novares@pec.novares.it, web: www.novares.it"
+      "Ragione": "Company Name S.p.A",
+      "Sede": "Via Roma, 1, 00100 Roma, telefono: 06 1234567890, PEC: pec@pec.dominio.it, web: www.dominio.it"
     },
     "Header": {
       "Titolo": "Administration",
@@ -75,7 +75,9 @@
         "Stampa": "Print notice",
         "Totale": "Total",
         "Inserimento": "Notice added to cart",
-        "Rimozione": "Notice removed from cart"
+        "Rimozione": "Notice removed from cart",
+        "PagaDiNuovo": "Pay again",
+        "CarrelloVuoto": "Empty cart"
       }
     },
     "DettaglioServizio": {
@@ -108,6 +110,18 @@
       "Titolo": "Debt position",
       "Debiti": {
         "Titolo": "{{value}} notice available|{{value}} notices available"
+      }
+    },
+    "DettaglioPosizione": {
+      "Titolo": "Debt position information",
+      "Dialog": {
+        "Riepilogo": "Summary",
+        "DatiAllegati": "Data attached",
+        "Avviso": "Do you want to add this charge to the cart with these data just entered?",
+        "Causale": "Causal payment",
+        "ImportoPendenza": "Amount due",
+        "Submit": "Add to cart",
+        "Close": "Cancel"
       }
     },
     "Archivio": {
@@ -210,6 +224,7 @@
       "PendenzaAnnullata": "The notice with number {{numeroAvviso}} has benn canceled",
       "PendenzaSconosciuta": "The notice with number {{numeroAvviso}} is unknown",
       "PendenzaScaduta": "The notice with number {{numeroAvviso}} has expired on {{data}}",
+      "ServizioValidazioneNonDisponibile": "Validation service not available",
       "CodiciEsito": {
         "InCorso": "In progress",
         "Annullato": "Canceled",
@@ -221,15 +236,25 @@
       "Filtro": {
         "NessunaCorrispondenza": "No matches.",
         "Risultati": {
-          "SS": "One service found in one department",
-          "SP": "One service found in {{value}} departments",
-          "PS": "{{value}} services found in one department",
-          "PP": "{{valueN}} services found in {{valueM}} departments",
+          "SS": "One service found in one group",
+          "SP": "One service found in {{value}} groups",
+          "PS": "{{value}} services found in one group",
+          "PP": "{{valueN}} services found in {{valueM}} groups",
+          "Filtro": "{{value}} service found|{{value}} services found",
           "ServiziAssessorato": "{{value}} service found|{{value}} services found"
         },
         "NessunRisultato": "No results.",
         "Placeholder": "Search a service..."
       }
+    },
+    "StatiPendeza": {
+      "ESEGUITA": "Done",
+      "DUPLICATA": "Duplicated",
+      "NON_ESEGUITA": "Not performed",
+      "ESEGUITA_PARZIALE": "Partially performed",
+      "ANNULLATA": "Annullata",
+      "SCADUTA": "Expired",
+      "IN_RITARDO": "Late"
     }
   }
 }

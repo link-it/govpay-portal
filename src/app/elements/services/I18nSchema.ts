@@ -78,7 +78,9 @@ export class I18n {
         Stampa: '',
         Totale: '',
         Inserimento: '',
-        Rimozione: ''
+        Rimozione: '',
+        PagaDiNuovo: '',
+        CarrelloVuoto: ''
       }
     },
     DettaglioServizio: {
@@ -111,6 +113,19 @@ export class I18n {
       Titolo: '',
       Debiti: {
         Titolo: ''
+      }
+    },
+    DettaglioPosizione: {
+      Titolo: '',
+      Dialog: {
+        Riepilogo: '',
+        DatiAllegati: '',
+        Aggiungi: '',
+        Rimuovi: '',
+        Scarica: '',
+        ImportoPendenza: '',
+        Submit: '',
+        Close: ''
       }
     },
     Archivio: {
@@ -213,6 +228,7 @@ export class I18n {
       PendenzaAnnullata: '',
       PendenzaSconosciuta: '',
       PendenzaScaduta: '',
+      ServizioValidazioneNonDisponibile: '',
       CodiciEsito: {
         InCorso: '',
         Annullato: '',
@@ -228,11 +244,22 @@ export class I18n {
           SP: '',
           PS: '',
           PP: '',
-          ServiziAssessorato: ''
+          Filtro: '',
+          ServiziAssessorato: '',
+          Flat: ''
         },
         NessunRisultato: '',
         Placeholder: ''
       }
+    },
+    StatiPendeza: {
+      ESEGUITA: '',
+      DUPLICATA: '',
+      NON_ESEGUITA: '',
+      ESEGUITA_PARZIALE: '',
+      ANNULLATA: '',
+      SCADUTA: '',
+      IN_RITARDO: ''
     }
   };
 

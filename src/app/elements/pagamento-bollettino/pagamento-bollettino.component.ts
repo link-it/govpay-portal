@@ -37,6 +37,9 @@ export class PagamentoBollettinoComponent implements OnInit, AfterViewInit, OnDe
       this.pay.sessione().then(() => {
       });
     }
+    if (!PayService.HasServices) {
+      PayService.TabsBehavior.next({ update: true, tabs: false });
+    }
   }
 
   ngOnDestroy() {
@@ -114,12 +117,12 @@ export class PagamentoBollettinoComponent implements OnInit, AfterViewInit, OnDe
           }
           switch(_stato) {
             case (PayService.STATI_VERIFICA_PENDENZA['SCADUTA']):
-             _expired = true;
-            break;
+              _expired = true;
+              break;
             case (PayService.STATI_VERIFICA_PENDENZA['ESEGUITA']):
             case (PayService.STATI_VERIFICA_PENDENZA['DUPLICATA']):
               _paid = true;
-            break;
+              break;
             default:
               _expired = false;
               _paid = false;

@@ -1,4 +1,4 @@
-@import '~bootstrap/dist/css/bootstrap.min.css';
+// @import '~bootstrap/dist/css/bootstrap.min.css';
 @import 'assets/css/material-icons.css';
 @import 'assets/css/font-titillium-300-400-600-700.css';
 // Angular Theme
@@ -174,8 +174,8 @@ $sidenavWidth: 310px;
   height: auto;
 }
 
-.mat-option:hover:not(.mat-option-disabled),
 .mat-option:focus:not(.mat-option-disabled),
+.mat-option:hover:not(.mat-option-disabled),
 .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
   color: $text-color;
   background-color: $background-2nd-color;
@@ -197,8 +197,8 @@ mat-option .mat-option-text {
   height: unset !important;
 }
 
-.mat-checkbox-indeterminate.mat-primary .mat-checkbox-background,
-.mat-checkbox-checked.mat-primary .mat-checkbox-background {
+.mat-checkbox-checked.mat-primary .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-primary .mat-checkbox-background {
   background-color: $hover-color;
 }
 
@@ -309,23 +309,23 @@ section {
   cursor: default;
 }
 
-pay-spid-login .dropdown-item:hover,
-pay-spid-login .dropdown-item:active,
-.language-bar p.dropdown-item:hover,
-.mat-menu-item:hover:not([disabled]),
-.mat-menu-item.cdk-program-focused:not([disabled]),
-.mat-menu-item.cdk-keyboard-focused:not([disabled]),
-.mat-menu-item-highlighted:not([disabled]),
 .language-bar p.dropdown-item.active,
-.language-bar p.dropdown-item:active {
+.language-bar p.dropdown-item:active,
+.language-bar p.dropdown-item:hover,
+.mat-menu-item-highlighted:not([disabled]),
+.mat-menu-item.cdk-keyboard-focused:not([disabled]),
+.mat-menu-item.cdk-program-focused:not([disabled]),
+.mat-menu-item:hover:not([disabled]),
+pay-spid-login .dropdown-item:active,
+pay-spid-login .dropdown-item:hover {
   color: $text-color;
   background-color: $background-2nd-color;
 }
 
 .language-bar p.dropdown-item.active-item,
-.language-bar p.dropdown-item.active-item:hover,
 .language-bar p.dropdown-item.active-item.active,
 .language-bar p.dropdown-item.active-item:active,
+.language-bar p.dropdown-item.active-item:hover,
 .route-link-disabled,
 .route-link-disabled:hover {
   color: $text-2nd-color;
@@ -397,11 +397,11 @@ mat-sidenav-container.mat-drawer-container {
 
 .side-nav .sidenav-logo-gestore {
   width: auto;
-  height: 3rem
+  height: 3rem;
 }
 
 .side-nav .logo-govpay {
-  padding: 3rem 1rem 1rem 1rem;
+  padding: 3rem 1rem 1rem;
 }
 
 .side-nav .logo-govpay p {
@@ -447,6 +447,7 @@ mat-sidenav-container.mat-drawer-container {
   color: $text-color;
   background-color: $background-color;
 }
+
 .header-bar .logged-user {
   font-size: 1rem;
   font-weight: 400;
@@ -531,8 +532,8 @@ mat-sidenav-container.mat-drawer-container {
   color: $hover-color;
 }
 
-pay-field-group:only-child,
-pay-field-group:last-child {
+pay-field-group:last-child,
+pay-field-group:only-child {
   margin-bottom: 0;
 }
 
@@ -540,8 +541,8 @@ pay-field-group .label-field {
   color: $text-2nd-color;
 }
 
-pay-field-group .valore-field a,
-pay-field-group .routable span.valore-field {
+pay-field-group .routable span.valore-field,
+pay-field-group .valore-field a {
   word-break: break-word;
 }
 
@@ -606,9 +607,9 @@ pay-choice-dialog .mat-form-field.mat-focused .mat-form-field-label {
   color: $text-color !important;
 }
 
-.mat-form-field.mat-focused .mat-form-field-ripple,
 .mat-focused .mat-form-field-ripple,
-.mat-focused .mat-form-field-underline {
+.mat-focused .mat-form-field-underline,
+.mat-form-field.mat-focused .mat-form-field-ripple {
   background-color: $hover-color;
 }
 
@@ -723,8 +724,8 @@ pay-title-deco[aria-expanded="false"] .title-deco.collapsible-title:after {
   color: $text-color;
 }
 
-pay-group:last-child,
-.quadro-servizio {
+.quadro-servizio,
+pay-group:last-child {
   margin-bottom: 3rem;
 }
 
@@ -773,7 +774,7 @@ pay-group .collapse-area {
 }
 
 pay-group .collapse-content {
-  padding: 1.125rem 0 0 0;
+  padding: 1.125rem 0 0;
   margin: 0;
 }
 
@@ -789,20 +790,19 @@ pay-group button.trigger-icon span.mat-button-wrapper {
   line-height: 1 !important;
 }
 
-
 pay-simple-item {
   position: relative;
   background-color: $background-nth-color;
   margin-bottom: .5rem;
 }
 
-pay-simple-item:only-child,
-pay-simple-item:last-child {
+pay-simple-item:last-child,
+pay-simple-item:only-child {
   margin-bottom: 0;
 }
 
 pay-simple-item:hover {
-  background-color: $background-2nd-color;
+  background-color: $background-color;
 }
 
 pay-simple-item .main-data .primary-text,
@@ -868,7 +868,7 @@ p.meta-text {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.3;
-  margin: 0 0 0 0;
+  margin: 0;
   word-break: break-all;
 }
 
@@ -923,7 +923,7 @@ pay-cart .cart-footer {
 
 pay-cart .cart-footer .main-text {
   color: $text-color;
-  margin: 0 0 0 0;
+  margin: 0;
 }
 
 pay-cart .cart-footer .main-text.currency-value {
@@ -975,16 +975,14 @@ pay-cart .cart-footer .total .col {
 }
 
 .markdown-section h3,
-.markdown-section p,
-.markdown-section li {
+.markdown-section li,
+.markdown-section p {
   font-size: 1rem;
   line-height: 1.5;
   font-weight: 400;
   margin-bottom: 1rem;
 }
-
 @media (min-width: 768px) {
-
   .markdown-section h1,
   .markdown-section h2 {
     font-size: 1.5rem;
@@ -1001,8 +999,8 @@ pay-cart .cart-footer .total .col {
   }
 
   .markdown-section h3,
-  .markdown-section p,
-  .markdown-section li {
+  .markdown-section li,
+  .markdown-section p {
     font-size: 1rem;
     line-height: 1.5;
     font-weight: 400;
@@ -1023,8 +1021,8 @@ label.mat-form-field-label {
   text-transform: lowercase;
 }
 
-legend.legend:first-letter,
-label.mat-form-field-label:first-letter {
+label.mat-form-field-label:first-letter,
+legend.legend:first-letter {
   text-transform: uppercase;
 }
 
@@ -1041,6 +1039,10 @@ label.mat-form-field-label:first-letter {
   border-radius: 0 !important;
 }
 
+.mat-menu-content {
+  max-height: 50vh;
+}
+
 @media (min-width: 768px) {
 
   section {
@@ -1052,5 +1054,160 @@ label.mat-form-field-label:first-letter {
     font-size: 3rem;
     margin: 0;
   }
-
 }
+
+@media (max-width: 1024px) {
+
+  pay-quadro .quadro .titolo {
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+}
+
+// pay-item-ext
+
+pay-item-ext .secondary-column p.main-text {
+  text-align: right;
+  font-weight: 600;
+}
+
+pay-item-ext .action-menu-icon,
+pay-item-ext .primary-icon {
+  color: $reverse-text-color;
+  background-color: $hover-color;
+}
+
+pay-item-ext .action-menu-icon:hover,
+pay-item-ext .primary-icon:hover {
+  color: $reverse-text-color;
+  background-color: $text-color;
+}
+
+pay-item-ext .touch-device {
+  background: $hover-color;
+}
+
+pay-item-ext .touch-device mat-icon {
+  color: $reverse-text-color;
+}
+
+pay-item-ext .item {
+  background: $background-nth-color;
+}
+
+pay-item-ext .expanding-container {
+  padding-top: .9375rem;
+  padding-bottom: .9375rem;
+  border-top: 1px solid $background-3rd-color;
+}
+
+pay-item-ext .expanding-container p {
+  margin-bottom: .5rem;
+}
+
+pay-item-ext .expanding-container p:last-child,
+pay-item-ext .expanding-container p:only-child {
+  margin-bottom: 0;
+}
+
+// Pendenze
+
+a {
+  color: #212121;
+
+  &:hover {
+    color: #797979;
+  }
+}
+
+.lh-90 {
+  line-height: 90%;
+}
+
+.lh-130 {
+  line-height: 130%;
+}
+
+.color-gray {
+  color: #797979 !important;
+}
+
+.word-break-all {
+  word-break: break-all !important;
+}
+
+.shadow {
+  box-shadow: 0 1px 1px 0 rgba(33,33,33,.2) !important;
+}
+
+.no-border-radius {
+  border-radius: 0 !important;
+}
+
+.regular-14 {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.regular-24 {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.medium-18 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.medium-24 {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.word-break-all {
+  word-break: break-all !important;
+}
+
+.matcard-title {
+  display: block;
+  margin: 0;
+}
+
+.select-button {
+  color: #212121;
+  /* font-size: 1rem; */
+  /* font-weight: 600; */
+  height: 2.5rem;
+  background-color: #ffffff;
+  display: inline-block;
+  padding: 8px 1.5rem;
+  border: 1px solid rgba(33, 33, 33, 0.42);
+  border-radius: 25px;
+  text-align: center;
+  transition: background-color .25s linear;
+}
+
+.select-button.active {
+  background-color: #BBDEFB;
+}
+
+.select-button.active:hover {
+  background-color: #BBDEFB;
+}
+
+.select-button:hover {
+  color: #212121;
+  background-color: #BBDEFB;
+}
+
+.material-icons, .material-icons img {
+  vertical-align: middle;
+  line-height: 1 !important;
+}
+
+.icon-20 {
+  width: 20px;
+}
+
+@import 'scss/survey_custom';
+@import 'scss/custom_responsive';

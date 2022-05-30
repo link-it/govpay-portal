@@ -7,6 +7,7 @@ import { DettaglioServizioComponent } from './elements/dettaglio-servizio/dettag
 import { CartComponent } from './elements/cart/cart.component';
 import { RicevutaPagamentoComponent } from './elements/ricevuta-pagamento/ricevuta-pagamento.component';
 import { PosizioneDebitoriaComponent } from './elements/posizione-debitoria/posizione-debitoria.component';
+import { DettaglioPosizioneComponent } from './elements/dettaglio-posizione/dettaglio-posizione.component';
 import { ArchivioComponent } from './elements/archivio/archivio.component';
 import { EsitoComponent } from './elements/esito/esito.component';
 import { AppComponent } from './app.component';
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'carrello', component: CartComponent, canActivate: [ AuthGuardService ] },
   { path: 'ricevuta', component: RicevutaPagamentoComponent, canActivate: [ AuthGuardService ] },
   { path: 'riepilogo', component: PosizioneDebitoriaComponent, canActivate: [ AuthGuardService ] },
+  { path: 'dettaglio-posizione', component: DettaglioPosizioneComponent, canActivate: [ AuthGuardService ] },
   { path: 'archivio', component: ArchivioComponent, canActivate: [ AuthGuardService ] },
   { path: 'esito-pagamento', component: EsitoComponent, canActivate: [ AuthGuardService ] },
   // { path: 'profilo', component: ProfiloComponent, canActivate: [ AuthGuardService ] },

@@ -10,6 +10,7 @@ import { I18n } from './I18nSchema';
 import { Language } from '../classes/language';
 import { Creditore } from '../classes/creditore';
 import { Standard } from '../classes/standard';
+import { StandardExt } from '../classes/standard-ext';
 
 import * as moment from 'moment';
 import { AvvisoTpl } from '../classes/avviso-tpl';
@@ -24,6 +25,8 @@ declare let JSZip;
 export class PayService implements OnInit, OnDestroy {
 
   public static DateAdapter: any;
+
+  public static Versione: string;
 
   public static RECAPTCHA_V3_SITE_KEY: any;
   public static SPID: any;
@@ -43,6 +46,7 @@ export class PayService implements OnInit, OnDestroy {
   public static POLLING_INTERVAL: number = 3000;
   public static PAY_RESPONSE_URL: string = '';
   public static UUID_CHECK: string = '';
+  public static ALPHA_2_CODE: string = '';
   public static ALPHA_3_CODE: string = '';
   public static Gestore: any;
   public static CollapsibleSections: any;
@@ -64,12 +68,16 @@ export class PayService implements OnInit, OnDestroy {
   public static ActionDetail: boolean = false;
   public static MobileBreakPointNotice: number = 768;
   public static EditMode: boolean = false;
+  public static HasServices: boolean = false;
   public static Jump: RegExp = /\/dettaglio-servizio\/(\d{11})\/(\d+)/;
   public static ImpostazioniOrdinamento: any;
   public static ImpostazioniLayout: any;
+  public static Filtri: any[];
 
   public static TabsBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
   public static StaticRouteBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
+
+  public static ScrollBehavior: BehaviorSubject<any> = new BehaviorSubject(null);
 
   // URL Services
   public static URL_SERVIZI: string = '/domini/{idDominio}/tipiPendenza';
@@ -157,6 +165,8 @@ export class PayService implements OnInit, OnDestroy {
   protected spinnerCount: number = 0;
   // protected _langSubscription: Subscription;
 
+  public lastTab = '';
+
   constructor(private message: MatSnackBar, private http: HttpClient, public router: Router,
               private paginator: MatPaginatorIntl, public translate: TranslateService,
               private dateAdapter: DateAdapter<any>) {
@@ -203,6 +213,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.RouteConfig = PayConfig['ROUTING'];
     PayService.ImpostazioniOrdinamento = PayConfig['ORDINAMENTO'];
     PayService.ImpostazioniLayout = PayConfig['LAYOUT'];
+    PayService.Filtri = PayConfig['FILTRI'];
   }
 
   // static StatiPendenza(): any[] {
@@ -651,7 +662,7 @@ export class PayService implements OnInit, OnDestroy {
    * @param {boolean} zip
    * @param {boolean} open
    */
-   pdf(props: AvvisoTpl[], recaptcha: string = '', zip: boolean = true, open: boolean = true) {
+  pdf(props: AvvisoTpl[], recaptcha: string = '', zip: boolean = true, open: boolean = true) {
     const methods = props.map((prop, index) => {
       let headers = new HttpHeaders();
       headers = headers.set('Content-Type', 'application/pdf');
@@ -810,6 +821,43 @@ export class PayService implements OnInit, OnDestroy {
   }
 
   /**
+   * getServizio
+   * @param {string} url
+   * @returns {Observable<any>}
+   */
+  getServizio(url: string, query?: string): Observable<any> {
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.get(url, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response.body || response;
+        })
+      );
+  }
+
+  /**
+   * postServizio
+   * @param {string} url
+   * @param {any} body
+   * @returns {Observable<any>}
+   */
+  postServizio(url: string, body: any, query?: string): Observable<any> {
+    if (query) {
+      url += '?' + query;
+    }
+    return this.http.post(url, body, {observe: 'response'})
+      .pipe(
+        timeout(PayService.TIMEOUT),
+        map((response: HttpResponse<any>) => {
+          return response.body || response;
+        })
+      );
+  }
+
+  /**
    * On error handler
    * @param error
    * @param {string} customMessage
@@ -950,7 +998,9 @@ export class PayService implements OnInit, OnDestroy {
    */
   static TranslateDynamicObject(_translate: TranslateService, _pay: PayService) {
     PayService.DateAdapter.setLocale(_translate.currentLang);
-    PayService.ALPHA_3_CODE = PayService.LINGUE.filter((l: Language) => (l.alpha2Code === _translate.currentLang))[0].alpha3Code;
+    const lang = PayService.LINGUE.filter((l: Language) => (l.alpha2Code === _translate.currentLang))[0];
+    PayService.ALPHA_2_CODE = lang.alpha2Code;
+    PayService.ALPHA_3_CODE = lang.alpha3Code;
     _translate.get('Language').subscribe((_language: any) => {
       PayService.I18n.json = Object.assign({}, _language);
       // if (!PayService.I18n.jsonSchema.Cart.BadgeSchema[_translate.currentLang]) {
@@ -1015,6 +1065,22 @@ export class PayService implements OnInit, OnDestroy {
         PayService.ActionDetail = true;
         PayService.Header.LeftIcon = 'close';
         break;
+      case '/dettaglio-posizione':
+        if (PayService.ExtraState) {
+          let title: string[];
+          if (PayService.ExtraState instanceof StandardExt) {
+            const raw: any = (PayService.ExtraState as StandardExt).rawData;
+            title = [ raw['causale'] ];
+          } else {
+            title = [ PayService.ExtraState['causale'] ];
+          }
+          PayService.Header.Titolo = { mobile: title[0], desktop: title.join(' - ') };
+        } else {
+          PayService.Header.Titolo = PayService.I18n.json.Header.Titolo;
+        }
+        PayService.ActionDetail = true;
+        PayService.Header.LeftIcon = 'close';
+        break;
       case '/carrello':
         PayService.Header.Titolo = PayService.I18n.json.Cart.Titolo;
         PayService.Header.LeftIcon = 'menu';
@@ -1063,7 +1129,7 @@ export class PayService implements OnInit, OnDestroy {
     PayService.TabsBehavior.next({ update: true, tabs: tabs });
   }
 
-  static MapResultsTitle(N: number, M: number): string {
+  static MapResultsTitle(N: number, M: number, G: string): string {
     const risultati: any = PayService.I18n.json.Common.Filtro.Risultati;
     let text = PayService.I18n.json.Common.Filtro.NessunRisultato;
     if (N === 1) {
@@ -1082,6 +1148,7 @@ export class PayService implements OnInit, OnDestroy {
         text = risultati.PP.split('{{valueN}}').join(N.toString()).split('{{valueM}}').join(M.toString());
       }
     }
+    text = text.split('{{valueG}}').join(G.toString());
     return text;
   }
 
@@ -1223,5 +1290,9 @@ export class PayService implements OnInit, OnDestroy {
       }
     }
     return 0;
+  }
+
+  public getFileType(name: string, type: string = 'json') {
+    return this.http.get<any>(`assets/${name}.${type}`, { headers: { 'Cache-Control': 'no-cache' } });
   }
 }

@@ -1,34 +1,59 @@
-<div class="container pt-5" *ngIf="!Pay.AssessoratoDetail">
+<div class="container pt-5" *ngIf="!Pay.AssessoratoDetail && !_loading">
   <div class="row mb-5">
     <div class="col-12">
       <pay-title-deco art-class="title-deco" [simple]="true" [titolo]="__title"></pay-title-deco>
     </div>
   </div>
-  <div class="row mb-5">
+  <div class="row mb-3">
     <div class="col-12">
       <mat-form-field class="w-100">
         <input #filtro matInput [placeholder]="Pay.I18n.json.Common.Filtro.Placeholder" [(value)]="__filterText" (keydown)="_keyDown($event)" autocomplete="off">
-        <mat-icon [ngClass]="filtro.value?'action':''" matSuffix (click)="__matFilterIcon(filtro)" aria-label="ricerca">{{ filtro.value?'close':'search' }}</mat-icon>
+        <mat-icon class="icon-search" [ngClass]="filtro.value?'action':''" matSuffix (click)="__matFilterIcon(filtro)" aria-label="ricerca">{{ filtro.value?'close':'search' }}</mat-icon>
       </mat-form-field>
     </div>
   </div>
-  <div class="row" *ngIf="_servizi">
-    <ng-template [ngIf]="!filtro.value.trim()">
-      <div class="col-6 col-md-3 quadro-servizio" *ngFor="let qs of _servizi[Pay.ALPHA_3_CODE].groups; let i = index">
-        <pay-quadro [quadro-class]="'quadro'" [logo-class]="'cover logo'" [titolo]="qs.group" [source]="qs"
-                    [image-src]="qs.backgroundSrc" (click)="_onQuadroClick(qs, i)"></pay-quadro>
+  <div class="row mb-5" *ngIf="_taxonomies && Taxonomies.showTaxonomies && !Pay.ImpostazioniLayout['FLAT_VIEW']">
+    <div class="col-12">
+      <button type="button" class="select-button mb-2 mr-3" [class.active]="isCurrentTaxonomy(_taxonomies.taxonomy1)" [class.w-100]="!Pay.SmBlock()" (click)="_setTaxonomy(_taxonomies.taxonomy1.id)" *ngIf="_taxonomies.taxonomy1">
+        <span class="d-inline material-icons" *ngIf="_taxonomies.taxonomy1.image"><img class="icon-20" [src]="_taxonomies.taxonomy1.image"></span>
+        <i class="material-icons mr-1" *ngIf="!_taxonomies.taxonomy1.image">{{ _taxonomies.taxonomy1.icon }}</i> 
+        <span>Mostra {{ _taxonomies.taxonomy1.name }}</span></button>
+      <button type="button" class="select-button" [class.active]="isCurrentTaxonomy(_taxonomies.taxonomy2)" [class.w-100]="!Pay.SmBlock()" (click)="_setTaxonomy(_taxonomies.taxonomy2.id)" *ngIf="_taxonomies.taxonomy2">
+        <span class="d-inline material-icons" *ngIf="_taxonomies.taxonomy2.image"><img class="icon-20" [src]="_taxonomies.taxonomy2.image"></span>
+        <i class="material-icons mr-1" *ngIf="!_taxonomies.taxonomy2.image">{{ _taxonomies.taxonomy2.icon }}</i> 
+        <span class="ml-2">Mostra {{ _taxonomies.taxonomy2.name }}</span></button>
+    </div>
+  </div>
+  <div class="row" [class.mt-5]="Pay.ImpostazioniLayout['FLAT_VIEW']" *ngIf="_servizi">
+    <ng-container *ngIf="Pay.ImpostazioniLayout['FLAT_VIEW']">
+      <div class="col-6 quadro-servizio" [ngClass]="{ 'col-md-4': _smallView, 'col-md-3': !_smallView }" *ngFor="let item of _servizi[Pay.ALPHA_3_CODE].flat|serviceFilter:filtro.value:Pay.Filtri; let i = index">
+        <pay-quadro-flat #psi
+          [gruppo]="item.group"
+          [titolo]="item.title"
+          [meta]="_mapMetaData(item)"
+          [source]="item"
+          (click)="_onItemClick(item)">
+        </pay-quadro-flat>
       </div>
-    </ng-template>
-    <ng-template [ngIf]="filtro.value.trim()">
-      <div class="col-12">
-        <!--<pay-simple-item group-content *ngFor="let fs of _servizi[Pay.ALPHA_3_CODE].flat" [primaryText]="fs.category" (click)="_onGroupItemClick(fs)"></pay-simple-item>-->
-        <pay-group *ngFor="let gs of _servizi[Pay.ALPHA_3_CODE].groups|serviceGroupFilter:filtro.value:_servizi[Pay.ALPHA_3_CODE].dictionary; let i = index"
-                   [groupIcon]="'group_work'" [title]="gs.group" [id]="i" [open]="true">
-          <pay-simple-item #psi group-content *ngFor="let se of gs.items" [primaryText]="se.title" [metadata]="_mapMetaData(se)" (click)="_onItemClick(se)"></pay-simple-item>
-          <p group-content class="m-0" *ngIf="gs.items.length === 0">{{Pay.I18n.json.Common.Filtro.NessunaCorrispondenza}}</p>
-        </pay-group>
-      </div>
-    </ng-template>
+    </ng-container>
+    <ng-container *ngIf="!Pay.ImpostazioniLayout['FLAT_VIEW']">
+      <ng-template [ngIf]="!filtro?.value.trim()">
+        <div class="col-6 quadro-servizio" [ngClass]="{ 'col-md-4': _smallView, 'col-md-3': !_smallView }" *ngFor="let qs of _servizi[Pay.ALPHA_3_CODE].groups; let i = index">
+          <pay-quadro [quadro-class]="'quadro'" [logo-class]="'cover logo'" [titolo]="_getTaxonomyTitle(qs)" [source]="qs"
+                      [image-src]="qs.backgroundSrc" (click)="_onQuadroClick(qs, i)"></pay-quadro>
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="filtro.value.trim()">
+        <div class="col-12">
+          <!--<pay-simple-item group-content *ngFor="let fs of _servizi[Pay.ALPHA_3_CODE].flat" [primaryText]="fs.category" (click)="_onGroupItemClick(fs)"></pay-simple-item>-->
+          <pay-group *ngFor="let gs of _servizi[Pay.ALPHA_3_CODE].groups|serviceGroupFilter:filtro.value:_servizi[Pay.ALPHA_3_CODE].dictionary:Pay.Filtri; let i = index"
+                    [groupIcon]="'group_work'" [groupImage]="gs.backgroundSrc" [title]="_getTaxonomyTitle(gs)" [id]="i" [open]="true">
+            <pay-simple-item #psi group-content *ngFor="let se of gs.items" [primaryText]="se.title" [metadata]="_mapMetaData(se)" (click)="_onItemClick(se)"></pay-simple-item>
+            <p group-content class="m-0" *ngIf="gs.items.length === 0">{{Pay.I18n.json.Common.Filtro.NessunaCorrispondenza}}</p>
+          </pay-group>
+        </div>
+      </ng-template>
+    </ng-container>
   </div>
 </div>
-<pay-servizi-assessorato *ngIf="Pay.AssessoratoDetail" [assessorato]="_assessorato" (on-close)="__closeAssessorato()"></pay-servizi-assessorato>
+<pay-servizi-assessorato *ngIf="Pay.AssessoratoDetail" [assessorato]="_assessorato" [tassonomia]="_currentTaxonomy" [tassonomia1]="_taxonomy1" [tassonomia2]="_taxonomy2" (on-close)="__closeAssessorato()"></pay-servizi-assessorato>
