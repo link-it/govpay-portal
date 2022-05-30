@@ -11,7 +11,7 @@ import { init as initCustomWidget } from './customwidget';
 
 import * as $ from 'jquery';
 
-declare let SurveyValidators;
+declare let SurveyCustomFunctions;
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -37,6 +37,8 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   Pay = PayService;
 
   _isBootstrapMaterial = false;
+
+  _firstInitilize = true;
 
   constructor(
     public pay: PayService,
@@ -77,12 +79,12 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     Survey.Serializer.addProperty('page', 'popupdescription:text');
 
     // Survey.FunctionFactory.Instance.register('CFValidator', this.customSurveyValidators.codiceFiscaleValidator.bind(this.customSurveyValidators));
-    if (SurveyValidators.length) {
-      SurveyValidators.forEach(plugin => {
-        Survey.FunctionFactory.Instance.register(plugin.name, plugin.validator);
+    if (SurveyCustomFunctions.length) {
+      SurveyCustomFunctions.forEach(plugin => {
+        Survey.FunctionFactory.Instance.register(plugin.name, plugin.method, plugin.isAsync);
       });
     } else {
-      // console.log('SurveyValidators non configurato');
+      // console.log('SurveyCustomFunctions non configurato');
     }
 
     Survey.StylesManager.applyTheme(this.theme);
@@ -127,6 +129,9 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
             label.innerHTML += ' *';
           }
           el.parentNode.insertBefore(label, el);
+        }
+        if (!this._firstInitilize) {
+          $(el).bootstrapMaterialDesign();
         }
       });
     }
@@ -214,6 +219,9 @@ export class SurveyComponent implements OnInit, AfterViewInit, OnChanges, OnDest
 
   ngAfterViewInit() {
     this._initBoostrapMaterial();
+    setTimeout(() => {
+      this._firstInitilize = false;
+    } , 1000);
   }
 
   _initBoostrapMaterial() {

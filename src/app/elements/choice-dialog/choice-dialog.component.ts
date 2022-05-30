@@ -24,6 +24,8 @@ export class ChoiceDialogComponent implements OnInit, AfterViewInit {
     this._config = value;
     this._configPartners = (value && value.AccessPanel.Partners);
     this._configGovpay = (value && value.AccessPanel.Govpay);
+    this._configGovpay = (value && value.AccessPanel.Govpay);
+    this._menuLogo = (value && value.AccessPanel.MenuLogo);
   }
   @Input('partners') _partners: LogoPartner[];
 
@@ -33,6 +35,7 @@ export class ChoiceDialogComponent implements OnInit, AfterViewInit {
   _config: Configuratore = null;
   _configPartners: boolean = false;
   _configGovpay: boolean = false;
+  _menuLogo: boolean = false;
 
   constructor() { }
 
@@ -53,7 +56,7 @@ export class ChoiceDialogComponent implements OnInit, AfterViewInit {
 
 export class Configuratore {
   Menu: { Infos: false, Partners: false, Govpay: false };
-  AccessPanel: { Partners: true, Govpay: false };
+  AccessPanel: { Partners: true, Govpay: false, MenuLogo: false };
 }
 
 export class LogoPartner {
