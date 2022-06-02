@@ -42,3 +42,19 @@
 .icon-search {
   top: 8px;
 }
+
+.mat-button-toggle-group {
+  height: 40px;
+  margin-bottom: 8px;  
+  align-items: center;
+  border: 1px solid rgba(33, 33, 33, 0.42);
+}
+
+.mat-button-toggle-group .material-icons {
+  line-height: 1 !important;
+}
+
+.mat-button-toggle-checked {
+  background-color: #BBDEFB;
+  color: rgba(0, 0, 0, 0.54);
+}

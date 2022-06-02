@@ -25,7 +25,7 @@ import { AuthGuardService } from './elements/services/auth-gard.service';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { TranslateLoaderExt } from './elements/classes/translate-loader-ext';
 import {
-  MatBadgeModule, MatButtonModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule,
+  MatBadgeModule, MatButtonModule, MatButtonToggleModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule,
   MatInputModule, MatListModule, MatMenuModule, MatSidenavModule, MatTabsModule
 } from '@angular/material';
 import { HeaderBarComponent } from './elements/header-bar/header-bar.component';
@@ -230,6 +230,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatSelectModule,
     MatAutocompleteModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatIconModule,
     MatDialogModule,
     MatBadgeModule,
