@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, ViewChildren, QueryList, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, ViewChildren, QueryList, AfterContentChecked, HostListener } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { PayService } from '../services/pay.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
@@ -18,6 +18,16 @@ export let updateLayoutNow: BehaviorSubject<boolean> = new BehaviorSubject(false
   styleUrls: ['./pagamento-servizio.component.css']
 })
 export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key == 'v' && event.ctrlKey){
+      this._showToggleLayout = !this._showToggleLayout;
+    }
+    if (event.key == 't' && event.ctrlKey){
+      this._showTaxonomies = !this._showTaxonomies;
+    }
+  }
+
   @ViewChildren('psi') psi: QueryList<SimpleItemComponent>;
   @ViewChild('filtro', { read: ElementRef }) _filtro: ElementRef;
   Pay = PayService;
@@ -43,6 +53,10 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   _loading = true;
 
   _smallView = false;
+
+  _showTaxonomies = Taxonomies.showTaxonomies;
+  _isFlat = PayService.ImpostazioniLayout['FLAT_VIEW'];
+  _showToggleLayout = PayService.ImpostazioniLayout['SHOW_TOGGLE_LAYOUT'];
 
   constructor(private responsive: BreakpointObserver, public pay: PayService, protected translate: TranslateService) {
     this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
@@ -155,7 +169,6 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   }
 
   _setupGroups(decodedServices: any[], taxonomy1: string, taxonomy2: string): any[] {
-    const _isFlat = PayService.ImpostazioniLayout['FLAT_VIEW'];
     const servicesByLanguage: any = {};
     let mismatch: boolean = false;
     PayService.LINGUE.forEach((lingua: any) => {
@@ -174,11 +187,11 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
         } else {
           const srv: any = service.detail[lingua.alpha3Code] || service.detail['ita'];
           const _mappedService: any = {
-            group: _isFlat ? srv.group : service.detail[taxonomy1] || 'default',
+            group: this._isFlat ? srv.group : service.detail[taxonomy1] || 'default',
             subgroup: service.detail[taxonomy2] || 'default',
             group_rank: srv.group_rank || Number.MAX_VALUE,
             category: srv.category || '',
-            metadata: _isFlat ? srv.short_description || srv.metadata : srv.metadata || '',
+            metadata: this._isFlat ? srv.short_description || srv.metadata : srv.metadata || '',
             taxonomy1: service.detail.taxonomy1 || 'default',
             taxonomy2: service.detail.taxonomy2 || 'default',
             searchTerms: srv.search_terms || '',
@@ -191,7 +204,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           const taxonomy = this._getTaxonomy(group);
           const taxonomyRank = taxonomy ? taxonomy.rank : Number.MAX_VALUE;
           const taxonomyName = taxonomy ? taxonomy.name : '';
-          if (!_isFlat) {
+          if (!this._isFlat) {
             if (!_groups.hasOwnProperty(group)) {
               _groups[group] = [];
               _ranking.push({ group: group, group_rank: taxonomyRank, code: _mappedService.code, name: taxonomyName});
@@ -255,9 +268,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   }
 
   __mapTitle() {
-    const _isFlat = PayService.ImpostazioniLayout['FLAT_VIEW'];
+    // const _isFlat = PayService.ImpostazioniLayout['FLAT_VIEW'];
     if (this._servizi && this._filtro && !this._filtro.nativeElement.value) {
-      if (_isFlat) {
+      if (this._isFlat) {
         this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.Flat, this._servizi[PayService.ALPHA_3_CODE].N);
       } else {
         const valueGroup = (this._servizi[PayService.ALPHA_3_CODE].M > 1) ? this._currentTaxonomy.name : this._currentTaxonomy.singularName;
@@ -342,6 +355,11 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           break;
       }
     }
+    this._resetServizi();
+  }
+
+  _toggleLayout(event) {
+    this._isFlat = !this._isFlat;
     this._resetServizi();
   }
 

@@ -148,6 +148,7 @@
     },
     LAYOUT: {
       FLAT_VIEW: true,
+      SHOW_TOGGLE_LAYOUT: false,
       GROUP_METADATA: [ 'metadata' ],
       DETAILS_METADATA: {
         show_image: true,
@@ -162,6 +163,7 @@
   };
 
   addScript('assets/config/tassonomie.pay');
+  addScript('assets/extensions/custom-functions.pay');
 
   _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
 

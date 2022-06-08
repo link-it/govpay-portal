@@ -800,6 +800,8 @@ MIT
 
 @angular/material/progress-spinner
 
+@angular/material/button-toggle
+
 @zxing/ngx-scanner
 MIT
 MIT License
@@ -1089,8 +1091,6 @@ THE SOFTWARE.
 @angular/material/card
 
 @angular/material/expansion
-
-@angular/material/button-toggle
 
 @angular/material/checkbox
 

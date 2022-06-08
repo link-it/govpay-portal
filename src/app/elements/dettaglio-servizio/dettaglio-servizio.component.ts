@@ -104,7 +104,24 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     PayService.ResetState();
   }
 
-  _generaPendenza(form: any, verify: boolean = false) {
+  _generateRecaptcha(form: any, verify: boolean = false) {
+    try {
+      this.pay.updateSpinner(true);
+      PayService.GenerateRecaptchaV3Token('pagamenti').then((response) => {
+        const token = response.token;
+        this.pay.updateSpinner(false);
+        this._generaPendenza(form, verify, token);
+      }).catch((error) => {
+        this.pay.updateSpinner(false);
+        this.pay.onError(error);
+      });
+    } catch (e) {
+      this.pay.updateSpinner(false);
+      console.error('try/catch', e);
+    }
+  }
+
+  _generaPendenza(form: any, verify: boolean = false, reCaptchaToken = '') {
     const creditore: string = PayService.CreditoreAttivo.value;
     let query = '';
     let tipoPendenza: string = '';
@@ -119,6 +136,9 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
     } else {
       tipoPendenza = PayService.ExtraState['idTipoPendenza'];
       PayService.ExtraState.jsfDef['data'] = data;
+    }
+    if (reCaptchaToken) {
+      query = query ? query + '&gRecaptchaResponse=' + reCaptchaToken : '?gRecaptchaResponse=' + reCaptchaToken;
     }
     this.pay.updateSpinner(true);
     this.pay.richiestaPendenza(creditore, tipoPendenza, data, query).subscribe(
@@ -411,7 +431,7 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
 
   _onSubmitFormly(model) {
     if (this.formlyForm.valid) {
-      this._generaPendenza(model, true);
+      this._generateRecaptcha(model, true);
     }
   }
 
@@ -431,6 +451,6 @@ export class DettaglioServizioComponent implements OnInit, AfterViewInit, OnDest
   _onSubmitSurvey(data) {
     this._surveyEdit = false;
     this._surveyData = data;
-    this._generaPendenza(data, true);
+    this._generateRecaptcha(data, true);
   }
 }
