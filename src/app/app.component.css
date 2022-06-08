@@ -76,3 +76,10 @@ a:hover {
   background-color: #E3F2FD;
   cursor: pointer;
 }
+
+.version {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0 5px 5px;
+}

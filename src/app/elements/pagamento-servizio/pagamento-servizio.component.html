@@ -12,20 +12,26 @@
       </mat-form-field>
     </div>
   </div>
-  <div class="row mb-5" *ngIf="_taxonomies && Taxonomies.showTaxonomies && !Pay.ImpostazioniLayout['FLAT_VIEW']">
-    <div class="col-12">
-      <button type="button" class="select-button mb-2 mr-3" [class.active]="isCurrentTaxonomy(_taxonomies.taxonomy1)" [class.w-100]="!Pay.SmBlock()" (click)="_setTaxonomy(_taxonomies.taxonomy1.id)" *ngIf="_taxonomies.taxonomy1">
+  <div class="row mb-5">
+    <div class="" [ngClass]="{ 'col-12': !_showToggleLayout, 'col-9': _showToggleLayout }" *ngIf="_taxonomies && _showTaxonomies && !_isFlat">
+      <button type="button" class="select-button mb-2 mr-3 text-truncate" [class.active]="isCurrentTaxonomy(_taxonomies.taxonomy1)" [class.w-100]="!Pay.SmBlock()" (click)="_setTaxonomy(_taxonomies.taxonomy1.id)" *ngIf="_taxonomies.taxonomy1">
         <span class="d-inline material-icons" *ngIf="_taxonomies.taxonomy1.image"><img class="icon-20" [src]="_taxonomies.taxonomy1.image"></span>
         <i class="material-icons mr-1" *ngIf="!_taxonomies.taxonomy1.image">{{ _taxonomies.taxonomy1.icon }}</i> 
         <span>Mostra {{ _taxonomies.taxonomy1.name }}</span></button>
-      <button type="button" class="select-button" [class.active]="isCurrentTaxonomy(_taxonomies.taxonomy2)" [class.w-100]="!Pay.SmBlock()" (click)="_setTaxonomy(_taxonomies.taxonomy2.id)" *ngIf="_taxonomies.taxonomy2">
+      <button type="button" class="select-button text-truncate" [class.active]="isCurrentTaxonomy(_taxonomies.taxonomy2)" [class.w-100]="!Pay.SmBlock()" (click)="_setTaxonomy(_taxonomies.taxonomy2.id)" *ngIf="_taxonomies.taxonomy2">
         <span class="d-inline material-icons" *ngIf="_taxonomies.taxonomy2.image"><img class="icon-20" [src]="_taxonomies.taxonomy2.image"></span>
         <i class="material-icons mr-1" *ngIf="!_taxonomies.taxonomy2.image">{{ _taxonomies.taxonomy2.icon }}</i> 
         <span class="ml-2">Mostra {{ _taxonomies.taxonomy2.name }}</span></button>
     </div>
+    <div class="col-sm-3 text-right" [ngClass]="{ 'offset-9': !(_taxonomies && _showTaxonomies && !_isFlat) }" *ngIf="_showToggleLayout">
+      <mat-button-toggle-group name="_isFlat" aria-label="Flat Toggle" (change)="_toggleLayout($event)">
+        <mat-button-toggle value="taxonomies" [checked]="!_isFlat"><mat-icon>grid_view</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="flat" [checked]="_isFlat"><mat-icon>dashboard</mat-icon></mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
   </div>
-  <div class="row" [class.mt-5]="Pay.ImpostazioniLayout['FLAT_VIEW']" *ngIf="_servizi">
-    <ng-container *ngIf="Pay.ImpostazioniLayout['FLAT_VIEW']">
+  <div class="row" [class.mt-5]="_isFlat" *ngIf="_servizi">
+    <ng-container *ngIf="_isFlat">
       <div class="col-6 quadro-servizio" [ngClass]="{ 'col-md-4': _smallView, 'col-md-3': !_smallView }" *ngFor="let item of _servizi[Pay.ALPHA_3_CODE].flat|serviceFilter:filtro.value:Pay.Filtri; let i = index">
         <pay-quadro-flat #psi
           [gruppo]="item.group"
@@ -36,7 +42,7 @@
         </pay-quadro-flat>
       </div>
     </ng-container>
-    <ng-container *ngIf="!Pay.ImpostazioniLayout['FLAT_VIEW']">
+    <ng-container *ngIf="!_isFlat">
       <ng-template [ngIf]="!filtro?.value.trim()">
         <div class="col-6 quadro-servizio" [ngClass]="{ 'col-md-4': _smallView, 'col-md-3': !_smallView }" *ngFor="let qs of _servizi[Pay.ALPHA_3_CODE].groups; let i = index">
           <pay-quadro [quadro-class]="'quadro'" [logo-class]="'cover logo'" [titolo]="_getTaxonomyTitle(qs)" [source]="qs"

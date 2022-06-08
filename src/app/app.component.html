@@ -18,7 +18,7 @@
   </div>
   <a add-on *ngIf="Pay.CreditoreAttivo && Pay.CREDITORI.length === 1" (click)="gotoUrl(Pay.CreditoreAttivo.href)">
     <p class="language-bar-title w-100 m-0 multiline-text">
-      {{ Pay.I18n.json.Header.LanguageBar.Titolo }}
+      {{ Pay.CreditoreAttivo.label }}
     </p>
   </a>
 </pay-language-bar>
@@ -53,7 +53,7 @@
         <a [href]="Pay.Gestore?.ProgettoGovPay.Menu.Url" target="_blank">
           <img class="govpay-prj" *ngIf="Pay.Gestore?.Configurazione.Menu.Govpay" [src]="'assets/images/'+Pay.Gestore?.ProgettoGovPay.Menu.Logo" [alt]="Pay.Gestore?.ProgettoGovPay.Menu.AltText">
         </a>
-        <p>{{ Pay.Versione }}</p>
+        <p class="version">{{ Pay.Versione }}</p>
       </div>
     </mat-list>
   </mat-sidenav>
