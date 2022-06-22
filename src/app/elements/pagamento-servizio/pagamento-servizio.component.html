@@ -25,13 +25,17 @@
     </div>
     <div class="col-sm-3 text-right" [ngClass]="{ 'offset-9': !(_taxonomies && _showTaxonomies && !_isFlat) }" *ngIf="_showToggleLayout">
       <mat-button-toggle-group name="_isFlat" aria-label="Flat Toggle" (change)="_toggleLayout($event)">
-        <mat-button-toggle value="taxonomies" [checked]="!_isFlat"><mat-icon>grid_view</mat-icon></mat-button-toggle>
-        <mat-button-toggle value="flat" [checked]="_isFlat"><mat-icon>dashboard</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="taxonomies" [checked]="!_isFlat"><mat-icon>account_tree</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="flat" [checked]="_isFlat"><mat-icon>remove</mat-icon></mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-button-toggle-group class="ml-2" name="_isFlatGrid" aria-label="Flat Grid Toggle" (change)="_toggleFlatView($event)" *ngIf="_isFlat">
+        <mat-button-toggle value="true" [checked]="_isFlatGrid"><mat-icon>view_module</mat-icon></mat-button-toggle>
+        <mat-button-toggle value="false" [checked]="!_isFlatGrid"><mat-icon>view_list</mat-icon></mat-button-toggle>
       </mat-button-toggle-group>
     </div>
   </div>
-  <div class="row" [class.mt-5]="_isFlat" *ngIf="_servizi">
-    <ng-container *ngIf="_isFlat">
+  <div class="row" [class.mt-5]="_isFlat" [class.mx-0]="_isFlat && !_isFlatGrid" *ngIf="_servizi">
+    <ng-container *ngIf="_isFlat && _isFlatGrid">
       <div class="col-6 quadro-servizio" [ngClass]="{ 'col-md-4': _smallView, 'col-md-3': !_smallView }" *ngFor="let item of _servizi[Pay.ALPHA_3_CODE].flat|serviceFilter:filtro.value:Pay.Filtri; let i = index">
         <pay-quadro-flat #psi
           [gruppo]="item.group"
@@ -41,6 +45,17 @@
           (click)="_onItemClick(item)">
         </pay-quadro-flat>
       </div>
+    </ng-container>
+    <ng-container *ngIf="_isFlat && !_isFlatGrid">
+      <pay-group class="col-12 mx-auto" *ngFor="let gs of _servizi[Pay.ALPHA_3_CODE].groups|serviceGroupFilter:filtro.value:_servizi[Pay.ALPHA_3_CODE].dictionary:Pay.Filtri; let i = index"
+        [groupIcon]="'group_work'" [groupImage]="_getTaxonomyImage(gs)" [title]="_getTaxonomyTitle(gs)" [count]="_showCounter ? gs.items.length : 0" [id]="i" [open]="true">
+        <pay-simple-item #psi group-content *ngFor="let se of gs.items"
+          [primaryText]="se.title"
+          [metadata]="_mapMetaData(se)"
+          (click)="_onItemClick(se)">
+        </pay-simple-item>
+        <p group-content class="m-0" *ngIf="gs.items.length === 0">{{Pay.I18n.json.Common.Filtro.NessunaCorrispondenza}}</p>
+      </pay-group>
     </ng-container>
     <ng-container *ngIf="!_isFlat">
       <ng-template [ngIf]="!filtro?.value.trim()">

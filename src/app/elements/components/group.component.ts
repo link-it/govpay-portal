@@ -11,6 +11,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
             <img class="icon-image" [src]="_groupImage" *ngIf="_groupImage">
             <i class="material-icons" *ngIf="!_groupImage">{{ _groupIcon }}</i>
             <p class="flex-grow-1 group-title">{{ _title }}</p>
+            <p class="badge badge-gray group-title" *ngIf="count">{{ count }}</p>
             <i class="material-icons ml-auto" *ngIf="_showTrigger">{{ (_expanded || open)?'expand_less':'expand_more' }}</i>
             <button mat-icon-button class="material-icons trigger-icon" *ngIf="_triggerIcon" (click)="_onTriggerIcon($event)">
               <mat-icon>{{ _triggerIcon }}</mat-icon>
@@ -56,6 +57,8 @@ export class GroupComponent implements OnInit {
   @Input('showTrigger') _showTrigger: boolean = false;
   @Input('showTriggerMenu') _showTriggerMenu: boolean = false;
   @Input() open: boolean = false;
+  @Input() count: number = 0;
+
 
   @Input() source: any;
 

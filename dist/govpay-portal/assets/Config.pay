@@ -12,13 +12,6 @@
         logo: 'logo-comune-dimostrativo.png',
         altText: 'Comune Dimostrativo',
         href: 'https://www.comune-dimostrativo.it/'
-      },
-      {
-        label: 'Comune Dimostrativo 9',
-        value: '99999999999',
-        logo: '',
-        altText: 'Comune Dimostrativo 9',
-        href: 'https://www.comune-dimostrativo-9.it/'
       }
     ];
   }
@@ -153,6 +146,8 @@
     },
     LAYOUT: {
       FLAT_VIEW: true,
+      FLAT_VIEW_GRID: true,
+      SHOW_COUNTER: false,
       SHOW_TOGGLE_LAYOUT: false,
       GROUP_METADATA: [ 'metadata' ],
       DETAILS_METADATA: {

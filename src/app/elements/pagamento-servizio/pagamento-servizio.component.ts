@@ -20,11 +20,15 @@ export let updateLayoutNow: BehaviorSubject<boolean> = new BehaviorSubject(false
 export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if (event.key == 'v' && event.ctrlKey){
+    console.log('keyEvent', event);
+    if (event.key == 'J' && event.ctrlKey && event.shiftKey) {
       this._showToggleLayout = !this._showToggleLayout;
     }
-    if (event.key == 't' && event.ctrlKey){
+    if (event.key == 'K' && event.ctrlKey && event.shiftKey) {
       this._showTaxonomies = !this._showTaxonomies;
+    }
+    if (event.key == 'L' && event.ctrlKey && event.shiftKey) {
+      this._showCounter = !this._showCounter;
     }
   }
 
@@ -56,6 +60,8 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
 
   _showTaxonomies = Taxonomies.showTaxonomies;
   _isFlat = PayService.ImpostazioniLayout['FLAT_VIEW'];
+  _isFlatGrid = PayService.ImpostazioniLayout['FLAT_VIEW_GRID'];
+  _showCounter = PayService.ImpostazioniLayout['SHOW_COUNTER'];
   _showToggleLayout = PayService.ImpostazioniLayout['SHOW_TOGGLE_LAYOUT'];
 
   constructor(private responsive: BreakpointObserver, public pay: PayService, protected translate: TranslateService) {
@@ -204,7 +210,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
           const taxonomy = this._getTaxonomy(group);
           const taxonomyRank = taxonomy ? taxonomy.rank : Number.MAX_VALUE;
           const taxonomyName = taxonomy ? taxonomy.name : '';
-          if (!this._isFlat) {
+          // if (!this._isFlat || this._isFlatGrid) {
             if (!_groups.hasOwnProperty(group)) {
               _groups[group] = [];
               _ranking.push({ group: group, group_rank: taxonomyRank, code: _mappedService.code, name: taxonomyName});
@@ -212,7 +218,8 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
               _maps[group] = this.__mapGroupSchemaLanguages(service.detail);
             }
             _groups[group].push(_mappedService);
-          } else {
+          // }
+          if (this._isFlat) {
             _flat.push(_mappedService);
           }
           sCount++;
@@ -270,7 +277,7 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   __mapTitle() {
     // const _isFlat = PayService.ImpostazioniLayout['FLAT_VIEW'];
     if (this._servizi && this._filtro && !this._filtro.nativeElement.value) {
-      if (this._isFlat) {
+      if (this._isFlat && this._isFlatGrid) {
         this.__filterTitle = TranslateLoaderExt.Pluralization(PayService.I18n.json.Common.Filtro.Risultati.Flat, this._servizi[PayService.ALPHA_3_CODE].N);
       } else {
         const valueGroup = (this._servizi[PayService.ALPHA_3_CODE].M > 1) ? this._currentTaxonomy.name : this._currentTaxonomy.singularName;
@@ -361,6 +368,12 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   _toggleLayout(event) {
     this._isFlat = !this._isFlat;
     this._resetServizi();
+  }
+
+  _toggleFlatView(event) {
+    this._isFlatGrid = !this._isFlatGrid;
+    // this._resetServizi();
+    this.__mapTitle();
   }
 
   _getTaxonomy(id) {

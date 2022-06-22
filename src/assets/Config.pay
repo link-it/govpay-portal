@@ -146,6 +146,8 @@
     },
     LAYOUT: {
       FLAT_VIEW: true,
+      FLAT_VIEW_GRID: true,
+      SHOW_COUNTER: false,
       SHOW_TOGGLE_LAYOUT: false,
       GROUP_METADATA: [ 'metadata' ],
       DETAILS_METADATA: {
