@@ -2,7 +2,7 @@
 
   function _elencoDomini() {
     return [
-      { label: 'Comune Dimostrativo', value: '01234567890' },
+      { label: 'Comune Dimostrativo', value: '01234567890', agreement_code: '01234567890_A' },
       { label: 'Comune Alternativo', value: '12345678901' }
     ]
   }
