@@ -20,7 +20,6 @@ export let updateLayoutNow: BehaviorSubject<boolean> = new BehaviorSubject(false
 export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log('keyEvent', event);
     if (event.key == 'J' && event.ctrlKey && event.shiftKey) {
       this._showToggleLayout = !this._showToggleLayout;
     }
