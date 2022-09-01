@@ -2,6 +2,7 @@ export class Creditore {
 
   label: string = '';
   value: string = '';
+  agreement_code: string = null;
 
   constructor (_data?: any) {
 

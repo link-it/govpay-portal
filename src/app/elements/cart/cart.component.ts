@@ -101,10 +101,14 @@ export class CartComponent implements OnInit, AfterContentChecked {
       _body['autenticazioneSoggetto'] = null;
     }
 
-    const qRobot = '';
+    let qRobot = '';
     // if(event && event.token) {
     //   qRobot = '?gRecaptchaResponse=' + event.token;
     // }
+    if (PayService.CreditoreAttivo && PayService.CreditoreAttivo.agreement_code) {
+      qRobot += (qRobot !== '') ? '&' : '?';
+      qRobot += `codiceConvenzione=${PayService.CreditoreAttivo.agreement_code}`;
+    }
 
     if(_body.pendenze && _body.pendenze.length != 0) {
       this.pay.updateSpinner(true);
