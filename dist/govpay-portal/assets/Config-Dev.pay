@@ -1,0 +1,172 @@
+(function (global) {
+
+  function addScript(file) {
+    document.write('<script src="' + file + '"></script>');
+  }
+
+  function _elencoDomini() {
+    return [
+      {
+        label: 'Comune Dimostrativo',
+        value: '01234567890',
+        logo: 'logo-comune-dimostrativo.png',
+        altText: 'Comune Dimostrativo',
+        href: 'https://www.comune-dimostrativo.it/'
+      },
+      {
+        label: 'Comune Alternativo',
+        value: '12345678901',
+        logo: '',
+        altText: 'Comune Dimostrativo',
+        href: 'https://www.comune-dimostrativo.it/'
+      },
+      {
+        label: 'Regione Siciliana',
+        value: '80012000826',
+        logo: '',
+        altText: 'Comune Dimostrativo',
+        href: 'https://www.comune-dimostrativo.it/'
+      }
+    ];
+  }
+
+  function _traduzioni() {
+    return [
+      {
+        language: 'Italiano',
+        alpha2Code: 'it',
+        alpha3Code: 'ita'
+      },
+      {
+        language: 'English',
+        alpha2Code: 'en',
+        alpha3Code: 'eng'
+      }
+    ];
+  }
+
+  function _assetsGestore() {
+    return {
+      Logo: {
+        Small: 'logo.png',
+        Full: 'logo.png',
+        AltText: 'Logo'
+      },
+      Background: {
+        Small: 'background-small.png',
+        Full: 'background.png'
+      },
+      Partners: [
+        {
+          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
+          Url: 'http://#'
+        }
+      ],
+      Configurazione: {
+        Menu: {
+          Infos: false,
+          Partners: true,
+          Govpay: true
+        },
+        AccessPanel: {
+          Partners: true,
+          Govpay: false,
+          MenuLogo: true
+        }
+      },
+      ProgettoGovPay: {
+        Menu: {
+          Logo: 'progetto-govpay.png',
+          Url: 'http://#',
+          AltText: 'Logo Progetto GovPay'
+        },
+        AccessPanel: {
+          Logo: 'govpay-reverse.svg',
+          Url: 'http://#',
+          AltText: 'Logo GovPay'
+        }
+      }
+    };
+  }
+
+  function _GoogleReCaptchaV3(siteKey) {
+    if(siteKey) {
+      document.write('<script src="https://www.google.com/recaptcha/api.js?render=' + siteKey + '"></script>');
+    }
+  }
+
+  global.PayConfig = {
+    REVERSE_PROXY: '',
+    AUTH_HOST: 'https://dev.govcloud.it',
+    AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/session/v2',
+    AUTH_LOGOUT_URL: 'https://dev.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout',
+    AUTH_LOGOUT_URLS: [
+      ''
+    ],
+    AUTH_LOGOUT_LANDING_PAGE: '/',
+    AUTH_LOGOUT_LANDING_PAGE_TARGET: '_blank',
+    PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
+    SPID_SETTINGS: {
+      ACCESS: true,
+      AUTHN_CONTEXT_CLASS_REF: '',
+      SERVICE_TARGET: 'https://dev.govcloud.it/govpay/frontend/api/user/rs/spid/v1/login/gpportal',
+      TEST_PROVIDER: 'https://spidtest.govcloud.it',
+      ACTION_FORM_URL: 'https://dev.govcloud.it/Shibboleth.sso/Login'
+    },
+    IAM_SETTINGS: {
+      ACCESS: false,
+      LOGIN_URL: ''
+    },
+    UUID_CHECK: true,
+    RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',
+    PAY_RESPONSE_URL: 'https://dev.govcloud.it/govpay-portal/esito-pagamento',
+    TIME_OUT_POLL: 5, // Secs.
+    POLLING_INTERVAL: 3000, // Millisecs.
+    ROUTING: {
+      PUBLIC_ACCESS: '',
+      PUBLIC_EXIT: 'pagamento-servizio'
+    },
+    DOMINI: _elencoDomini(),
+    LINGUE: _traduzioni(),
+    GESTORE: _assetsGestore(),
+    COLLAPSIBLE_SECTIONS: {
+      InformazioniDettaglioServizio: true
+    },
+    ORDINAMENTO: {
+      GRUPPI: {
+        PROPRIETA: [ 'group_rank', 'group' ],
+        ASCENDENTE: true
+      },
+      SOTTOGRUPPI: {
+        PROPRIETA: [ 'subgroup' ],
+        ASCENDENTE: true
+      },
+      ELEMENTI: {
+        PROPRIETA: [ 'name' ],
+        ASCENDENTE: true
+      }
+    },
+    LAYOUT: {
+      FLAT_VIEW: true,
+      FLAT_VIEW_GRID: true,
+      SHOW_COUNTER: false,
+      SHOW_TOGGLE_LAYOUT: false,
+      GROUP_METADATA: [ 'metadata' ],
+      DETAILS_METADATA: {
+        show_image: true,
+        show_block: false,
+        taxonomy_image: 'taxonomy2',
+        taxonomy1: 'taxonomy2',
+        taxonomy2: '',
+        metadata: true
+      }
+    },
+    FILTRI: [ 'title' ]
+  };
+
+  addScript('assets/config/tassonomie.pay');
+  addScript('assets/extensions/custom-functions.pay');
+
+  _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
+
+})(window);

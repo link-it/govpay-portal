@@ -1,0 +1,167 @@
+(function (global) {
+
+  function addScript(file) {
+    document.write('<script src="' + file + '"></script>');
+  }
+
+  function _elencoDomini() {
+    return [
+      {
+        label: 'Comune Dimostrativo',
+        value: '01234567890',
+        logo: 'logo-comune-dimostrativo.png',
+        altText: 'Comune Dimostrativo',
+        href: ''
+      }
+    ];
+  }
+
+  function _traduzioni() {
+    return [
+      {
+        language: 'Italiano',
+        alpha2Code: 'it',
+        alpha3Code: 'ita'
+      },
+      {
+        language: 'English',
+        alpha2Code: 'en',
+        alpha3Code: 'eng'
+      }
+    ];
+  }
+
+  function _assetsGestore() {
+    return {
+      Logo: {
+        Small: 'logo.png',
+        Full: 'logo.png',
+        AltText: 'Logo'
+      },
+      Background: {
+        Small: 'background-small.png',
+        Full: 'background.png'
+      },
+      Partners: [
+        {
+          Logo: { Menu: 'govpay-powered.svg', AccessPanel: 'govpay-powered.svg', AltText: 'Logo GovPay' },
+          Url: 'https://github.com/link-it/govpay'
+        },
+        {
+          Logo: { Menu: 'partner-logo-double.png', AccessPanel: 'partner-logo-double-reverse.png', AltText: 'Logo partner double' },
+          Url: ''
+        },
+        {
+          Logo: { Menu: 'partner-logo.png', AccessPanel: 'partner-logo-reverse.png', AltText: 'Logo partner' },
+          Url: ''
+        }
+      ],
+      Configurazione: {
+        Menu: {
+          Infos: false,
+          Partners: true,
+          Govpay: true
+        },
+        AccessPanel: {
+          Partners: true,
+          Govpay: false,
+          MenuLogo: true
+        }
+      },
+      ProgettoGovPay: {
+        Menu: {
+          Logo: 'progetto-govpay.png',
+          Url: 'https://github.com/link-it/govpay',
+          AltText: 'Logo Progetto GovPay'
+        },
+        AccessPanel: {
+          Logo: 'govpay-reverse.svg',
+          Url: 'https://github.com/link-it/govpay',
+          AltText: 'Logo GovPay'
+        }
+      }
+    };
+  }
+
+  function _GoogleReCaptchaV3(siteKey) {
+    if(siteKey) {
+      document.write('<script src="https://www.google.com/recaptcha/api.js?render=' + siteKey + '"></script>');
+    }
+  }
+
+  global.PayConfig = {
+    REVERSE_PROXY: '',
+    AUTH_HOST: 'https://demo.govcloud.it',
+    AUTH_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/spid/v2',
+    AUTH_LOGOUT_URL: '',
+    AUTH_LOGOUT_URLS: [
+      ''
+    ],
+    AUTH_LOGOUT_LANDING_PAGE: '/',
+    AUTH_LOGOUT_LANDING_PAGE_TARGET: '_blank',
+    PUBLIC_ROOT_SERVICE: '/govpay/frontend/api/pagamento/rs/public/v2',
+    SPID_SETTINGS: {
+      ACCESS: true,
+      AUTHN_CONTEXT_CLASS_REF: '',
+      SERVICE_TARGET: 'https://demo.govcloud.it/govpay-portal/riepilogo',
+      TEST_PROVIDER: 'https://idp.spid.gov.it',
+      ACTION_FORM_URL: 'https://demo.govcloud.it/Shibboleth.sso/Login',
+      LOGOUT_URL: 'https://demo.govcloud.it/govpay/frontend/api/pagamento/rs/spid/v2/logout'
+    },
+    IAM_SETTINGS: {
+      ACCESS: false,
+      LOGIN_URL: ''
+    },
+    UUID_CHECK: true,
+    RECAPTCHA_V3_SITE_KEY: '6LeQvvMUAAAAAOuBeGJME2fOSkHs-0dhTCiCK24C',
+    PAY_RESPONSE_URL: 'https://demo.govcloud.it/govpay-portal/esito-pagamento',
+    TIME_OUT_POLL: 5, // Secs.
+    POLLING_INTERVAL: 3000, // Millisecs.
+    ROUTING: {
+      PUBLIC_ACCESS: '',
+      PUBLIC_EXIT: 'pagamento-servizio'
+    },
+    DOMINI: _elencoDomini(),
+    LINGUE: _traduzioni(),
+    GESTORE: _assetsGestore(),
+    COLLAPSIBLE_SECTIONS: {
+      InformazioniDettaglioServizio: true
+    },
+    ORDINAMENTO: {
+      GRUPPI: {
+        PROPRIETA: [ 'group_rank', 'group' ],
+        ASCENDENTE: true
+      },
+      SOTTOGRUPPI: {
+        PROPRIETA: [ 'subgroup' ],
+        ASCENDENTE: true
+      },
+      ELEMENTI: {
+        PROPRIETA: [ 'name' ],
+        ASCENDENTE: true
+      }
+    },
+    LAYOUT: {
+      FLAT_VIEW: true,
+      FLAT_VIEW_GRID: true,
+      SHOW_COUNTER: false,
+      SHOW_TOGGLE_LAYOUT: false,
+      GROUP_METADATA: [ 'metadata' ],
+      DETAILS_METADATA: {
+        show_image: true,
+        show_block: false,
+        taxonomy_image: 'taxonomy2',
+        taxonomy1: 'taxonomy2',
+        taxonomy2: '',
+        metadata: true
+      }
+    },
+    FILTRI: [ 'title' ]
+  };
+
+  addScript('assets/config/tassonomie-demo.pay');
+  addScript('assets/extensions/custom-functions.pay');
+
+  _GoogleReCaptchaV3(global.PayConfig.RECAPTCHA_V3_SITE_KEY);
+
+})(window);

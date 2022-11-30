@@ -1,0 +1,156 @@
+(function (global) {
+
+  global.Taxonomies = {
+    showTaxonomies: false,
+    ita: {
+      taxonomy1: {
+        id: "tipologie",
+        name: "Tipologie",
+        singularName: "Tipologia",
+        icon: "label",
+        image: "./assets/images/badge.svg",
+        items: [
+          {
+            id: "concessioni",
+            name: "Tasse sulle Concessioni",
+            image: "/assets/images/tematiche/concessioni.png",
+            rank: 1
+          },
+          {
+            id: "scuola",
+            name: "Scuola",
+            image: "/assets/images/tematiche/scuola.png",
+            rank: 5
+          },
+          {
+            id: "patrimonio",
+            name: "Patrimonio",
+            image: "/assets/images/tematiche/patrimonio.png",
+            rank: 5
+          },
+          {
+            id: "diritti-oneri",
+            name: "Diritti e Oneri",
+            image: "/assets/images/tematiche/diritti-oneri.png",
+            rank: 6
+          },
+          {
+            id: "default",
+            name: "Varie",
+            image: "/assets/images/tematiche/tematica.png",
+            rank: 10
+          }
+        ],
+        defaultItem: "default"
+      },
+      taxonomy2: {
+        id: "assessorati",
+        name: "Assessorati",
+        singularName: "Assessorato",
+        icon: "foundation",
+        image: "./assets/images/library-building.svg",
+        items: [
+          {
+            id: "presidenza",
+            name: "Presidenza",
+            image: "/assets/images/assessorati/presidenza.png",
+            rank: 1
+          },
+          {
+            id: "agricoltura",
+            name: "Assessorato dell'agricoltura, della pesca e dello sviluppo rurale",
+            image: "/assets/images/assessorati/agricoltura.png",
+            rank: 5
+          },
+          {
+            id: "energia",
+            name: "Assessorato dell'energia e servizi di pubblica utilità",
+            image: "/assets/images/assessorati/energia.png",
+            rank: 5
+          },
+          {
+            id: "istruzione",
+            name: "Assessorato dell'istruzione e formazione professionale",
+            image: "/assets/images/assessorati/istruzione.png",
+            rank: 5
+          },
+          {
+            id: "salute",
+            name: "Assessorato della salute",
+            image: "/assets/images/assessorati/salute.png",
+            rank: 5
+          },
+          {
+            id: "attivita-produttive",
+            name: "Assessorato delle attività produttive",
+            image: "/assets/images/assessorati/attivita-produttive.png",
+            rank: 5
+          },
+          {
+            id: "infrastrutture",
+            name: "Assessorato delle infrastrutture e della mobilità",
+            image: "/assets/images/assessorati/infrastrutture.png",
+            rank: 5
+          },
+          {
+            id: "territorio",
+            name: "Assessorato del territorio e dell'ambiente",
+            image: "/assets/images/assessorati/territorio.png",
+            rank: 5
+          },
+          {
+            id: "famiglia",
+            name: "Assessorato della famiglia, delle politiche sociale e del lavoro",
+            image: "/assets/images/assessorati/famiglia.png",
+            rank: 5
+          },
+          {
+            id: "beni-culturali",
+            name: "Assessorato dei beni culturali e dell'identità siciliana",
+            image: "/assets/images/assessorati/beni-culturali.png",
+            rank: 5
+          },
+          {
+            id: "turismo",
+            name: "Assessorato del turismo, dello sport e dello spettacolo",
+            image: "/assets/images/assessorati/turismo.png",
+            rank: 5
+          },
+          {
+            id: "economia",
+            name: "Assessorato dell'economia",
+            image: "/assets/images/assessorati/economia.png",
+            rank: 9
+          },
+          {
+            id: "autonomie-locali",
+            name: "Assessorato delle autonomie locali e della funzione pubblica",
+            image: "/assets/images/assessorati/autonomie-locali.png",
+            rank: 10
+          },
+          {
+            id: "arti-mestieri",
+            name: "Arti e Mestieri",
+            image: "/assets/images/assessorati/arti-professioni.png",
+            rank: 10
+          },
+          {
+            id: "citta-metropolitane",
+            name: "Città metropolitane",
+            image: "/assets/images/assessorati/citta-metropolitane.png",
+            rank: 10
+          },
+          {
+            id: "default",
+            name: "Varie",
+            image: "/assets/images/tematiche/tematica.png",
+            rank: 100
+          }
+        ],
+        defaultItem: "default"
+      },
+      defaultTaxonomy: "taxonomy1"
+    }
+  };
+
+})(window);

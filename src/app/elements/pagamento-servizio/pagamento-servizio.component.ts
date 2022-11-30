@@ -63,6 +63,9 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
   _showCounter = PayService.ImpostazioniLayout['SHOW_COUNTER'];
   _showToggleLayout = PayService.ImpostazioniLayout['SHOW_TOGGLE_LAYOUT'];
 
+  _useTestData: boolean = false;
+  _testData: any[] = [];
+
   constructor(private responsive: BreakpointObserver, public pay: PayService, protected translate: TranslateService) {
     this._spidSession = pay.spidSessionExpired.subscribe((exit: boolean) => {
       if (exit && this._filtro) {
@@ -101,8 +104,23 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       });
     }
 
+    if (this._useTestData) {
+      this._getTestData();
+    }
+
     this._initTaxonomies();
     this._resetServizi();
+  }
+
+  _getTestData() {
+    this.pay.getFileType('json_/pendenze-w-err').subscribe(
+      (reponse) => {
+        this._testData = reponse;
+      },
+      (error) => {
+        this._testData = []
+      }
+    );
   }
 
   _resetServizi() {
@@ -142,7 +160,8 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       (result) => {
         if(result.body) {
           const _response = result.body;
-          const _decodedServices: any[] = PayService.DecodeServices(_response['risultati']);
+          const _result = (this._useTestData && this._testData.length) ? this._testData : _response['risultati'];
+          const _decodedServices: any[] = PayService.DecodeServices(_result);
           this._servizi = this._setupGroups(_decodedServices, this._taxonomy1, this._taxonomy2);
           PayService.HasServices = (_decodedServices.length > 0);
           if (!PayService.HasServices) {
@@ -187,7 +206,10 @@ export class PagamentoServizioComponent implements OnInit, AfterViewInit, AfterC
       const _ranking: any[] = [];
       const _flat: any[] = [];
       decodedServices.forEach((service: any) => {
-        if ((!service.detail.ita || !service.jsfDef.layout_ita) && (service.form.tipo === 'angular2-json-schema-form')) {
+        if (
+          (!service.detail || !service.jsfDef) ||
+          ((!service.detail.ita || !service.jsfDef.layout_ita) && (service.form.tipo === 'angular2-json-schema-form'))
+        ) {
           mismatch = true;
         } else {
           const srv: any = service.detail[lingua.alpha3Code] || service.detail['ita'];

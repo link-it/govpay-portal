@@ -1241,17 +1241,25 @@ export class PayService implements OnInit, OnDestroy {
       if (ser.form) {
         if (ser.form['definizione']) {
           try {
-            ser.jsfDef = JSON.parse(PayService.DecodeB64(ser.form['definizione']));
+            const _jsonString = PayService.DecodeB64(ser.form['definizione']);
+            ser.jsfDef = JSON.parse(_jsonString);
           } catch (e) {
-            console.log(e);
+            console.group('JSON Parse Failed - Form Definizione')
+            console.log('Pendenza', ser.idTipoPendenza);
+            console.log('Errore', e);
+            console.groupEnd();
             ser.jsfDef = '';
           }
         }
         if (ser.form['impaginazione']) {
           try {
-            ser.detail = JSON.parse(PayService.DecodeB64(ser.form['impaginazione']));
+            const _jsonString = PayService.DecodeB64(ser.form['impaginazione']);
+            ser.detail = JSON.parse(_jsonString);
           } catch (e) {
-            console.log(e);
+            console.group('JSON Parse Failed - Form Impaginazione')
+            console.log('Pendenza', ser.idTipoPendenza);
+            console.log('Errore', e);
+            console.groupEnd();
             ser.detail = '';
           }
         }

@@ -1,0 +1,30 @@
+{
+  "requireUserConfirm": true,
+  "img": "assets/images/servizi/1801-iscrizione_registro_regionale.jpg",
+  "taxonomy1": "concessioni",
+  "taxonomy2": "salute",
+  "ita": {
+    "group": "Infrastrutture e mobilità",
+    "group_rank": 5,
+    "group_icon": "/site/assets/images/assessorati/infrastrutture.png",
+    "subgroup": "Dipartimento delle infrastrutture, della mobilità e dei trasporti",
+    "category": "Autorizzazione - Autotrasporto persone",
+    "code": "1801",
+    "metadata": "Dipartimento delle infrastrutture, della mobilità e dei trasporti",
+    "name": "1001 - Autorizzazione ed iscrizione al Registro regionale",
+    "search_terms": "noleggio, autobus, nacc, autorizzazione, registro, regionale",
+    "long_description": "Autorizzazione Attività Noleggio di Autobus con Conducente.",
+    "properties": [
+      {
+        "label": "Dipartimento",
+        "text": "Informazioni",
+        "url": "https://www.regione.sicilia.it/istituzioni/regione/strutture-regionali/assessorato-infrastrutture-mobilita/dipartimento-infrastrutture-mobilita-trasporti"
+      },
+      {
+        "label": "Documentazione",
+        "text": "Regolamento",
+        "url": "http://pti.regione.sicilia.it/portal/page/portal/PIR_PORTALE/PIR_LaStrutturaRegionale/PIR_AssInfrastruttureMobilita/PIR_InfrastruttureMobilitaTrasporti/PIR_Areetematiche/PIR_Altricontenuti/PIR_4115326.436191696/PIR_266188.4858249397/circolare_DG_8197_24feb2020_applicazione_DA3663_pubbl.pdf"
+      }
+    ]
+  }
+}

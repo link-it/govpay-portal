@@ -1,0 +1,186 @@
+(function (global) {
+
+  global.Taxonomies = {
+    showTaxonomies: true,
+    ita: {
+      taxonomy1: {
+        id: "tipologie",
+        name: "Tipologie",
+        singularName: "Tipologia",
+        icon: "label",
+        image: "/site/assets/images/badge.svg",
+        items: [
+          {
+            id: "concessioni",
+            name: "Tasse sulle Concessioni Regionali",
+            image: "/site/assets/images/assessorati/economia.png",
+            rank: 1
+          },
+          {
+            id: "canone",
+            name: "Canoni e/o vendita beni patrimoniali disponibili",
+            image: "/site/assets/images/assessorati/canone-vendita-demaniale.png",
+            rank: 5
+          },
+          {
+            id: "interessi",
+            name: "Interessi e Sanzioni",
+            image: "/site/assets/images/assessorati/interessi-sanzioni.png",
+            rank: 5
+          },
+          {
+            id: "accessoatti",
+            name: "Accesso Agli Atti",
+            image: "/site/assets/images/assessorati/accessoagliatti.png",
+            rank: 6
+          },
+          {
+            id: "autorizzazioni",
+            name: "Concessioni e Autorizzazioni",
+            image: "/site/assets/images/assessorati/concessioni-autorizzazione.png",
+            rank: 6
+          },
+          {
+            id: "contributi",
+            name: "Contributi Regionali",
+            image: "/site/assets/images/assessorati/contributiregionali.png",
+            rank: 6
+          },
+          {
+            id: "rimborsi",
+            name: "Rimborsi",
+            image: "/site/assets/images/assessorati/rimborsi.png",
+            rank: 6
+          },
+          {
+            id: "iscrizioni",
+            name: "Iscrizioni - Contributi",
+            image: "/site/assets/images/assessorati/iscrizioni-contribuiti.png",
+            rank: 5
+          },
+          {
+            id: "gazzetta",
+            name: "Gazzetta Ufficiale",
+            image: "/site/assets/images/assessorati/gazzetta-ufficiale.png",
+            rank: 2
+          },   		  
+          {
+            id: "default",
+            name: "Varie",
+            image: "/site/assets/images/assessorati/pagamento.png",
+            rank: 10
+          }
+        ],
+        defaultItem: "default"
+      },
+      taxonomy2: {
+        id: "assessorati",
+        name: "Assessorati",
+        singularName: "Assessorato",
+        icon: "foundation",
+        image: "/site/assets/images/library-building.svg",
+        items: [
+          {
+            id: "presidenza",
+            name: "Presidenza",
+            image: "/site/assets/images/assessorati/presidenza.png",
+            rank: 1
+          },
+          {
+            id: "agricoltura",
+            name: "Assessorato dell'agricoltura, della pesca e dello sviluppo rurale",
+            image: "/site/assets/images/assessorati/agricoltura.png",
+            rank: 5
+          },
+          {
+            id: "energia",
+            name: "Assessorato dell'energia e servizi di pubblica utilità",
+            image: "/site/assets/images/assessorati/energia.png",
+            rank: 5
+          },
+          {
+            id: "istruzione",
+            name: "Assessorato dell'istruzione e formazione professionale",
+            image: "/site/assets/images/assessorati/istruzione.png",
+            rank: 5
+          },
+          {
+            id: "salute",
+            name: "Assessorato della salute",
+            image: "/site/assets/images/assessorati/salute.png",
+            rank: 5
+          },
+          {
+            id: "attivita-produttive",
+            name: "Assessorato delle attività produttive",
+            image: "/site/assets/images/assessorati/attivita-produttive.png",
+            rank: 5
+          },
+          {
+            id: "infrastrutture",
+            name: "Assessorato delle infrastrutture e della mobilità",
+            image: "/site/assets/images/assessorati/infrastrutture.png",
+            rank: 5
+          },
+          {
+            id: "territorio",
+            name: "Assessorato del territorio e dell'ambiente",
+            image: "/site/assets/images/assessorati/territorio.png",
+            rank: 5
+          },
+          {
+            id: "famiglia",
+            name: "Assessorato della famiglia, delle politiche sociale e del lavoro",
+            image: "/site/assets/images/assessorati/famiglia.png",
+            rank: 5
+          },
+          {
+            id: "beni-culturali",
+            name: "Assessorato dei beni culturali e dell'identità siciliana",
+            image: "/site/assets/images/assessorati/beni-culturali.png",
+            rank: 5
+          },
+          {
+            id: "turismo",
+            name: "Assessorato del turismo, dello sport e dello spettacolo",
+            image: "/site/assets/images/assessorati/turismo.png",
+            rank: 5
+          },
+          {
+            id: "economia",
+            name: "Assessorato dell'economia",
+            image: "/site/assets/images/assessorati/economia.png",
+            rank: 9
+          },
+          {
+            id: "autonomie-locali",
+            name: "Assessorato delle autonomie locali e della funzione pubblica",
+            image: "/site/assets/images/assessorati/autonomie-locali.png",
+            rank: 10
+          },
+          {
+            id: "arti-mestieri",
+            name: "Arti e Mestieri",
+            image: "/site/assets/images/assessorati/arti-professioni.png",
+            rank: 10
+          },
+          {
+            id: "citta-metropolitane",
+            name: "Città metropolitane",
+            image: "/site/assets/images/assessorati/citta-metropolitane.png",
+            rank: 10
+          },
+          {
+            id: "default",
+            name: "Varie",
+            image: "/site/assets/images/assessorati/pagamento.png",
+            rank: 100
+          }
+        ],
+        defaultItem: "default"
+      },
+      defaultTaxonomy: "taxonomy1"
+    }
+  };
+
+})(window);
