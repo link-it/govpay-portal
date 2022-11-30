@@ -11,7 +11,8 @@
         value: '01234567890',
         logo: 'logo-comune-dimostrativo.png',
         altText: 'Comune Dimostrativo',
-        href: 'https://www.comune-dimostrativo.it/'
+        href: 'https://www.comune-dimostrativo.it/',
+        agreement_code: '01234567890_A'
       }
     ];
   }

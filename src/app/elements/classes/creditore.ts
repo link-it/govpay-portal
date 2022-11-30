@@ -4,6 +4,7 @@ export class Creditore {
   value: string = '';
   logo: string = '';
   href: string = '';
+  agreement_code: string = null;
 
   constructor (_data?: any) {
 
