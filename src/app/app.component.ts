@@ -118,6 +118,9 @@ export class AppComponent implements OnInit, AfterContentChecked {
                 if(PayService.UUID_CHECK && _params['UUID']) {
                   PayService.QUERY_STRING_AVVISO_PAGAMENTO_DIRETTO.UUID = _params['UUID'];
                 }
+                setTimeout(() => {
+                  this.router.navigateByUrl('/bollettino');
+                }, 200);
               }
             }
           }

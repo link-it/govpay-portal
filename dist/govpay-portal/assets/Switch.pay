@@ -19,7 +19,7 @@ function _parseQueryString() {
   return params;
 }
 _resetConfig();
-_defaultConfig('-Sicilia-Work');
+_defaultConfig('-Meg-Test-Online');
 const domains = location.hostname.toLowerCase().split('.');
 const queryObject = _parseQueryString();
 const hasDomain = (domains.length >= 3 && domains[0].length > 2 && domains[0].indexOf('www') === -1);
