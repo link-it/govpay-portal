@@ -1,0 +1,163 @@
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, inject, importProvidersFrom } from '@angular/core';
+import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
+import { provideIcons } from '@ng-icons/core';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { FormlyModule } from '@ngx-formly/core';
+import {
+  bootstrapHouseDoor,
+  bootstrapHouse,
+  bootstrapCart3,
+  bootstrapCartPlus,
+  bootstrapReceipt,
+  bootstrapArchive,
+  bootstrapBank,
+  bootstrapBoxArrowRight,
+  bootstrapBoxArrowInRight,
+  bootstrapPerson,
+  bootstrapPersonLock,
+  bootstrapGear,
+  bootstrapList,
+  bootstrapListUl,
+  bootstrapX,
+  bootstrapXLg,
+  bootstrapCheck2,
+  bootstrapExclamationTriangle,
+  bootstrapExclamationCircle,
+  bootstrapInfoCircle,
+  bootstrapCheckCircle,
+  bootstrapCheckCircleFill,
+  bootstrapXCircle,
+  bootstrapXCircleFill,
+  bootstrapExclamationCircleFill,
+  bootstrapDashCircleFill,
+  bootstrapQuestionCircle,
+  bootstrapClockHistory,
+  bootstrapThreeDotsVertical,
+  bootstrapFlower1,
+  bootstrapCurrencyEuro,
+  bootstrapBoxArrowUpRight,
+  bootstrapPlus,
+  bootstrapTrash,
+  bootstrapSearch,
+  bootstrapQrCodeScan,
+  bootstrapDownload,
+  bootstrapChevronDown,
+  bootstrapChevronUp,
+  bootstrapChevronRight,
+  bootstrapChevronLeft,
+  bootstrapArrowLeft,
+  bootstrapArrowRepeat,
+  bootstrapCreditCard2Front,
+  bootstrapFileEarmarkPdf,
+  bootstrapFileEarmarkText,
+  bootstrapFileText,
+  bootstrapTelephone,
+  bootstrapGlobe,
+  bootstrapClock,
+  bootstrapEye,
+  bootstrapEyeSlash,
+  bootstrapCalendar3,
+  bootstrapShieldCheck,
+  bootstrapGrid3x3Gap,
+  bootstrapCollection,
+  bootstrapFolder,
+  bootstrapLightbulb,
+  bootstrapBuilding,
+  bootstrapPrinter,
+} from '@ng-icons/bootstrap-icons';
+
+import { routes } from './app.routes';
+import { provideCore } from '@core/core.provider';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes, withPreloading(PreloadAllModules)),
+    provideCore(),
+    // Formly per form dinamiche
+    importProvidersFrom(FormlyModule.forRoot({})),
+    provideIcons({
+      // Navigazione
+      bootstrapHouseDoor,
+      bootstrapHouse,
+      bootstrapCart3,
+      bootstrapCartPlus,
+      bootstrapReceipt,
+      bootstrapArchive,
+      bootstrapBank,
+      bootstrapBoxArrowRight,
+      bootstrapBoxArrowInRight,
+      bootstrapPerson,
+      bootstrapPersonLock,
+      bootstrapGear,
+      // UI
+      bootstrapList,
+      bootstrapListUl,
+      bootstrapX,
+      bootstrapXLg,
+      bootstrapCheck2,
+      bootstrapChevronDown,
+      bootstrapChevronUp,
+      bootstrapChevronRight,
+      bootstrapChevronLeft,
+      bootstrapArrowLeft,
+      bootstrapArrowRepeat,
+      bootstrapClock,
+      bootstrapEye,
+      bootstrapEyeSlash,
+      bootstrapCalendar3,
+      bootstrapGrid3x3Gap,
+      bootstrapCollection,
+      bootstrapFolder,
+      // Notifiche
+      bootstrapExclamationTriangle,
+      bootstrapExclamationCircle,
+      bootstrapExclamationCircleFill,
+      bootstrapInfoCircle,
+      bootstrapCheckCircle,
+      bootstrapCheckCircleFill,
+      bootstrapXCircle,
+      bootstrapXCircleFill,
+      bootstrapDashCircleFill,
+      bootstrapQuestionCircle,
+      bootstrapClockHistory,
+      bootstrapShieldCheck,
+      // Azioni
+      bootstrapThreeDotsVertical,
+      bootstrapFlower1,
+      bootstrapCurrencyEuro,
+      bootstrapBoxArrowUpRight,
+      bootstrapPlus,
+      bootstrapTrash,
+      bootstrapSearch,
+      bootstrapDownload,
+      // Pagamenti
+      bootstrapCreditCard2Front,
+      bootstrapQrCodeScan,
+      bootstrapFileEarmarkPdf,
+      bootstrapFileEarmarkText,
+      bootstrapFileText,
+      bootstrapTelephone,
+      // Lingua
+      bootstrapGlobe,
+      // Categorie/Servizi
+      bootstrapLightbulb,
+      bootstrapBuilding,
+      // Stampa
+      bootstrapPrinter,
+    }),
+    provideTranslateService({
+      fallbackLang: 'it',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: () => {
+          const http = inject(HttpClient);
+          return {
+            getTranslation: (lang: string) => http.get(`./assets/i18n/${lang}.json`),
+          };
+        },
+      },
+    }),
+  ],
+};

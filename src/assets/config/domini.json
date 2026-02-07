@@ -1,0 +1,20 @@
+{
+  "domini": [
+    {
+      "label": "Comune Dimostrativo",
+      "value": "01234567890",
+      "logo": "LINK_GovPay-icon.svg",
+      "altText": "Comune Dimostrativo",
+      "href": "https://www.comune-dimostrativo.it/",
+      "agreementCode": "01234567890_A"
+    },
+    {
+      "label": "Comune Dimostrativo 2",
+      "value": "80012000826",
+      "logo": "LINK_GovPay-icon.svg",
+      "altText": "Comune Dimostrativo 2",
+      "href": "https://www.comune-dimostrativo-2.it/",
+      "agreementCode": "80012000826_A"
+    }
+  ]
+}

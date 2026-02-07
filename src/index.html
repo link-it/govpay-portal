@@ -1,18 +1,80 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="utf-8">
-  <title>Portale Pagamenti</title>
+  <title>GovPay Portal</title>
   <base href="/">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <style>.web-init{border:4px solid #f3f3f3;border-top:4px solid #06f;border-radius:50%;width:40px;height:40px;animation:spin 2s linear infinite;position:fixed;top:calc(50% - 20px);left:calc(50% - 20px)}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
-  <script src="assets/Switch.pay"></script>
+  <meta name="description" content="Portale di pagamento pagoPA per la Pubblica Amministrazione">
+  <meta name="theme-color" content="#0066cc">
+  <link rel="icon" type="image/x-icon" href="govpay.png">
+
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="assets/fonts/titillium-web-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/titillium-web-600.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- Loading styles -->
+  <style>
+    .app-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      z-index: 9999;
+    }
+
+    .app-loading-logo {
+      margin-bottom: 24px;
+    }
+
+    .app-loading-logo img {
+      width: 200px;
+      height: auto;
+    }
+
+    .app-loading-spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #0066cc;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .app-loading-text {
+      margin-top: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      color: #64748b;
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Hide loading when app is ready */
+    app-root:not(:empty) + .app-loading,
+    app-root:not(:empty) ~ .app-loading {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <pay-root>
-    <div class="web-init"></div>
-  </pay-root>
+  <app-root></app-root>
+
+  <!-- Loading indicator -->
+  <div class="app-loading">
+    <div class="app-loading-logo">
+      <img src="assets/images/logo/LINK_logo-Govpay.svg" alt="GovPay">
+    </div>
+    <div class="app-loading-spinner"></div>
+  </div>
 </body>
 </html>

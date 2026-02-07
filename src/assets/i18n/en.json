@@ -1,262 +1,279 @@
 {
   "Language": {
-    "Gestore": {
-      "Ragione": "Company Name S.p.A",
-      "Sede": "Via Roma, 1, 00100 Roma, telefono: 06 1234567890, PEC: pec@pec.dominio.it, web: www.dominio.it"
-    },
     "Header": {
-      "Titolo": "Administration",
-      "LanguageBar": {
-        "Titolo": "Region"
-      },
-      "Erogatore": {
-        "Titolo": "Payment management",
-        "Creditore": "Select a creditor"
-      }
+      "Titolo": "Payment Portal",
+      "ApriMenu": "Open menu",
+      "Carrello": "Cart"
     },
-    "SideNav": {
-      "Titolo": "Payment management",
-      "MenuItems": [
-        {
-          "Label": "Payments",
-          "Link": "/pagamento-servizio"
-        },
-        {
-          "Label": "Payments history",
-          "Link": "/archivio"
-        },
-        {
-          "Label": "Debt position",
-          "Link": "/riepilogo"
-        },
-        {
-          "Label": "Cart",
-          "Link": "/carrello"
-        }
-      ],
-      "Logout": "Log out"
+    "Menu": {
+      "PagaServizio": "PAY A SERVICE",
+      "PagaAvviso": "PAY A NOTICE",
+      "Pagamenti": "Payments",
+      "Carrello": "Cart",
+      "PosizioneDebitoria": "Debt Position",
+      "ArchivioPagamenti": "Payment Archive",
+      "Riepilogo": "Debt Position",
+      "Archivio": "Payment Archive"
     },
-    "Spid": {
-      "Label": "Login with SPID",
-      "Info": "More information",
-      "Ask": "Don't you have SPID?",
-      "Help": "Need help?"
-    },
-    "Iam": {
-      "Label": "Login with IAM"
+    "Common": {
+      "Conferma": "Confirm",
+      "Annulla": "Cancel",
+      "Chiudi": "Close",
+      "Indietro": "Back",
+      "Errore": "Error",
+      "Causale": "Description",
+      "Caricamento": "Loading...",
+      "Scadenza": "Due date",
+      "NumeroAvviso": "Notice Number",
+      "Importo": "Amount",
+      "Stato": "Status",
+      "Data": "Date",
+      "AlertAction": "Close",
+      "DocumentoPdf": "Document",
+      "ArchivioPdf": "Receipts_Archive.zip",
+      "WarningRicevuta": "Receipt not available",
+      "CodeException": "An unexpected error occurred",
+      "Aggiorna": "Refresh",
+      "Riprova": "Retry"
     },
     "Pagamenti": {
-      "Titolo": "Online payments",
-      "Bollettino": {
-        "Titolo": "Simple payment",
-        "Note": "Where do you find the notice number?",
-        "Submit": "Add to cart",
-        "Dialog": {
-          "Close": "Got it"
-        },
-        "Form": {
-          "Avviso": "Notice number",
-          "Fotocamera": "Camera",
-          "Errors": {
-            "Required": "Field required."
-          }
-        }
-      },
-      "Servizi": {
-        "Titolo": "Pay a service"
-      }
+      "Titolo": "Payments",
+      "SelezionaDominio": "Select the creditor",
+      "SelezionaServizio": "Select the service",
+      "CercaServizio": "Search service...",
+      "ServiziTrovati": "services found",
+      "NessunServizio": "No services found",
+      "NessunServizioDisponibile": "No services available for this creditor",
+      "NessunRisultatoRicerca": "No results found for your search",
+      "AzzercaRicerca": "Clear search",
+      "SelezionaEnteTitolo": "Select a creditor",
+      "SelezionaEnteDescrizione": "Select the creditor to view available services"
+    },
+    "Bollettino": {
+      "Titolo": "Pay a notice",
+      "Sottotitolo": "Enter the payment notice number",
+      "NumeroAvviso": "Notice Number",
+      "NumeroAvvisoPlaceholder": "Enter notice number (18 digits)",
+      "NumeroAvvisoHelp": "The notice number consists of 18 digits",
+      "CodiceAvviso": "Notice code",
+      "CodiceAvvisoHint": "Enter the 18-digit notice code",
+      "EnteCreditore": "Creditor organization",
+      "SelezionaEnte": "Select an organization",
+      "CercaAvviso": "Search notice",
+      "ScansionaQR": "Scan QR Code",
+      "InfoTitolo": "Where can I find the notice number?",
+      "InfoDescrizione": "The notice number is printed on the pagoPA payment notice you received. You can also scan the QR code on the notice.",
+      "AvvisoTrovato": "Payment notice",
+      "AvvisoNonTrovato": "Notice not found. Please check the number entered.",
+      "Creditore": "Creditor",
+      "Scaduto": "Overdue",
+      "AggiungiCarrello": "Add to cart",
+      "NelCarrello": "In cart",
+      "NuovaRicerca": "New search",
+      "NonPagabile": "This notice cannot be paid online",
+      "VaiCarrello": "Go to cart",
+      "QRIstruzioni": "Point the camera at the QR code on the payment notice",
+      "QRErrore": "Cannot access camera. Please check browser permissions.",
+      "Tassonomia": "Category",
+      "CodiceQR": "QR Code",
+      "CodiceBarcode": "Barcode"
     },
     "Cart": {
       "Titolo": "Cart",
-      "Pagamenti": {
-        "Titolo": "Payments list",
-        "Paga": "Pay with pagoPA",
-        "Indietro": "Back to payments",
-        "Stampa": "Print notice",
-        "Totale": "Total",
-        "Inserimento": "Notice added to cart",
-        "Rimozione": "Notice removed from cart",
-        "PagaDiNuovo": "Pay again",
-        "CarrelloVuoto": "Empty cart"
-      }
-    },
-    "DettaglioServizio": {
-      "Titolo": "Service information",
-      "Form": {
-        "Titolo": "Payment details",
-        "Salva": "Save",
-        "Verifica": "Verify"
-      },
-      "Dialog": {
-        "Avviso": "Do you want to add this charge to the cart with these data just entered?",
-        "Causale": "Causal payment",
-        "ImportoPendenza": "Amount due",
-        "Submit": "Add to cart",
-        "Close": "Cancel"
-      }
-    },
-    "Ricevuta": {
-      "Titolo": "Payment receipt",
-      "Form": {
-        "Titolo": "Data necessary for the delivery of the receipt",
-        "Note": "We ask you for this data because...",
-        "Email": "Email",
-        "ConfermaEmail": "Confirm email",
-        "Submit": "Complete the payment",
-        "Error": "Check the information entered"
-      }
+      "NumeroElementi": "{{count}} items in cart",
+      "SvuotaCarrello": "Clear cart",
+      "Vuoto": "Cart is empty",
+      "VuotoDescrizione": "Add payments to cart to proceed",
+      "VaiPagamenti": "Go to payments",
+      "PagaAvviso": "Pay a notice",
+      "Subtotale": "Subtotal",
+      "CommissioniInfo": "PSP fees will be calculated at checkout",
+      "Totale": "Total",
+      "Azioni": "Actions",
+      "Modifica": "Edit",
+      "StampaAvviso": "Print notice",
+      "Rimuovi": "Remove",
+      "Scaduto": "Overdue",
+      "Procedi": "Proceed to payment",
+      "AggiungiAltro": "Add another",
+      "PagoPAInfo": "Secure payment via pagoPA",
+      "ConfermaTitle": "Confirm payment",
+      "ConfermaDesc": "You will be redirected to the pagoPA platform to complete the payment.",
+      "EmailNotifica": "Email for receipt",
+      "EmailPlaceholder": "Enter your email",
+      "EmailHint": "You will receive payment confirmation at this address",
+      "ConfermaPaga": "Confirm and pay",
+      "Elaborazione": "Processing...",
+      "RedirectInfo": "You will be redirected to pagoPA for payment",
+      "RedirectPSP": "Redirecting to pagoPA...",
+      "NonChiudere": "Do not close this window",
+      "ErroreRedirect": "Error creating payment. Please try again.",
+      "ErroreDati": "Invalid payment data. Please check the items in your cart.",
+      "ErroreDuplicato": "One or more payments have already been completed.",
+      "ErroreValidazione": "Unable to process payment. Please check the entered data.",
+      "ErroreCheckout": "Error creating payment on pagoPA"
     },
     "Posizione": {
-      "Titolo": "Debt position",
+      "Titolo": "Debt Position",
+      "Sottotitolo": "Your pending payments",
       "Debiti": {
-        "Titolo": "{{value}} notice available|{{value}} notices available"
-      }
-    },
-    "DettaglioPosizione": {
-      "Titolo": "Debt position information",
-      "Dialog": {
-        "Riepilogo": "Summary",
-        "DatiAllegati": "Data attached",
-        "Aggiungi": "Add to cart",
-        "Rimuovi": "Remove fron cart",
-        "Scarica": "Download receipt",
-        "ImportoPendenza": "Amount due",
-        "Submit": "Add to cart",
-        "Close": "Cancel"
+        "Titolo": "Your debts"
+      },
+      "NessunDebito": "You have no outstanding debts",
+      "NessunDebitoDesc": "There are no pending payments at this time",
+      "VaiPagamenti": "Go to payments",
+      "LoginRichiesto": "Login required",
+      "LoginRichiestoDesc": "Please login to view your debt position",
+      "TotaleDebiti": "Total to pay",
+      "NumeroDebiti": "{{count}} pending debts",
+      "DebitiScaduti": "{{count}} overdue",
+      "Selezionati": "{{count}} selected",
+      "SelezionaTutti": "Select all",
+      "AggiungiSelezionati": "Add {{count}} to cart",
+      "PagaTutto": "Pay all",
+      "AggiungiCarrello": "Add to cart",
+      "NelCarrello": "In cart",
+      "ScaricaAvviso": "Download notice",
+      "Scaduto": "Overdue",
+      "Risultati": "Results {{from}}-{{to}} of {{count}}",
+      "ErroreCaricamento": "Loading error",
+      "Filtri": {
+        "Dominio": "Creditor",
+        "Stato": "Status",
+        "TuttiStati": "All statuses"
       }
     },
     "Archivio": {
-      "Titolo": "Payments history",
+      "Titolo": "Payment Archive",
+      "Sottotitolo": "History of completed transactions",
       "Pagamenti": {
-        "Titolo": "{{value}} stored payment|{{value}} stored payments"
-      }
+        "Titolo": "Your payments"
+      },
+      "NessunPagamento": "You have no payments in the archive",
+      "NessunPagamentoDesc": "Your payment history will appear here",
+      "VaiPagamenti": "Go to payments",
+      "ScaricaTutte": "Download all receipts",
+      "Creditore": "Creditor",
+      "Risultati": "Results {{from}}-{{to}} of {{count}}",
+      "LoginRichiesto": "Login required",
+      "LoginRichiestoDesc": "Please login to view your payment history"
+    },
+    "Ricevuta": {
+      "Titolo": "Payment Receipt",
+      "Scarica": "Download",
+      "ScaricaRicevuta": "Download receipt",
+      "ScaricaRicevute": "Download receipts for completed payments",
+      "DatiMancanti": "Missing notice data for download",
+      "ErroreDownload": "Error downloading receipt",
+      "InviaEmail": "Send receipt via email",
+      "EmailPlaceholder": "Enter email address",
+      "Invia": "Send",
+      "EmailInviata": "Receipt sent successfully",
+      "ErroreInvio": "Error sending receipt"
     },
     "Esito": {
-      "Titolo": "Payment outcome",
-      "Pagamenti": {
-        "Titolo": "Summary",
-        "Dettaglio": {
-          "Eseguito": "The payment required appears to have been successful. The payment receipt will be sent to the address provided.",
-          "Fallito": "The payment required does NOT appear to have been successful.",
-          "Errore": "Payment information is temporarily unavailable.",
-          "InCorso": {
-            "Titolo": "Recovery of information in progress...",
-            "Ok": "The payment process has been completed successfully. We are awaiting confirmation of payment from the pagoPA platform.",
-            "Errore": "The payment process has been completed without the payment of the due amount. We are awaiting confirmation of payment from the pagoPA platform.",
-            "Timeout": {
-              "Ok": "The payment process has been completed successfully, but there has been a delay in communicating the payment claim from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
-              "Errore": "The payment process was completed without the payment of the due, but there was a delay in the communication of the payment attestation from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
-              "Overflow": {
-                "Ok": "The payment process has been completed successfully. Still trying to communicate the payment claim from the pagoPA platform. As soon as it is made available, we will send it to your email address.",
-                "Errore": "The payment process was completed without the payment of the due. The communication of the payment attestation from the pagoPA platform is not yet available. We will take care of delivering it to your email address."
-              }
-            }
-          }
-        }
-      }
+      "Titolo": "Payment Result",
+      "Successo": "Payment completed successfully",
+      "SuccessoDesc": "Your payment has been processed successfully.",
+      "Errore": "Payment failed",
+      "ErroreDesc": "There was a problem processing your payment. Please try again later.",
+      "InCorso": "Verifying...",
+      "InAttesa": "Payment pending",
+      "InAttesaDesc": "Your payment is pending confirmation. You will be notified when completed.",
+      "Timeout": "Timeout",
+      "TimeoutDesc": "Unable to verify payment status. Please check the payment archive.",
+      "Annullato": "Payment cancelled",
+      "AnnullatoDesc": "You cancelled the payment. You can try again anytime.",
+      "TornaHome": "Back to home",
+      "TornaCarrello": "Back to cart",
+      "Riprova": "Retry",
+      "VaiArchivio": "Go to archive",
+      "VaiPosizioneDebitoria": "Go to debt position",
+      "VerificaStato": "Check payment status",
+      "IdPagamento": "Payment ID"
     },
-    "JsonForm": {
-      "Required": "This field is required",
-      "MinLength": "Must be {{minimumLength}} characters or longer (current length: {{currentLength}})",
-      "MaxLength": "Must be {{maximumLength}} characters or shorter (current length: {{currentLength}})",
-      "Pattern": "Must match pattern: {{requiredPattern}}",
-      "Format": {
-        "Date": "Must be a date",
-        "Time": "Must be a time",
-        "DateTime": "Must be a date-time",
-        "Email": "Must be an email address",
-        "Hostname": "Must be a hostname",
-        "Ipv4": "Must be an IPv4 address",
-        "Ipv6": "Must be an IPv6 address, like 1234:5678:9ABC:DEF0:1234:5678:9ABC:DEF0",
-        "Url": "Must be a url, like http://www.example.com/page.html",
-        "UUID": "Must be a uuid, like 12345678-9ABC-DEF0-1234-56789ABCDEF0",
-        "Color": "Must be a color, like #FFFFFF or rgb(255, 255, 255)",
-        "JsonPointer": "Must be a JSON Pointer, like /pointer/to/something",
-        "RelativeJsonPointer": "Must be a relative JSON Pointer, like 2/pointer/to/something",
-        "Regex": "Must be a regular expression, like (1-)?\\d{3}-\\d{3}-\\d{4}",
-        "Generic": "Must be a correctly formatted: {{requiredFormat}}"
-      },
-      "Minimum": "Must be {{minimumValue}} or more",
-      "ExclusiveMinimum": "Must be more than {{exclusiveMinimumValue}}",
-      "Maximum": "Must be {{maximumValue}} or less",
-      "ExclusiveMaximum": "Must be less than {{exclusiveMaximumValue}}",
-      "MultipleOf": "Must be a multiple of {{multipleOfValue}}",
-      "Decimals": "Must have {{decimals}} or fewer decimal places",
-      "MinProperties": "Must have {{minimumProperties}} or more items (current items: {{currentProperties}})",
-      "MaxProperties": "Must have {{maximumProperties}} or fewer items (current items: {{currentProperties}}",
-      "MinItems": "Must have {{minimumItems}} or more items (current items: {{currentItems}})",
-      "MaxItems": "Must have {{maximumItems}} or fewer items (current items: {{currentItems}})",
-      "UniqueItems": "All items must be unique"
+    "Servizio": {
+      "Dettaglio": "Service Detail",
+      "Informazioni": "Service Information",
+      "DatiPagamento": "Payment Details",
+      "Dettagli": "Details",
+      "CompilaForm": "Fill the form",
+      "Verifica": "Verify",
+      "AggiungiCarrello": "Add to cart",
+      "PagamentoDiretto": "Direct payment",
+      "PagamentoDirettoDesc": "This service does not require filling a form.",
+      "ConfermaOperazione": "Confirm operation",
+      "NonTrovato": "Service not found",
+      "NonTrovatoDesc": "The requested service is not available or was not found.",
+      "ErroreCaricamento": "Error loading service",
+      "TornaPagamenti": "Back to payments",
+      "Web": "Website",
+      "Documentazione": "Documentation",
+      "Telefono": "Phone",
+      "Importo": "Amount",
+      "DettaglioImporti": "Amount breakdown",
+      "FormNonValido": "Please check the form fields and try again",
+      "FormJsonSchemaNotSupported": "JSON Schema form not yet supported.",
+      "FormJsonSchemaFuture": "Will be available in a future version.",
+      "ConfigurazioneNonValida": "Invalid configuration",
+      "ErroreCreazionePagamento": "An error occurred while creating the payment",
+      "ServiziInTipologie": "There are {{servizi}} services in {{categorie}} categories",
+      "ServiziInAssessorati": "There are {{servizi}} services in {{categorie}} departments",
+      "ServiziPresenti": "There are {{count}} services",
+      "CercaServizio": "Search for a service",
+      "MostraTipologie": "Show Categories",
+      "MostraAssessorati": "Show Departments",
+      "NessunRisultato": "No results found",
+      "NessunServizioTrovato": "No services found",
+      "ModificaRicerca": "Try modifying your search terms",
+      "AzzeraRicerca": "Clear search"
+    },
+    "Auth": {
+      "Accedi": "Login",
+      "Esci": "Logout",
+      "AccediConSpid": "Login with SPID",
+      "AccediConCie": "Login with CIE",
+      "BenvenutoUtente": "Welcome"
+    },
+    "SideNav": {
+      "MenuItems": [
+        { "Label": "Payments", "Link": "/pagamento-servizio", "Icon": "payment" },
+        { "Label": "Pay Notice", "Link": "/bollettino", "Icon": "receipt" },
+        { "Label": "Cart", "Link": "/carrello", "Icon": "shopping_cart" },
+        { "Label": "Debt Position", "Link": "/riepilogo", "Icon": "account_balance" },
+        { "Label": "Archive", "Link": "/archivio", "Icon": "archive" }
+      ]
     },
     "Http": {
-      "ErrorMap": [{
-          "Match": "string_to_match",
-          "Message": "[%1, %2, %3, %4] Error message"
-        }
-      ],
-      "Status400": "[%1, %2, %3, %4] Bad request.",
-      "Status401": "[%1, %2, %3, %4] Access not authorized. Try to login again.",
-      "Status403": "[%1, %2, %3, %4] Access forbidden.",
-      "Status404": "[%1, %2, %3, %4] Service not found.",
-      "Status422": "[%1, %2, %3, %4] Unable to complete the request.",
-      "Status500": "[%1, %2, %3, %4] Internal server error.",
-      "Status504": "[%1, %2, %3, %4] Gateway timeout.",
-      "Default": "[%1, %2, %3, %4] Service not available, please try again later."
+      "Status400": "Invalid request",
+      "Status401": "Session expired. Please login again.",
+      "Status403": "Access denied",
+      "Status404": "Resource not found",
+      "Status422": "Unable to process the request",
+      "Status500": "Server error",
+      "Status504": "Request timeout",
+      "Default": "An error occurred",
+      "ErrorMap": []
     },
-    "Common": {
-      "AlertAction": "Close",
-      "NumeroAvviso": "Notice",
-      "IUV": "Payment ID",
-      "Beneficiario": "Payee",
-      "Pagamento": "Paid on",
-      "Importo": "Amount",
-      "Scadenza": "By",
-      "SenzaScadenza": "No expiration date",
-      "Data": "Date",
-      "NotAvailable": "Not available",
-      "Modifica": "Edit",
-      "Elimina": "Delete",
-      "CodeException": "Unpredictable problem. Please try again later",
-      "DocumentoPdf": "Document.pdf",
-      "ArchivioPdf": "Archive.zip",
-      "WarningRicevuta": "No documents available",
-      "PendenzaInserita": "The notice with number {{numeroAvviso}} has already added to cart",
-      "PendenzaEseguita": "The notice with number {{numeroAvviso}} has already been paid on {{data}}",
-      "PendenzaAnnullata": "The notice with number {{numeroAvviso}} has benn canceled",
-      "PendenzaSconosciuta": "The notice with number {{numeroAvviso}} is unknown",
-      "PendenzaScaduta": "The notice with number {{numeroAvviso}} has expired on {{data}}",
-      "ServizioValidazioneNonDisponibile": "Validation service not available",
-      "CodiciEsito": {
-        "InCorso": "In progress",
-        "Annullato": "Canceled",
-        "Fallito": "Failed",
-        "Eseguito": "Paid",
-        "NonEseguito": "Not paid",
-        "EseguitoParziale": "Partially paid"
+    "Stati": {
+      "Pagamento": {
+        "in_corso": "In progress",
+        "annullato": "Cancelled",
+        "fallito": "Failed",
+        "eseguito": "Completed",
+        "non_eseguito": "Not executed",
+        "eseguito_parziale": "Partially executed"
       },
-      "Filtro": {
-        "NessunaCorrispondenza": "No matches.",
-        "Risultati": {
-          "SS": "One service found in one group",
-          "SP": "One service found in {{value}} groups",
-          "PS": "{{value}} services found in one group",
-          "PP": "{{valueN}} services found in {{valueM}} groups",
-          "Filtro": "{{value}} service found|{{value}} services found",
-          "ServiziAssessorato": "{{value}} service found|{{value}} services found",
-          "Flat": "{{value}} service found|{{value}} services found"
-        },
-        "NessunRisultato": "No results.",
-        "Placeholder": "Search a service..."
+      "Pendenza": {
+        "eseguita": "Paid",
+        "duplicata": "Duplicate",
+        "non_eseguita": "To pay",
+        "eseguita_parziale": "Partially paid",
+        "annullata": "Cancelled",
+        "scaduta": "Expired",
+        "in_ritardo": "Overdue",
+        "anomala": "Anomalous"
       }
-    },
-    "StatiPendeza": {
-      "ESEGUITA": "Done",
-      "DUPLICATA": "Duplicated",
-      "NON_ESEGUITA": "Not performed",
-      "ESEGUITA_PARZIALE": "Partially performed",
-      "ANNULLATA": "Annullata",
-      "SCADUTA": "Expired",
-      "IN_RITARDO": "Late"
     }
   }
 }

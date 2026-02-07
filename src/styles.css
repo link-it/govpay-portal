@@ -1,0 +1,927 @@
+@import "tailwindcss";
+
+/* Override Tailwind preflight per checkbox/radio Material */
+@layer base {
+  /* Permetti ai checkbox/radio Material di usare i propri stili */
+  .mat-mdc-checkbox input[type="checkbox"],
+  .mdc-checkbox input[type="checkbox"],
+  .mat-mdc-radio-button input[type="radio"],
+  .mdc-radio input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    /* Non forzare dimensioni - lascia che Material le gestisca */
+  }
+}
+
+/* Font di fallback Inter (locale) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin-wght-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin-wght-italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Tema personalizzato Tailwind */
+@theme {
+  /* Font di default - viene sovrascritto dal FontLoaderService basato sulla configurazione */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Colori primari pagoPA/AgID */
+  --color-primary-50: #e3f2fd;
+  --color-primary-100: #bbdefb;
+  --color-primary-200: #90caf9;
+  --color-primary-300: #64b5f6;
+  --color-primary-400: #42a5f5;
+  --color-primary-500: #0066cc;
+  --color-primary-600: #0059b3;
+  --color-primary-700: #004d99;
+  --color-primary-800: #004080;
+  --color-primary-900: #003366;
+
+  /* Colori secondari */
+  --color-secondary-500: #17324d;
+  --color-secondary-600: #0d1f30;
+
+  /* Colori stato */
+  --color-success-500: #008758;
+  --color-warning-500: #a66300;
+  --color-error-500: #d9364f;
+  --color-info-500: #0066cc;
+}
+
+/* Variabili CSS globali per tema dinamico */
+:root {
+  /* Font - sovrascritti dinamicamente dal FontLoaderService */
+  --theme-font-primary: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --theme-font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --theme-font-mono: ui-monospace, monospace;
+
+  /* Buttons - sovrascritti dinamicamente dal ThemeLoaderService */
+  --btn-primary-bg: #0066cc;
+  --btn-primary-text: #ffffff;
+  --btn-primary-hover: #004d99;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-text: #17324d;
+  --btn-secondary-border: #d1d5db;
+  --btn-secondary-hover: #f3f4f6;
+
+  /* Header */
+  --theme-header-bg: #e3f2fd;
+  --theme-header-text: #17324d;
+  --theme-header-tab-active: #0066cc;
+  --theme-header-tab-inactive: #5c6f82;
+
+  /* Sidebar */
+  --theme-sidebar-header-bg: #e3f2fd;
+  --theme-sidebar-header-text: #17324d;
+  --theme-sidebar-bg: #ffffff;
+  --theme-sidebar-menu-text: #5c6f82;
+  --theme-sidebar-menu-active: #0066cc;
+  --theme-sidebar-footer-bg: #f5f7fa;
+
+  /* Card colors */
+  --theme-card-1: #ffc107;
+  --theme-card-2: #dc3545;
+  --theme-card-3: #0066cc;
+  --theme-card-4: #28a745;
+  --theme-card-5: #6f42c1;
+  --theme-card-6: #17a2b8;
+  --theme-card-7: #fd7e14;
+  --theme-card-8: #20c997;
+
+  /* Title decoration */
+  --theme-title-deco-bg: #bbdefb;
+}
+
+/* Stili base */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: #f5f7fa;
+}
+
+/* Scrollbar custom */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Classi pulsanti con tema dinamico e hover */
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  transition: background-color 0.15s ease-in-out;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--btn-primary-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+  transition: background-color 0.15s ease-in-out;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--btn-secondary-hover);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+  SurveyJS Custom Styles (Material Design)
+  Converted from _survey_custom.scss
+  ======================================== */
+
+form {
+  margin-bottom: 0 !important;
+}
+
+.survey-container .card-body {
+  padding: 0;
+}
+
+.survey-container .card-footer {
+  padding: .75rem 0;
+  background-color: transparent;
+  border-top: none;
+}
+
+.survey-container .sv-body__page {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.survey-container .sv-question__content {
+  margin-left: 0;
+}
+
+.survey-container .sv_custom_header {
+  background-color: transparent !important;
+}
+
+.survey-container .sv-footer {
+  padding: .87em 0;
+}
+
+.survey-container .sv-body__footer {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.survey-container .sv-footer__complete-btn {
+  float: left;
+}
+
+.survey-container .sv-dropdown {
+  padding: .25em 1.5em .25em 0;
+}
+
+.survey-container .sv-text {
+  padding: .25em 0;
+}
+
+.survey-container .sv-question__erbox {
+  color: #ef5350;
+  font-weight: 400;
+}
+
+.survey-container .sv-question__description {
+  font-size: 12px;
+}
+
+.survey-container .sv_main.sv_main .sv_qstn_error_bottom {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Boolean */
+.survey-container .sv_main.sv_main .sv-boolean__switch {
+  background-color: var(--btn-primary-bg);
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.survey-container .sv_main.sv_main .sv_row .sv_qstn:first-child:last-child {
+  overflow: hidden;
+}
+
+.survey-container .sv_main.sv_main .sv-boolean__label {
+  color: rgb(64, 64, 64);
+}
+
+.survey-container .checkbox label,
+.survey-container label.checkbox-inline {
+  padding-left: 0;
+}
+
+.survey-container .sv-boolean input:focus ~ .sv-boolean__switch {
+  outline: 1px solid var(--btn-primary-bg);
+  outline-offset: 1px;
+}
+
+.survey-container h5 {
+  font-size: .75em;
+  color: rgba(0,0,0,.54);
+}
+
+.survey-container label {
+  margin-bottom: 0;
+}
+
+.survey-container input.form-control:focus {
+  box-shadow: none;
+}
+
+.survey-container .sv_main .sv_q_dropdown_control,
+.survey-container .sv_main .sv_q_other input,
+.survey-container .sv_main .sv_q_text_root,
+.survey-container .sv_main input:not([type=button]):not([type=reset]):not([type=submit]):not([type=image]):not([type=checkbox]):not([type=radio]),
+.survey-container .sv_main select,
+.survey-container .sv_main textarea {
+  border: none;
+  background-color: transparent;
+}
+
+.survey-container select.form-control {
+  background: var(--arrow) right center no-repeat transparent;
+  border-bottom: 1px solid rgba(33, 33, 33, 0.42);
+  padding-right: 24px;
+}
+
+.survey-container select.form-control:focus {
+  background: var(--arrow) right center no-repeat transparent;
+  border-bottom: 2px solid var(--btn-primary-bg) !important;
+}
+
+.survey-container .sv-file__choose-btn,
+.survey-container .sv_main .sv_container .sv_body .sv_nav .sv_next_btn,
+.survey-container .sv_main .sv_container .sv_body .sv_nav .sv_start_btn {
+  background-color: var(--btn-primary-bg);
+  border-radius: 0;
+}
+
+/* defaultV2 */
+.survey-container .sd-body--responsive .sd-page {
+  padding: 0;
+}
+
+/* Modern */
+.survey-container .sv-root-modern .sv-question__erbox {
+  color: #ef5350;
+}
+
+.survey-container .sv-root-modern .sv-footer__complete-btn,
+.survey-container .sv_main .sv_container .sv_body .sv_nav .sv_complete_btn {
+  float: left;
+}
+
+.survey-container .sv-root-modern .sv-file__clean-btn {
+  background-color: rgb(255, 24, 0);
+  border-radius: 0;
+}
+
+.survey-container .sv-root-modern .sv-text:focus {
+  border-color: var(--btn-primary-bg);
+}
+
+/* Error */
+.survey-container .alert {
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.survey-container .alert-danger {
+  color: #ef5350;
+  background-color: transparent;
+  font-size: 75%;
+  border: none;
+}
+
+.survey-container .sv_bootstrap_css .sv_qstn {
+  padding: .5em .2em 1.5em;
+}
+
+.survey-container .sv_main.sv_main.sv_bootstrapmaterial_css input[type="button"].btn-primary {
+  background-color: var(--btn-primary-bg);
+  border-radius: 0;
+  padding: 10px;
+}
+
+/* Bootstrap Material Design */
+.survey-container .form-control {
+  background-image: linear-gradient(0deg, rgba(33, 33, 33, 0.42) 2px, rgba(33, 150, 243, 0) 0), linear-gradient(0deg, rgba(33, 33, 33, 0.42) 1px, transparent 0);
+}
+
+.survey-container .form-control:focus {
+  box-shadow: none !important;
+  transition-duration: 0s;
+  background-image: linear-gradient(0deg, var(--btn-primary-bg) 2px, rgba(33, 150, 243, 0) 0), linear-gradient(0deg, rgba(0, 0, 0, 0.26) 1px, transparent 0);
+}
+
+.survey-container .bmd-form-group:first-child {
+  padding-top: 0;
+}
+
+.survey-container [class*=" bmd-label"],
+.survey-container [class^=bmd-label] {
+  color: rgba(0,0,0,.54);
+}
+
+.survey-container .sv_main .sv_q_dropdown_control:focus,
+.survey-container .sv_main .sv_q_other input:focus,
+.survey-container .sv_main .sv_q_text_root:focus,
+.survey-container .sv_main input:not([type=button]):not([type=reset]):not([type=submit]):not([type=image]):not([type=checkbox]):not([type=radio]):focus,
+.survey-container .sv_main select:focus,
+.survey-container .sv_main textarea:focus {
+  border: none;
+}
+
+.survey-container .sv_main button {
+  background-color: var(--btn-primary-bg);
+  border-color: var(--btn-primary-bg);
+  border-radius: 0;
+}
+
+.survey-container .sv_q_file {
+  padding: 0 10px 10px;
+  border: 1px solid rgba(33, 33, 33, 0.42);
+}
+
+.survey-container .sv_main .sv_qstn .sv_q_file .sv_q_file_remove_button {
+  display: none;
+  padding: .25em 2em;
+}
+
+.survey-container .sv_main .sv_qstn .sv_q_file .sv_q_file_remove_button:hover {
+  background-color: #5ccd16;
+}
+
+.survey-container .sv_q_file_remove_button {
+  border: 1px solid rgba(0,0,0,.54);
+}
+
+/* Input custom styles */
+.survey-container input[type="file"]::file-selector-button {
+  background-color: #a4d1f9;
+  box-sizing: border-box;
+  position: relative;
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  min-width: 64px;
+  line-height: 36px;
+  padding: 0 16px;
+  border-radius: 0;
+  overflow: visible;
+  transform: translate3d(0, 0, 0);
+  transition: background 400ms cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 1.5rem 0 .5rem;
+}
+
+.survey-container input[type="file"]::-webkit-file-upload-button {
+  background-color: #a4d1f9;
+  box-sizing: border-box;
+  position: relative;
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: 0;
+  min-width: 64px;
+  line-height: 36px;
+  padding: 0 16px;
+  border-radius: 0;
+  overflow: visible;
+  font-weight: 500;
+}
+
+.survey-container .sd-context-btn {
+  background-color: #F5F5F5 !important;
+  border-radius: 0;
+}
+
+.survey-container .sd-context-btn.sd-file__choose-btn--icon {
+  right: 10px;
+  background-color: transparent !important;
+}
+
+.survey-container .sd-file__decorator {
+  border: 1px solid var(--border, #d6d6d6);
+}
+
+.survey-container .sd-file__decorator--error {
+  background-color: transparent !important;
+}
+
+.survey-container .sd-action.sd-action {
+  color: var(--btn-primary-text);
+  font-weight: 400;
+  background-color: var(--btn-primary-bg);
+}
+
+.survey-container .sd-action.sd-action:not(:disabled):not(.sd-action--disabled):focus,
+.survey-container .sd-action.sd-action:not(:disabled):not(.sd-action--disabled):hover {
+  background-color: #a4d1f9;
+  color: #343a40;
+}
+
+/* Hide SurveyJS branding */
+.survey-container .sv-brand-info {
+  display: none !important;
+}
+
+/* ========================================
+  SurveyJS Compact Layout (Material-like)
+  ======================================== */
+
+/* SurveyJS Theme Variables - mappatura al tema dell'app */
+.survey-container {
+  --arrow: url("data:image/svg+xml;utf8,<svg fill='%230000008a' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+}
+
+/* Override variabili tema SurveyJS - !important per sovrascrivere stili inline */
+.survey-container .sd-root-modern,
+.survey-container .sd-root-modern.sd-root-modern--full-container {
+  /* Colori primari */
+  --sjs-primary-backcolor: #e8e8e8 !important;
+  --sjs-primary-backcolor-dark: var(--btn-primary-hover, #004d99) !important;
+  --sjs-primary-backcolor-light: var(--color-primary-100, #bbdefb) !important;
+  --sjs-primary-forecolor: rgba(0, 0, 0, 0.87) !important;
+  --sjs-primary-forecolor-light: rgba(255, 255, 255, 0.7) !important;
+
+  /* Colori generali */
+  --sjs-general-backcolor: transparent !important;
+  --sjs-general-backcolor-dark: #f5f5f5 !important;
+  --sjs-general-backcolor-dim: #fafafa !important;
+  --sjs-general-backcolor-dim-light: #ffffff !important;
+  --sjs-general-forecolor: rgba(0, 0, 0, 0.87) !important;
+  --sjs-general-forecolor-light: rgba(0, 0, 0, 0.54) !important;
+  --sjs-general-dim-forecolor: rgba(0, 0, 0, 0.87) !important;
+  --sjs-general-dim-forecolor-light: rgba(0, 0, 0, 0.54) !important;
+
+  /* Sfondi editor e pannelli */
+  --sjs-editor-background: #ffffff !important;
+  --sjs-editorpanel-backcolor: #ffffff !important;
+  --sjs-editorpanel-hovercolor: var(--color-primary-50, #e3f2fd) !important;
+  --sjs-questionpanel-backcolor: transparent !important;
+  --sjs-questionpanel-hovercolor: rgba(0, 0, 0, 0.04) !important;
+  --sjs-question-background: transparent !important;
+
+  /* Bordi */
+  --sjs-border-default: rgba(0, 0, 0, 0.12) !important;
+  --sjs-border-light: rgba(0, 0, 0, 0.08) !important;
+  --sjs-border-inside: rgba(0, 0, 0, 0.06) !important;
+
+  /* Header */
+  --sjs-header-backcolor: transparent !important;
+
+  /* Colori secondari */
+  --sjs-secondary-backcolor: var(--color-secondary-500, #17324d) !important;
+
+  /* Colori semantici */
+  --sjs-special-red-forecolor: var(--color-error-500, #d9364f) !important;
+
+  /* Padding e layout */
+  --sd-base-padding: 0px !important;
+  --sd-base-vertical-padding: 8px !important;
+
+  background: transparent !important;
+}
+
+.survey-container .sd-body {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.survey-container .sd-body__page {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.survey-container .sd-page {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+/* Question spacing with vertical padding */
+.survey-container .sd-element--with-frame {
+  padding: 8px 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.survey-container .sd-question {
+  padding: 12px 0 !important;
+  background: transparent !important;
+}
+
+.survey-container .sd-question__content {
+  display: flex !important;
+  flex-direction: column !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  background: transparent !important;
+}
+
+.survey-container .sd-question__header {
+  padding-bottom: 4px !important;
+  background: transparent !important;
+}
+
+/* Row spacing with vertical padding */
+.survey-container .sd-row {
+  margin-top: 8px !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.survey-container .sd-row:first-child {
+  margin-top: 0 !important;
+}
+
+.survey-container .sd-row > div {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Panel/Group styling */
+.survey-container .sd-panel {
+  padding: 8px 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.survey-container .sd-panel__content {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Input fields - underline style */
+.survey-container .sd-input {
+  border: none !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 4px 0 !important;
+  box-shadow: none !important;
+}
+
+.survey-container .sd-input:focus {
+  border-bottom: 2px solid var(--btn-primary-bg) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Dropdown - underline style */
+.survey-container .sd-dropdown {
+  border: none !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 4px 0 !important;
+  box-shadow: none !important;
+}
+
+.survey-container .sd-dropdown:focus-within {
+  border-bottom: 2px solid var(--btn-primary-bg) !important;
+  box-shadow: none !important;
+}
+
+/* Text input - underline style */
+.survey-container .sd-text {
+  border: none !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42) !important;
+  border-radius: 0 !important;
+  padding: 4px 0 !important;
+  box-shadow: none !important;
+}
+
+.survey-container .sd-text:focus {
+  border-bottom: 2px solid var(--btn-primary-bg) !important;
+  box-shadow: none !important;
+}
+
+/* Checkbox/Radio - compact */
+.survey-container .sd-selectbase {
+  padding: 0 !important;
+}
+
+.survey-container .sd-selectbase__item {
+  padding: 2px 0 !important;
+}
+
+/* Navigation buttons - Material style */
+.survey-container .sd-navigation__complete-btn,
+.survey-container .sd-navigation__next-btn,
+.survey-container .sd-navigation__prev-btn {
+  border-radius: 4px !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  padding: 8px 16px !important;
+}
+
+.survey-container .sd-btn--action {
+  background-color: var(--btn-primary-bg) !important;
+  color: var(--btn-primary-text) !important;
+}
+
+.survey-container .sd-btn--action:hover {
+  background-color: var(--btn-primary-hover) !important;
+}
+
+/* Footer compact */
+.survey-container .sd-body__navigation {
+  padding: 16px 0 0 0 !important;
+}
+
+/* Remove frame backgrounds */
+.survey-container .sd-element--with-frame > .sd-element__header {
+  background: transparent !important;
+}
+
+/* Ensure all backgrounds are transparent */
+.survey-container,
+.survey-container .sd-root-modern__wrapper,
+.survey-container .sd-container-modern,
+.survey-container .sd-container-modern__title,
+.survey-container .sd-header,
+.survey-container .sd-title {
+  background: transparent !important;
+}
+
+/* Question title - Material typography */
+.survey-container .sd-question__title {
+  font-size: 12px !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+  font-weight: 400 !important;
+  padding: 0 !important;
+  margin-bottom: 4px !important;
+}
+
+/* Required asterisk */
+.survey-container .sd-question__required-text {
+  color: #d32f2f !important;
+}
+
+/* Error messages - force below field */
+.survey-container .sd-question__erbox {
+  font-size: 12px !important;
+  color: #d32f2f !important;
+  padding: 0 !important;
+  margin: 4px 0 0 0 !important;
+  order: 999 !important;
+  background: transparent !important;
+}
+
+/* Error container positioning */
+.survey-container .sd-question__erbox--above-question {
+  order: 999 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.survey-container .sd-question__erbox--below-question {
+  order: 999 !important;
+}
+
+/* ========================================
+  ng-formworks / JSON Schema Form Styles
+  ======================================== */
+
+/* Form container transparent */
+app-json-schema-form,
+json-schema-form,
+[class*="json-schema"] {
+  background-color: transparent !important;
+}
+
+/* Elementi figli trasparenti - esclude checkbox e dropdown */
+app-json-schema-form *:not(.mdc-checkbox):not(.mdc-checkbox__background):not(.mdc-checkbox__checkmark):not(.mdc-checkbox__mixedmark):not(.mat-mdc-checkbox):not([class*="checkbox"]):not(.mat-mdc-select-panel):not(.mat-mdc-option):not(.mdc-menu-surface):not(.mdc-list-item):not([class*="cdk-overlay"]),
+json-schema-form *:not(.mdc-checkbox):not(.mdc-checkbox__background):not(.mdc-checkbox__checkmark):not(.mdc-checkbox__mixedmark):not(.mat-mdc-checkbox):not([class*="checkbox"]):not(.mat-mdc-select-panel):not(.mat-mdc-option):not(.mdc-menu-surface):not(.mdc-list-item):not([class*="cdk-overlay"]) {
+  background-color: transparent !important;
+}
+
+/* Material form field - all variants (esclude checkbox) */
+.mat-mdc-form-field,
+.mat-form-field,
+.mdc-text-field {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ========================================
+  Angular Material Checkbox Fix
+  Ripristina gli stili necessari per i checkbox MDC
+  ======================================== */
+
+/* Assicura che i checkbox Material siano visibili e cliccabili */
+.mat-mdc-checkbox,
+.mdc-checkbox {
+  /* Mantieni dimensioni corrette */
+  min-width: 18px;
+  min-height: 18px;
+}
+
+/* Background del checkbox - NON deve essere transparent */
+.mdc-checkbox__background {
+  background-color: transparent;
+  border-color: rgba(0, 0, 0, 0.54) !important;
+}
+
+/* Checkbox checked - colore di sfondo */
+.mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--btn-primary-bg, #0066cc) !important;
+  border-color: var(--btn-primary-bg, #0066cc) !important;
+}
+
+/* Checkmark (spunta) visibile */
+.mdc-checkbox__checkmark {
+  color: #ffffff !important;
+}
+
+.mdc-checkbox__checkmark-path {
+  stroke: #ffffff !important;
+}
+
+/* Input nativo accessibile per eventi click */
+.mdc-checkbox__native-control {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  cursor: pointer !important;
+  z-index: 1 !important;
+}
+
+/* Ripple effect */
+.mdc-checkbox__ripple {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+}
+
+/* Focus ring */
+.mdc-checkbox__native-control:focus ~ .mdc-checkbox__ripple {
+  opacity: 0.12 !important;
+  background-color: var(--btn-primary-bg, #0066cc) !important;
+}
+
+/* Label del checkbox cliccabile */
+.mat-mdc-checkbox label,
+.mdc-form-field > label {
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+/* MDC specific overrides */
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+}
+
+.mdc-text-field--filled .mdc-text-field__ripple::before,
+.mdc-text-field--filled .mdc-text-field__ripple::after {
+  background-color: transparent !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: transparent !important;
+}
+
+.mdc-line-ripple::before,
+.mdc-line-ripple::after {
+  border-bottom-color: rgba(0, 0, 0, 0.42) !important;
+}
+
+/* Remove filled background */
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  background-color: transparent !important;
+}
+
+/* Field wrapper spacing */
+.mat-mdc-form-field-subscript-wrapper {
+  background-color: transparent !important;
+  position: relative !important;
+}
+
+/* Increase margin between fields */
+app-json-schema-form flex-layout-root-widget > div > div,
+app-json-schema-form section-widget > fieldset > div,
+app-json-schema-form .mat-mdc-form-field,
+json-schema-form flex-layout-root-widget > div > div,
+json-schema-form section-widget > fieldset > div,
+json-schema-form .mat-mdc-form-field {
+  margin-bottom: 8px !important;
+}
+
+/* Remove padding from text field */
+.mdc-text-field {
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Error message - same position as mat-hint */
+.mat-mdc-form-field-error-wrapper {
+  position: relative !important;
+  padding: 0 !important;
+}
+
+mat-error,
+.mat-mdc-form-field-error {
+  font-size: 12px !important;
+}
+
+mat-error {
+  margin-top: -1.5rem !important;
+}
+
+/* Dropdown/Select panel - white background */
+.mat-mdc-select-panel,
+.mat-mdc-autocomplete-panel,
+.cdk-overlay-pane .mat-mdc-select-panel,
+.mdc-menu-surface,
+.cdk-overlay-container .mat-mdc-select-panel,
+.cdk-overlay-container .mdc-menu-surface {
+  background-color: #ffffff !important;
+}
+
+/* Opzioni dropdown - sfondo bianco e hover */
+.mat-mdc-option,
+.mdc-list-item {
+  background-color: #ffffff !important;
+}
+
+.mat-mdc-option:hover,
+.mat-mdc-option:focus,
+.mdc-list-item:hover,
+.mdc-list-item:focus {
+  background-color: #f5f5f5 !important;
+}
+
+.mat-mdc-option.mat-mdc-option-active,
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: #e8e8e8 !important;
+}

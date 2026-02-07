@@ -1,0 +1,13 @@
+@if (isLoading()) {
+  <div class="flex items-center justify-center p-8">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+  </div>
+} @else if (surveyModel()) {
+  <div class="survey-container">
+    <survey [model]="surveyModel()!"></survey>
+  </div>
+} @else if (errorMessage()) {
+  <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+    {{ errorMessage() }}
+  </div>
+}

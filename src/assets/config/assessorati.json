@@ -1,0 +1,118 @@
+[
+  {
+    "id": "presidenza",
+    "nome": "Presidenza",
+    "icona": "bootstrapShieldCheck",
+    "immagine": "/assets/images/assessorati/presidenza.svg",
+    "backgroundColor": "#17324d",
+    "color": "#ffffff",
+    "numeroServizi": 45
+  },
+  {
+    "id": "agricoltura",
+    "nome": "Assessorato dell'agricoltura, della pesca e dello sviluppo rurale",
+    "icona": "bootstrapFlower1",
+    "immagine": "/assets/images/assessorati/agricoltura.svg",
+    "backgroundColor": "#ea580c",
+    "color": "#1f2937",
+    "numeroServizi": 67
+  },
+  {
+    "id": "energia",
+    "nome": "Assessorato dell'energia e servizi di pubblica utilità",
+    "icona": "bootstrapLightning",
+    "immagine": "/assets/images/assessorati/energia.svg",
+    "backgroundColor": "#0d9488",
+    "color": "#ffffff",
+    "numeroServizi": 29
+  },
+  {
+    "id": "istruzione",
+    "nome": "Assessorato dell'istruzione e formazione professionale",
+    "icona": "bootstrapMortarboard",
+    "immagine": "/assets/images/assessorati/istruzione.svg",
+    "backgroundColor": "#6366f1",
+    "color": "#ffffff",
+    "numeroServizi": 27
+  },
+  {
+    "id": "salute",
+    "nome": "Assessorato della salute",
+    "icona": "bootstrapHeart",
+    "immagine": "/assets/images/assessorati/salute.svg",
+    "backgroundColor": "#ef4444",
+    "color": "#ffffff",
+    "numeroServizi": 35
+  },
+  {
+    "id": "attivita-produttive",
+    "nome": "Assessorato delle attività produttive",
+    "icona": "bootstrapBuilding",
+    "immagine": "/assets/images/assessorati/attivita-produttive.svg",
+    "backgroundColor": "#dc2626",
+    "numeroServizi": 52
+  },
+  {
+    "id": "infrastrutture",
+    "nome": "Assessorato delle infrastrutture e della mobilità",
+    "icona": "bootstrapSignpost",
+    "immagine": "/assets/images/assessorati/infrastrutture.svg",
+    "backgroundColor": "#8b5cf6",
+    "color": "#ffffff",
+    "numeroServizi": 41
+  },
+  {
+    "id": "territorio",
+    "nome": "Assessorato del territorio e dell'ambiente",
+    "icona": "bootstrapGlobe",
+    "immagine": "/assets/images/assessorati/territorio.svg",
+    "backgroundColor": "#22c55e",
+    "color": "#ffffff",
+    "numeroServizi": 48
+  },
+  {
+    "id": "famiglia",
+    "nome": "Assessorato della famiglia, delle politiche sociale e del lavoro",
+    "icona": "bootstrapPeople",
+    "immagine": "/assets/images/assessorati/famiglia.svg",
+    "backgroundColor": "#3b82f6",
+    "color": "#ffffff",
+    "numeroServizi": 33
+  },
+  {
+    "id": "beni-culturali",
+    "nome": "Assessorato dei beni culturali e dell'identità regionale",
+    "icona": "bootstrapBank2",
+    "immagine": "/assets/images/assessorati/beni-culturali.svg",
+    "backgroundColor": "#84cc16",
+    "color": "#ffffff",
+    "numeroServizi": 38
+  },
+  {
+    "id": "turismo",
+    "nome": "Assessorato del turismo, dello sport e dello spettacolo",
+    "icona": "bootstrapSun",
+    "immagine": "/assets/images/assessorati/turismo.svg",
+    "backgroundColor": "#eab308",
+    "color": "#1f2937",
+    "numeroServizi": 19
+  },
+  {
+    "id": "economia",
+    "nome": "Assessorato dell'economia",
+    "icona": "bootstrapGraphUp",
+    "immagine": "/assets/images/assessorati/economia.svg",
+    "backgroundColor": "#ec4899",
+    "color": "#ffffff",
+    "numeroServizi": 44
+  },
+  {
+    "id": "autonomie-locali",
+    "nome": "Assessorato delle autonomie locali e della funzione pubblica",
+    "icona": "bootstrapGeoAlt",
+    "immagine": "/assets/images/assessorati/autonomie-locali.svg",
+    "backgroundColor": "#14b8a6",
+    "color": "#ffffff",
+    "numeroServizi": 22
+  }
+]

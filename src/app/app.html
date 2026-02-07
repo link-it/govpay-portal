@@ -1,0 +1,92 @@
+<div class="min-h-screen bg-gray-50 flex flex-col">
+  <!-- Header temporaneo per test -->
+  <header class="bg-primary-500 text-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <ng-icon name="bootstrapCreditCard2Front" class="text-2xl"></ng-icon>
+        <h1 class="text-xl font-semibold">{{ config.appName() }}</h1>
+      </div>
+      <div class="text-sm opacity-80">
+        v{{ config.appVersion() }}
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenuto principale -->
+  <main class="container mx-auto px-4 py-8 flex-1">
+    @if (config.loaded()) {
+      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">
+          {{ 'Language.Header.Titolo' | translate }}
+        </h2>
+        <p class="text-gray-600 mb-4">
+          Configurazione caricata correttamente. Il progetto base è pronto.
+        </p>
+
+        <!-- Info configurazione -->
+        <div class="bg-gray-50 rounded p-4 mt-6">
+          <h3 class="font-semibold text-gray-700 mb-2">API Base URL</h3>
+          <code class="text-sm text-primary-600 break-all">{{ config.api().baseUrl }}</code>
+        </div>
+
+        <!-- Domini configurati -->
+        @if (config.domini().length > 0) {
+          <div class="mt-6">
+            <h3 class="font-semibold text-gray-700 mb-2">Domini configurati</h3>
+            <ul class="list-disc list-inside">
+              @for (dominio of config.domini(); track dominio.value) {
+                <li class="text-gray-600">{{ dominio.label }} ({{ dominio.value }})</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <!-- Lingue disponibili -->
+        <div class="mt-6">
+          <h3 class="font-semibold text-gray-700 mb-2">Lingue disponibili</h3>
+          <div class="flex gap-2">
+            @for (lingua of config.lingue(); track lingua.alpha2Code) {
+              <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm">
+                {{ lingua.language }}
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="mt-6">
+          <h3 class="font-semibold text-gray-700 mb-2">Features</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-full text-sm"
+                  [class]="config.isSpidEnabled() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'">
+              SPID: {{ config.isSpidEnabled() ? 'Attivo' : 'Disattivo' }}
+            </span>
+            <span class="px-3 py-1 rounded-full text-sm"
+                  [class]="config.isIamEnabled() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'">
+              IAM: {{ config.isIamEnabled() ? 'Attivo' : 'Disattivo' }}
+            </span>
+            <span class="px-3 py-1 rounded-full text-sm"
+                  [class]="config.features().qrScanner ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'">
+              QR Scanner: {{ config.features().qrScanner ? 'Attivo' : 'Disattivo' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Router outlet per le pagine -->
+      <router-outlet />
+    } @else {
+      <!-- Loading -->
+      <div class="flex items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+      </div>
+    }
+  </main>
+
+  <!-- Footer temporaneo -->
+  <footer class="bg-secondary-500 text-white py-4">
+    <div class="container mx-auto px-4 text-center text-sm">
+      {{ config.appTitle() }} - Powered by GovPay
+    </div>
+  </footer>
+</div>

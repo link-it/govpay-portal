@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bgPlaceholder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bgPlaceholder)"/>
+  <!-- Document/Service icon -->
+  <g transform="translate(400, 160)" fill="none" stroke="#e2e8f0" stroke-width="3">
+    <!-- Document shape -->
+    <path d="M-50,-70 L30,-70 L50,-50 L50,70 L-50,70 Z"/>
+    <path d="M30,-70 L30,-50 L50,-50"/>
+    <!-- Lines representing text -->
+    <line x1="-30" y1="-40" x2="30" y2="-40"/>
+    <line x1="-30" y1="-20" x2="30" y2="-20"/>
+    <line x1="-30" y1="0" x2="20" y2="0"/>
+    <line x1="-30" y1="20" x2="30" y2="20"/>
+    <line x1="-30" y1="40" x2="10" y2="40"/>
+    <!-- Euro symbol -->
+    <circle cx="0" cy="0" r="15" stroke-width="2" opacity="0"/>
+  </g>
+  <!-- Euro badge -->
+  <g transform="translate(440, 120)">
+    <circle cx="0" cy="0" r="25" fill="#48bb78"/>
+    <text x="0" y="8" font-family="system-ui, sans-serif" font-size="24" font-weight="700" fill="white" text-anchor="middle">€</text>
+  </g>
+  <text x="400" y="300" font-family="system-ui, sans-serif" font-size="24" font-weight="600" fill="#e2e8f0" text-anchor="middle">Servizio di Pagamento</text>
+  <text x="400" y="330" font-family="system-ui, sans-serif" font-size="14" fill="#cbd5e0" text-anchor="middle">Portale Pagamenti - pagoPA</text>
+</svg>

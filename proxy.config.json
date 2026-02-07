@@ -1,14 +1,8 @@
 {
-  "/govpay/frontend/api/pagamento/rs/public/v2/*": {
-    "target": "https://dev.govcloud.it",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  },
-  "/govpay/frontend/api/pagamento/rs/spid/v2/*": {
-    "target": "https://dev.govcloud.it",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
+  "/govpay-api-portal": {
+    "target": "https://lab.link.it",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }
