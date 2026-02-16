@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-HEADER_PATTERN="Licensed under the EUPL"
+HEADER_PATTERN="GNU General Public License"
 MISSING_FILES=()
 
 # Trova tutti i file .ts, .js, .mjs nella directory src/ e scripts/

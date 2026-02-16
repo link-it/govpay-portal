@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Aggiunge l'header di licenza EUPL 1.2 a tutti i file sorgente che non lo contengono
+# Aggiunge l'header di licenza GPLv3 a tutti i file sorgente che non lo contengono
 #
 
 set -euo pipefail
@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 LICENSE_FILE="$PROJECT_ROOT/license-header.txt"
 
-HEADER_PATTERN="Licensed under the EUPL"
+HEADER_PATTERN="GNU General Public License"
 ADDED_COUNT=0
 SKIPPED_COUNT=0
 
