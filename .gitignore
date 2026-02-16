@@ -48,6 +48,11 @@ Dockerfile
 .dockerignore
 docker/
 
+# CI/CD artifacts
+/reports
+/third-party-licenses
+/.npm
+
 # System Files
 .DS_Store
 Thumbs.db

@@ -6,6 +6,13 @@ Il Portale di Pagamento è un'applicazione web per il cittadino che realizza i p
 
 ## Funzionalità
 
+* Funzioni disponibili a soggetti non autenticati:
+  * Pagamento di Avvisi pagoPA
+  * Pagamenti spontanei
+* Funzioni disponibili a soggetti autenticati:
+  * Consultazione della posizione debitoria
+  * Consultazione dello storico dei pagamenti
+
 **Utenti non autenticati:**
 
 - Pagamento di Avvisi pagoPA ad iniziativa Ente
@@ -28,6 +35,8 @@ Il Portale di Pagamento è un'applicazione web per il cittadino che realizza i p
 - **Form Dinamiche**: Supporto SurveyJS e Formly per form configurabili
 
 Il Portale di Pagamento utilizza le API REST di [GovPay](https://github.com/link-it/govpay) per l'accesso ai dati e l'interazione con pagoPA.
+
+E' disponibile una installazione [dimostrativa del portale](https://demo.govcloud.it/govpay-portal/)
 
 ## Documentazione
 
