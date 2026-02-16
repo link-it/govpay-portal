@@ -30,8 +30,8 @@ import {
  */
 const EMPTY_OBJECT: Record<string, unknown> = Object.freeze({});
 
-const ASSESSORATI_URL = '/assets/config/assessorati.json';
-const TIPOLOGIE_URL = '/assets/config/tipologie.json';
+const ASSESSORATI_URL = './assets/config/assessorati.json';
+const TIPOLOGIE_URL = './assets/config/tipologie.json';
 
 interface AssessoratoConfig {
   id: string;

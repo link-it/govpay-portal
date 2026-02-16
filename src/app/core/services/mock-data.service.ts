@@ -88,9 +88,9 @@ export interface PagamentoMock {
 
 // ============ CONFIG URLS ============
 
-const TIPOLOGIE_URL = '/assets/config/tipologie.json';
-const ASSESSORATI_URL = '/assets/config/assessorati.json';
-const SERVIZI_URL = '/assets/config/servizi.json';
+const TIPOLOGIE_URL = './assets/config/tipologie.json';
+const ASSESSORATI_URL = './assets/config/assessorati.json';
+const SERVIZI_URL = './assets/config/servizi.json';
 
 const PENDENZE_MOCK: PendenzaMock[] = [
   {

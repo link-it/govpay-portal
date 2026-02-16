@@ -36,6 +36,7 @@ describe('FontLoaderService', () => {
     mockDocument = {
       head: mockHead,
       documentElement: mockRoot,
+      baseURI: 'http://localhost/',
       createElement: vi.fn((tagName: string): MockElement => {
         return {
           tagName,

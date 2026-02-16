@@ -49,7 +49,7 @@ export function provideCore(): EnvironmentProviders {
       // Configura il servizio API reale con i parametri da config
       const apiConfig = configService.api();
       realApiService.configure({
-        baseUrl: apiConfig.baseUrl || 'https://lab.link.it/govpay-api-portal/v1',
+        baseUrl: apiConfig.baseUrl || 'https://lab.link.it/govpay-api-portal',
         useSpidDevHeaders: apiConfig.useSpidDevHeaders || false
       });
 

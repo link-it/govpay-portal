@@ -20,9 +20,9 @@ import {
   PagoPAConfig
 } from './app-config.model';
 
-const CONFIG_URL = '/assets/config/app-config.json';
-const THEME_URL = '/assets/config/theme.json';
-const DOMINI_URL = '/assets/config/domini.json';
+const CONFIG_URL = './assets/config/app-config.json';
+const THEME_URL = './assets/config/theme.json';
+const DOMINI_URL = './assets/config/domini.json';
 
 /**
  * Configurazione di default usata come fallback
@@ -96,10 +96,10 @@ const DEFAULT_THEME: ThemeConfig = {
     primary: {
       family: 'Titillium Web',
       files: [
-        { weight: '300', src: '/assets/fonts/titillium-web-300.woff2' },
-        { weight: '400', src: '/assets/fonts/titillium-web-400.woff2' },
-        { weight: '600', src: '/assets/fonts/titillium-web-600.woff2' },
-        { weight: '700', src: '/assets/fonts/titillium-web-700.woff2' },
+        { weight: '300', src: './assets/fonts/titillium-web-300.woff2' },
+        { weight: '400', src: './assets/fonts/titillium-web-400.woff2' },
+        { weight: '600', src: './assets/fonts/titillium-web-600.woff2' },
+        { weight: '700', src: './assets/fonts/titillium-web-700.woff2' },
       ],
     },
   },
@@ -274,15 +274,15 @@ export class ConfigService {
       this._tenant.set(tenant);
 
       const configUrl = tenant
-        ? `/assets/config/${tenant}/app-config.json`
+        ? `./assets/config/${tenant}/app-config.json`
         : CONFIG_URL;
 
       const themeUrl = tenant
-        ? `/assets/config/${tenant}/theme.json`
+        ? `./assets/config/${tenant}/theme.json`
         : THEME_URL;
 
       const dominiUrl = tenant
-        ? `/assets/config/${tenant}/domini.json`
+        ? `./assets/config/${tenant}/domini.json`
         : DOMINI_URL;
 
       // Carica tutti i file in parallelo

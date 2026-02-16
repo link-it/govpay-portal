@@ -1,7 +1,7 @@
 {
   "logo": {
-    "full": "/assets/images/logo/LINK_GovPay-icon.svg",
-    "compact": "/assets/images/logo/LINK_GovPay-icon.svg",
+    "full": "assets/images/logo/LINK_GovPay-icon.svg",
+    "compact": "assets/images/logo/LINK_GovPay-icon.svg",
     "showTitle": true,
     "fallbackText": "PP",
     "fallbackGradient": {
@@ -100,10 +100,10 @@
       "primary": {
         "family": "Titillium Web",
         "files": [
-          { "weight": "300", "src": "/assets/fonts/titillium-web-300.woff2" },
-          { "weight": "400", "src": "/assets/fonts/titillium-web-400.woff2" },
-          { "weight": "600", "src": "/assets/fonts/titillium-web-600.woff2" },
-          { "weight": "700", "src": "/assets/fonts/titillium-web-700.woff2" }
+          { "weight": "300", "src": "assets/fonts/titillium-web-300.woff2" },
+          { "weight": "400", "src": "assets/fonts/titillium-web-400.woff2" },
+          { "weight": "600", "src": "assets/fonts/titillium-web-600.woff2" },
+          { "weight": "700", "src": "assets/fonts/titillium-web-700.woff2" }
         ]
       }
     },

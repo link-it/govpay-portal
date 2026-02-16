@@ -47,15 +47,18 @@ export class FontLoaderService {
       const styleElement = this.document.createElement('style');
       styleElement.id = fontId;
 
-      const fontFaces = config.files.map(file => `
+      const fontFaces = config.files.map(file => {
+        const resolvedSrc = new URL(file.src, this.document.baseURI).href;
+        return `
         @font-face {
           font-family: '${config.family}';
           font-style: ${file.style || 'normal'};
           font-weight: ${file.weight};
           font-display: swap;
-          src: url('${file.src}') format('woff2');
+          src: url('${resolvedSrc}') format('woff2');
         }
-      `).join('\n');
+      `;
+      }).join('\n');
 
       styleElement.textContent = fontFaces;
       this.document.head.appendChild(styleElement);

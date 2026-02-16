@@ -5,7 +5,7 @@
  * Le implementazioni concrete (mock, reale) estendono questa classe astratta.
  *
  * Basato su: OpenAPI GovPay Portal API v1.0.0
- * Server sviluppo: https://lab.link.it/govpay-api-portal/v1
+ * Server sviluppo: https://lab.link.it/govpay-api-portal
  *
  * Ultimo aggiornamento: 2026-01-24
  */

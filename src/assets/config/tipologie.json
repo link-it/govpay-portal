@@ -3,7 +3,7 @@
     "id": "concessioni",
     "nome": "Tasse sulle Concessioni Regionali",
     "icona": "bootstrapCurrencyEuro",
-    "immagine": "/assets/images/assessorati/economia.svg",
+    "immagine": "assets/images/assessorati/economia.svg",
     "backgroundColor": "#f5a623",
     "color": "#1f2937",
     "numeroServizi": 45
@@ -12,7 +12,7 @@
     "id": "canone",
     "nome": "Canoni e/o vendita beni patrimoniali disponibili",
     "icona": "bootstrapHouseDoor",
-    "immagine": "/assets/images/assessorati/canone-vendita-demaniale.svg",
+    "immagine": "assets/images/assessorati/canone-vendita-demaniale.svg",
     "backgroundColor": "#4a5568",
     "color": "#ffffff",
     "numeroServizi": 52
@@ -21,7 +21,7 @@
     "id": "interessi",
     "nome": "Interessi e Sanzioni",
     "icona": "bootstrapExclamationTriangle",
-    "immagine": "/assets/images/assessorati/interessi-sanzioni.svg",
+    "immagine": "assets/images/assessorati/interessi-sanzioni.svg",
     "backgroundColor": "#dc2626",
     "color": "#ffffff",
     "numeroServizi": 89
@@ -30,7 +30,7 @@
     "id": "accessoatti",
     "nome": "Accesso Agli Atti",
     "icona": "bootstrapPencilSquare",
-    "immagine": "/assets/images/assessorati/accessoagliatti.svg",
+    "immagine": "assets/images/assessorati/accessoagliatti.svg",
     "backgroundColor": "#16a34a",
     "color": "#ffffff",
     "numeroServizi": 41
@@ -39,7 +39,7 @@
     "id": "autorizzazioni",
     "nome": "Concessioni e Autorizzazioni",
     "icona": "bootstrapShieldCheck",
-    "immagine": "/assets/images/assessorati/concessioni-autorizzazione.svg",
+    "immagine": "assets/images/assessorati/concessioni-autorizzazione.svg",
     "backgroundColor": "#7c3aed",
     "color": "#ffffff",
     "numeroServizi": 34
@@ -48,7 +48,7 @@
     "id": "contributi",
     "nome": "Contributi Regionali",
     "icona": "bootstrapWallet2",
-    "immagine": "/assets/images/assessorati/contributiregionali.svg",
+    "immagine": "assets/images/assessorati/contributiregionali.svg",
     "backgroundColor": "#0891b2",
     "color": "#ffffff",
     "numeroServizi": 31
@@ -57,7 +57,7 @@
     "id": "rimborsi",
     "nome": "Rimborsi",
     "icona": "bootstrapArrowRepeat",
-    "immagine": "/assets/images/assessorati/rimborsi.svg",
+    "immagine": "assets/images/assessorati/rimborsi.svg",
     "backgroundColor": "#059669",
     "color": "#ffffff",
     "numeroServizi": 22
@@ -66,7 +66,7 @@
     "id": "iscrizioni",
     "nome": "Iscrizioni - Contributi",
     "icona": "bootstrapPersonPlus",
-    "immagine": "/assets/images/assessorati/iscrizioni-contribuiti.svg",
+    "immagine": "assets/images/assessorati/iscrizioni-contribuiti.svg",
     "backgroundColor": "#6366f1",
     "color": "#ffffff",
     "numeroServizi": 18
@@ -75,7 +75,7 @@
     "id": "gazzetta",
     "nome": "Gazzetta Ufficiale",
     "icona": "bootstrapNewspaper",
-    "immagine": "/assets/images/assessorati/gazzetta-ufficiale.svg",
+    "immagine": "assets/images/assessorati/gazzetta-ufficiale.svg",
     "backgroundColor": "#1d4ed8",
     "color": "#ffffff",
     "numeroServizi": 8

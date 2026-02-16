@@ -10,7 +10,7 @@
     "importoMinimo": 100.00,
     "importoMassimo": 50000.00,
     "attivo": true,
-    "immagine": "/assets/images/servizi/fabbricati-demaniali.svg",
+    "immagine": "assets/images/servizi/fabbricati-demaniali.svg",
     "linkWeb": { "label": "Portale Demanio", "url": "https://demanio.ente-dimostrativo.it" },
     "linkDocumentazione": { "label": "Normativa di riferimento", "url": "https://demanio.ente-dimostrativo.it/normativa" },
     "telefono": "091 123 4567"
@@ -61,7 +61,7 @@
     "idDominio": "80012000826",
     "importoFisso": 50.00,
     "attivo": true,
-    "immagine": "/assets/images/servizi/concessione-caccia.svg",
+    "immagine": "assets/images/servizi/concessione-caccia.svg",
     "linkWeb": { "label": "Portale Caccia e Pesca", "url": "https://cacciapesca.ente-dimostrativo.it" },
     "telefono": "091 234 5678"
   },
