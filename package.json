@@ -14,7 +14,11 @@
     "version:patch": "node scripts/bump-version.js patch && node scripts/generate-version.js",
     "version:minor": "node scripts/bump-version.js minor && node scripts/generate-version.js",
     "version:major": "node scripts/bump-version.js major && node scripts/generate-version.js",
-    "version:set": "node scripts/bump-version.js"
+    "version:set": "node scripts/bump-version.js",
+    "audit:ci": "npx audit-ci --config audit-ci.json",
+    "license:add": "bash .github/workflows/scripts/add-license-headers.sh",
+    "license:check": "bash .github/workflows/scripts/check-license-headers.sh",
+    "license:update-year": "find src scripts -type f \\( -name '*.ts' -o -name '*.js' -o -name '*.mjs' \\) -exec sed -i 's/Copyright (c) [0-9]\\{4\\} Link.it/Copyright (c) 2026 Link.it/g' {} +"
   },
   "prettier": {
     "printWidth": 100,
