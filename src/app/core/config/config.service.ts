@@ -335,25 +335,11 @@ export class ConfigService {
   }
 
   /**
-   * Rileva il tenant dalla URL (subdomain o query param)
+   * Rileva il tenant dal query param id_ec
    */
   private detectTenant(): string | null {
-    // Check query param id_ec
     const urlParams = new URLSearchParams(globalThis.location.search);
-    if (urlParams.has('id_ec')) {
-      return urlParams.get('id_ec');
-    }
-
-    // Check subdomain
-    const hostname = globalThis.location.hostname.toLowerCase();
-    const parts = hostname.split('.');
-
-    // Se ha almeno 3 parti e la prima non è 'www' e ha più di 2 caratteri
-    if (parts.length >= 3 && parts[0] !== 'www' && parts[0].length > 2) {
-      return parts[0];
-    }
-
-    return null;
+    return urlParams.get('id_ec');
   }
 
   /**
