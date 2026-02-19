@@ -85,12 +85,19 @@ export class PagoPACheckoutService {
     try {
       // Prova prima con redirect: 'follow'
       // Il browser seguirà il redirect e response.url conterrà l'URL finale
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/html'
+      };
+
+      const subscriptionKey = this.config.pagopa()?.checkout?.subscriptionKey;
+      if (subscriptionKey) {
+        headers['Ocp-Apim-Subscription-Key'] = subscriptionKey;
+      }
+
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json, text/html'
-        },
+        headers,
         body: JSON.stringify(request),
         redirect: 'follow',
         mode: 'cors'

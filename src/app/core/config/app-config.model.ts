@@ -292,6 +292,7 @@ export interface PagoPACheckoutConfig {
   enabled: boolean;
   baseUrl: string;
   directMode: boolean;
+  subscriptionKey?: string;
 }
 
 export interface PagoPAConfig {

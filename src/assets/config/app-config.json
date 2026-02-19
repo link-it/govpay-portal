@@ -34,7 +34,8 @@
     "checkout": {
       "enabled": true,
       "baseUrl": "https://lab.link.it/govpay-ndpsym/pagopa/rs/checkout",
-      "directMode": true
+      "directMode": true,
+      "subscriptionKey": ""
     }
   },
   "ui": {
