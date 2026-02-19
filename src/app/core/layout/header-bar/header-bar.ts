@@ -84,7 +84,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
                     <img
                       [src]="'assets/images/partners/' + partner.logo"
                       [alt]="partner.alt"
-                      class="opacity-80 hover:opacity-100 transition-opacity"
+                      class="hover:opacity-100 transition-opacity"
                       [style.height.px]="headerPartnerLogoHeight()"
                     />
                   </a>
@@ -92,7 +92,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
                   <img
                     [src]="'assets/images/partners/' + partner.logo"
                     [alt]="partner.alt"
-                    class="opacity-80"
+                    class=""
                     [style.height.px]="headerPartnerLogoHeight()"
                   />
                 }

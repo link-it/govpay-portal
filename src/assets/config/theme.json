@@ -12,19 +12,22 @@
   "primaryColor": "#0066cc",
   "secondaryColor": "#17324d",
   "header": {
-    "partners": [],
-    "partnerLogoHeight": 32
+    "partners": [
+      { "logo": "Link.it_coral.svg", "alt": "Link.it", "url": "https://link.it" }
+    ],
+    "partnerLogoHeight": 30
   },
   "footer": {
     "partners": [
+      { "logo": "Govpay.svg", "alt": "Progetto GovPay", "url": "https://github.com/link-it/govpay" },
       { "logo": "pagoPA.svg", "alt": "pagoPA", "url": "https://www.pagopa.gov.it/" }
     ],
     "partnerLogoHeight": 30,
     "govpay": {
       "show": true,
-      "logo": "LINK_logo-Govpay.svg",
-      "url": "https://github.com/link-it/govpay",
-      "alt": "Progetto GovPay"
+      "logo": "Link.it_coral.svg",
+      "url": "https://link.it",
+      "alt": "Link.it"
     },
     "showVersion": true
   },
