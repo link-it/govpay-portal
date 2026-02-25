@@ -1,4 +1,10 @@
+<p align="center">
+<img src="https://www.link.it/wp-content/uploads/2025/01/logo-govpay.svg" alt="GovPay Logo" width="200"/>
+</p>
+
 # GovPay - Portale di Pagamento
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://raw.githubusercontent.com/link-it/govpay-portal/master/LICENSE)
 
 Portale di pagamento pagoPA per la Pubblica Amministrazione, sviluppato con Angular 21 e Tailwind CSS 4.
 
