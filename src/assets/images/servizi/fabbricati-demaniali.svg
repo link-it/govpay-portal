@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a5568"/>
+      <stop offset="100%" style="stop-color:#2d3748"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg1)"/>
+  <!-- Building icon -->
+  <g transform="translate(400, 180)" fill="none" stroke="#a0aec0" stroke-width="3">
+    <!-- Main building -->
+    <rect x="-80" y="-60" width="160" height="120" rx="4"/>
+    <!-- Roof -->
+    <path d="M-90,-60 L0,-100 L90,-60"/>
+    <!-- Windows row 1 -->
+    <rect x="-60" y="-40" width="30" height="25" rx="2"/>
+    <rect x="-15" y="-40" width="30" height="25" rx="2"/>
+    <rect x="30" y="-40" width="30" height="25" rx="2"/>
+    <!-- Windows row 2 -->
+    <rect x="-60" y="0" width="30" height="25" rx="2"/>
+    <rect x="30" y="0" width="30" height="25" rx="2"/>
+    <!-- Door -->
+    <rect x="-15" y="10" width="30" height="50" rx="2"/>
+    <!-- Columns -->
+    <line x1="-100" y1="60" x2="-100" y2="-40"/>
+    <line x1="100" y1="60" x2="100" y2="-40"/>
+  </g>
+  <text x="400" y="320" font-family="system-ui, sans-serif" font-size="24" font-weight="600" fill="#e2e8f0" text-anchor="middle">Fabbricati Demaniali</text>
+  <text x="400" y="350" font-family="system-ui, sans-serif" font-size="14" fill="#a0aec0" text-anchor="middle">Ente Dimostrativo</text>
+</svg>

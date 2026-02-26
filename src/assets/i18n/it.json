@@ -1,261 +1,279 @@
 {
   "Language": {
-    "Gestore": {
-      "Ragione": "Ragione Sociale S.p.A",
-      "Sede": "Via Roma, 1, 00100 Roma, telefono: 06 1234567890, PEC: pec@pec.dominio.it, web: www.dominio.it"
-    },
     "Header": {
-      "Titolo": "Comune",
-      "LanguageBar": {
-        "Titolo": "Regione"
-      },
-      "Erogatore": {
-        "Titolo": "Gestione pagamenti",
-        "Creditore": "Seleziona Ente erogatore"
-      }
+      "Titolo": "Portale Pagamenti",
+      "ApriMenu": "Apri menu",
+      "Carrello": "Carrello"
     },
-    "SideNav": {
-      "Titolo": "Gestione pagamenti",
-      "MenuItems": [
-        {
-          "Label": "Pagamenti",
-          "Link": "/pagamento-servizio"
-        },
-        {
-          "Label": "Archivio pagamenti",
-          "Link": "/archivio"
-        },
-        {
-          "Label": "Posizione debitoria",
-          "Link": "/riepilogo"
-        },
-        {
-          "Label": "Carrello",
-          "Link": "/carrello"
-        }
-      ],
-      "Logout": "Esci"
+    "Menu": {
+      "PagaServizio": "PAGA UN SERVIZIO",
+      "PagaAvviso": "PAGA UN AVVISO",
+      "Pagamenti": "Pagamenti",
+      "Carrello": "Carrello",
+      "PosizioneDebitoria": "Posizione Debitoria",
+      "ArchivioPagamenti": "Archivio Pagamenti",
+      "Riepilogo": "Posizione Debitoria",
+      "Archivio": "Archivio Pagamenti"
     },
-    "Spid": {
-      "Label": "Accedi con SPID",
-      "Info": "Maggiori informazioni",
-      "Ask": "Non hai SPID?",
-      "Help": "Serve aiuto?"
-    },
-    "Iam": {
-      "Label": "Accedi con IAM"
+    "Common": {
+      "Conferma": "Conferma",
+      "Annulla": "Annulla",
+      "Chiudi": "Chiudi",
+      "Indietro": "Indietro",
+      "Errore": "Errore",
+      "Causale": "Causale",
+      "Caricamento": "Caricamento in corso...",
+      "Scadenza": "Scadenza",
+      "NumeroAvviso": "Numero Avviso",
+      "Importo": "Importo",
+      "Stato": "Stato",
+      "Data": "Data",
+      "AlertAction": "Chiudi",
+      "DocumentoPdf": "Documento",
+      "ArchivioPdf": "Archivio_Ricevute.zip",
+      "WarningRicevuta": "Ricevuta non disponibile",
+      "CodeException": "Si è verificato un errore imprevisto",
+      "Aggiorna": "Aggiorna",
+      "Riprova": "Riprova"
     },
     "Pagamenti": {
-      "Titolo": "Pagamenti online",
-      "Bollettino": {
-        "Titolo": "Paga un bollettino",
-        "Note": "Dove trovo il numero dell’avviso?",
-        "Submit": "Aggiungi al carrello",
-        "Dialog": {
-          "Close": "Ho capito"
-        },
-        "Form": {
-          "Avviso": "Numero dell'avviso",
-          "Fotocamera": "Fotocamera",
-          "Errors": {
-            "Required": "Campo obbligatorio."
-          }
-        }
-      },
-      "Servizi": {
-        "Titolo": "Paga un servizio"
-      }
+      "Titolo": "Pagamenti",
+      "SelezionaDominio": "Seleziona l'ente creditore",
+      "SelezionaServizio": "Seleziona il servizio",
+      "CercaServizio": "Cerca servizio...",
+      "ServiziTrovati": "servizi trovati",
+      "NessunServizio": "Nessun servizio trovato",
+      "NessunServizioDisponibile": "Non ci sono servizi disponibili per questo ente",
+      "NessunRisultatoRicerca": "La ricerca non ha prodotto risultati",
+      "AzzercaRicerca": "Azzera ricerca",
+      "SelezionaEnteTitolo": "Seleziona un ente",
+      "SelezionaEnteDescrizione": "Seleziona l'ente creditore per visualizzare i servizi disponibili"
+    },
+    "Bollettino": {
+      "Titolo": "Paga un avviso",
+      "Sottotitolo": "Inserisci il numero dell'avviso di pagamento",
+      "NumeroAvviso": "Numero Avviso",
+      "NumeroAvvisoPlaceholder": "Inserisci il numero avviso (18 cifre)",
+      "NumeroAvvisoHelp": "Il numero avviso è composto da 18 cifre",
+      "CodiceAvviso": "Codice dell'avviso",
+      "CodiceAvvisoHint": "Inserisci le 18 cifre del codice avviso",
+      "EnteCreditore": "Ente creditore",
+      "SelezionaEnte": "Seleziona un ente",
+      "CercaAvviso": "Cerca avviso",
+      "ScansionaQR": "Scansiona QR Code",
+      "InfoTitolo": "Dove trovo il numero avviso?",
+      "InfoDescrizione": "Il numero avviso è riportato sull'avviso di pagamento pagoPA ricevuto. Puoi anche scansionare il QR code presente sull'avviso.",
+      "AvvisoTrovato": "Avviso di pagamento",
+      "AvvisoNonTrovato": "Avviso non trovato. Verifica il numero inserito.",
+      "Creditore": "Ente creditore",
+      "Scaduto": "Scaduto",
+      "AggiungiCarrello": "Aggiungi al carrello",
+      "NelCarrello": "Nel carrello",
+      "NuovaRicerca": "Nuova ricerca",
+      "NonPagabile": "Questo avviso non è pagabile online",
+      "VaiCarrello": "Vai al carrello",
+      "QRIstruzioni": "Inquadra il QR code presente sull'avviso di pagamento",
+      "QRErrore": "Impossibile accedere alla fotocamera. Verifica i permessi del browser.",
+      "Tassonomia": "Categoria",
+      "CodiceQR": "Codice QR",
+      "CodiceBarcode": "Codice a barre"
     },
     "Cart": {
       "Titolo": "Carrello",
-      "Pagamenti": {
-        "Titolo": "Elenco pagamenti",
-        "Paga": "Paga con pagoPA",
-        "Indietro": "Torna ai pagamenti",
-        "Stampa": "Stampa bollettino",
-        "Totale": "Totale",
-        "Inserimento": "Pendenza inserita nel carrello",
-        "Rimozione": "Pendenza rimossa dal carrello",
-        "PagaDiNuovo": "Paga di nuovo",
-        "CarrelloVuoto": "Carrello vuoto"
-      }
-    },
-    "DettaglioServizio": {
-      "Titolo": "Informazioni sul servizio",
-      "Form": {
-        "Titolo": "Dati necessari al pagamento",
-        "Salva": "Salva",
-        "Verifica": "Verifica"
-      },
-      "Dialog": {
-        "Avviso": "Vuoi aggiungere al carrello la pendenza con i dati appena inseriti?",
-        "Causale": "Causale pagamento",
-        "ImportoPendenza": "Importo",
-        "Submit": "Aggiungi al carrello",
-        "Close": "Annulla"
-      }
-    },
-    "Ricevuta": {
-      "Titolo": "Ricevuta di pagamento",
-      "Form": {
-        "Titolo": "Dati necessari alla consegna della ricevuta",
-        "Note": "Ti chiediamo questi dati perché...",
-        "Email": "Email",
-        "ConfermaEmail": "Conferma email",
-        "Submit": "Concludi il pagamento",
-        "Error": "Verificare le informazioni inserite"
-      }
+      "NumeroElementi": "{{count}} elementi nel carrello",
+      "SvuotaCarrello": "Svuota carrello",
+      "Vuoto": "Il carrello è vuoto",
+      "VuotoDescrizione": "Aggiungi pagamenti al carrello per procedere",
+      "VaiPagamenti": "Vai ai pagamenti",
+      "PagaAvviso": "Paga un avviso",
+      "Subtotale": "Subtotale",
+      "CommissioniInfo": "Le commissioni PSP saranno calcolate al checkout",
+      "Totale": "Totale",
+      "Azioni": "Azioni",
+      "Modifica": "Modifica",
+      "StampaAvviso": "Stampa avviso",
+      "Rimuovi": "Rimuovi",
+      "Scaduto": "Scaduto",
+      "Procedi": "Procedi al pagamento",
+      "AggiungiAltro": "Aggiungi altro",
+      "PagoPAInfo": "Pagamento sicuro tramite pagoPA",
+      "ConfermaTitle": "Conferma pagamento",
+      "ConfermaDesc": "Stai per essere reindirizzato alla piattaforma pagoPA per completare il pagamento.",
+      "EmailNotifica": "Email per ricevuta",
+      "EmailPlaceholder": "Inserisci la tua email",
+      "EmailHint": "Riceverai la conferma del pagamento a questo indirizzo",
+      "ConfermaPaga": "Conferma e paga",
+      "Elaborazione": "Elaborazione...",
+      "RedirectInfo": "Verrai reindirizzato al sito pagoPA per il pagamento",
+      "RedirectPSP": "Reindirizzamento a pagoPA...",
+      "NonChiudere": "Non chiudere questa finestra",
+      "ErroreRedirect": "Errore durante la creazione del pagamento. Riprova.",
+      "ErroreDati": "Dati di pagamento non validi. Verifica gli elementi nel carrello.",
+      "ErroreDuplicato": "Uno o più pagamenti risultano già effettuati.",
+      "ErroreValidazione": "Impossibile processare il pagamento. Verifica i dati inseriti.",
+      "ErroreCheckout": "Errore durante la creazione del pagamento su pagoPA"
     },
     "Posizione": {
-      "Titolo": "Posizione debitoria",
+      "Titolo": "Posizione Debitoria",
+      "Sottotitolo": "I tuoi debiti da pagare",
       "Debiti": {
-        "Titolo": "È presente {{value}} sola pendenza|Sono presenti {{value}} pendenze"
-      }
-    },
-    "DettaglioPosizione": {
-      "Titolo": "Informazioni posizione debitoria",
-      "Dialog": {
-        "Riepilogo": "Riepilogo",
-        "DatiAllegati": "Dati allegati",
-        "Aggiungi": "Aggiungi al carrello",
-        "Rimuovi": "Rimuovi dal carrello",
-        "Scarica": "Scarica ricevuta",
-        "ImportoPendenza": "Importo",
-        "Close": "Annulla"
+        "Titolo": "I tuoi debiti"
+      },
+      "NessunDebito": "Non hai debiti in sospeso",
+      "NessunDebitoDesc": "Al momento non risultano pagamenti da effettuare",
+      "VaiPagamenti": "Vai ai pagamenti",
+      "LoginRichiesto": "Accesso richiesto",
+      "LoginRichiestoDesc": "Effettua l'accesso per visualizzare la tua posizione debitoria",
+      "TotaleDebiti": "Totale da pagare",
+      "NumeroDebiti": "{{count}} debiti pendenti",
+      "DebitiScaduti": "{{count}} scaduti",
+      "Selezionati": "{{count}} selezionati",
+      "SelezionaTutti": "Seleziona tutti",
+      "AggiungiSelezionati": "Aggiungi {{count}} al carrello",
+      "PagaTutto": "Paga tutto",
+      "AggiungiCarrello": "Aggiungi al carrello",
+      "NelCarrello": "Nel carrello",
+      "ScaricaAvviso": "Scarica avviso",
+      "Scaduto": "Scaduto",
+      "Risultati": "Risultati {{from}}-{{to}} di {{count}}",
+      "ErroreCaricamento": "Errore nel caricamento",
+      "Filtri": {
+        "Dominio": "Ente creditore",
+        "Stato": "Stato",
+        "TuttiStati": "Tutti gli stati"
       }
     },
     "Archivio": {
-      "Titolo": "Archivio dei pagamenti",
+      "Titolo": "Archivio Pagamenti",
+      "Sottotitolo": "Storico delle transazioni effettuate",
       "Pagamenti": {
-        "Titolo": "C'è {{value}} pagamento|Ci sono {{value}} pagamenti"
-      }
+        "Titolo": "I tuoi pagamenti"
+      },
+      "NessunPagamento": "Non hai pagamenti nell'archivio",
+      "NessunPagamentoDesc": "Qui troverai lo storico dei pagamenti effettuati",
+      "VaiPagamenti": "Vai ai pagamenti",
+      "ScaricaTutte": "Scarica tutte le ricevute",
+      "Creditore": "Creditore",
+      "Risultati": "Risultati {{from}}-{{to}} di {{count}}",
+      "LoginRichiesto": "Accesso richiesto",
+      "LoginRichiestoDesc": "Effettua l'accesso per visualizzare lo storico dei tuoi pagamenti"
+    },
+    "Ricevuta": {
+      "Titolo": "Ricevuta di Pagamento",
+      "Scarica": "Scarica",
+      "ScaricaRicevuta": "Scarica ricevuta",
+      "ScaricaRicevute": "Scarica le ricevute dei pagamenti effettuati",
+      "DatiMancanti": "Dati avviso mancanti per il download",
+      "ErroreDownload": "Errore durante il download della ricevuta",
+      "InviaEmail": "Invia ricevuta via email",
+      "EmailPlaceholder": "Inserisci indirizzo email",
+      "Invia": "Invia",
+      "EmailInviata": "Ricevuta inviata con successo",
+      "ErroreInvio": "Errore durante l'invio della ricevuta"
     },
     "Esito": {
-      "Titolo": "Esito del pagamento",
-      "Pagamenti": {
-        "Titolo": "Riepilogo",
-        "Dettaglio": {
-          "Eseguito": "Il pagamento richiesto risulta essere andato a buon fine.",
-          "Fallito": "La richiesta di pagamento è stata rifiutata da pagoPA.",
-          "Errore": "Le informazioni sul pagamento sono temporaneamente non disponibili.",
-          "InCorso": {
-            "Titolo": "Recupero informazioni in corso...",
-            "Ok": "Il processo di pagamento è stato completato con successo. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
-            "Errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto. Siamo in attesa dell'attestazione di pagamento dalla piattaforma pagoPA.",
-            "Timeout": {
-              "Ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail.",
-              "Errore": "Il processo di pagamento è stato completato senza la riscossione del dovuto, ma si è verificato un ritardo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail.",
-              "Overflow": {
-                "Ok": "Il processo di pagamento è stato completato con successo, ma si è verificato un ritardo eccessivo nella comunicazione dell'attestazione di pagamento dalla piattaforma pagoPA. Non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail.",
-                "Errore": "Il processo di pagamento è stato completato senza il pagamento del dovuto. La comunicazione dell'attestato di pagamento dalla piattaforma pagoPA non è ancora disponibile, non appena verrà resa disponibile, sarà nostra cura recapitarla al suo indirizzo mail."
-              }
-            }
-          }
-        }
-      }
+      "Titolo": "Esito Pagamento",
+      "Successo": "Pagamento completato con successo",
+      "SuccessoDesc": "Il pagamento è stato elaborato correttamente.",
+      "Errore": "Pagamento non riuscito",
+      "ErroreDesc": "Si è verificato un problema durante il pagamento. Riprova più tardi.",
+      "InCorso": "Verifica in corso...",
+      "InAttesa": "Pagamento in attesa",
+      "InAttesaDesc": "Il pagamento è in attesa di conferma. Riceverai una notifica quando sarà completato.",
+      "Timeout": "Tempo scaduto",
+      "TimeoutDesc": "Non è stato possibile verificare lo stato del pagamento. Controlla l'archivio pagamenti.",
+      "Annullato": "Pagamento annullato",
+      "AnnullatoDesc": "Hai annullato il pagamento. Puoi riprovare quando vuoi.",
+      "TornaHome": "Torna alla home",
+      "TornaCarrello": "Torna al carrello",
+      "Riprova": "Riprova",
+      "VaiArchivio": "Vai all'archivio",
+      "VaiPosizioneDebitoria": "Vai alla posizione debitoria",
+      "VerificaStato": "Verifica stato pagamento",
+      "IdPagamento": "ID Pagamento"
     },
-    "JsonForm": {
-      "Required": "Campo obbligatorio",
-      "MinLength": "Numero minimo di caratteri richiesti: {{minimumLength}} (valore corrente: {{currentLength}})",
-      "MaxLength": "Numero massimo di caratteri: {{maximumLength}} (valore corrente: {{currentLength}})",
-      "Pattern": "Schema non corrispondente: {{requiredPattern}}",
-      "Format": {
-        "Date": "Formato data non corrispondente",
-        "Time": "Formato orario non corrispondente",
-        "DateTime": "Formato data/ora non corrispondente",
-        "Email": "Indirizzo email non valido",
-        "Hostname": "Hostname non valido",
-        "Ipv4": "Indirizzo IPv4 non valido, es. 127.0.0.1",
-        "Ipv6": "Indirizzo IPv6 non valido, es. 1234:5678:9ABC:DEF0:1234:5678:9ABC:DEF0",
-        "Url": "Url non valido, es. http://www.example.com/page.html",
-        "UUID": "UUID non valido, es. 12345678-9ABC-DEF0-1234-56789ABCDEF0",
-        "Color": "Colore non valido, es. #FFFFFF o rgb(255, 255, 255)",
-        "JsonPointer": "Puntatore JSON non valido, es. /pointer/to/something",
-        "RelativeJsonPointer": "Puntatore JSON relativo non valido, es. 2/pointer/to/something",
-        "Regex": "Espressione regolare non valida, es. (1-)?\\d{3}-\\d{3}-\\d{4}",
-        "Generic": "Valore non correttamente formattato: {{requiredFormat}}"
-      },
-      "Minimum": "Valore minimo {{minimumValue}} o maggiore",
-      "ExclusiveMinimum": "Valore minimo richiesto almeno {{exclusiveMinimumValue}}",
-      "Maximum": "Valore massimo {{maximumValue}} o inferiore",
-      "ExclusiveMaximum": "Valore massimo richiesto al più {{exclusiveMaximumValue}}",
-      "MultipleOf": "Deve essere un multiplo di {{multipleOfValue}}",
-      "Decimals": "Numero decimali richiesti {{decimals}} o meno",
-      "MinProperties": "Proprietà richieste: {{minimumProperties}} o più (proprietà correnti: {{currentProperties}})",
-      "MaxProperties": "Proprietà richieste: {{maximumProperties}} o meno (proprietà correnti: {{currentProperties}})",
-      "MinItems": "Elementi richiesti: {{minimumItems}} o più (elementi correnti: {{currentItems}})",
-      "MaxItems": "Elementi richiesti: {{maximumItems}} or meno (elementi correnti: {{currentItems}})",
-      "UniqueItems": "Ogni elemento deve essere unico"
+    "Servizio": {
+      "Dettaglio": "Dettaglio Servizio",
+      "Informazioni": "Informazioni sul servizio",
+      "DatiPagamento": "Dati necessari al pagamento",
+      "Dettagli": "Dettagli",
+      "CompilaForm": "Compila il modulo",
+      "Verifica": "Verifica",
+      "AggiungiCarrello": "Aggiungi al carrello",
+      "PagamentoDiretto": "Pagamento diretto",
+      "PagamentoDirettoDesc": "Questo servizio non richiede la compilazione di un modulo.",
+      "ConfermaOperazione": "Conferma operazione",
+      "NonTrovato": "Servizio non trovato",
+      "NonTrovatoDesc": "Il servizio richiesto non è disponibile o non è stato trovato.",
+      "ErroreCaricamento": "Errore durante il caricamento del servizio",
+      "TornaPagamenti": "Torna ai pagamenti",
+      "Web": "Sito web",
+      "Documentazione": "Documentazione",
+      "Telefono": "Telefono",
+      "Importo": "Importo",
+      "DettaglioImporti": "Dettaglio importi",
+      "FormNonValido": "Verifica i campi del modulo e riprova",
+      "FormJsonSchemaNotSupported": "Form JSON Schema non ancora supportato.",
+      "FormJsonSchemaFuture": "Sarà disponibile in una versione futura.",
+      "ConfigurazioneNonValida": "Configurazione non valida",
+      "ErroreCreazionePagamento": "Si è verificato un errore durante la creazione del pagamento",
+      "ServiziInTipologie": "Sono presenti {{servizi}} servizi in {{categorie}} tipologie",
+      "ServiziInAssessorati": "Sono presenti {{servizi}} servizi in {{categorie}} assessorati",
+      "ServiziPresenti": "Sono presenti {{count}} servizi",
+      "CercaServizio": "Cerca un servizio",
+      "MostraTipologie": "Mostra Tipologie",
+      "MostraAssessorati": "Mostra Assessorati",
+      "NessunRisultato": "Nessun risultato trovato",
+      "NessunServizioTrovato": "Nessun servizio trovato",
+      "ModificaRicerca": "Prova a modificare i termini di ricerca",
+      "AzzeraRicerca": "Azzera ricerca"
+    },
+    "Auth": {
+      "Accedi": "Accedi",
+      "Esci": "Esci",
+      "AccediConSpid": "Accedi con SPID",
+      "AccediConCie": "Accedi con CIE",
+      "BenvenutoUtente": "Benvenuto"
+    },
+    "SideNav": {
+      "MenuItems": [
+        { "Label": "Pagamenti", "Link": "/pagamento-servizio", "Icon": "payment" },
+        { "Label": "Paga Avviso", "Link": "/bollettino", "Icon": "receipt" },
+        { "Label": "Carrello", "Link": "/carrello", "Icon": "shopping_cart" },
+        { "Label": "Posizione Debitoria", "Link": "/riepilogo", "Icon": "account_balance" },
+        { "Label": "Archivio", "Link": "/archivio", "Icon": "archive" }
+      ]
     },
     "Http": {
-      "ErrorMap": [{
-          "Match": "stringa_di_controllo",
-          "Message": "[%1, %2, %3, %4] Messaggio di errore"
-        }
-      ],
-      "Status400": "[%1, %2, %3, %4] Richiesta non valida.",
-      "Status401": "[%1, %2, %3, %4] Accesso al servizio non autorizzato. Autenticarsi per avviare la sessione.",
-      "Status403": "[%1, %2, %3, %4] Accesso non consentito.",
-      "Status404": "[%1, %2, %3, %4] Servizio non trovato.",
-      "Status422": "[%1, %2, %3, %4] Impossibile completare la richiesta.",
-      "Status500": "[%1, %2, %3, %4] Errore interno del server.",
-      "Status504": "[%1, %2, %3, %4] Timeout del gateway.",
-      "Default": "[%1, %2, %3, %4] Servizio non disponibile, si prega di riprovare più tardi."
+      "Status400": "Richiesta non valida",
+      "Status401": "Sessione scaduta. Effettua nuovamente l'accesso.",
+      "Status403": "Accesso non autorizzato",
+      "Status404": "Risorsa non trovata",
+      "Status422": "Impossibile eseguire la richiesta",
+      "Status500": "Errore del server",
+      "Status504": "Timeout della richiesta",
+      "Default": "Si è verificato un errore",
+      "ErrorMap": []
     },
-    "Common": {
-      "AlertAction": "Chiudi",
-      "NumeroAvviso": "Numero avviso",
-      "IUV": "Identificativo versamento",
-      "Beneficiario": "Beneficiario",
-      "Pagamento": "Pagata il",
-      "Importo": "Importo",
-      "Scadenza": "Entro il",
-      "SenzaScadenza": "Senza scadenza",
-      "Data": "Data",
-      "NotAvailable": "Non disponibile",
-      "Modifica": "Modifica",
-      "Elimina": "Elimina",
-      "CodeException": "Si è verificato un problema non previsto, si prega di riprovare più tardi",
-      "DocumentoPdf": "Documento.pdf",
-      "ArchivioPdf": "Archivio.zip",
-      "WarningRicevuta": "Nessun documento disponibile",
-      "PendenzaInserita": "La pendenza con numero avviso {{numeroAvviso}} risulta già inserita nel carrello",
-      "PendenzaEseguita": "La pendenza con numero avviso {{numeroAvviso}} risulta già pagata il giorno {{data}}",
-      "PendenzaAnnullata": "La pendenza con numero avviso {{numeroAvviso}} è stata annullata",
-      "PendenzaSconosciuta": "Non è presente alcuna pendenza con numero avviso {{numeroAvviso}}",
-      "PendenzaScaduta": "La pendenza con numero avviso {{numeroAvviso}} è scaduta il giorno {{data}}",
-      "ServizioValidazioneNonDisponibile": "Servizio di validazione non disponibile",
-      "CodiciEsito": {
-        "InCorso": "In corso",
-        "Annullato": "Annullato",
-        "Fallito": "Fallito",
-        "Eseguito": "Eseguito",
-        "NonEseguito": "Non eseguito",
-        "EseguitoParziale": "Eseguito parziale"
+    "Stati": {
+      "Pagamento": {
+        "in_corso": "In corso",
+        "annullato": "Annullato",
+        "fallito": "Fallito",
+        "eseguito": "Eseguito",
+        "non_eseguito": "Non eseguito",
+        "eseguito_parziale": "Eseguito parzialmente"
       },
-      "Filtro": {
-        "NessunaCorrispondenza": "Nessuna corrispondenza.",
-        "Risultati": {
-          "SS": "È presente un servizio in un {{valueG}}",
-          "SP": "È presente un servizio in {{value}} {{valueG}}",
-          "PS": "Sono presenti {{value}} servizi in un {{valueG}}",
-          "PP": "Sono presenti {{valueN}} servizi in {{valueM}} {{valueG}}",
-          "Filtro": "Trovato {{value}} servizio|Trovati {{value}} servizi",
-          "ServiziAssessorato": "È presente {{value}} servizio|Sono presenti {{value}} servizi",
-          "Flat": "È presente {{value}} servizio|Sono presenti {{value}} servizi"
-        },
-        "NessunRisultato": "Nessun risultato.",
-        "Placeholder": "Cerca un servizio..."
+      "Pendenza": {
+        "eseguita": "Pagata",
+        "duplicata": "Duplicata",
+        "non_eseguita": "Da pagare",
+        "eseguita_parziale": "Pagata parzialmente",
+        "annullata": "Annullata",
+        "scaduta": "Scaduta",
+        "in_ritardo": "In ritardo",
+        "anomala": "Anomala"
       }
-    },
-    "StatiPendeza": {
-      "ESEGUITA": "Eseguita",
-      "DUPLICATA": "Duplicata",
-      "NON_ESEGUITA": "Non eseguita",
-      "ESEGUITA_PARZIALE": "Eseguita parzialmente",
-      "ANNULLATA": "Annullata",
-      "SCADUTA": "Scaduta",
-      "IN_RITARDO": "In ritardo"
     }
   }
 }

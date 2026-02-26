@@ -1,0 +1,93 @@
+name: GovPay Portal CI/CD
+
+on:
+  push:
+    branches: [ "*" ]
+    tags:
+      - '*'
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: write
+  id-token: write
+  actions: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set timezone to Europe/Rome
+        run: sudo timedatectl set-timezone Europe/Rome
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test with coverage
+        run: npm run test:coverage
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+
+      - name: Build production
+        run: npm run build:prod
+
+      - name: Audit dependencies
+        run: npx audit-ci --config audit-ci.json
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+
+      - name: OWASP Dependency Check
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_OWASP_JOB == 'true') }}
+        uses: dependency-check/Dependency-Check_Action@main
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+        with:
+          project: ${{ github.repository }}
+          path: '.'
+          out: 'reports'
+          format: 'ALL'
+          args: >
+            --failOnCVSS 0
+            --nodeAuditSkipDevDependencies
+            --nodePackageSkipDevDependencies
+
+      - name: Upload OWASP report
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_OWASP_JOB == 'true') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: reports
+
+      - name: License Analysis
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_LICENSE_JOB == 'true') }}
+        run: |
+          set -euo pipefail
+          echo "Analyzing NPM licenses..."
+          npm config set cache .npm --location=project
+          npm ci --production
+          python3 .github/workflows/scripts/analyze_npm_licenses.py --exceptions .github/workflows/scripts/npm-license-exceptions.json
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+
+      - name: Upload license report
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_LICENSE_JOB == 'true') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: third-party-licenses
+          path: third-party-licenses
+
+      - name: Check license headers
+        run: npm run license:check
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}

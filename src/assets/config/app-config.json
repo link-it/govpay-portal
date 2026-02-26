@@ -1,0 +1,115 @@
+{
+  "app": {
+    "name": "Pagamenti online",
+    "title": "Gestione pagamenti",
+    "subtitle": "Ente Creditore",
+    "description": "Portale di pagamento per la Pubblica Amministrazione",
+    "version": "5.0.0"
+  },
+  "api": {
+    "baseUrl": "/govpay-api-portal",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "useMockApi": false,
+    "useSpidDevHeaders": true
+  },
+  "auth": {
+    "spid": {
+      "enabled": true,
+      "serviceTarget": "",
+      "testProvider": "",
+      "actionFormUrl": "",
+      "authnContextClassRef": ""
+    },
+    "iam": {
+      "enabled": false,
+      "loginUrl": ""
+    },
+    "logoutUrl": "",
+    "logoutUrls": [],
+    "logoutLandingPage": "/",
+    "logoutLandingPageTarget": "_self"
+  },
+  "pagopa": {
+    "checkout": {
+      "enabled": true,
+      "baseUrl": "https://lab.link.it/govpay-ndpsym/pagopa/rs/checkout",
+      "directMode": true
+    }
+  },
+  "ui": {
+    "pollingInterval": 3000,
+    "pollingTimeout": 5,
+    "mobileBreakpoint": 768,
+    "showLanguageSelector": true,
+    "languages": [
+      {
+        "language": "Italiano",
+        "alpha2Code": "it",
+        "alpha3Code": "ita"
+      },
+      {
+        "language": "English",
+        "alpha2Code": "en",
+        "alpha3Code": "eng"
+      }
+    ],
+    "layout": {
+      "flatView": true,
+      "flatViewGrid": true,
+      "showCounter": false,
+      "showToggleLayout": false,
+      "cardDisplay": "icon",
+      "showDetailImage": false
+    },
+    "collapsibleSections": {
+      "informazioniDettaglioServizio": true
+    },
+    "bollettino": {
+      "showQrCode": false,
+      "showBarcode": false
+    }
+  },
+  "features": {
+    "recaptcha": {
+      "enabled": true,
+      "siteKey": "",
+      "actions": {
+        "createPendenza": "create_pendenza",
+        "payment": "payment"
+      },
+      "badgePosition": "bottomright"
+    },
+    "qrScanner": true,
+    "uuidCheck": true,
+    "darkMode": false
+  },
+  "routing": {
+    "publicAccess": "pagamento-servizio",
+    "publicExit": "pagamento-servizio"
+  },
+  "sorting": {
+    "groups": {
+      "properties": [
+        "group_rank",
+        "group"
+      ],
+      "ascending": true
+    },
+    "subgroups": {
+      "properties": [
+        "subgroup"
+      ],
+      "ascending": true
+    },
+    "items": {
+      "properties": [
+        "name"
+      ],
+      "ascending": true
+    }
+  },
+  "filters": [
+    "title"
+  ]
+}

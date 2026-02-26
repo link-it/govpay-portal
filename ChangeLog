@@ -1,0 +1,10 @@
+2026-02-06  Alfonso Tatarelli <alfonso.tatarelli@link.it>
+
+  * Primo commit GovPay Portal v5.0.0
+  Stack Tecnologico
+  - **Node.js** >= 22.12
+  - **npm** >= 10.x
+  - **Angular** 21 con standalone components
+  - **Tailwind CSS** 4
+  - **TypeScript** 5.9
+  - **Vitest** per test

@@ -1,0 +1,125 @@
+{
+  "logo": {
+    "full": "assets/images/logo/LINK_GovPay-icon.svg",
+    "compact": "assets/images/logo/LINK_GovPay-icon.svg",
+    "showTitle": true,
+    "fallbackText": "PP",
+    "fallbackGradient": {
+      "from": "#0066cc",
+      "to": "#004d99"
+    }
+  },
+  "primaryColor": "#0066cc",
+  "secondaryColor": "#17324d",
+  "header": {
+    "partners": [
+      { "logo": "Link.it_coral.svg", "alt": "Link.it", "url": "https://link.it" }
+    ],
+    "partnerLogoHeight": 30
+  },
+  "footer": {
+    "partners": [
+      { "logo": "Govpay.svg", "alt": "Progetto GovPay", "url": "https://github.com/link-it/govpay" },
+      { "logo": "pagoPA.svg", "alt": "pagoPA", "url": "https://www.pagopa.gov.it/" }
+    ],
+    "partnerLogoHeight": 30,
+    "govpay": {
+      "show": true,
+      "logo": "Link.it_coral.svg",
+      "url": "https://link.it",
+      "alt": "Link.it"
+    },
+    "showVersion": true
+  },
+  "theme": {
+    "topBar": {
+      "background": "#ffffff",
+      "text": "#17324d",
+      "border": "#e3f2fd"
+    },
+    "header": {
+      "background": "#e3f2fd",
+      "text": "#17324d",
+      "border": "#e3f2fd",
+      "tabActive": "#0066cc",
+      "tabInactive": "#5c6f82",
+      "tabHover": "#004d99",
+      "cartBadgeBackground": "#dc3545",
+      "cartBadgeText": "#ffffff",
+      "showShadow": false
+    },
+    "sidebar": {
+      "background": "#ffffff",
+      "border": "#e5e7eb",
+      "headerBackground": "#e3f2fd",
+      "headerText": "#17324d",
+      "headerBorder": "#e5e7eb",
+      "headerWatermark": "",
+      "headerWatermarkOpacity": 1.0,
+      "menuBackground": "#ffffff",
+      "menuText": "#5c6f82",
+      "menuHover": "#f3f4f6",
+      "menuActive": "#0066cc",
+      "menuActiveBackground": "#e3f2fd",
+      "footerBackground": "transparent",
+      "footerBorder": "#e5e7eb",
+      "footerText": "#5c6f82"
+    },
+    "content": {
+      "background": "#f5f7fa",
+      "cardBackground": "#ffffff",
+      "cardBorder": "#e5e7eb",
+      "cardHover": "#f9fafb"
+    },
+    "buttons": {
+      "primaryBackground": "#0066cc",
+      "primaryText": "#ffffff",
+      "primaryHover": "#004d99",
+      "secondaryBackground": "#ffffff",
+      "secondaryText": "#17324d",
+      "secondaryBorder": "#d1d5db",
+      "secondaryHover": "#f3f4f6"
+    },
+    "cards": {
+      "colors": ["#ffc107", "#dc3545", "#0066cc", "#28a745", "#6f42c1", "#17a2b8", "#fd7e14", "#20c997"]
+    },
+    "boxes": {
+      "background": "#ffffff",
+      "border": "rgba(33,33,33,.2)",
+      "itemDivider": "rgba(0,0,0,0.05)",
+      "hoverType": "border",
+      "hoverBorderColor": "#2962ff",
+      "hoverShadow": "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
+      "itemBackground": "#ffffff",
+      "itemBorderRadius": "0.5rem",
+      "itemGap": "0.5rem",
+      "itemsPadding": "0.5rem",
+      "cardBorderRadius": "0.5rem",
+      "cardTitleBackground": "#ffffff",
+      "groupBorderRadius": "0.5rem",
+      "groupBackground": "#f3f4f6"
+    },
+    "fonts": {
+      "primary": {
+        "family": "Titillium Web",
+        "files": [
+          { "weight": "300", "src": "assets/fonts/titillium-web-300.woff2" },
+          { "weight": "400", "src": "assets/fonts/titillium-web-400.woff2" },
+          { "weight": "600", "src": "assets/fonts/titillium-web-600.woff2" },
+          { "weight": "700", "src": "assets/fonts/titillium-web-700.woff2" }
+        ]
+      }
+    },
+    "scrollToTop": {
+      "enabled": true,
+      "background": "#0066cc",
+      "text": "#ffffff",
+      "hover": "#004d99",
+      "size": "3rem",
+      "borderRadius": "50%",
+      "bottom": "1.5rem",
+      "right": "1.5rem",
+      "scrollThreshold": 300
+    }
+  }
+}

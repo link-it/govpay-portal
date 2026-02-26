@@ -1,0 +1,10 @@
+{
+  "exceptions": [
+    {
+      "groupId": "govpay-portal",
+      "artifactId": "govpay-portal",
+      "reason": "Progetto principale - licenza EUPL 1.2 interna",
+      "exclude_from_reports": true
+    }
+  ]
+}
