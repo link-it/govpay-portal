@@ -18,7 +18,7 @@
  */
 
 import { Component, inject, signal, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgIcon } from '@ng-icons/core';
@@ -328,6 +328,7 @@ export class CarrelloComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly recaptcha = inject(RecaptchaService);
   private readonly pagoPACheckout = inject(PagoPACheckoutService);
+  private readonly document = inject(DOCUMENT);
 
   private readonly destroy$ = new Subject<void>();
 
@@ -492,8 +493,8 @@ export class CarrelloComponent implements OnDestroy {
     const cart = this.pay.cart();
     const cartId = this.pay.cartId();
 
-    // Costruisci URL di ritorno
-    const returnBaseUrl = `${globalThis.location.origin}/esito-pagamento`;
+    // Costruisci URL di ritorno (include base href per deploy con context path)
+    const returnBaseUrl = `${this.document.baseURI}esito-pagamento`;
 
     // Email per notifica (inserita dall'utente nel dialog)
     const emailNotice = this.emailNotice() || undefined;
@@ -536,8 +537,8 @@ export class CarrelloComponent implements OnDestroy {
       }
     }
 
-    // Costruisci URL di ritorno
-    const returnUrl = `${globalThis.location.origin}/esito-pagamento`;
+    // Costruisci URL di ritorno (include base href per deploy con context path)
+    const returnUrl = `${this.document.baseURI}esito-pagamento`;
 
     // Prepara la richiesta di pagamento
     const request = this.pay.preparePaymentRequest(returnUrl);
