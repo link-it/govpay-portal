@@ -80,9 +80,9 @@ describe('ConfigService', () => {
     theme = mockTheme,
     domini = mockDomini
   ) {
-    httpMock.expectOne('/assets/config/app-config.json').flush(appConfig);
-    httpMock.expectOne('/assets/config/theme.json').flush(theme);
-    httpMock.expectOne('/assets/config/domini.json').flush(domini);
+    httpMock.expectOne('./assets/config/app-config.json').flush(appConfig);
+    httpMock.expectOne('./assets/config/theme.json').flush(theme);
+    httpMock.expectOne('./assets/config/domini.json').flush(domini);
   }
 
   beforeEach(() => {
@@ -130,11 +130,11 @@ describe('ConfigService', () => {
     it('should merge with defaults on partial config', async () => {
       const loadPromise = service.load();
 
-      httpMock.expectOne('/assets/config/app-config.json').flush({
+      httpMock.expectOne('./assets/config/app-config.json').flush({
         app: { name: 'Partial Config' },
       });
-      httpMock.expectOne('/assets/config/theme.json').flush({});
-      httpMock.expectOne('/assets/config/domini.json').flush({ domini: [] });
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
 
       await loadPromise;
 
@@ -258,15 +258,15 @@ describe('ConfigService', () => {
     beforeEach(async () => {
       const loadPromise = service.load();
 
-      httpMock.expectOne('/assets/config/app-config.json').flush({
+      httpMock.expectOne('./assets/config/app-config.json').flush({
         features: {
           qrScanner: true,
           darkMode: false,
           recaptcha: { enabled: true, siteKey: 'key' },
         },
       });
-      httpMock.expectOne('/assets/config/theme.json').flush({});
-      httpMock.expectOne('/assets/config/domini.json').flush({ domini: [] });
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
 
       await loadPromise;
     });
@@ -310,9 +310,9 @@ describe('ConfigService', () => {
     it('should return single domain as active when no selection', async () => {
       const loadPromise = service.load();
 
-      httpMock.expectOne('/assets/config/app-config.json').flush(mockAppConfig);
-      httpMock.expectOne('/assets/config/theme.json').flush(mockTheme);
-      httpMock.expectOne('/assets/config/domini.json').flush({
+      httpMock.expectOne('./assets/config/app-config.json').flush(mockAppConfig);
+      httpMock.expectOne('./assets/config/theme.json').flush(mockTheme);
+      httpMock.expectOne('./assets/config/domini.json').flush({
         domini: [{ value: '80012000826', label: 'Unico Ente', logo: '', altText: '', href: '' }],
       });
 
@@ -327,9 +327,9 @@ describe('ConfigService', () => {
     it('should provide theme with defaults', async () => {
       const loadPromise = service.load();
 
-      httpMock.expectOne('/assets/config/app-config.json').flush({});
-      httpMock.expectOne('/assets/config/theme.json').flush({});
-      httpMock.expectOne('/assets/config/domini.json').flush({ domini: [] });
+      httpMock.expectOne('./assets/config/app-config.json').flush({});
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
 
       await loadPromise;
 
@@ -343,13 +343,13 @@ describe('ConfigService', () => {
     it('should merge custom theme with defaults', async () => {
       const loadPromise = service.load();
 
-      httpMock.expectOne('/assets/config/app-config.json').flush({});
-      httpMock.expectOne('/assets/config/theme.json').flush({
+      httpMock.expectOne('./assets/config/app-config.json').flush({});
+      httpMock.expectOne('./assets/config/theme.json').flush({
         theme: {
           header: { background: '#custom-color' },
         },
       });
-      httpMock.expectOne('/assets/config/domini.json').flush({ domini: [] });
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
 
       await loadPromise;
 
