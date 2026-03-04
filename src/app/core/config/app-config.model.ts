@@ -44,6 +44,12 @@ export interface ThemeTopBarConfig {
   background: string;
   text: string;
   border: string;
+  /** Padding orizzontale del container (es. '1rem'). Default: '1rem' */
+  padding?: string;
+  /** Altezza della top bar (es. '4rem'). Default: '4rem' */
+  height?: string;
+  /** Altezza del logo (es. '2.5rem'). Default: '2.5rem' */
+  logoHeight?: string;
 }
 
 export interface ThemeHeaderConfig {
@@ -333,6 +339,8 @@ export interface UiConfig {
   layout: LayoutConfig;
   collapsibleSections: CollapsibleSections;
   bollettino?: BollettinoConfig;
+  /** Mostra il titolo app nella top bar dell'header (default: false) */
+  showHeaderTitle?: boolean;
   /** Mostra il selettore lingua nell'header (default: true) */
   showLanguageSelector?: boolean;
   /** Lingue disponibili per l'applicazione */

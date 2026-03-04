@@ -39,15 +39,15 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
         [style.background-color]="config.theme().topBar.background"
         [style.border-color]="config.theme().topBar.border"
       >
-      <div class="container- mx-auto px-4">
-        <div class="flex items-center justify-between h-16">
+      <div class="container- mx-auto" [style.padding-left]="config.theme().topBar.padding || '1rem'" [style.padding-right]="config.theme().topBar.padding || '1rem'">
+        <div class="flex items-center justify-between" [style.height]="config.theme().topBar.height || '4rem'">
           <!-- Logo ente -->
           <a routerLink="/" class="flex items-center gap-3">
             @if (config.logo().full) {
               <img
                 [src]="config.logo().full"
                 [alt]="config.appSubtitle() || config.appName()"
-                class="h-10"
+                [style.height]="config.theme().topBar.logoHeight || '2.5rem'"
               />
             } @else {
               <div
@@ -60,17 +60,19 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
             @if (config.appSubtitle()) {
               <div class="hidden sm:block">
                 <div
-                  class="text-sm font-medium"
+                  class="text-medium font-semibold"
                   [style.color]="config.theme().topBar.text"
                 >
                   {{ config.appSubtitle() }}
                 </div>
-                <div
-                  class="text-xs opacity-70"
-                  [style.color]="config.theme().topBar.text"
-                >
-                  {{ config.appTitle() }}
-                </div>
+                @if (config.ui().showHeaderTitle !== false) {
+                  <div
+                    class="text-xs opacity-70"
+                    [style.color]="config.theme().topBar.text"
+                  >
+                    {{ config.appTitle() }}
+                  </div>
+                }
               </div>
             }
           </a>

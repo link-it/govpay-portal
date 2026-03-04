@@ -35,7 +35,10 @@
     "topBar": {
       "background": "#ffffff",
       "text": "#17324d",
-      "border": "#e3f2fd"
+      "border": "#e3f2fd",
+      "padding": "1rem",
+      "height": "4rem",
+      "logoHeight": "2.5rem"
     },
     "header": {
       "background": "#e3f2fd",

@@ -73,7 +73,7 @@ export interface UserInfo {
         <!-- Contenuto header -->
         <div class="relative p-5 h-full min-h-56 flex flex-col justify-center">
           <!-- Riga logo + nome ente -->
-          <div class="flex items-center gap-3 mb-3">
+          <div class="flex items-center gap-3 mb-5">
             @if (getEnteLogo()) {
               <img
                 [src]="getEnteLogo()"
