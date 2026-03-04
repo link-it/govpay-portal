@@ -11,7 +11,7 @@
     "timeout": 30000,
     "retryAttempts": 3,
     "useMockApi": false,
-    "useSpidDevHeaders": true
+    "useSpidDevHeaders": false
   },
   "auth": {
     "spid": {
@@ -41,6 +41,7 @@
     "pollingInterval": 3000,
     "pollingTimeout": 5,
     "mobileBreakpoint": 768,
+    "showHeaderTitle": true,
     "showLanguageSelector": true,
     "languages": [
       {
