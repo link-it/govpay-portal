@@ -1,0 +1,36 @@
+FROM nginx:alpine
+
+ARG govpay_portal_fullversion
+ARG govpay_portal_home=/usr/share/nginx/html
+ARG govpay_portal_log=/var/log/govpay-portal
+
+LABEL maintainer="Link.it s.r.l."
+LABEL description="GovPay Portal"
+LABEL govpay.portal.version="${govpay_portal_fullversion}"
+
+ENV GOVPAY_PORTAL_FULLVERSION=${govpay_portal_fullversion} \
+GOVPAY_PORTAL_LOGDIR=${govpay_portal_log} \
+GOVPAY_PORTAL_HOME=${govpay_portal_home} \
+TZ=Europe/Rome
+
+RUN set -eux; \
+apk update; \
+apk upgrade; \
+apk add --no-cache bash curl tar unzip tzdata; \
+rm -rf /var/cache/apk/*; \
+echo "${TZ}" > /etc/timezone; \
+mkdir -p ${GOVPAY_PORTAL_LOGDIR}
+
+WORKDIR ${GOVPAY_PORTAL_HOME}
+
+# Copy Portal dist from local build context
+COPY app/ ${GOVPAY_PORTAL_HOME}/
+
+# Copy entrypoint
+COPY commons/entrypoint.sh /usr/local/bin/
+RUN chmod ug=rx /usr/local/bin/entrypoint.sh
+
+EXPOSE 80
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD []

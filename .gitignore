@@ -44,9 +44,7 @@ chrome-profiler-events.json
 speed-measure-plugin.json
 
 # Docker
-Dockerfile
-.dockerignore
-docker/
+docker/buildcontext/
 
 # CI/CD artifacts
 /reports

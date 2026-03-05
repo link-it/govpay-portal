@@ -91,3 +91,56 @@ jobs:
       - name: Check license headers
         run: npm run license:check
         continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+
+  docker:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build:prod
+
+      - name: Prepare Docker build context
+        working-directory: docker
+        run: |
+          rm -rf buildcontext
+          mkdir -p buildcontext/app
+          cp -fr commons buildcontext/
+          cp -rf ../dist/govpay-portal/browser/* buildcontext/app/
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ vars.DOCKERHUB_NAMESPACE || github.repository_owner }}/govpay-portal
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: docker/buildcontext
+          file: docker/govpay-portal/Dockerfile.daFile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            govpay_portal_fullversion=${{ github.ref_name }}
