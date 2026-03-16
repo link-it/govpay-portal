@@ -77,7 +77,7 @@ export function provideCore(): EnvironmentProviders {
       // warm-up la prima chiamata API dei componenti riceve 403.
       if (!apiConfig.useMockApi && apiConfig.baseUrl) {
         await firstValueFrom(
-          http.get(apiConfig.baseUrl, { observe: 'response' }).pipe(
+          http.get(`${apiConfig.baseUrl}/domini`, { observe: 'response' }).pipe(
             catchError(() => of(null))
           )
         );

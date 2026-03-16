@@ -28,3 +28,4 @@ export { RecaptchaService } from './recaptcha.service';
 export { ThemeLoaderService } from './theme-loader.service';
 export { PagoPACheckoutService } from './pagopa-checkout.service';
 export { MockDataService } from './mock-data.service';
+export { SurveyExtensionsService } from './survey-extensions.service';
