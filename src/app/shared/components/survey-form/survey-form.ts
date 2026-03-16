@@ -29,12 +29,13 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
-import { Model, SurveyModel, surveyLocalization } from 'survey-core';
+import { Model, SurveyModel, surveyLocalization, FunctionFactory } from 'survey-core';
 import { SurveyModule } from 'survey-angular-ui';
 // Importa locale italiano (side effect - registra automaticamente il locale)
 import 'survey-core/i18n/italian';
 // Importa i temi SurveyJS
 import * as SurveyThemes from 'survey-core/themes';
+import { SurveyExtensionsService } from '@core/services';
 
 // Interfaccia per definizione form SurveyJS
 export interface SurveyDefinition {
@@ -61,6 +62,7 @@ export interface SurveyDefinition {
 })
 export class SurveyFormComponent implements OnDestroy {
   private readonly translate = inject(TranslateService);
+  private readonly surveyExtensions = inject(SurveyExtensionsService);
 
   // Inputs
   readonly definition = input.required<SurveyDefinition>();
@@ -84,13 +86,16 @@ export class SurveyFormComponent implements OnDestroy {
     this.configureSurveyJS();
 
     // Effect per creare/aggiornare il modello quando cambia la definizione
+    // Carica le estensioni prima di creare il modello
     effect(() => {
       const def = this.definition();
       const data = this.data();
       const readOnly = this.readOnly();
       const locale = this.locale();
 
-      this.createSurveyModel(def, data, readOnly, locale);
+      this.surveyExtensions.loadExtensions().then(() => {
+        this.createSurveyModel(def, data, readOnly, locale);
+      });
     });
 
     // Effect per gestire lo stato di submitting
@@ -196,6 +201,9 @@ export class SurveyFormComponent implements OnDestroy {
       // Mostra errori sotto i campi
       survey.questionErrorLocation = 'bottom';
 
+      // Valida i campi al cambio valore (necessario per expression validators)
+      survey.checkErrorsMode = 'onValueChanged';
+
       // Imposta i dati iniziali
       if (data && Object.keys(data).length > 0) {
         survey.data = data;
@@ -233,6 +241,12 @@ export class SurveyFormComponent implements OnDestroy {
           newPage: options.newCurrentPage
         });
       });
+
+      // Log diagnostico per verificare registrazione custom functions
+      const registeredFns = FunctionFactory.Instance.getAll();
+      if (registeredFns.length > 0) {
+        console.log('[SurveyForm] Funzioni registrate in FunctionFactory:', registeredFns);
+      }
 
       // Imposta il modello
       this.surveyModel.set(survey);

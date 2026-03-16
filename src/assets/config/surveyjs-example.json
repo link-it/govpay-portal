@@ -1,275 +1,102 @@
 {
-  "title": "Richiesta Permesso ZTL",
-  "description": "Compila il modulo per richiedere il permesso di accesso alla Zona a Traffico Limitato",
+  "locale": "it",
   "logoPosition": "right",
-  "showProgressBar": "top",
-  "progressBarType": "pages",
-  "showQuestionNumbers": false,
-  "questionErrorLocation": "bottom",
   "pages": [
     {
-      "name": "datiRichiedente",
-      "title": "Dati del Richiedente",
-      "elements": [
-        {
-          "type": "panel",
-          "name": "anagrafica",
-          "title": "Anagrafica",
-          "elements": [
-            {
-              "type": "text",
-              "name": "nome",
-              "title": "Nome",
-              "isRequired": true,
-              "maxLength": 50
-            },
-            {
-              "type": "text",
-              "name": "cognome",
-              "title": "Cognome",
-              "isRequired": true,
-              "maxLength": 50
-            },
-            {
-              "type": "text",
-              "name": "codiceFiscale",
-              "title": "Codice Fiscale",
-              "isRequired": true,
-              "validators": [
-                {
-                  "type": "regex",
-                  "regex": "^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$",
-                  "text": "Inserisci un codice fiscale valido (16 caratteri)"
-                }
-              ],
-              "maxLength": 16,
-              "placeholder": "Es. RSSMRA80A01H501Z"
-            },
-            {
-              "type": "text",
-              "name": "dataNascita",
-              "title": "Data di Nascita",
-              "inputType": "date",
-              "isRequired": true
-            }
-          ]
-        },
-        {
-          "type": "panel",
-          "name": "contatti",
-          "title": "Contatti",
-          "elements": [
-            {
-              "type": "text",
-              "name": "email",
-              "title": "Email",
-              "inputType": "email",
-              "isRequired": true,
-              "validators": [
-                {
-                  "type": "email"
-                }
-              ],
-              "placeholder": "esempio@email.com"
-            },
-            {
-              "type": "text",
-              "name": "telefono",
-              "title": "Telefono",
-              "inputType": "tel",
-              "isRequired": true,
-              "placeholder": "+39 333 1234567"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "datiVeicolo",
-      "title": "Dati del Veicolo",
+      "name": "page1",
       "elements": [
         {
           "type": "dropdown",
-          "name": "tipoVeicolo",
-          "title": "Tipo di Veicolo",
+          "name": "tipo",
+          "title": "Tipo di Tassa",
+          "hideNumber": true,
           "isRequired": true,
           "choices": [
-            { "value": "auto", "text": "Automobile" },
-            { "value": "moto", "text": "Motociclo" },
-            { "value": "furgone", "text": "Furgone" },
-            { "value": "altro", "text": "Altro" }
+            {
+              "value": "Rilascio",
+              "text": "Rilascio"
+            }
           ]
         },
         {
           "type": "text",
-          "name": "targa",
-          "title": "Targa del Veicolo",
+          "name": "anno_riferimento",
+          "title": "Anno di Riferimento",
+          "isRequired": true,
+          "minLength": 4,
+          "maxLength": 4,
+          "validators": [
+            {
+              "type": "numeric",
+              "text": "Anno di riferimento errato",
+              "minValue": 1900,
+              "maxValue": 2100
+            }
+          ]
+        },
+        {
+          "type": "dropdown",
+          "name": "attivita",
+          "title": "Attività",
+          "hideNumber": true,
+          "isRequired": true,
+          "choices": [
+            {
+              "value": "industriali-commerciali",
+              "text": "Attività industriali o commerciali"
+            },
+            {
+              "value": "professioni",
+              "text": "Professioni"
+            },
+            {
+              "value": "arti-mestieri",
+              "text": "Arti e mestieri"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "name": "nome",
+          "title": "Nome",
+          "hideNumber": true,
+          "isRequired": true
+        },
+        {
+          "type": "text",
+          "name": "cognome",
+          "title": "Cognome",
+          "hideNumber": true,
+          "isRequired": true
+        },
+        {
+          "type": "text",
+          "name": "identificativo",
+          "title": "Codice fiscale",
+          "hideNumber": true,
           "isRequired": true,
           "validators": [
             {
               "type": "regex",
-              "regex": "^[A-Z]{2}[0-9]{3}[A-Z]{2}$",
-              "text": "Inserisci una targa valida (es. AB123CD)"
-            }
-          ],
-          "maxLength": 7,
-          "placeholder": "AB123CD"
-        },
-        {
-          "type": "text",
-          "name": "marca",
-          "title": "Marca",
-          "isRequired": true
-        },
-        {
-          "type": "text",
-          "name": "modello",
-          "title": "Modello",
-          "isRequired": true
-        },
-        {
-          "type": "radiogroup",
-          "name": "alimentazione",
-          "title": "Tipo di Alimentazione",
-          "isRequired": true,
-          "choices": [
-            { "value": "benzina", "text": "Benzina" },
-            { "value": "diesel", "text": "Diesel" },
-            { "value": "gpl", "text": "GPL" },
-            { "value": "metano", "text": "Metano" },
-            { "value": "ibrido", "text": "Ibrido" },
-            { "value": "elettrico", "text": "Elettrico" }
-          ],
-          "colCount": 3
-        },
-        {
-          "type": "dropdown",
-          "name": "classeAmbientale",
-          "title": "Classe Ambientale",
-          "isRequired": true,
-          "choices": [
-            { "value": "euro6", "text": "Euro 6" },
-            { "value": "euro5", "text": "Euro 5" },
-            { "value": "euro4", "text": "Euro 4" },
-            { "value": "euro3", "text": "Euro 3" },
-            { "value": "euro2", "text": "Euro 2" },
-            { "value": "euro1", "text": "Euro 1" },
-            { "value": "euro0", "text": "Euro 0" }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "dettagliPermesso",
-      "title": "Dettagli Permesso",
-      "elements": [
-        {
-          "type": "radiogroup",
-          "name": "tipologiaPermesso",
-          "title": "Tipologia di Permesso",
-          "isRequired": true,
-          "choices": [
-            { "value": "residenti", "text": "Residenti - Permesso annuale" },
-            { "value": "lavoratori", "text": "Lavoratori - Permesso annuale" },
-            { "value": "temporaneo", "text": "Permesso temporaneo (max 30 giorni)" },
-            { "value": "carico_scarico", "text": "Carico/Scarico merci" }
-          ]
-        },
-        {
-          "type": "text",
-          "name": "dataInizio",
-          "title": "Data Inizio Validità",
-          "inputType": "date",
-          "isRequired": true,
-          "minValueExpression": "today()"
-        },
-        {
-          "type": "text",
-          "name": "dataFine",
-          "title": "Data Fine Validità",
-          "inputType": "date",
-          "visibleIf": "{tipologiaPermesso} = 'temporaneo'",
-          "isRequired": true,
-          "minValueExpression": "{dataInizio}"
-        },
-        {
-          "type": "checkbox",
-          "name": "zoneAccesso",
-          "title": "Zone di Accesso Richieste",
-          "isRequired": true,
-          "choices": [
-            { "value": "centro_storico", "text": "Centro Storico" },
-            { "value": "zona_nord", "text": "ZTL Nord" },
-            { "value": "zona_sud", "text": "ZTL Sud" },
-            { "value": "zona_mare", "text": "ZTL Lungomare" }
-          ],
-          "colCount": 2
-        },
-        {
-          "type": "comment",
-          "name": "motivazione",
-          "title": "Motivazione della Richiesta",
-          "isRequired": true,
-          "maxLength": 500,
-          "rows": 4,
-          "placeholder": "Descrivi brevemente il motivo della richiesta..."
-        }
-      ]
-    },
-    {
-      "name": "documenti",
-      "title": "Documenti e Dichiarazioni",
-      "elements": [
-        {
-          "type": "file",
-          "name": "documentoIdentita",
-          "title": "Documento di Identità",
-          "isRequired": true,
-          "acceptedTypes": ".pdf,.jpg,.jpeg,.png",
-          "maxSize": 5242880,
-          "waitForUpload": true
-        },
-        {
-          "type": "file",
-          "name": "librettoCircolazione",
-          "title": "Libretto di Circolazione",
-          "isRequired": true,
-          "acceptedTypes": ".pdf,.jpg,.jpeg,.png",
-          "maxSize": 5242880
-        },
-        {
-          "type": "boolean",
-          "name": "dichiarazioneVeridicita",
-          "title": "Dichiaro che tutte le informazioni fornite sono veritiere",
-          "isRequired": true,
-          "labelTrue": "Accetto",
-          "labelFalse": "Non accetto",
-          "validators": [
+              "text": "Codice fiscale errato",
+              "regex": "^[0-9]{11}$|^[A-Za-z]{6}[0-9LMNPQRSTUV]{2}[A-Za-z]{1}[0-9LMNPQRSTUV]{2}[A-Za-z]{1}[0-9LMNPQRSTUV]{3}[A-Za-z]{1}$"
+            },
             {
               "type": "expression",
-              "expression": "{dichiarazioneVeridicita} = true",
-              "text": "Devi accettare la dichiarazione per procedere"
+              "text": "Codice fiscale non corrispondente ai dati inseriti",
+              "expression": "CFValidator({identificativo}, {nome}, {cognome})"
             }
-          ]
+          ],
+          "uppercase": true
         },
         {
-          "type": "boolean",
-          "name": "consensoPrivacy",
-          "title": "Acconsento al trattamento dei dati personali ai sensi del GDPR",
-          "isRequired": true,
-          "labelTrue": "Acconsento",
-          "labelFalse": "Non acconsento",
-          "validators": [
-            {
-              "type": "expression",
-              "expression": "{consensoPrivacy} = true",
-              "text": "Devi fornire il consenso per procedere"
-            }
-          ]
+          "type": "text",
+          "name": "indirizzo",
+          "title": "Indirizzo",
+          "hideNumber": true,
+          "isRequired": true
         }
       ]
     }
-  ],
-  "completedHtml": "<h3>Grazie per aver inviato la richiesta!</h3><p>Riceverai una email di conferma all'indirizzo indicato.</p>",
-  "showCompletedPage": false
+  ]
 }

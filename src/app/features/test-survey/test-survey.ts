@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -60,11 +60,22 @@ import { SurveyFormComponent, SurveyDefinition } from '@shared/components/survey
           </div>
         } @else if (surveyDefinition()) {
           <app-survey-form
+            #surveyForm
             [definition]="surveyDefinition()!"
             [locale]="'it'"
             (surveyComplete)="onComplete($event)"
             (valueChanged)="onValueChanged($event)"
           ></app-survey-form>
+
+          <div class="mt-6 flex gap-3">
+            <button
+              type="button"
+              class="px-6 py-2.5 bg-primary-600 text-white font-medium rounded hover:bg-primary-700"
+              (click)="onValidate()"
+            >
+              Verifica
+            </button>
+          </div>
         }
       </div>
 
@@ -121,6 +132,8 @@ export class TestSurveyComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly logger = inject(LoggerService);
 
+  @ViewChild('surveyForm') surveyFormRef?: SurveyFormComponent;
+
   protected readonly isLoading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly surveyDefinition = signal<SurveyDefinition | null>(null);
@@ -152,6 +165,17 @@ export class TestSurveyComponent implements OnInit {
   onComplete(data: any): void {
     this.logger.log('Form completata:', data);
     this.submittedData.set(data);
+  }
+
+  onValidate(): void {
+    if (!this.surveyFormRef) return;
+
+    const isValid = this.surveyFormRef.validate();
+    this.logger.log('Validazione:', isValid ? 'OK' : 'ERRORI');
+
+    if (isValid) {
+      this.surveyFormRef.doComplete();
+    }
   }
 
   onValueChanged(event: { name: string; value: any }): void {
