@@ -344,6 +344,7 @@ describe('ConfigService', () => {
       const loadPromise = service.load();
 
       httpMock.expectOne('./assets/config/app-config.json').flush({});
+
       httpMock.expectOne('./assets/config/theme.json').flush({
         theme: {
           header: { background: '#custom-color' },
@@ -355,6 +356,94 @@ describe('ConfigService', () => {
 
       expect(service.theme().header.background).toBe('#custom-color');
       expect(service.theme().buttons.primaryBackground).toBe('#0066cc'); // Default
+    });
+  });
+
+  describe('portalBaseUrl', () => {
+    it('should return absolute portalUrl as-is', async () => {
+      const loadPromise = service.load();
+
+      httpMock.expectOne('./assets/config/app-config.json').flush({
+        api: { portalUrl: 'https://pagamenti.example.it/site/' },
+      });
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
+
+      await loadPromise;
+
+      expect(service.portalBaseUrl()).toBe('https://pagamenti.example.it/site/');
+    });
+
+    it('should add trailing slash to absolute portalUrl', async () => {
+      const loadPromise = service.load();
+
+      httpMock.expectOne('./assets/config/app-config.json').flush({
+        api: { portalUrl: 'https://pagamenti.example.it/site' },
+      });
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
+
+      await loadPromise;
+
+      expect(service.portalBaseUrl()).toBe('https://pagamenti.example.it/site/');
+    });
+
+    it('should prepend location.origin for relative path', async () => {
+      const loadPromise = service.load();
+
+      httpMock.expectOne('./assets/config/app-config.json').flush({
+        api: { portalUrl: '/govpay-portal/' },
+      });
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
+
+      await loadPromise;
+
+      const expected = globalThis.location.origin + '/govpay-portal/';
+      expect(service.portalBaseUrl()).toBe(expected);
+    });
+
+    it('should add trailing slash and prepend origin for relative path without slash', async () => {
+      const loadPromise = service.load();
+
+      httpMock.expectOne('./assets/config/app-config.json').flush({
+        api: { portalUrl: '/site' },
+      });
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
+
+      await loadPromise;
+
+      const expected = globalThis.location.origin + '/site/';
+      expect(service.portalBaseUrl()).toBe(expected);
+    });
+
+    it('should fallback to document.baseURI when portalUrl is empty', async () => {
+      const loadPromise = service.load();
+
+      httpMock.expectOne('./assets/config/app-config.json').flush({
+        api: { portalUrl: '' },
+      });
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
+
+      await loadPromise;
+
+      expect(service.portalBaseUrl()).toBe(document.baseURI);
+    });
+
+    it('should fallback to document.baseURI when portalUrl is not configured', async () => {
+      const loadPromise = service.load();
+
+      httpMock.expectOne('./assets/config/app-config.json').flush({
+        api: { baseUrl: '/api' },
+      });
+      httpMock.expectOne('./assets/config/theme.json').flush({});
+      httpMock.expectOne('./assets/config/domini.json').flush({ domini: [] });
+
+      await loadPromise;
+
+      expect(service.portalBaseUrl()).toBe(document.baseURI);
     });
   });
 });

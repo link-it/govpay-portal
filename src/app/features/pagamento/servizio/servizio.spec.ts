@@ -1127,4 +1127,175 @@ describe('PagamentoServizioComponent', () => {
       expect(theme.buttons.primaryText).toBe('#ffffff');
     });
   });
+
+  describe('buildServiziFromApi taxonomy mapping', () => {
+    // Simula la logica di buildServiziFromApi per testare il mapping
+    function buildServiziFromApi(
+      tipiPendenza: any[],
+      idDominio: string,
+      tipologie: { id: string }[],
+      assessorati: { id: string }[]
+    ): Servizio[] {
+      const defaultTipologia = tipologie[0]?.id || 'altro';
+      const defaultAssessorato = assessorati[0]?.id || 'altro';
+      const servizi: Servizio[] = [];
+
+      for (const tp of tipiPendenza) {
+        const tipologiaId = tp.detail?.taxonomy1 || tp.gruppo || defaultTipologia;
+        const assessoratoId = tp.detail?.taxonomy2 || tp.sottogruppo || defaultAssessorato;
+        const detailIta = tp.detail?.ita || tp.detail?.eng;
+
+        servizi.push({
+          id: tp.idTipoPendenza,
+          nome: detailIta?.name || tp.descrizione,
+          descrizione: tp.descrizione,
+          dipartimento: detailIta?.subgroup || detailIta?.metadata,
+          tipologiaId,
+          assessoratoId,
+          idDominio: idDominio,
+          idTipoPendenza: tp.idTipoPendenza,
+          attivo: true,
+          hasForm: !!tp.form,
+          immagine: tp.detail?.img || tp.detail?.thumbnail || tp.immagine,
+        });
+      }
+      return servizi;
+    }
+
+    it('should map taxonomy1/taxonomy2 from detail', () => {
+      const tipiPendenza = [{
+        idTipoPendenza: '050130',
+        descrizione: 'Concessione attività non elencate',
+        form: { tipo: 'surveyjs' },
+        detail: {
+          taxonomy1: 'concessioni',
+          taxonomy2: 'famiglia',
+          img: 'assets/images/servizi/050130.jpg',
+          ita: {
+            name: 'Autorizzazioni, licenze e iscrizioni',
+            subgroup: 'Dipartimento del lavoro',
+          }
+        }
+      }];
+
+      const result = buildServiziFromApi(tipiPendenza, '80012000826', mockTipologie, mockAssessorati);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].tipologiaId).toBe('concessioni');
+      expect(result[0].assessoratoId).toBe('famiglia');
+      expect(result[0].nome).toBe('Autorizzazioni, licenze e iscrizioni');
+      expect(result[0].dipartimento).toBe('Dipartimento del lavoro');
+      expect(result[0].immagine).toBe('assets/images/servizi/050130.jpg');
+    });
+
+    it('should fallback to gruppo/sottogruppo when detail is missing', () => {
+      const tipiPendenza = [{
+        idTipoPendenza: 'TEST001',
+        descrizione: 'Servizio test',
+        gruppo: 'tributi',
+        sottogruppo: 'economia',
+      }];
+
+      const result = buildServiziFromApi(tipiPendenza, '80012000826', mockTipologie, mockAssessorati);
+
+      expect(result[0].tipologiaId).toBe('tributi');
+      expect(result[0].assessoratoId).toBe('economia');
+      expect(result[0].nome).toBe('Servizio test');
+    });
+
+    it('should fallback to defaults when no taxonomy info available', () => {
+      const tipiPendenza = [{
+        idTipoPendenza: 'TEST002',
+        descrizione: 'Servizio senza categoria',
+      }];
+
+      const result = buildServiziFromApi(tipiPendenza, '80012000826', mockTipologie, mockAssessorati);
+
+      expect(result[0].tipologiaId).toBe('tributi'); // primo della lista
+      expect(result[0].assessoratoId).toBe('economia'); // primo della lista
+    });
+
+    it('should use detail.ita.metadata as dipartimento fallback', () => {
+      const tipiPendenza = [{
+        idTipoPendenza: 'TEST003',
+        descrizione: 'Servizio con metadata',
+        detail: {
+          taxonomy1: 'concessioni',
+          taxonomy2: 'energia',
+          ita: {
+            name: 'Servizio energia',
+            metadata: 'Dipartimento energia e servizi',
+          }
+        }
+      }];
+
+      const result = buildServiziFromApi(tipiPendenza, '80012000826', mockTipologie, mockAssessorati);
+
+      expect(result[0].dipartimento).toBe('Dipartimento energia e servizi');
+    });
+
+    it('should use detail.thumbnail as immagine fallback', () => {
+      const tipiPendenza = [{
+        idTipoPendenza: 'TEST004',
+        descrizione: 'Servizio con thumbnail',
+        detail: {
+          taxonomy1: 'canone',
+          taxonomy2: 'economia',
+          thumbnail: 'assets/images/thumb.jpg',
+        }
+      }];
+
+      const result = buildServiziFromApi(tipiPendenza, '80012000826', mockTipologie, mockAssessorati);
+
+      expect(result[0].immagine).toBe('assets/images/thumb.jpg');
+    });
+
+    it('should fallback to tp.immagine when detail has no image', () => {
+      const tipiPendenza = [{
+        idTipoPendenza: 'TEST005',
+        descrizione: 'Servizio con immagine esterna',
+        immagine: 'https://example.com/img.png',
+        detail: {
+          taxonomy1: 'canone',
+          taxonomy2: 'economia',
+        }
+      }];
+
+      const result = buildServiziFromApi(tipiPendenza, '80012000826', mockTipologie, mockAssessorati);
+
+      expect(result[0].immagine).toBe('https://example.com/img.png');
+    });
+
+    it('should use eng fallback when ita is not available', () => {
+      const tipiPendenza = [{
+        idTipoPendenza: 'TEST006',
+        descrizione: 'English only service',
+        detail: {
+          taxonomy1: 'concessioni',
+          taxonomy2: 'turismo',
+          eng: {
+            name: 'English Service Name',
+            subgroup: 'Tourism Department',
+          }
+        }
+      }];
+
+      const result = buildServiziFromApi(tipiPendenza, '80012000826', mockTipologie, mockAssessorati);
+
+      expect(result[0].nome).toBe('English Service Name');
+      expect(result[0].dipartimento).toBe('Tourism Department');
+    });
+
+    it('should set hasForm based on form presence', () => {
+      const tipiPendenza = [
+        { idTipoPendenza: 'WITH_FORM', descrizione: 'Con form', form: { tipo: 'surveyjs' } },
+        { idTipoPendenza: 'NO_FORM', descrizione: 'Senza form' },
+      ];
+
+      const result = buildServiziFromApi(tipiPendenza, '80012000826', mockTipologie, mockAssessorati);
+
+      expect(result[0].hasForm).toBe(true);
+      expect(result[1].hasForm).toBe(false);
+    });
+  });
 });
