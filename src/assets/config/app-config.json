@@ -8,6 +8,7 @@
   },
   "api": {
     "baseUrl": "/govpay-api-portal",
+    "portalUrl": "",
     "timeout": 30000,
     "retryAttempts": 3,
     "useMockApi": false,

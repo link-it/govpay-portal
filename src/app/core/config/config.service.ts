@@ -35,7 +35,6 @@ import {
   Creditore,
   Lingua,
   ThemeConfig,
-  ThemeBoxesConfig,
   PagoPAConfig
 } from './app-config.model';
 
@@ -157,6 +156,7 @@ const DEFAULT_CONFIG: AppConfig = {
   },
   api: {
     baseUrl: '',
+    portalUrl: '',
     timeout: 30000,
     retryAttempts: 3,
     useMockApi: false,
@@ -274,9 +274,28 @@ export class ConfigService {
     this._config().auth.spid.enabled || this._config().auth.iam.enabled
   );
 
-  private readonly logger = inject(LoggerService);
+  /**
+   * URL base del portale per redirect (esito pagamento, ecc.).
+   * Usa api.portalUrl se configurato, altrimenti fallback su document.baseURI.
+   * Garantisce URL assoluto (con origin) che termina sempre con '/'.
+   */
+  readonly portalBaseUrl = computed(() => {
+    const configured = this._config().api.portalUrl;
+    if (configured) {
+      const withSlash = configured.endsWith('/') ? configured : configured + '/';
+      // Se è un path relativo (es. /site/), lo rende assoluto con l'origin corrente
+      if (withSlash.startsWith('/')) {
+        return globalThis.location.origin + withSlash;
+      }
+      return withSlash;
+    }
+    return document.baseURI;
+  });
 
-  constructor(private readonly http: HttpClient) {}
+  private readonly logger = inject(LoggerService);
+  private readonly http = inject(HttpClient);
+
+  constructor() {}
 
   /**
    * Carica la configurazione dai file JSON.

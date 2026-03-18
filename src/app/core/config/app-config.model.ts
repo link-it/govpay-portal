@@ -244,6 +244,9 @@ export interface BrandingConfig {
 export interface ApiConfig {
   /** URL base unificato per le API (es: /govpay-api-portal) */
   baseUrl?: string;
+  /** URL base del portale per redirect esito pagamento (es: https://host/site/).
+   *  Se non configurato, fallback su document.baseURI */
+  portalUrl?: string;
   timeout: number;
   retryAttempts: number;
   /** Se true, usa il servizio mock invece del backend reale */

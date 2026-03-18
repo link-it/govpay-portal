@@ -644,18 +644,12 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
 
     // Determina l'idDominio attivo
     const idDominio = this.config.activeDominioId() || this.config.domini()[0]?.value || '80012000826';
-    const isUsingMock = this.api.isUsingMock;
 
     this.logger.log('[PagamentoServizio] Loading data for dominio:', idDominio);
-    this.logger.log('[PagamentoServizio] Using mock API:', isUsingMock);
+    this.logger.log('[PagamentoServizio] Using mock API:', this.api.isUsingMock);
 
-    if (isUsingMock) {
-      // MODALITÀ MOCK/DEMO: carica servizi da file locale
-      this.loadMockData();
-    } else {
-      // MODALITÀ REALE: carica servizi da API
-      this.loadApiData(idDominio);
-    }
+    // Carica sempre da API (il proxy gestisce mock/reale in base a config)
+    this.loadApiData(idDominio);
   }
 
   /**
@@ -806,17 +800,23 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
     const defaultAssessorato = this.assessorati()[0]?.id || 'altro';
 
     for (const tp of tipiPendenza) {
+      // taxonomy1/taxonomy2 sono nell'impaginazione decodificata (detail)
+      const tipologiaId = tp.detail?.taxonomy1 || tp.gruppo || defaultTipologia;
+      const assessoratoId = tp.detail?.taxonomy2 || tp.sottogruppo || defaultAssessorato;
+      const detailIta = tp.detail?.ita || tp.detail?.eng;
+
       servizi.push({
         id: tp.idTipoPendenza,
-        nome: tp.descrizione,
+        nome: detailIta?.name || tp.descrizione,
         descrizione: tp.descrizione,
-        tipologiaId: tp.gruppo || defaultTipologia,
-        assessoratoId: tp.sottogruppo || defaultAssessorato,
+        dipartimento: detailIta?.subgroup || detailIta?.metadata,
+        tipologiaId,
+        assessoratoId,
         idDominio: idDominio,
         idTipoPendenza: tp.idTipoPendenza,
         attivo: true,
         hasForm: !!tp.form,
-        immagine: tp.immagine,
+        immagine: tp.detail?.img || tp.detail?.thumbnail || tp.immagine,
       });
     }
 

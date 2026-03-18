@@ -25,9 +25,11 @@
  *
  * Ultimo aggiornamento: 2026-01-24
  */
-import { Injectable, signal } from '@angular/core';
-import { Observable, of, delay, throwError } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, delay, throwError, map, catchError } from 'rxjs';
 import { GovPayApiService } from './govpay-api.service';
+import { decodeTipiPendenza, decodeTipoPendenza } from '../../utils/base64.utils';
 import {
   Profilo,
   ListaDomini,
@@ -331,8 +333,12 @@ const MOCK_PROFILO: Profilo = {
 // MOCK SERVICE IMPLEMENTATION
 // ============================================================================
 
+/** Path del file fixture per tipi pendenza (se presente, viene usato al posto dei dati hardcoded) */
+const MOCK_TIPI_PENDENZA_FIXTURE = './assets/config/mock-tipipendenza.json';
+
 @Injectable()
 export class MockGovPayApiService extends GovPayApiService {
+  private readonly http = inject(HttpClient);
 
   // Simula stato autenticazione - true di default per sviluppo
   private readonly _authenticated = signal(true);
@@ -386,24 +392,27 @@ export class MockGovPayApiService extends GovPayApiService {
   // ==========================================================================
 
   override getTipiPendenza(idDominio: string, params?: GetTipiPendenzaParams): Observable<ListaTipiPendenza> {
-    // Verifica che il dominio esista
-    const dominio = MOCK_DOMINI.find(d => d.idDominio === idDominio);
-    if (!dominio) {
-      return this.notFoundError('Dominio non trovato');
-    }
-
-    let risultati = [...MOCK_TIPI_PENDENZA];
-
-    // Applica filtri
-    if (params?.gruppo) {
-      // Per ora ignoriamo il filtro gruppo (non abbiamo dati mock con gruppo)
-    }
-    if (params?.descrizione) {
-      const desc = params.descrizione.toLowerCase();
-      risultati = risultati.filter(t => t.descrizione.toLowerCase().includes(desc));
-    }
-
-    return of({ risultati }).pipe(delay(400));
+    // Prova a caricare fixture da file JSON (dati reali esportati con Base64)
+    return this.http.get<ListaTipiPendenza>(MOCK_TIPI_PENDENZA_FIXTURE).pipe(
+      map(data => {
+        // Decodifica Base64 (definizione e impaginazione)
+        let risultati = decodeTipiPendenza(data.risultati || []);
+        if (params?.descrizione) {
+          const desc = params.descrizione.toLowerCase();
+          risultati = risultati.filter(t => t.descrizione.toLowerCase().includes(desc));
+        }
+        return { risultati };
+      }),
+      // Fallback sui dati hardcoded se il file non esiste
+      catchError(() => {
+        let risultati = [...MOCK_TIPI_PENDENZA];
+        if (params?.descrizione) {
+          const desc = params.descrizione.toLowerCase();
+          risultati = risultati.filter(t => t.descrizione.toLowerCase().includes(desc));
+        }
+        return of({ risultati });
+      })
+    );
   }
 
   override getTipoPendenza(idDominio: string, idTipoPendenza: string): Observable<TipoPendenza> {

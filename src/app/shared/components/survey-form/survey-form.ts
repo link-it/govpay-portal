@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
-import { Model, SurveyModel, surveyLocalization, FunctionFactory } from 'survey-core';
+import { Model, SurveyModel, surveyLocalization } from 'survey-core';
 import { SurveyModule } from 'survey-angular-ui';
 // Importa locale italiano (side effect - registra automaticamente il locale)
 import 'survey-core/i18n/italian';
@@ -241,12 +241,6 @@ export class SurveyFormComponent implements OnDestroy {
           newPage: options.newCurrentPage
         });
       });
-
-      // Log diagnostico per verificare registrazione custom functions
-      const registeredFns = FunctionFactory.Instance.getAll();
-      if (registeredFns.length > 0) {
-        console.log('[SurveyForm] Funzioni registrate in FunctionFactory:', registeredFns);
-      }
 
       // Imposta il modello
       this.surveyModel.set(survey);
