@@ -28,11 +28,26 @@ export interface DropdownMenuItem {
   disabled?: boolean;
 }
 
+export interface DropdownMenuTheme {
+  /** Colore sfondo item al hover */
+  hoverBackground?: string;
+  /** Colore sfondo item selezionato */
+  selectedBackground?: string;
+  /** Colore testo item */
+  textColor?: string;
+  /** Colore testo item selezionato */
+  selectedTextColor?: string;
+}
+
 export interface DropdownMenuConfig {
   items: (DropdownMenuItem | 'divider')[];
   width?: string;
   position?: 'left' | 'right';
   selectedValue?: any;
+  /** Altezza massima del dropdown con scroll (es. '60vh', '300px') */
+  maxHeight?: string;
+  /** Personalizzazione colori */
+  theme?: DropdownMenuTheme;
 }
 
 @Component({
@@ -56,7 +71,11 @@ export interface DropdownMenuConfig {
           role="menu"
           aria-orientation="vertical"
         >
-          <div class="px-1 py-2">
+          <div
+            class="px-1 py-2"
+            [style.max-height]="config.maxHeight || null"
+            [style.overflow-y]="config.maxHeight ? 'auto' : null"
+          >
             @for (item of config.items; track $index) {
               @if (item === 'divider') {
                 <hr class="my-1 border-gray-100" />
@@ -65,14 +84,17 @@ export interface DropdownMenuConfig {
                   type="button"
                   [disabled]="item.disabled"
                   (click)="onItemClick(item)"
-                  class="flex items-center gap-2 px-4 py-2 mb-1 w-full text-sm text-left text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed lnk-button-focus rounded"
-                  [class.bg-primary-50]="config.selectedValue === item.value"
-                  [class.text-gray-900]="config.selectedValue === item.value"
+                  class="flex items-center gap-2 px-4 py-2 mb-1 w-full text-sm text-left disabled:opacity-50 disabled:cursor-not-allowed lnk-button-focus rounded dropdown-item"
+                  [class.hover:bg-gray-100]="!config.theme"
+                  [class.bg-primary-50]="!config.theme && config.selectedValue === item.value"
+                  [class.text-gray-900]="!config.theme && config.selectedValue === item.value"
                   [class.font-medium]="config.selectedValue === item.value"
-                  [class.text-gray-700]="config.selectedValue !== item.value"
-                  [class.hover:bg-gray-50]="config.selectedValue !== item.value && !item.disabled"
+                  [class.text-gray-700]="!config.theme && config.selectedValue !== item.value"
                   [class.opacity-50]="item.disabled"
                   [class.cursor-not-allowed]="item.disabled"
+                  [style.color]="config.theme ? (config.selectedValue === item.value ? config.theme.selectedTextColor || config.theme.textColor : config.theme.textColor) : null"
+                  [style.background-color]="config.theme && config.selectedValue === item.value ? config.theme.selectedBackground : null"
+                  [style.--dropdown-hover-bg]="config.theme?.hoverBackground"
                   role="menuitem"
                 >
                   @if (item.icon) {
@@ -87,6 +109,11 @@ export interface DropdownMenuConfig {
       }
     </div>
   `,
+  styles: [`
+    .dropdown-item[style*="--dropdown-hover-bg"]:hover {
+      background-color: var(--dropdown-hover-bg) !important;
+    }
+  `],
   host: { class: 'inline-flex items-center' }
 })
 export class DropdownMenuComponent {

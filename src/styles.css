@@ -927,6 +927,12 @@ mat-error {
   background-color: #ffffff !important;
 }
 
+/* Datepicker calendar - white background */
+.mat-datepicker-content,
+.mat-datepicker-content .mat-calendar {
+  background-color: #ffffff !important;
+}
+
 /* Opzioni dropdown - sfondo bianco e hover */
 .mat-mdc-option,
 .mdc-list-item {

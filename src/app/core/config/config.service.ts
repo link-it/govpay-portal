@@ -260,6 +260,13 @@ export class ConfigService {
     return this._domini().domini.find(d => d.value === id);
   });
 
+  // Computed per domain selector
+  readonly needsDomainSelection = computed(() => {
+    const domainSelector = this._config().ui.domainSelector;
+    const enabled = domainSelector?.enabled !== false;
+    return enabled && !this.isSingleDomain() && !this._activeDominioId();
+  });
+
   // Shortcut comuni
   readonly appName = computed(() => this._config().app.name);
   readonly appTitle = computed(() => this._config().app.title);

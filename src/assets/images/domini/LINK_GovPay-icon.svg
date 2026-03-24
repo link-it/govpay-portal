@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Livello 2" xmlns="http://www.w3.org/2000/svg" width="79.836" height="65.867" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 79.836 65.867">
+  <defs>
+    <linearGradient id="d" data-name="Sfumatura senza nome 34" x1="0" y1="45.569" x2="67.752" y2="45.569" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#94d0cf" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#94d0cf"/>
+    </linearGradient>
+    <linearGradient id="e" data-name="Sfumatura senza nome 27" x1="22.944" y1="41.081" x2="67.751" y2="41.081" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff818c"/>
+      <stop offset="1" stop-color="#ff9da6"/>
+    </linearGradient>
+  </defs>
+  <g id="c" data-name="Livello 1">
+    <g>
+      <path d="M79.836,28.446c0-15.71-12.736-28.446-28.446-28.446-14.636,0-26.685,11.056-28.265,25.271h38.917c3.757,0,6.266,3.046,5.604,6.803l-3.877,21.99c9.509-4.603,16.068-14.344,16.068-25.618Z" fill="#ff4050"/>
+      <path d="M22.944,28.446c0-1.074.065-2.132.181-3.175h-10.257c-3.757,0-7.34,3.046-8.002,6.803L.106,59.064c-.663,3.757,1.846,6.803,5.603,6.803h49.174c3.757,0,7.34-3.046,8.002-6.803l.882-5c-3.742,1.812-7.941,2.828-12.378,2.828-15.71,0-28.446-12.736-28.446-28.446Z" fill="url(#d)"/>
+      <path d="M62.042,25.271H23.125c-.116,1.043-.181,2.102-.181,3.175,0,15.71,12.736,28.446,28.446,28.446,4.437,0,8.636-1.017,12.378-2.828l3.877-21.99c.663-3.757-1.846-6.803-5.604-6.803Z" fill="url(#e)"/>
+    </g>
+  </g>
+</svg>

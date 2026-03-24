@@ -70,6 +70,26 @@
     "bollettino": {
       "showQrCode": false,
       "showBarcode": false
+    },
+    "domainSelector": {
+      "enabled": true,
+      "headerImage": "",
+      "headerHeight": 430,
+      "headerOverlay": 0,
+      "showInHeader": true,
+      "background": "",
+      "title": "",
+      "subtitle": "",
+      "footer": {
+        "lines": [
+          "Link.it srl",
+          "Via San Martino n. 51 - Pisa (PI)",
+          "P.IVA 01313050500"
+        ],
+        "logo": "assets/images/logo/LINK_logo-Govpay.svg",
+        "logoAlt": "GovPay",
+        "logoHeight": 40
+      }
     }
   },
   "features": {

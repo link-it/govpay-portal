@@ -223,10 +223,17 @@
       "CercaServizio": "Search for a service",
       "MostraTipologie": "Show Categories",
       "MostraAssessorati": "Show Departments",
+      "VistaSchede": "Cards",
+      "VistaLista": "List",
       "NessunRisultato": "No results found",
       "NessunServizioTrovato": "No services found",
       "ModificaRicerca": "Try modifying your search terms",
       "AzzeraRicerca": "Clear search"
+    },
+    "Domain": {
+      "SelezionaEnte": "Select the creditor organization",
+      "GestionePagamenti": "Payment management",
+      "CambiaEnte": "Change organization"
     },
     "Auth": {
       "Accedi": "Login",

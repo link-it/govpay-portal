@@ -88,12 +88,14 @@ export interface UserInfo {
                 {{ getEnteLabel().charAt(0) }}
               </div>
             }
-            <div
-              class="text-xl font-semibold"
-              [style.color]="config.theme().sidebar.headerText"
-            >
-              {{ getEnteLabel() }}
-            </div>
+            @if (!config.theme().sidebar.headerLogo) {
+              <div
+                class="text-xl font-semibold"
+                [style.color]="config.theme().sidebar.headerText"
+              >
+                {{ getEnteLabel() }}
+              </div>
+            }
           </div>
 
           <!-- Sottotitolo applicazione -->
@@ -145,7 +147,7 @@ export interface UserInfo {
       }
 
       <!-- Navigation -->
-      <nav class="flex-1 overflow-y-auto py-2">
+      <nav class="flex-1 overflow-y-auto py-2" [style.--sidebar-menu-hover]="config.theme().sidebar.menuHover">
         <ul class="space-y-1 px-3">
           @for (item of filteredMenuItems; track item.link) {
             <li>
@@ -236,6 +238,19 @@ export interface UserInfo {
           </div>
         }
 
+        <!-- Righe di testo -->
+        @if (footerConfig()?.lines?.length) {
+          <div
+            class="text-center text-xs leading-relaxed pb-3 mb-3 border-b"
+            [style.color]="config.theme().sidebar.footerText"
+            [style.border-color]="config.theme().sidebar.footerBorder"
+          >
+            @for (line of footerConfig()!.lines!; track $index) {
+              <div>{{ line }}</div>
+            }
+          </div>
+        }
+
         <!-- Logo GovPay e versione -->
         @if (footerConfig()?.govpay?.show || footerConfig()?.showVersion) {
           <div class="flex items-center justify-center gap-3 text-xs" [style.color]="config.theme().sidebar.footerText">
@@ -276,7 +291,7 @@ export interface UserInfo {
       font-weight: 600;
     }
     a:hover:not(.active-menu-item) {
-      background-color: rgba(0, 0, 0, 0.04) !important;
+      background-color: var(--sidebar-menu-hover) !important;
     }
   `]
 })
@@ -356,20 +371,29 @@ export class SidebarComponent {
   }
 
   /**
-   * Ritorna il logo dell'ente attivo o del primo ente se singolo dominio
+   * Ritorna il logo dell'ente attivo o del primo ente se singolo dominio.
+   * In multidominio, se configurato sidebar.headerLogo, usa quello.
    */
   getEnteLogo(): string {
+    const headerLogo = this.config.theme().sidebar.headerLogo;
+    if (headerLogo) {
+      return headerLogo;
+    }
     const ente = this.config.activeDominio() ?? this.config.domini()[0];
     if (ente?.logo) {
-      return `assets/images/logo/${ente.logo}`;
+      return `assets/images/domini/${ente.logo}`;
     }
     return '';
   }
 
   /**
-   * Ritorna il nome dell'ente attivo o del primo ente se singolo dominio
+   * Ritorna il nome dell'ente attivo o del primo ente se singolo dominio.
+   * In multidominio con headerLogo, mostra il nome app o subtitle.
    */
   getEnteLabel(): string {
+    if (this.config.theme().sidebar.headerLogo) {
+      return this.config.appSubtitle() || this.config.appName();
+    }
     const ente = this.config.activeDominio() ?? this.config.domini()[0];
     return ente?.label ?? this.config.appSubtitle() ?? 'Ente';
   }

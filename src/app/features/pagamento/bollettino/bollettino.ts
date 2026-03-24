@@ -47,8 +47,8 @@ type Html5Qrcode = any;
         <!-- Form ricerca -->
         <div class="space-y-6">
           <div class="mb-12">
-            <!-- Domain selector -->
-            @if (!config.isSingleDomain()) {
+            <!-- Domain selector (nascosto se dominio già selezionato via header) -->
+            @if (!config.isSingleDomain() && !config.activeDominioId()) {
               <app-floating-select
                 [label]="'Language.Bollettino.EnteCreditore' | translate"
                 [(ngModel)]="selectedDomain"
@@ -325,7 +325,7 @@ export class PagamentoBollettinoComponent implements OnDestroy, AfterViewInit {
 
   // Verifica se la ricerca può essere eseguita
   protected canSearch(): boolean {
-    const hasDomain = this.config.isSingleDomain() || !!this.selectedDomain;
+    const hasDomain = this.config.isSingleDomain() || !!this.config.activeDominioId() || !!this.selectedDomain;
     const hasValidNumber = this.noticeNumber.replace(/\s/g, '').length === 18;
     return hasDomain && hasValidNumber;
   }
@@ -356,7 +356,7 @@ export class PagamentoBollettinoComponent implements OnDestroy, AfterViewInit {
 
     const domain = this.config.isSingleDomain()
       ? this.config.domini()[0].value
-      : this.selectedDomain;
+      : this.config.activeDominioId() || this.selectedDomain;
 
     this.isLoading.set(true);
     this.errorMessage.set(null);

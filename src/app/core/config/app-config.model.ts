@@ -73,6 +73,8 @@ export interface ThemeSidebarConfig {
   headerBackground: string;
   headerText: string;
   headerBorder: string;
+  /** Logo da mostrare nell'header sidebar al posto di quello dell'ente (utile per multidominio) */
+  headerLogo?: string;
   /** Immagine watermark decorativo nell'header (opzionale, default: logo ente) */
   headerWatermark?: string;
   /** Opacità del watermark (0-1, default: 0.08 per fallback logo, 1 se headerWatermark configurato) */
@@ -89,6 +91,8 @@ export interface ThemeSidebarConfig {
 
 export interface ThemeContentConfig {
   background: string;
+  /** Colore testo principale nell'area contenuto (default: topBar.text) */
+  text?: string;
   cardBackground: string;
   cardBorder: string;
   cardHover: string;
@@ -220,6 +224,8 @@ export interface FooterConfig {
   govpay?: FooterGovPayConfig;
   /** Mostra versione applicazione */
   showVersion?: boolean;
+  /** Righe di testo aggiuntive nel footer (es. indirizzo, P.IVA) */
+  lines?: string[];
 }
 
 /** Configurazione header (loghi partner a destra) */
@@ -324,6 +330,8 @@ export interface LayoutConfig {
   cardDisplay?: CardDisplayMode;
   /** Mostra immagine nella pagina dettaglio servizio (default: true) */
   showDetailImage?: boolean;
+  /** Altezza immagine nel dettaglio servizio (es. '12rem', '200px'). Default: '12rem' */
+  detailImageHeight?: string;
 }
 
 export interface CollapsibleSections {
@@ -333,6 +341,44 @@ export interface CollapsibleSections {
 export interface BollettinoConfig {
   showQrCode: boolean;
   showBarcode: boolean;
+}
+
+export interface DomainSelectorFooterConfig {
+  /** Righe di testo a sinistra (es. indirizzo, P.IVA, telefono) */
+  lines?: string[];
+  /** Logo a destra nel footer */
+  logo?: string;
+  /** Alt text del logo */
+  logoAlt?: string;
+  /** Altezza logo in pixel (default: 40) */
+  logoHeight?: number;
+  /** Dimensione font delle righe (es. '0.75rem', '12px'). Default: '0.75rem' */
+  fontSize?: string;
+  /** Colore sfondo footer */
+  background?: string;
+  /** Colore testo footer */
+  textColor?: string;
+}
+
+export interface DomainSelectorConfig {
+  /** Mostra la pagina di selezione dominio all'avvio (default: true se multidominio) */
+  enabled?: boolean;
+  /** Immagine di sfondo nella pagina di selezione */
+  headerImage?: string;
+  /** Altezza header in pixel (default: 280) */
+  headerHeight?: number;
+  /** Overlay scuro sull'immagine (0-1, default: 0.4) */
+  headerOverlay?: number;
+  /** Mostra il dropdown cambio ente nell'header (default: true) */
+  showInHeader?: boolean;
+  /** Titolo mostrato nella pagina (default: da i18n Language.Domain.GestionePagamenti) */
+  title?: string;
+  /** Sottotitolo opzionale sotto il titolo */
+  subtitle?: string;
+  /** Colore di sfondo della pagina (default: theme.content.background) */
+  background?: string;
+  /** Footer con dati ente e logo */
+  footer?: DomainSelectorFooterConfig;
 }
 
 export interface UiConfig {
@@ -348,6 +394,8 @@ export interface UiConfig {
   showLanguageSelector?: boolean;
   /** Lingue disponibili per l'applicazione */
   languages?: Lingua[];
+  /** Configurazione selettore dominio multidominio */
+  domainSelector?: DomainSelectorConfig;
 }
 
 export interface RoutingConfig {

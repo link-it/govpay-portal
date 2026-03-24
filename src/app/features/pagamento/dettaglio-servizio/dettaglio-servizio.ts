@@ -139,7 +139,8 @@ interface ServizioState {
                 <img
                   [src]="detail()!.immagine"
                   [alt]="detail()!.name"
-                  class="w-full h-48 object-cover"
+                  class="w-full object-cover"
+                  [style.height]="config.ui().layout.detailImageHeight || '12rem'"
                   (error)="onImageError($event)"
                 />
               </div>
