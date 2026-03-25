@@ -214,7 +214,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
             }
 
             <!-- Login button -->
-            @if (!isAuthenticated) {
+            @if (!isAuthenticated && config.hasAuthentication()) {
               <button
                 type="button"
                 class="flex items-center gap-2 px-4 py-2 text-sm font-medium header-btn rounded-lg transition-colors"
