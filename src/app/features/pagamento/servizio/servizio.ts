@@ -66,6 +66,7 @@ interface AssessoratoConfig {
 interface Servizio {
   id: string;
   nome: string;
+  code?: string;
   descrizione: string;
   dipartimento?: string;
   tipologiaId: string;
@@ -212,7 +213,7 @@ interface ServizioConfig {
                   <div class="flex-1"></div>
                   <!-- Nome servizio -->
                   <div class="px-4 pb-2">
-                    <h4 class="text-lg font-semibold leading-snug">{{ servizio.nome }}</h4>
+                    <h4 class="text-lg font-semibold leading-snug">{{ servizioLabel(servizio) }}</h4>
                   </div>
                   <!-- Short description -->
                   @if (servizio.shortDescription) {
@@ -240,7 +241,7 @@ interface ServizioConfig {
                   [style.--hover-bg]="config.theme().content.cardHover"
                   (click)="onServizioSelectFromSearch(servizio)"
                 >
-                  <h4 class="font-medium mb-1">{{ servizio.nome | uppercase }}</h4>
+                  <h4 class="font-medium mb-1">{{ servizioLabel(servizio) | uppercase }}</h4>
                   @if (servizio.dipartimento) {
                     <p class="text-sm opacity-70">{{ servizio.dipartimento }}</p>
                   }
@@ -324,7 +325,7 @@ interface ServizioConfig {
                       [style.--hover-bg]="config.theme().content.cardHover"
                       (click)="onServizioSelectFromSearch(servizio)"
                     >
-                      <h4 class="font-medium mb-1">{{ servizio.nome | uppercase }}</h4>
+                      <h4 class="font-medium mb-1">{{ servizioLabel(servizio) | uppercase }}</h4>
                       @if (servizio.dipartimento) {
                         <p class="text-sm opacity-70">{{ servizio.dipartimento }}</p>
                       }
@@ -490,7 +491,7 @@ interface ServizioConfig {
                     [style.--hover-bg]="config.theme().content.cardHover"
                     (click)="onServizioSelect(servizio)"
                   >
-                    <h4 class="font-medium mb-1">{{ servizio.nome | uppercase }}</h4>
+                    <h4 class="font-medium mb-1">{{ servizioLabel(servizio) | uppercase }}</h4>
                     @if (servizio.dipartimento) {
                       <p class="text-sm opacity-70">{{ servizio.dipartimento }}</p>
                     }
@@ -616,6 +617,10 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
     this.config.theme().content.text || this.config.theme().topBar.text
   );
 
+  protected servizioLabel(servizio: Servizio): string {
+    return servizio.code ? `${servizio.code} - ${servizio.nome}` : servizio.nome;
+  }
+
   // Computed
   protected readonly totaleServizi = computed(() => this.servizi().length);
 
@@ -636,6 +641,7 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
     let lista = this.servizi();
     if (search) {
       lista = lista.filter(s =>
+        s.code?.toLowerCase().includes(search) ||
         s.nome.toLowerCase().includes(search) ||
         s.dipartimento?.toLowerCase().includes(search)
       );
@@ -686,8 +692,9 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
     const search = this.searchText().toLowerCase();
     if (!search) return [];
 
-    // Filtra servizi per nome o dipartimento
+    // Filtra servizi per code, nome o dipartimento
     const serviziFiltrati = this.servizi().filter(s =>
+      s.code?.toLowerCase().includes(search) ||
       s.nome.toLowerCase().includes(search) ||
       s.dipartimento?.toLowerCase().includes(search)
     );
@@ -736,6 +743,7 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
     // Applica filtro ricerca
     if (search) {
       serviziFiltrati = serviziFiltrati.filter(s =>
+        s.code?.toLowerCase().includes(search) ||
         s.nome.toLowerCase().includes(search) ||
         s.dipartimento?.toLowerCase().includes(search)
       );
@@ -966,6 +974,7 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
       servizi.push({
         id: tp.idTipoPendenza,
         nome: detailIta?.name || tp.descrizione,
+        code: detailIta?.code,
         descrizione: tp.descrizione,
         dipartimento: detailIta?.subgroup || detailIta?.metadata,
         shortDescription: detailIta?.short_description,
