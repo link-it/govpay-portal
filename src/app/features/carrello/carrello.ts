@@ -536,8 +536,10 @@ export class CarrelloComponent implements OnDestroy {
       }
     }
 
-    // Costruisci URL di ritorno (usa portalUrl da config, fallback su document.baseURI)
-    const returnUrl = `${this.config.portalBaseUrl()}esito-pagamento`;
+    // Costruisci URL di ritorno (con idDominio per ripristino in multidominio)
+    const idDominio = !this.config.isSingleDomain() ? this.config.activeDominioId() : null;
+    const domainParam = idDominio ? `?idDominio=${idDominio}` : '';
+    const returnUrl = `${this.config.portalBaseUrl()}esito-pagamento${domainParam}`;
 
     // Prepara la richiesta di pagamento
     const request = this.pay.preparePaymentRequest(returnUrl);

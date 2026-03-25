@@ -212,11 +212,13 @@ export class PagoPACheckoutService {
       throw new Error('Nessun avviso di pagamento valido nel carrello');
     }
 
-    // Costruisci return URLs
+    // Costruisci return URLs (con idDominio per ripristino in multidominio)
+    const idDominio = !this.config.isSingleDomain() ? this.config.activeDominioId() : null;
+    const domainParam = idDominio ? `&idDominio=${idDominio}` : '';
     const returnUrls: PagoPAReturnUrls = {
-      returnOkUrl: `${returnBaseUrl}?esito=ok&cartId=${cartId}`,
-      returnCancelUrl: `${returnBaseUrl}?esito=cancel&cartId=${cartId}`,
-      returnErrorUrl: `${returnBaseUrl}?esito=error&cartId=${cartId}`
+      returnOkUrl: `${returnBaseUrl}?esito=ok&cartId=${cartId}${domainParam}`,
+      returnCancelUrl: `${returnBaseUrl}?esito=cancel&cartId=${cartId}${domainParam}`,
+      returnErrorUrl: `${returnBaseUrl}?esito=error&cartId=${cartId}${domainParam}`
     };
 
     // Converti items in PaymentNotices
