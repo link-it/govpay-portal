@@ -194,8 +194,26 @@ export class MainLayoutComponent implements OnInit {
       this.pay.mockLogin();
       return;
     }
-    // Altrimenti apri sidebar per mostrare opzioni login
+    // Se solo IAM (no SPID), redirect diretto senza aprire sidebar
+    if (this.config.isIamEnabled() && !this.config.isSpidEnabled()) {
+      this.redirectToIamLogin();
+      return;
+    }
+    // Altrimenti apri sidebar per mostrare opzioni login (SPID + eventuale IAM)
     this.sidebarOpen.set(true);
+  }
+
+  private redirectToIamLogin(): void {
+    const loginUrl = this.config.auth().iam.loginUrl;
+    if (!loginUrl) return;
+
+    const idDominio = this.config.activeDominioId() || this.config.domini()[0]?.value;
+    let url = loginUrl;
+    if (idDominio) {
+      const separator = loginUrl.includes('?') ? '&' : '?';
+      url = `${loginUrl}${separator}idDominio=${idDominio}`;
+    }
+    window.location.href = url;
   }
 
   onNavigateTo(path: string): void {
@@ -223,11 +241,29 @@ export class MainLayoutComponent implements OnInit {
     this.pay.logout().subscribe({
       next: () => {
         this.closeSidebar();
-        this.router.navigate(['/pagamento-servizio']);
+        this.handleLogoutRedirect();
       },
       error: (err) => {
         console.error('Errore durante il logout:', err);
+        this.closeSidebar();
+        this.handleLogoutRedirect();
       }
     });
+  }
+
+  private handleLogoutRedirect(): void {
+    const landingPage = this.config.auth().logoutLandingPage;
+    const target = this.config.auth().logoutLandingPageTarget || '_self';
+
+    if (landingPage && landingPage.startsWith('http')) {
+      // URL esterno: apri in nuova finestra o nella stessa
+      window.open(landingPage, target);
+      if (target !== '_self') {
+        this.router.navigate(['/' + this.config.routing().publicExit]);
+      }
+    } else {
+      // Path interno o default
+      this.router.navigate([landingPage || '/' + this.config.routing().publicExit]);
+    }
   }
 }

@@ -196,7 +196,7 @@ export interface UserInfo {
             @if (config.isIamEnabled()) {
               <button
                 type="button"
-                class="btn-secondary w-full flex items-center justify-center gap-2 px-4 py-3 border-2 rounded-lg"
+                class="btn-primary w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg"
                 (click)="onIamLogin()"
               >
                 <ng-icon name="bootstrapPerson" class="text-xl"></ng-icon>
@@ -335,8 +335,19 @@ export class SidebarComponent {
   }
 
   onIamLogin() {
-    // TODO: implementare login IAM
-    this.logger.log('IAM login clicked');
+    const loginUrl = this.config.auth().iam.loginUrl;
+    if (!loginUrl) return;
+
+    // Costruisce URL con idDominio come query parameter
+    const idDominio = this.config.activeDominioId() || this.config.domini()[0]?.value;
+    let url = loginUrl;
+    if (idDominio) {
+      const separator = loginUrl.includes('?') ? '&' : '?';
+      url = `${loginUrl}${separator}idDominio=${idDominio}`;
+    }
+
+    this.logger.log('[IAM] Redirect login:', url);
+    window.location.href = url;
   }
 
   /**
