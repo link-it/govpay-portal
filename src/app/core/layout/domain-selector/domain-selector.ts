@@ -96,6 +96,8 @@ import type { SelectOption } from '@shared/components';
               [label]="'Language.Domain.SelezionaEnte' | translate"
               [placeholder]="'Language.Domain.SelezionaEnte' | translate"
               [options]="dominiOptions()"
+              [textColor]="config.theme().header.text"
+              [borderColor]="config.theme().header.text"
               (selectionChange)="onDomainSelected($event)"
             />
           </div>

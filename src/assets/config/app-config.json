@@ -16,14 +16,14 @@
   },
   "auth": {
     "spid": {
-      "enabled": true,
+      "enabled": false,
       "serviceTarget": "",
       "testProvider": "",
       "actionFormUrl": "",
       "authnContextClassRef": ""
     },
     "iam": {
-      "enabled": false,
+      "enabled": true,
       "loginUrl": ""
     },
     "logoutUrl": "",

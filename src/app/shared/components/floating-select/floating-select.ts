@@ -48,14 +48,16 @@ export interface SelectOption {
         [disabled]="disabled"
         class="peer w-full px-0 pt-5 pb-2 bg-transparent border-0 border-b-2 transition-colors appearance-none
               focus:outline-none focus:ring-0 cursor-pointer"
-        [class.border-gray-300]="!hasError"
-        [class.focus:border-primary-500]="!hasError"
+        [class.border-gray-300]="!hasError && !borderColor"
+        [class.focus:border-primary-500]="!hasError && !borderColor"
         [class.border-red-500]="hasError"
         [class.focus:border-red-500]="hasError"
         [class.opacity-50]="disabled"
         [class.cursor-not-allowed]="disabled"
-        [class.text-gray-400]="!value"
-        [class.text-gray-900]="value"
+        [class.text-gray-400]="!value && !textColor"
+        [class.text-gray-900]="value && !textColor"
+        [style.color]="textColor || null"
+        [style.border-color]="!hasError && borderColor ? borderColor : null"
         [(ngModel)]="value"
         (ngModelChange)="onValueChange($event)"
         (blur)="onBlur()"
@@ -86,9 +88,11 @@ export interface SelectOption {
         [class.text-xs]="value || isFocused() || placeholder"
         [class.top-5]="!value && !isFocused() && !placeholder"
         [class.text-base]="!value && !isFocused() && !placeholder"
-        [class.text-gray-500]="!hasError && !isFocused()"
-        [class.text-primary-500]="!hasError && isFocused()"
+        [class.text-gray-500]="!hasError && !isFocused() && !textColor"
+        [class.text-primary-500]="!hasError && isFocused() && !textColor"
         [class.text-red-500]="hasError"
+        [style.color]="!hasError && textColor ? textColor : null"
+        [style.opacity]="textColor && !isFocused() ? '0.7' : null"
       >
         {{ label }}
         @if (required) {
@@ -97,7 +101,11 @@ export interface SelectOption {
       </label>
 
       <!-- Dropdown arrow -->
-      <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+      <div
+        class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
+        [class.text-gray-400]="!textColor"
+        [style.color]="textColor || null"
+      >
         <ng-icon name="bootstrapChevronDown" class="text-sm"></ng-icon>
       </div>
 
@@ -141,6 +149,10 @@ export class FloatingSelectComponent implements ControlValueAccessor {
   @Input() hasError = false;
   @Input() errorMessage = '';
   @Input() hint = '';
+  /** Colore testo personalizzato (sovrascrive i default Tailwind) */
+  @Input() textColor = '';
+  /** Colore bordo personalizzato */
+  @Input() borderColor = '';
 
   @Output() selectionChange = new EventEmitter<string>();
 
