@@ -38,6 +38,7 @@ testem.log
 /typings
 __screenshots__/
 .codegraph/
+assets-*/
 
 # profiling files
 chrome-profiler-events.json

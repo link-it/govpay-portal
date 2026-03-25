@@ -23,6 +23,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfigService } from '../../config';
+import { Creditore } from '../../config/app-config.model';
 import { NavigationStateService } from '../../services/navigation-state.service';
 import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@shared/components';
 
@@ -41,41 +42,74 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
       >
       <div class="container- mx-auto" [style.padding-left]="config.theme().topBar.padding || '1rem'" [style.padding-right]="config.theme().topBar.padding || '1rem'">
         <div class="flex items-center justify-between" [style.height]="config.theme().topBar.height || '4rem'">
-          <!-- Logo ente -->
-          <a routerLink="/" class="flex items-center gap-3">
-            @if (config.logo().full) {
-              <img
-                [src]="config.logo().full"
-                [alt]="config.appSubtitle() || config.appName()"
-                [style.height]="config.theme().topBar.logoHeight || '2.5rem'"
-              />
-            } @else {
-              <div
-                class="w-12 h-12 rounded-lg flex items-center justify-center text-xl font-bold text-white"
-                [style.background]="'linear-gradient(135deg, ' + config.logo().fallbackGradient.from + ', ' + config.logo().fallbackGradient.to + ')'"
+          <!-- Logo ente / Domain switcher -->
+          @if (showDomainSwitcher && activeDominio) {
+            <!-- Multidominio: logo ente selezionato + dropdown cambio -->
+            <app-dropdown-menu
+              [config]="domainDropdownConfig"
+              (itemSelected)="onDomainSelected($event)"
+            >
+              <button
+                dropdown-trigger
+                type="button"
+                class="flex items-center gap-3 py-1 rounded-lg hover:bg-black/5 transition-colors"
+                [style.color]="config.theme().topBar.text"
               >
-                {{ config.logo().fallbackText }}
-              </div>
-            }
-            @if (config.appSubtitle()) {
-              <div class="hidden sm:block">
-                <div
-                  class="text-medium font-semibold"
-                  [style.color]="config.theme().topBar.text"
-                >
-                  {{ config.appSubtitle() }}
-                </div>
-                @if (config.ui().showHeaderTitle !== false) {
-                  <div
-                    class="text-xs opacity-70"
+                @if (activeDominio.logo) {
+                  <img
+                    [src]="'assets/images/domini/' + activeDominio.logo"
+                    [alt]="activeDominio.label"
+                    [style.height]="config.theme().topBar.logoHeight || '2.5rem'"
+                  />
+                }
+                <div class="hidden sm:flex items-center gap-1.5">
+                  <span
+                    class="text-medium font-semibold"
                     [style.color]="config.theme().topBar.text"
                   >
-                    {{ config.appTitle() }}
+                    {{ activeDominio.label }}
+                  </span>
+                  <ng-icon name="bootstrapChevronDown" class="text-xs opacity-60"></ng-icon>
+                </div>
+              </button>
+            </app-dropdown-menu>
+          } @else {
+            <!-- Singolo dominio: logo statico -->
+            <a routerLink="/" class="flex items-center gap-3">
+              @if (config.logo().full) {
+                <img
+                  [src]="config.logo().full"
+                  [alt]="config.appSubtitle() || config.appName()"
+                  [style.height]="config.theme().topBar.logoHeight || '2.5rem'"
+                />
+              } @else {
+                <div
+                  class="w-12 h-12 rounded-lg flex items-center justify-center text-xl font-bold text-white"
+                  [style.background]="'linear-gradient(135deg, ' + config.logo().fallbackGradient.from + ', ' + config.logo().fallbackGradient.to + ')'"
+                >
+                  {{ config.logo().fallbackText }}
+                </div>
+              }
+              @if (config.appSubtitle()) {
+                <div class="hidden sm:block">
+                  <div
+                    class="text-medium font-semibold"
+                    [style.color]="config.theme().topBar.text"
+                  >
+                    {{ config.appSubtitle() }}
                   </div>
-                }
-              </div>
-            }
-          </a>
+                  @if (config.ui().showHeaderTitle !== false) {
+                    <div
+                      class="text-xs opacity-70"
+                      [style.color]="config.theme().topBar.text"
+                    >
+                      {{ config.appTitle() }}
+                    </div>
+                  }
+                </div>
+              }
+            </a>
+          }
 
           <!-- Loghi partner a destra -->
           @if (headerPartners().length > 0) {
@@ -109,6 +143,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
     <header
       [class.shadow-sm]="config.theme().header.showShadow !== false"
       [style.background-color]="config.theme().header.background"
+      [style.--header-btn-hover]="headerBtnHover()"
     >
       <div class="container mx-auto px-4 space-y-6 max-w-5xl xl:max-w-7xl">
         <div class="flex items-center gap-4" [class]="detailMode ? 'h-16' : 'h-14'">
@@ -116,7 +151,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
             <!-- Pulsante X per tornare indietro -->
             <button
               type="button"
-              class="p-2 rounded-lg hover:bg-black/5 transition-colors flex"
+              class="p-2 rounded-lg header-btn transition-colors flex"
               [style.color]="config.theme().header.text"
               (click)="backClick.emit()"
               [attr.aria-label]="'Language.Common.Chiudi' | translate"
@@ -136,7 +171,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
             @if (showMenuButton) {
               <button
                 type="button"
-                class="p-2 rounded-lg hover:bg-black/5 transition-colors flex"
+                class="p-2 rounded-lg header-btn transition-colors flex"
                 [style.color]="config.theme().header.text"
                 (click)="menuClick.emit()"
                 [attr.aria-label]="'Language.Header.ApriMenu' | translate"
@@ -168,7 +203,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
                 <button
                   dropdown-trigger
                   type="button"
-                  class="p-2 rounded-lg hover:bg-black/5 transition-colors flex items-center gap-1"
+                  class="flex items-center gap-2 px-4 p-2 text-sm font-medium rounded-lg header-btn transition-colors"
                   [style.color]="config.theme().header.text"
                 >
                   <ng-icon name="bootstrapGlobe" class="text-lg"></ng-icon>
@@ -182,9 +217,8 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
             @if (!isAuthenticated) {
               <button
                 type="button"
-                class="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors login-btn"
-                [style.background-color]="config.theme().buttons.primaryBackground"
-                [style.color]="config.theme().buttons.primaryText"
+                class="flex items-center gap-2 px-4 py-2 text-sm font-medium header-btn rounded-lg transition-colors"
+                [style.color]="config.theme().header.text"
                 (click)="loginClick.emit()"
               >
                 <ng-icon name="bootstrapBoxArrowInRight" class="text-lg"></ng-icon>
@@ -201,7 +235,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
                 <button
                   dropdown-trigger
                   type="button"
-                  class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg hover:bg-black/5 transition-colors"
+                  class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg header-btn transition-colors"
                   [style.color]="config.theme().header.text"
                 >
                   <div
@@ -220,7 +254,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
             <!-- Cart button -->
             <button
               type="button"
-              class="p-2 rounded-lg hover:bg-black/5 transition-colors relative flex"
+              class="p-2 rounded-lg header-btn transition-colors relative flex"
               [style.color]="config.theme().header.text"
               (click)="cartClick.emit()"
               [attr.aria-label]="'Language.Header.Carrello' | translate"
@@ -292,6 +326,9 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
     .login-btn:hover {
       background-color: var(--btn-primary-hover) !important;
     }
+    .header-btn:hover {
+      background-color: var(--header-btn-hover) !important;
+    }
   `]
 })
 export class HeaderBarComponent {
@@ -310,18 +347,30 @@ export class HeaderBarComponent {
   @Input() detailMode = false;
   @Input() detailTitle = '';
 
+  // Domain switcher
+  @Input() domini: Creditore[] = [];
+  @Input() activeDominio: Creditore | undefined;
+  @Input() showDomainSwitcher = false;
+
   @Output() menuClick = new EventEmitter<void>();
   @Output() cartClick = new EventEmitter<void>();
   @Output() loginClick = new EventEmitter<void>();
   @Output() logoutClick = new EventEmitter<void>();
   @Output() navigateTo = new EventEmitter<string>();
   @Output() backClick = new EventEmitter<void>();
+  @Output() domainChange = new EventEmitter<string>();
 
   protected readonly currentLang = signal('it');
 
+  // Hover pulsanti header: bianco su sfondo scuro, nero su sfondo chiaro
+  protected readonly headerBtnHover = computed(() => {
+    const bg = this.config.theme().header.background;
+    return this.isColorDark(bg) ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.05)';
+  });
+
   // Mostra/nascondi selettore lingua (default: true se non configurato)
   protected readonly showLanguageSelector = computed(() =>
-    this.config.ui().showLanguageSelector !== false
+    this.config.ui().showLanguageSelector !== false && this.config.lingue().length > 1
   );
 
   // Partner da mostrare nell'header (a destra)
@@ -333,6 +382,25 @@ export class HeaderBarComponent {
   protected readonly headerPartnerLogoHeight = computed(() =>
     this.config.branding().header?.partnerLogoHeight || 32
   );
+
+  // Config per il dropdown domini
+  protected get domainDropdownConfig(): DropdownMenuConfig {
+    return {
+      items: this.domini.map(d => ({
+        label: d.label,
+        value: d.value
+      })),
+      position: 'left',
+      selectedValue: this.activeDominio?.value,
+      maxHeight: '60vh',
+      theme: {
+        hoverBackground: this.config.theme().buttons.primaryBackground + '1a',
+        selectedBackground: this.config.theme().buttons.primaryBackground + '26',
+        textColor: undefined,
+        selectedTextColor: this.config.theme().buttons.primaryBackground
+      }
+    };
+  }
 
   // Config per il dropdown lingua
   protected readonly languageDropdownConfig = computed<DropdownMenuConfig>(() => ({
@@ -372,11 +440,24 @@ export class HeaderBarComponent {
     this.navigationState.requestServizioReset();
   }
 
+  protected onDomainSelected(item: DropdownMenuItem): void {
+    this.domainChange.emit(item.value);
+  }
+
   protected onUserMenuSelected(item: DropdownMenuItem): void {
     if (item.value === 'logout') {
       this.logoutClick.emit();
     } else {
       this.navigateTo.emit('/' + item.value);
     }
+  }
+
+  private isColorDark(hex: string): boolean {
+    const c = hex.replace('#', '');
+    if (c.length < 6) return false;
+    const r = parseInt(c.substring(0, 2), 16);
+    const g = parseInt(c.substring(2, 4), 16);
+    const b = parseInt(c.substring(4, 6), 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 128;
   }
 }

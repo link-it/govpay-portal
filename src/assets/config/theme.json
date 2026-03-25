@@ -23,6 +23,11 @@
       { "logo": "pagoPA.svg", "alt": "pagoPA", "url": "https://www.pagopa.gov.it/" }
     ],
     "partnerLogoHeight": 30,
+    "lines": [
+      "Link.it srl",
+      "Via San Martino n. 51 - Pisa (PI)",
+      "P.IVA 01313050500"
+    ],
     "govpay": {
       "show": true,
       "logo": "Link.it_coral.svg",
@@ -56,6 +61,7 @@
       "border": "#e5e7eb",
       "headerBackground": "#e3f2fd",
       "headerText": "#17324d",
+      "headerLogo": "",
       "headerBorder": "#e5e7eb",
       "headerWatermark": "",
       "headerWatermarkOpacity": 1.0,

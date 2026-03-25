@@ -25,7 +25,7 @@ export { FloatingSelectComponent } from './floating-select/floating-select';
 export type { SelectOption } from './floating-select/floating-select';
 export { ToggleButtonComponent } from './toggle-button/toggle-button';
 export { DropdownMenuComponent } from './dropdown-menu/dropdown-menu';
-export type { DropdownMenuItem, DropdownMenuConfig } from './dropdown-menu/dropdown-menu';
+export type { DropdownMenuItem, DropdownMenuConfig, DropdownMenuTheme } from './dropdown-menu/dropdown-menu';
 export { SkeletonComponent } from './skeleton/skeleton';
 export type { SkeletonType } from './skeleton/skeleton';
 export { JsonSchemaFormComponent } from './json-schema-form/json-schema-form';

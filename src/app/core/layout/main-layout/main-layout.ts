@@ -23,6 +23,7 @@ import { CommonModule, Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { HeaderBarComponent } from '../header-bar/header-bar';
 import { SidebarComponent } from '../sidebar/sidebar';
+import { DomainSelectorComponent } from '../domain-selector/domain-selector';
 import { ScrollToTopComponent } from '@shared/components';
 import { ConfigService } from '../../config';
 import { PayService } from '../../pay';
@@ -31,57 +32,65 @@ import { HeaderStateService } from '../../services/header-state.service';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderBarComponent, SidebarComponent, ScrollToTopComponent],
+  imports: [CommonModule, RouterOutlet, HeaderBarComponent, SidebarComponent, DomainSelectorComponent, ScrollToTopComponent],
   template: `
-    <div class="min-h-screen bg-gray-100 flex flex-col">
-      <!-- Header -->
-      <app-header-bar
-        [title]="config.appName()"
-        [version]="config.appVersion()"
-        [showMenuButton]="true"
-        [cartCount]="pay.cartCount()"
-        [isAuthenticated]="pay.isAuthenticated()"
-        [userName]="currentUserName()"
-        [detailMode]="headerState.detailMode()"
-        [detailTitle]="headerState.detailTitle()"
-        (menuClick)="toggleSidebar()"
-        (cartClick)="onCartClick()"
-        (loginClick)="onLoginClick()"
-        (logoutClick)="onLogout()"
-        (navigateTo)="onNavigateTo($event)"
-        (backClick)="onBackClick()"
-      />
-
-      <div class="flex flex-1 overflow-hidden relative">
-        <!-- Sidebar -->
-        <app-sidebar
-          [isOpen]="sidebarOpen()"
-          [menuItems]="menuItems"
-          [user]="currentUser()"
+    @if (config.needsDomainSelection()) {
+      <app-domain-selector (domainSelected)="onDomainSelected($event)" />
+    } @else {
+      <div class="min-h-screen bg-gray-100 flex flex-col">
+        <!-- Header -->
+        <app-header-bar
+          [title]="config.appName()"
+          [version]="config.appVersion()"
+          [showMenuButton]="true"
+          [cartCount]="pay.cartCount()"
           [isAuthenticated]="pay.isAuthenticated()"
-          (close)="closeSidebar()"
-          (logout)="onLogout()"
+          [userName]="currentUserName()"
+          [detailMode]="headerState.detailMode()"
+          [detailTitle]="headerState.detailTitle()"
+          [domini]="config.domini()"
+          [activeDominio]="config.activeDominio()"
+          [showDomainSwitcher]="showDomainSwitcher()"
+          (menuClick)="toggleSidebar()"
+          (cartClick)="onCartClick()"
+          (loginClick)="onLoginClick()"
+          (logoutClick)="onLogout()"
+          (navigateTo)="onNavigateTo($event)"
+          (backClick)="onBackClick()"
+          (domainChange)="onDomainSelected($event)"
         />
 
-        <!-- Overlay per mobile quando sidebar aperta (z-[55] per coprire l'header z-50) -->
-        @if (sidebarOpen()) {
-          <div
-            class="fixed inset-0 bg-black/10 z-55 transition-opacity"
-            (click)="closeSidebar()"
-          ></div>
-        }
+        <div class="flex flex-1 overflow-hidden relative">
+          <!-- Sidebar -->
+          <app-sidebar
+            [isOpen]="sidebarOpen()"
+            [menuItems]="menuItems"
+            [user]="currentUser()"
+            [isAuthenticated]="pay.isAuthenticated()"
+            (close)="closeSidebar()"
+            (logout)="onLogout()"
+          />
 
-        <!-- Main content -->
-        <main class="flex-1 overflow-auto">
-          <div class="container mx-auto px-4 py-12 max-w-5xl xl:max-w-7xl">
-            <router-outlet />
-          </div>
-        </main>
+          <!-- Overlay per mobile quando sidebar aperta (z-[55] per coprire l'header z-50) -->
+          @if (sidebarOpen()) {
+            <div
+              class="fixed inset-0 bg-black/10 z-55 transition-opacity"
+              (click)="closeSidebar()"
+            ></div>
+          }
+
+          <!-- Main content -->
+          <main class="flex-1 overflow-auto">
+            <div class="container mx-auto px-4 py-12 max-w-5xl xl:max-w-7xl">
+              <router-outlet />
+            </div>
+          </main>
+        </div>
+
+        <!-- Scroll to top button -->
+        <pay-scroll-to-top />
       </div>
-
-      <!-- Scroll to top button -->
-      <pay-scroll-to-top />
-    </div>
+    }
   `,
   styles: [`
     :host {
@@ -115,6 +124,10 @@ export class MainLayoutComponent implements OnInit {
     const user = this.pay.user();
     return user?.anagrafica?.anagrafica || null;
   });
+
+  protected readonly showDomainSwitcher = computed(() =>
+    !this.config.isSingleDomain() && this.config.ui().domainSelector?.showInHeader !== false
+  );
 
   // Getter per ricalcolare le traduzioni ad ogni accesso
   protected get menuItems() {
@@ -192,6 +205,10 @@ export class MainLayoutComponent implements OnInit {
   onBackClick(): void {
     this.headerState.clearDetailMode();
     this.location.back();
+  }
+
+  onDomainSelected(idDominio: string): void {
+    this.config.setActiveDominio(idDominio);
   }
 
   onLogout(): void {

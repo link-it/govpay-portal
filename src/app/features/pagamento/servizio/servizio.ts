@@ -33,6 +33,7 @@ import { NavigationStateService } from '@core/services/navigation-state.service'
 import { TitleDecoComponent, FloatingInputComponent, QuadroComponent, ToggleButtonComponent, SkeletonComponent } from '@shared/components';
 
 type ViewMode = 'tipologie' | 'assessorati';
+type FlatDisplayMode = 'card' | 'list';
 
 // Interfacce per metadati locali (da file di configurazione)
 interface TipologiaConfig {
@@ -79,6 +80,8 @@ interface Servizio {
   linkWeb?: { label: string; url: string };
   linkDocumentazione?: { label: string; url: string };
   telefono?: string;
+  shortDescription?: string;
+  gruppo?: string;
   // Dati dall'API
   hasForm?: boolean;
 }
@@ -123,7 +126,7 @@ interface ServizioConfig {
         <!-- Vista principale -->
 
         <!-- Contatore servizi con title-deco -->
-        <pay-title-deco [text]="isSearchMode() ? serviziTrovatiLabel() : (viewMode() === 'tipologie' ? serviziInTipologieLabel() : serviziInAssessoratiLabel())"></pay-title-deco>
+        <pay-title-deco [text]="isSearchMode() ? serviziTrovatiLabel() : (hasGrouping() ? (viewMode() === 'tipologie' ? serviziInTipologieLabel() : serviziInAssessoratiLabel()) : serviziFlatLabel())"></pay-title-deco>
 
         <!-- Barra di ricerca -->
         <app-floating-input
@@ -134,8 +137,8 @@ interface ServizioConfig {
           (actionClick)="searchText() ? clearSearch() : null"
         ></app-floating-input>
 
-        <!-- Toggle Tipologie / Assessorati (nascosto in modalità ricerca) -->
-        @if (!isSearchMode()) {
+        <!-- Toggle Tipologie / Assessorati (nascosto in modalità ricerca e se non c'è raggruppamento) -->
+        @if (!isSearchMode() && hasGrouping()) {
           <div class="flex items-center gap-3 py-8">
             <pay-toggle-button
               [label]="'Language.Servizio.MostraTipologie' | translate"
@@ -155,6 +158,123 @@ interface ServizioConfig {
         <!-- Loading state -->
         @if (isLoading()) {
           <app-skeleton type="grid" [count]="8"></app-skeleton>
+        } @else if (!hasGrouping()) {
+          <!-- Modalità lista piatta: nessun raggruppamento configurato -->
+
+          <!-- Toggle Card / Lista (visibile solo se abilitato in config) -->
+          @if (config.ui().layout.showToggleLayout) {
+          <div class="flex items-center gap-3 py-8">
+            <pay-toggle-button
+              [label]="'Language.Servizio.VistaSchede' | translate"
+              icon="bootstrapGrid3x3Gap"
+              [active]="flatDisplayMode() === 'card'"
+              (toggle)="flatDisplayMode.set('card')"
+            ></pay-toggle-button>
+            <pay-toggle-button
+              [label]="'Language.Servizio.VistaLista' | translate"
+              icon="bootstrapListUl"
+              [active]="flatDisplayMode() === 'list'"
+              (toggle)="flatDisplayMode.set('list')"
+            ></pay-toggle-button>
+          </div>
+          }
+
+          @if (flatDisplayMode() === 'card') {
+            <!-- Vista a schede -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" [class.mt-8]="!config.ui().layout.showToggleLayout">
+              @for (servizio of serviziFiltratiFlatList(); track servizio.id) {
+                <div
+                  class="flex flex-col cursor-pointer transition-all service-box overflow-hidden min-h-48"
+                  [style.background-color]="config.theme().boxes.itemBackground"
+                  [style.border]="'1px solid ' + config.theme().boxes.border"
+                  [style.border-radius]="config.theme().boxes.groupBorderRadius || config.theme().boxes.cardBorderRadius"
+                  [style.color]="contentTextColor()"
+                  [style.--hover-border]="config.theme().boxes.hoverBorderColor"
+                  [style.--hover-shadow]="config.theme().boxes.hoverShadow"
+                  [class.hover-border]="config.theme().boxes.hoverType === 'border'"
+                  [class.hover-shadow]="config.theme().boxes.hoverType === 'shadow'"
+                  (click)="onServizioSelectFromSearch(servizio)"
+                >
+                  <!-- Header con icona e gruppo -->
+                  <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+                    <div
+                      class="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                      [style.background-color]="config.theme().header.background"
+                      [style.color]="config.theme().header.text"
+                    >
+                      <ng-icon name="bootstrapFileEarmarkText" class="text-sm"></ng-icon>
+                    </div>
+                    @if (servizio.gruppo) {
+                      <span class="text-sm opacity-60 truncate">{{ servizio.gruppo }}</span>
+                    }
+                  </div>
+                  <!-- Spacer per spingere il contenuto in basso -->
+                  <div class="flex-1"></div>
+                  <!-- Nome servizio -->
+                  <div class="px-4 pb-2">
+                    <h4 class="text-lg font-semibold leading-snug">{{ servizio.nome }}</h4>
+                  </div>
+                  <!-- Short description -->
+                  @if (servizio.shortDescription) {
+                    <div class="px-4 pb-4">
+                      <p class="text-sm opacity-70 line-clamp-3">{{ servizio.shortDescription }}</p>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <!-- Vista a lista -->
+            <div
+              class="flex flex-col"
+              [class.mt-8]="!config.ui().layout.showToggleLayout"
+              [style.gap]="config.theme().boxes.itemGap"
+            >
+              @for (servizio of serviziFiltratiFlatList(); track servizio.id) {
+                <div
+                  class="px-4 py-4 cursor-pointer transition-colors service-item overflow-hidden"
+                  [style.background-color]="config.theme().boxes.itemBackground"
+                  [style.border]="'1px solid ' + config.theme().boxes.border"
+                  [style.border-radius]="config.theme().boxes.itemBorderRadius"
+                  [style.color]="contentTextColor()"
+                  [style.--hover-bg]="config.theme().content.cardHover"
+                  (click)="onServizioSelectFromSearch(servizio)"
+                >
+                  <h4 class="font-medium mb-1">{{ servizio.nome | uppercase }}</h4>
+                  @if (servizio.dipartimento) {
+                    <p class="text-sm opacity-70">{{ servizio.dipartimento }}</p>
+                  }
+                  @if (servizio.descrizione) {
+                    <p class="text-sm opacity-50 mt-1">{{ servizio.descrizione }}</p>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Empty state -->
+          @if (serviziFiltratiFlatList().length === 0) {
+            <div class="bg-white rounded-lg shadow p-8 text-center mt-6">
+              <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                <ng-icon name="bootstrapSearch" class="text-3xl text-gray-400"></ng-icon>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">
+                {{ 'Language.Servizio.NessunServizioTrovato' | translate }}
+              </h3>
+              <p class="text-gray-500">
+                {{ 'Language.Servizio.ModificaRicerca' | translate }}
+              </p>
+              @if (searchText()) {
+                <button
+                  type="button"
+                  class="mt-4 text-primary-600 hover:text-primary-700 font-medium"
+                  (click)="clearSearch()"
+                >
+                  {{ 'Language.Servizio.AzzeraRicerca' | translate }}
+                </button>
+              }
+            </div>
+          }
         } @else if (isSearchMode()) {
           <!-- Risultati ricerca: Lista servizi raggruppati per tipologia corrente -->
           <div class="space-y-6 mt-6">
@@ -186,7 +306,7 @@ interface ServizioConfig {
                       <ng-icon [name]="gruppo.categoria.icona" class="text-lg"></ng-icon>
                     </div>
                   }
-                  <span class="font-medium" [style.color]="config.theme().header.text">{{ gruppo.categoria.nome }}</span>
+                  <span class="font-medium" [style.color]="contentTextColor()">{{ gruppo.categoria.nome }}</span>
                 </div>
 
                 <!-- Lista servizi della categoria -->
@@ -200,7 +320,7 @@ interface ServizioConfig {
                       class="px-4 py-4 cursor-pointer transition-colors service-item"
                       [style.background-color]="config.theme().boxes.itemBackground"
                       [style.border-radius]="config.theme().boxes.itemBorderRadius"
-                      [style.color]="config.theme().header.text"
+                      [style.color]="contentTextColor()"
                       [style.--hover-bg]="config.theme().content.cardHover"
                       (click)="onServizioSelectFromSearch(servizio)"
                     >
@@ -352,7 +472,7 @@ interface ServizioConfig {
                     <ng-icon [name]="gruppo.categoria.icona" class="text-lg"></ng-icon>
                   </div>
                 }
-                <span class="font-medium" [style.color]="config.theme().header.text">{{ gruppo.categoria.nome }}</span>
+                <span class="font-medium" [style.color]="contentTextColor()">{{ gruppo.categoria.nome }}</span>
               </div>
 
               <!-- Lista servizi della categoria -->
@@ -366,7 +486,7 @@ interface ServizioConfig {
                     class="px-4 py-4 cursor-pointer transition-colors service-item"
                     [style.background-color]="config.theme().boxes.itemBackground"
                     [style.border-radius]="config.theme().boxes.itemBorderRadius"
-                    [style.color]="config.theme().header.text"
+                    [style.color]="contentTextColor()"
                     [style.--hover-bg]="config.theme().content.cardHover"
                     (click)="onServizioSelect(servizio)"
                   >
@@ -447,6 +567,9 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
   protected readonly searchText = signal('');
   protected readonly serviceSearchText = signal('');
   protected readonly viewMode = signal<ViewMode>('tipologie');
+  protected readonly flatDisplayMode = signal<FlatDisplayMode>(
+    this.config.ui()?.layout?.flatViewGrid !== false ? 'card' : 'list'
+  );
   protected readonly isLoading = signal(true);
   protected readonly isTipologiaView = signal(true);
 
@@ -476,6 +599,23 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
     }
   });
 
+  // Ricarica servizi quando cambia il dominio attivo
+  private readonly domainChangeEffect = effect(() => {
+    const dominioId = this.config.activeDominioId();
+    if (dominioId) {
+      this.selectedCategory.set(null);
+      this.serviziCategoria.set([]);
+      this.searchText.set('');
+      this.serviceSearchText.set('');
+      this.loadData();
+    }
+  });
+
+  // Colore testo contenuto (usa content.text se configurato, fallback su topBar.text)
+  protected readonly contentTextColor = computed(() =>
+    this.config.theme().content.text || this.config.theme().topBar.text
+  );
+
   // Computed
   protected readonly totaleServizi = computed(() => this.servizi().length);
 
@@ -484,6 +624,24 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
 
   // Modalità ricerca attiva (mostra lista servizi invece di grid)
   protected readonly isSearchMode = computed(() => this.searchText().length > 0);
+
+  // Indica se è configurato il raggruppamento per tipologie/assessorati
+  protected readonly hasGrouping = computed(() =>
+    this.tipologie().length > 0 || this.assessorati().length > 0
+  );
+
+  // Lista piatta di servizi (usata quando non c'è raggruppamento)
+  protected readonly serviziFiltratiFlatList = computed(() => {
+    const search = this.searchText().toLowerCase();
+    let lista = this.servizi();
+    if (search) {
+      lista = lista.filter(s =>
+        s.nome.toLowerCase().includes(search) ||
+        s.dipartimento?.toLowerCase().includes(search)
+      );
+    }
+    return lista;
+  });
 
   protected readonly filteredTipologie = computed(() => {
     const search = this.searchText().toLowerCase();
@@ -810,6 +968,8 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
         nome: detailIta?.name || tp.descrizione,
         descrizione: tp.descrizione,
         dipartimento: detailIta?.subgroup || detailIta?.metadata,
+        shortDescription: detailIta?.short_description,
+        gruppo: detailIta?.group,
         tipologiaId,
         assessoratoId,
         idDominio: idDominio,
@@ -976,8 +1136,13 @@ export class PagamentoServizioComponent implements OnInit, OnDestroy {
   }
 
   serviziTrovatiLabel(): string {
+    const count = this.hasGrouping() ? this.serviziRicercatiCount() : this.serviziFiltratiFlatList().length;
+    return this.translate.instant('Language.Servizio.ServiziPresenti', { count });
+  }
+
+  serviziFlatLabel(): string {
     return this.translate.instant('Language.Servizio.ServiziPresenti', {
-      count: this.serviziRicercatiCount()
+      count: this.totaleServizi()
     });
   }
 

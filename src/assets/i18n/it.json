@@ -223,10 +223,17 @@
       "CercaServizio": "Cerca un servizio",
       "MostraTipologie": "Mostra Tipologie",
       "MostraAssessorati": "Mostra Assessorati",
+      "VistaSchede": "Schede",
+      "VistaLista": "Lista",
       "NessunRisultato": "Nessun risultato trovato",
       "NessunServizioTrovato": "Nessun servizio trovato",
       "ModificaRicerca": "Prova a modificare i termini di ricerca",
       "AzzeraRicerca": "Azzera ricerca"
+    },
+    "Domain": {
+      "SelezionaEnte": "Seleziona l'ente creditore",
+      "GestionePagamenti": "Gestione pagamenti",
+      "CambiaEnte": "Cambia ente"
     },
     "Auth": {
       "Accedi": "Accedi",

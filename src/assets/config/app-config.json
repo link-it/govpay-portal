@@ -4,7 +4,7 @@
     "title": "Gestione pagamenti",
     "subtitle": "Ente Creditore",
     "description": "Portale di pagamento per la Pubblica Amministrazione",
-    "version": "5.0.0"
+    "version": "5.1.0"
   },
   "api": {
     "baseUrl": "/govpay-api-portal",
@@ -70,6 +70,26 @@
     "bollettino": {
       "showQrCode": false,
       "showBarcode": false
+    },
+    "domainSelector": {
+      "enabled": true,
+      "headerImage": "",
+      "headerHeight": 430,
+      "headerOverlay": 0,
+      "showInHeader": true,
+      "background": "",
+      "title": "",
+      "subtitle": "",
+      "footer": {
+        "lines": [
+          "Link.it srl",
+          "Via San Martino n. 51 - Pisa (PI)",
+          "P.IVA 01313050500"
+        ],
+        "logo": "assets/images/logo/LINK_logo-Govpay.svg",
+        "logoAlt": "GovPay",
+        "logoHeight": 40
+      }
     }
   },
   "features": {

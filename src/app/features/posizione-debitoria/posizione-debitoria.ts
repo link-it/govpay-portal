@@ -530,8 +530,12 @@ export class PosizioneDebitoriaComponent implements OnInit, OnDestroy {
         this.domini.set(dominiList);
 
         if (dominiList.length > 0) {
-          // Seleziona il primo dominio di default
-          this.selectedDominioId.set(dominiList[0].idDominio);
+          // Usa il dominio attivo (da header) se disponibile, altrimenti il primo
+          const activeDominio = this.config.activeDominioId();
+          const defaultDominio = activeDominio && dominiList.find(d => d.idDominio === activeDominio)
+            ? activeDominio
+            : dominiList[0].idDominio;
+          this.selectedDominioId.set(defaultDominio);
           this.loadPendenze();
         } else {
           this.isLoading.set(false);
