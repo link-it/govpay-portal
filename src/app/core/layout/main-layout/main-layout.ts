@@ -18,7 +18,7 @@
  */
 
 import { Component, inject, signal, computed, OnInit, HostListener } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { HeaderBarComponent } from '../header-bar/header-bar';
@@ -169,10 +169,23 @@ export class MainLayoutComponent implements OnInit {
     }
   }
 
+  private readonly route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    // Ripristina dominio da query param (es. ritorno da pagoPA)
+    this.restoreDomainFromUrl();
+
     // Verifica sessione se ci sono metodi di autenticazione abilitati
     if (this.config.hasAuthentication()) {
       this.pay.checkSession().subscribe();
+    }
+  }
+
+  private restoreDomainFromUrl(): void {
+    const params = new URLSearchParams(globalThis.location.search);
+    const idDominio = params.get('idDominio');
+    if (idDominio && !this.config.activeDominioId()) {
+      this.config.setActiveDominio(idDominio);
     }
   }
 
