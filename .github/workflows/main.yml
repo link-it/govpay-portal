@@ -94,7 +94,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_SONAR_JOB == 'true') }}
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
