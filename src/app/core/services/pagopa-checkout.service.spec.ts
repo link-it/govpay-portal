@@ -35,7 +35,9 @@ describe('PagoPACheckoutService', () => {
         enabled,
         baseUrl
       }
-    })
+    }),
+    isSingleDomain: signal(true),
+    activeDominioId: signal(null)
   });
 
   const validCartItem: CartItem = {
