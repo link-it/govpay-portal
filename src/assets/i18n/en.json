@@ -230,6 +230,10 @@
       "ModificaRicerca": "Try modifying your search terms",
       "AzzeraRicerca": "Clear search"
     },
+    "Maintenance": {
+      "Titolo": "Service under maintenance",
+      "Messaggio": "The portal is temporarily unavailable due to scheduled maintenance. We apologize for the inconvenience."
+    },
     "Domain": {
       "SelezionaEnte": "Select the creditor organization",
       "GestionePagamenti": "Payment management",

@@ -133,5 +133,17 @@
   },
   "filters": [
     "title"
-  ]
+  ],
+  "maintenance": {
+    "enabled": true,
+    "title": "",
+    "message": "",
+    "icon": "bootstrapGear",
+    "image": "assets/images/logo/LINK_logo-Govpay.svg",
+    "background": "",
+    "textColor": "",
+    "iconBackground": "",
+    "iconColor": "",
+    "estimatedEnd": ""
+  }
 }

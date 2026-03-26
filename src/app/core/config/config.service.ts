@@ -267,6 +267,10 @@ export class ConfigService {
     return enabled && !this.isSingleDomain() && !this._activeDominioId();
   });
 
+  // Manutenzione
+  readonly maintenance = computed(() => this._config().maintenance);
+  readonly isMaintenanceMode = computed(() => this._config().maintenance?.enabled === true);
+
   // Shortcut comuni
   readonly appName = computed(() => this._config().app.name);
   readonly appTitle = computed(() => this._config().app.title);
@@ -428,6 +432,7 @@ export class ConfigService {
       },
       filters: config.filters ?? DEFAULT_CONFIG.filters,
       pagopa: config.pagopa,
+      maintenance: config.maintenance,
     };
   }
 

@@ -24,6 +24,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HeaderBarComponent } from '../header-bar/header-bar';
 import { SidebarComponent } from '../sidebar/sidebar';
 import { DomainSelectorComponent } from '../domain-selector/domain-selector';
+import { MaintenanceComponent } from '../maintenance/maintenance';
 import { ScrollToTopComponent } from '@shared/components';
 import { ConfigService } from '../../config';
 import { PayService } from '../../pay';
@@ -32,9 +33,11 @@ import { HeaderStateService } from '../../services/header-state.service';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderBarComponent, SidebarComponent, DomainSelectorComponent, ScrollToTopComponent],
+  imports: [CommonModule, RouterOutlet, HeaderBarComponent, SidebarComponent, DomainSelectorComponent, MaintenanceComponent, ScrollToTopComponent],
   template: `
-    @if (config.needsDomainSelection()) {
+    @if (config.isMaintenanceMode()) {
+      <app-maintenance />
+    } @else if (config.needsDomainSelection()) {
       <app-domain-selector (domainSelected)="onDomainSelected($event)" />
     } @else {
       <div class="min-h-screen bg-gray-100 flex flex-col">

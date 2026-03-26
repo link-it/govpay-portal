@@ -230,6 +230,10 @@
       "ModificaRicerca": "Prova a modificare i termini di ricerca",
       "AzzeraRicerca": "Azzera ricerca"
     },
+    "Maintenance": {
+      "Titolo": "Servizio in manutenzione",
+      "Messaggio": "Il portale è temporaneamente non disponibile per manutenzione programmata. Ci scusiamo per il disagio."
+    },
     "Domain": {
       "SelezionaEnte": "Seleziona l'ente creditore",
       "GestionePagamenti": "Gestione pagamenti",
