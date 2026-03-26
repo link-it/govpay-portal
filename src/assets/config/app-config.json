@@ -135,11 +135,11 @@
     "title"
   ],
   "maintenance": {
-    "enabled": true,
+    "enabled": false,
     "title": "",
     "message": "",
     "icon": "bootstrapGear",
-    "image": "assets/images/logo/LINK_logo-Govpay.svg",
+    "image": "",
     "background": "",
     "textColor": "",
     "iconBackground": "",
