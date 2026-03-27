@@ -37,6 +37,30 @@ import {
 import { CommonModule } from '@angular/common';
 import { DateAdapter } from '@angular/material/core';
 import { MaterialDesignFrameworkModule } from '@ng-formworks/material';
+import { JsonValidators, isNumber, hasValue, isEmpty, xor } from '@ng-formworks/core';
+
+/**
+ * Patch: fix floating point per validatore multipleOf di ng-formworks.
+ * Il validatore originale usa `currentValue % multipleOfValue === 0`
+ * che fallisce con decimali (es. 29.40 % 0.01 !== 0 per floating point).
+ * Questa versione usa un confronto con epsilon.
+ */
+(JsonValidators as any).multipleOf = (multipleOfValue: number) => {
+  if (!hasValue(multipleOfValue)) {
+    return JsonValidators.nullValidator;
+  }
+  return (control: any, invert = false) => {
+    if (isEmpty(control.value)) {
+      return null;
+    }
+    const currentValue = control.value;
+    const remainder = Math.abs(currentValue % multipleOfValue);
+    const isValid = isNumber(currentValue) &&
+      (remainder < 1e-10 || Math.abs(remainder - Math.abs(multipleOfValue)) < 1e-10);
+    return xor(isValid, invert) ?
+      null : { 'multipleOf': { multipleOfValue, currentValue } };
+  };
+};
 
 /**
  * Messaggi di validazione in italiano

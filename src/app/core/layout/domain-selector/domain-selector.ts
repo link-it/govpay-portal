@@ -99,6 +99,9 @@ import type { SelectOption } from '@shared/components';
               [textColor]="config.theme().header.text"
               [borderColor]="config.theme().header.text"
               [focusColor]="config.theme().buttons.primaryBackground"
+              [hoverBackground]="config.theme().buttons.primaryBackground + '1a'"
+              [selectedBackground]="config.theme().buttons.primaryBackground + '26'"
+              [selectedTextColor]="config.theme().buttons.primaryBackground"
               (selectionChange)="onDomainSelected($event)"
             />
           </div>
