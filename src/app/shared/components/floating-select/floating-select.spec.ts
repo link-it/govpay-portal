@@ -18,7 +18,6 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { provideIcons } from '@ng-icons/core';
 import { bootstrapChevronDown, bootstrapExclamationCircle } from '@ng-icons/bootstrap-icons';
 import { FloatingSelectComponent, SelectOption } from './floating-select';
@@ -35,7 +34,7 @@ describe('FloatingSelectComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FloatingSelectComponent, FormsModule],
+      imports: [FloatingSelectComponent],
       providers: [
         provideIcons({ bootstrapChevronDown, bootstrapExclamationCircle }),
       ],
@@ -92,35 +91,35 @@ describe('FloatingSelectComponent', () => {
   });
 
   describe('options rendering', () => {
-    it('should render options', () => {
+    it('should render options when dropdown is open', () => {
       component.options = mockOptions;
       fixture.detectChanges();
 
-      const options = fixture.nativeElement.querySelectorAll('option:not([disabled])');
-      // Filter out placeholder option
-      const nonPlaceholderOptions = Array.from(options).filter(
-        (opt: any) => opt.value !== ''
-      );
-      expect(nonPlaceholderOptions.length).toBe(2); // opt3 is disabled
+      // Apri il dropdown
+      component['toggle']();
+      fixture.detectChanges();
+
+      const buttons = fixture.nativeElement.querySelectorAll('[role="option"]');
+      expect(buttons.length).toBe(3);
     });
 
-    it('should render placeholder option', () => {
+    it('should show placeholder text when no value selected', () => {
       component.placeholder = 'Select an option';
       fixture.detectChanges();
 
-      const placeholderOption = fixture.nativeElement.querySelector('option[disabled]');
-      expect(placeholderOption?.textContent).toContain('Select an option');
+      const trigger = fixture.nativeElement.querySelector('button[role="combobox"]');
+      expect(trigger?.textContent).toContain('Select an option');
     });
 
     it('should mark disabled options', () => {
       component.options = mockOptions;
       fixture.detectChanges();
 
-      const disabledOptions = fixture.nativeElement.querySelectorAll('option[disabled]');
-      const hasDisabledOpt3 = Array.from(disabledOptions).some(
-        (opt: any) => opt.value === 'opt3'
-      );
-      expect(hasDisabledOpt3).toBe(true);
+      component['toggle']();
+      fixture.detectChanges();
+
+      const disabledButtons = fixture.nativeElement.querySelectorAll('[role="option"][disabled]');
+      expect(disabledButtons.length).toBe(1);
     });
   });
 
@@ -171,16 +170,20 @@ describe('FloatingSelectComponent', () => {
       expect(component.disabled).toBe(true);
     });
 
-    it('should apply disabled attribute to select', async () => {
-      // Set disabled and detect changes
+    it('should apply disabled attribute to trigger button', async () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
       await fixture.whenStable();
       fixture.detectChanges();
 
-      const select = fixture.nativeElement.querySelector('select') as HTMLSelectElement;
-      // Check both property and attribute presence
-      expect(select.hasAttribute('disabled') || select.disabled).toBe(true);
+      const button = fixture.nativeElement.querySelector('button[role="combobox"]') as HTMLButtonElement;
+      expect(button.hasAttribute('disabled') || button.disabled).toBe(true);
+    });
+
+    it('should not open dropdown when disabled', () => {
+      component.disabled = true;
+      component['toggle']();
+      expect(component['isOpen']()).toBe(false);
     });
   });
 
@@ -197,15 +200,19 @@ describe('FloatingSelectComponent', () => {
 
     it('should register onChange callback', () => {
       const fn = vi.fn();
+      component.options = mockOptions;
       component.registerOnChange(fn);
-      component['onValueChange']('opt2');
+      component['selectOption'](mockOptions[1]);
       expect(fn).toHaveBeenCalledWith('opt2');
     });
 
     it('should register onTouched callback', () => {
       const fn = vi.fn();
       component.registerOnTouched(fn);
-      component['onBlur']();
+      // onTouched viene chiamato su click outside
+      const outsideEvent = new MouseEvent('click');
+      Object.defineProperty(outsideEvent, 'target', { value: document.body });
+      component.onClickOutside(outsideEvent);
       expect(fn).toHaveBeenCalled();
     });
 
@@ -219,59 +226,65 @@ describe('FloatingSelectComponent', () => {
   });
 
   describe('selection change event', () => {
-    it('should emit selectionChange on value change', () => {
+    it('should emit selectionChange on option selection', () => {
       const spy = vi.fn();
+      component.options = mockOptions;
       component.selectionChange.subscribe(spy);
 
-      component['onValueChange']('opt1');
+      component['selectOption'](mockOptions[0]);
 
       expect(spy).toHaveBeenCalledWith('opt1');
     });
+
+    it('should not emit for disabled options', () => {
+      const spy = vi.fn();
+      component.options = mockOptions;
+      component.selectionChange.subscribe(spy);
+
+      component['selectOption'](mockOptions[2]); // disabled option
+
+      expect(spy).not.toHaveBeenCalled();
+    });
   });
 
-  describe('focus/blur handling', () => {
-    it('should set isFocused on focus', () => {
-      component['onFocus']();
-      expect(component['isFocused']()).toBe(true);
+  describe('open/close handling', () => {
+    it('should open dropdown on toggle', () => {
+      component['toggle']();
+      expect(component['isOpen']()).toBe(true);
     });
 
-    it('should clear isFocused on blur', () => {
-      component['onFocus']();
-      component['onBlur']();
-      expect(component['isFocused']()).toBe(false);
+    it('should close dropdown on toggle when open', () => {
+      component['toggle']();
+      component['toggle']();
+      expect(component['isOpen']()).toBe(false);
     });
 
-    it('should handle focus event from DOM', () => {
-      fixture.detectChanges();
-      const select = fixture.nativeElement.querySelector('select');
+    it('should close on option selection', () => {
+      component.options = mockOptions;
+      component['toggle']();
+      expect(component['isOpen']()).toBe(true);
 
-      select.dispatchEvent(new Event('focus'));
-
-      expect(component['isFocused']()).toBe(true);
+      component['selectOption'](mockOptions[0]);
+      expect(component['isOpen']()).toBe(false);
     });
 
-    it('should handle blur event from DOM', () => {
-      fixture.detectChanges();
-      const select = fixture.nativeElement.querySelector('select');
+    it('should close on escape key', () => {
+      component['toggle']();
+      expect(component['isOpen']()).toBe(true);
 
-      // First focus
-      select.dispatchEvent(new Event('focus'));
-      expect(component['isFocused']()).toBe(true);
-
-      // Then blur
-      select.dispatchEvent(new Event('blur'));
-      expect(component['isFocused']()).toBe(false);
+      component.onEscape();
+      expect(component['isOpen']()).toBe(false);
     });
 
-    it('should call onTouched on blur from DOM', () => {
-      const spy = vi.fn();
-      component.registerOnTouched(spy);
-      fixture.detectChanges();
+    it('should close on click outside', () => {
+      component['toggle']();
+      expect(component['isOpen']()).toBe(true);
 
-      const select = fixture.nativeElement.querySelector('select');
-      select.dispatchEvent(new Event('blur'));
-
-      expect(spy).toHaveBeenCalled();
+      // Simula click esterno
+      const outsideEvent = new MouseEvent('click');
+      Object.defineProperty(outsideEvent, 'target', { value: document.body });
+      component.onClickOutside(outsideEvent);
+      expect(component['isOpen']()).toBe(false);
     });
   });
 
@@ -281,6 +294,19 @@ describe('FloatingSelectComponent', () => {
 
       const arrow = fixture.nativeElement.querySelector('ng-icon[name="bootstrapChevronDown"]');
       expect(arrow).toBeTruthy();
+    });
+  });
+
+  describe('selected label', () => {
+    it('should return empty string when no value', () => {
+      component.options = mockOptions;
+      expect(component['selectedLabel']).toBe('');
+    });
+
+    it('should return option label when value is set', () => {
+      component.options = mockOptions;
+      component.writeValue('opt1');
+      expect(component['selectedLabel']).toBe('Option 1');
     });
   });
 });
