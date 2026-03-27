@@ -52,7 +52,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
               <button
                 dropdown-trigger
                 type="button"
-                class="flex items-center gap-3 py-1 rounded-lg hover:bg-black/5 transition-colors"
+                class="flex items-center gap-3 px-3 py-2 rounded-lg border border-transparent hover:bg-black/5 hover:border-black/10 transition-all cursor-pointer"
                 [style.color]="config.theme().topBar.text"
               >
                 @if (activeDominio.logo) {
@@ -62,14 +62,14 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
                     [style.height]="config.theme().topBar.logoHeight || '2.5rem'"
                   />
                 }
-                <div class="hidden sm:flex items-center gap-1.5">
+                <div class="hidden sm:flex items-center gap-2">
                   <span
                     class="text-medium font-semibold"
                     [style.color]="config.theme().topBar.text"
                   >
                     {{ activeDominio.label }}
                   </span>
-                  <ng-icon name="bootstrapChevronDown" class="text-xs opacity-60"></ng-icon>
+                  <ng-icon name="bootstrapChevronDown" class="text-sm"></ng-icon>
                 </div>
               </button>
             </app-dropdown-menu>
@@ -82,7 +82,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
                   [alt]="config.appSubtitle() || config.appName()"
                   [style.height]="config.theme().topBar.logoHeight || '2.5rem'"
                 />
-              } @else {
+              } @else if (config.logo().fallbackText) {
                 <div
                   class="w-12 h-12 rounded-lg flex items-center justify-center text-xl font-bold text-white"
                   [style.background]="'linear-gradient(135deg, ' + config.logo().fallbackGradient.from + ', ' + config.logo().fallbackGradient.to + ')'"

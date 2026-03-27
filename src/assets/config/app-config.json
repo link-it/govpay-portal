@@ -133,5 +133,17 @@
   },
   "filters": [
     "title"
-  ]
+  ],
+  "maintenance": {
+    "enabled": false,
+    "title": "",
+    "message": "",
+    "icon": "bootstrapGear",
+    "image": "",
+    "background": "",
+    "textColor": "",
+    "iconBackground": "",
+    "iconColor": "",
+    "estimatedEnd": ""
+  }
 }

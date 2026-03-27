@@ -98,6 +98,7 @@ import type { SelectOption } from '@shared/components';
               [options]="dominiOptions()"
               [textColor]="config.theme().header.text"
               [borderColor]="config.theme().header.text"
+              [focusColor]="config.theme().buttons.primaryBackground"
               (selectionChange)="onDomainSelected($event)"
             />
           </div>

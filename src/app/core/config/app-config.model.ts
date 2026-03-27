@@ -414,6 +414,29 @@ export interface SortingConfig {
   items: SortingProperty;
 }
 
+export interface MaintenanceConfig {
+  /** Abilita la pagina di manutenzione (default: false) */
+  enabled: boolean;
+  /** Titolo (default: "Servizio in manutenzione") */
+  title?: string;
+  /** Messaggio (default: testo di cortesia) */
+  message?: string;
+  /** Icona Bootstrap Icons (default: bootstrapGear) */
+  icon?: string;
+  /** Immagine opzionale al posto dell'icona */
+  image?: string;
+  /** Data/ora prevista fine manutenzione (formato libero, es. "26 marzo 2026 ore 18:00") */
+  estimatedEnd?: string;
+  /** Colore di sfondo della pagina (default: theme.content.background) */
+  background?: string;
+  /** Colore testo (default: content.text o topBar.text) */
+  textColor?: string;
+  /** Colore sfondo icona (default: theme.header.background) */
+  iconBackground?: string;
+  /** Colore icona (default: theme.header.text) */
+  iconColor?: string;
+}
+
 export interface AppConfig {
   app: AppInfo;
   branding: BrandingConfig;
@@ -425,6 +448,8 @@ export interface AppConfig {
   sorting: SortingConfig;
   filters: string[];
   pagopa?: PagoPAConfig;
+  /** Configurazione pagina di manutenzione */
+  maintenance?: MaintenanceConfig;
 }
 
 /**
