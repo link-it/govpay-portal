@@ -120,18 +120,22 @@ export interface SelectOption {
               />
             </div>
           }
-          <div class="py-1 max-h-60 overflow-y-auto">
+          <div class="px-1 py-2 max-h-60 overflow-y-auto">
             @for (option of filteredOptions(); track option.value) {
               <button
                 type="button"
                 [disabled]="option.disabled"
                 (mousedown)="selectOption(option)"
-                class="flex items-center w-full px-4 py-2.5 text-sm text-left transition-colors
-                      hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                [class.bg-primary-50]="value === option.value"
+                class="flex items-center w-full px-4 py-2 mb-1 text-sm text-left transition-colors rounded
+                      disabled:opacity-50 disabled:cursor-not-allowed select-item"
+                [class.hover:bg-gray-100]="!hoverBackground"
+                [class.bg-primary-50]="!selectedBackground && value === option.value"
                 [class.font-medium]="value === option.value"
-                [class.text-gray-900]="value === option.value"
-                [class.text-gray-700]="value !== option.value"
+                [class.text-gray-900]="!selectedTextColor && value === option.value"
+                [class.text-gray-700]="!textColor && value !== option.value"
+                [style.color]="value === option.value ? (selectedTextColor || null) : (itemTextColor || null)"
+                [style.background-color]="value === option.value ? (selectedBackground || null) : null"
+                [style.--select-hover-bg]="hoverBackground || null"
                 role="option"
                 [attr.aria-selected]="value === option.value"
               >
@@ -165,6 +169,9 @@ export interface SelectOption {
     .filter-input:focus {
       border-color: var(--focus-color, #60a5fa);
     }
+    .select-item[style*="--select-hover-bg"]:hover {
+      background-color: var(--select-hover-bg) !important;
+    }
   `]
 })
 export class FloatingSelectComponent implements ControlValueAccessor, AfterViewChecked {
@@ -186,6 +193,14 @@ export class FloatingSelectComponent implements ControlValueAccessor, AfterViewC
   @Input() borderColor = '';
   /** Colore bordo al focus (per input filtro e bordo trigger quando aperto) */
   @Input() focusColor = '';
+  /** Colore sfondo item al hover */
+  @Input() hoverBackground = '';
+  /** Colore sfondo item selezionato */
+  @Input() selectedBackground = '';
+  /** Colore testo item */
+  @Input() itemTextColor = '';
+  /** Colore testo item selezionato */
+  @Input() selectedTextColor = '';
   /** Numero minimo di opzioni per mostrare il campo filtro (default: 6) */
   @Input() filterThreshold = 6;
   /** Placeholder del campo filtro */

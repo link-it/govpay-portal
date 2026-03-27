@@ -411,7 +411,13 @@ export class HeaderBarComponent {
       value: lang.alpha2Code
     })),
     position: 'right',
-    selectedValue: this.currentLang()
+    selectedValue: this.currentLang(),
+    theme: {
+      hoverBackground: this.config.theme().buttons.primaryBackground + '1a',
+      selectedBackground: this.config.theme().buttons.primaryBackground + '26',
+      textColor: undefined,
+      selectedTextColor: this.config.theme().buttons.primaryBackground
+    }
   }));
 
   // Config per il dropdown menu utente (getter per ricalcolare le traduzioni)
