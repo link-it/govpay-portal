@@ -90,6 +90,13 @@ export const routes: Routes = [
           import('@feature/test-survey/test-survey').then(
             m => m.TestSurveyComponent
           )
+      },
+      {
+        path: 'test-jsonform',
+        loadComponent: () =>
+          import('@feature/test-jsonform/test-jsonform').then(
+            m => m.TestJsonFormComponent
+          )
       }
     ]
   },

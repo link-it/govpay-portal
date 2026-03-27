@@ -1,0 +1,176 @@
+{
+  "schema": {
+    "type": "object",
+    "required": ["nome", "cognome", "dataNascita", "email"],
+    "properties": {
+      "nome": {
+        "type": "string",
+        "title": "Nome",
+        "minLength": 2,
+        "maxLength": 50
+      },
+      "cognome": {
+        "type": "string",
+        "title": "Cognome",
+        "minLength": 2,
+        "maxLength": 50
+      },
+      "dataNascita": {
+        "type": "string",
+        "format": "date",
+        "title": "Data di nascita"
+      },
+      "dataScadenza": {
+        "type": "string",
+        "format": "date",
+        "title": "Data scadenza documento"
+      },
+      "dataOraAppuntamento": {
+        "type": "string",
+        "format": "date-time",
+        "title": "Data e ora appuntamento"
+      },
+      "email": {
+        "type": "string",
+        "format": "email",
+        "title": "Email"
+      },
+      "telefono": {
+        "type": "string",
+        "title": "Telefono",
+        "pattern": "^[0-9+\\-\\s]{6,20}$"
+      },
+      "importo": {
+        "type": "number",
+        "title": "Importo (€)",
+        "minimum": 0.01,
+        "maximum": 99999.99,
+        "multipleOf": 0.01
+      },
+      "tipoDocumento": {
+        "type": "string",
+        "title": "Tipo documento",
+        "enum": ["carta_identita", "patente", "passaporto"]
+      },
+      "note": {
+        "type": "string",
+        "title": "Note aggiuntive",
+        "maxLength": 500
+      },
+      "consensoPrivacy": {
+        "type": "boolean",
+        "title": "Acconsento al trattamento dei dati personali"
+      }
+    }
+  },
+  "layout_ita": [
+    {
+      "type": "fieldset",
+      "title": "Dati anagrafici",
+      "items": [
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "items": [
+            { "key": "nome", "flex": "1 1 45%" },
+            { "key": "cognome", "flex": "1 1 45%" }
+          ]
+        },
+        "dataNascita",
+        "email",
+        "telefono"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Documento",
+      "items": [
+        {
+          "key": "tipoDocumento",
+          "titleMap": [
+            { "value": "carta_identita", "name": "Carta d'identità" },
+            { "value": "patente", "name": "Patente di guida" },
+            { "value": "passaporto", "name": "Passaporto" }
+          ]
+        },
+        "dataScadenza"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Pagamento e appuntamento",
+      "items": [
+        "importo",
+        "dataOraAppuntamento"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Altre informazioni",
+      "items": [
+        {
+          "key": "note",
+          "type": "textarea",
+          "placeholder": "Inserisci eventuali note..."
+        },
+        "consensoPrivacy"
+      ]
+    }
+  ],
+  "layout_eng": [
+    {
+      "type": "fieldset",
+      "title": "Personal data",
+      "items": [
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "items": [
+            { "key": "nome", "title": "First name", "flex": "1 1 45%" },
+            { "key": "cognome", "title": "Last name", "flex": "1 1 45%" }
+          ]
+        },
+        { "key": "dataNascita", "title": "Date of birth" },
+        { "key": "email", "title": "Email" },
+        { "key": "telefono", "title": "Phone" }
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Document",
+      "items": [
+        {
+          "key": "tipoDocumento",
+          "title": "Document type",
+          "titleMap": [
+            { "value": "carta_identita", "name": "ID Card" },
+            { "value": "patente", "name": "Driving licence" },
+            { "value": "passaporto", "name": "Passport" }
+          ]
+        },
+        { "key": "dataScadenza", "title": "Document expiry date" }
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Payment and appointment",
+      "items": [
+        { "key": "importo", "title": "Amount (€)" },
+        { "key": "dataOraAppuntamento", "title": "Appointment date and time" }
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Other information",
+      "items": [
+        {
+          "key": "note",
+          "title": "Notes",
+          "type": "textarea",
+          "placeholder": "Enter any notes..."
+        },
+        { "key": "consensoPrivacy", "title": "I consent to data processing" }
+      ]
+    }
+  ]
+}

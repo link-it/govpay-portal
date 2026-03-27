@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DateAdapter } from '@angular/material/core';
 import { ConfigService } from '../../config';
 import { Creditore } from '../../config/app-config.model';
 import { NavigationStateService } from '../../services/navigation-state.service';
@@ -334,6 +335,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
 export class HeaderBarComponent {
   protected readonly config = inject(ConfigService);
   private readonly translate = inject(TranslateService);
+  private readonly dateAdapter = inject(DateAdapter);
   private readonly navigationState = inject(NavigationStateService);
 
   @Input() title = '';
@@ -434,6 +436,8 @@ export class HeaderBarComponent {
   protected onLanguageSelected(item: DropdownMenuItem): void {
     this.currentLang.set(item.value);
     this.translate.use(item.value);
+    // Aggiorna il locale del DateAdapter di Material per i datepicker
+    this.dateAdapter.setLocale(item.value);
   }
 
   protected onTabClick(): void {
