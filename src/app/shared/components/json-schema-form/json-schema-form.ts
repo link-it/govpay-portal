@@ -31,9 +31,11 @@ import {
   Output,
   EventEmitter,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DateAdapter } from '@angular/material/core';
 import { MaterialDesignFrameworkModule } from '@ng-formworks/material';
 
 /**
@@ -188,6 +190,7 @@ export interface JsonSchemaFormDefinition {
   `
 })
 export class JsonSchemaFormComponent implements OnChanges {
+  private readonly dateAdapter = inject(DateAdapter);
   /**
    * Definizione completa del form (contiene schema, layout, data)
    */
@@ -284,6 +287,9 @@ export class JsonSchemaFormComponent implements OnChanges {
    * Aggiorna layout e opzioni in base al locale corrente
    */
   private updateForLocale(): void {
+    // Aggiorna locale Material DatePicker
+    this.dateAdapter.setLocale(this.locale);
+
     // Aggiorna opzioni
     this.currentOptions = this.locale === 'en' ? FORM_OPTIONS_EN : FORM_OPTIONS_IT;
 

@@ -17,12 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, inject, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, inject, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { FormlyModule } from '@ngx-formly/core';
+import { registerLocaleData } from '@angular/common';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import localeIt from '@angular/common/locales/it';
+import localeEn from '@angular/common/locales/en';
 import {
   bootstrapHouseDoor,
   bootstrapHouse,
@@ -89,11 +93,19 @@ import {
 import { routes } from './app.routes';
 import { provideCore } from '@core/core.provider';
 
+// Registra i locale per pipe Angular (date, currency, ecc.)
+registerLocaleData(localeIt);
+registerLocaleData(localeEn);
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideCore(),
+    // Locale italiano come default per Angular e Material DatePicker
+    { provide: LOCALE_ID, useValue: 'it' },
+    { provide: MAT_DATE_LOCALE, useValue: 'it' },
+    provideNativeDateAdapter(),
     // Formly per form dinamiche
     importProvidersFrom(FormlyModule.forRoot({})),
     provideIcons({
