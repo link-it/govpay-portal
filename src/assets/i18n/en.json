@@ -285,6 +285,34 @@
         "in_ritardo": "Overdue",
         "anomala": "Anomalous"
       }
+    },
+    "Validation": {
+      "Required": "This field is required.",
+      "MinLength": "Must be at least {{minimumLength}} characters long.",
+      "MaxLength": "Must be at most {{maximumLength}} characters long.",
+      "Pattern": "Invalid format.",
+      "Format": "Invalid format. Required: {{requiredFormat}}.",
+      "Minimum": "Value must be at least {{minimumValue}}.",
+      "ExclusiveMinimum": "Value must be greater than {{exclusiveMinimumValue}}.",
+      "Maximum": "Value must be at most {{maximumValue}}.",
+      "ExclusiveMaximum": "Value must be less than {{exclusiveMaximumValue}}.",
+      "MultipleOfDecimals": "Must have {{decimals}} or fewer decimal places.",
+      "MultipleOf": "Must be a multiple of {{multipleOfValue}}.",
+      "MinProperties": "Must have at least {{minimumProperties}} properties.",
+      "MaxProperties": "Must have at most {{maximumProperties}} properties.",
+      "MinItems": "Must contain at least {{minimumItems}} items.",
+      "MaxItems": "Must contain at most {{maximumItems}} items.",
+      "UniqueItems": "Items must be unique.",
+      "Type": "Invalid type. Required: {{requiredType}}.",
+      "Const": "Value must be {{requiredValue}}.",
+      "Enum": "Must be one of the allowed values.",
+      "Email": "Please enter a valid email address.",
+      "Url": "Please enter a valid URL.",
+      "Date": "Please enter a valid date.",
+      "DateTime": "Please enter a valid date and time.",
+      "Time": "Please enter a valid time.",
+      "Ipv4": "Please enter a valid IPv4 address.",
+      "Ipv6": "Please enter a valid IPv6 address."
     }
   }
 }

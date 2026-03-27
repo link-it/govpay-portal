@@ -36,6 +36,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DateAdapter } from '@angular/material/core';
+import { TranslateService } from '@ngx-translate/core';
 import { MaterialDesignFrameworkModule } from '@ng-formworks/material';
 import { JsonValidators, isNumber, hasValue, isEmpty, xor } from '@ng-formworks/core';
 
@@ -62,96 +63,7 @@ import { JsonValidators, isNumber, hasValue, isEmpty, xor } from '@ng-formworks/
   };
 };
 
-/**
- * Messaggi di validazione in italiano
- */
-const VALIDATION_MESSAGES_IT: Record<string, string | ((error: any) => string)> = {
-  required: 'Campo obbligatorio.',
-  minLength: 'Deve contenere almeno {{minimumLength}} caratteri.',
-  maxLength: 'Deve contenere al massimo {{maximumLength}} caratteri.',
-  pattern: 'Formato non valido.',
-  format: 'Formato non valido. Richiesto: {{requiredFormat}}.',
-  minimum: 'Il valore deve essere almeno {{minimumValue}}.',
-  exclusiveMinimum: 'Il valore deve essere maggiore di {{exclusiveMinimumValue}}.',
-  maximum: 'Il valore deve essere al massimo {{maximumValue}}.',
-  exclusiveMaximum: 'Il valore deve essere minore di {{exclusiveMaximumValue}}.',
-  multipleOf: (error: any) => {
-    if ((1 / error.multipleOfValue) % 10 === 0) {
-      const decimals = Math.log10(1 / error.multipleOfValue);
-      return `Deve avere al massimo ${decimals} decimali.`;
-    }
-    return `Deve essere un multiplo di ${error.multipleOfValue}.`;
-  },
-  minProperties: 'Deve avere almeno {{minimumProperties}} proprietà.',
-  maxProperties: 'Deve avere al massimo {{maximumProperties}} proprietà.',
-  minItems: 'Deve contenere almeno {{minimumItems}} elementi.',
-  maxItems: 'Deve contenere al massimo {{maximumItems}} elementi.',
-  uniqueItems: 'Gli elementi devono essere unici.',
-  type: 'Tipo non valido. Richiesto: {{requiredType}}.',
-  const: 'Il valore deve essere {{requiredValue}}.',
-  enum: 'Deve essere uno dei valori consentiti.',
-  email: 'Inserire un indirizzo email valido.',
-  url: 'Inserire un URL valido.',
-  date: 'Inserire una data valida.',
-  'date-time': 'Inserire una data e ora valide.',
-  time: 'Inserire un\'ora valida.',
-  ipv4: 'Inserire un indirizzo IPv4 valido.',
-  ipv6: 'Inserire un indirizzo IPv6 valido.',
-};
-
-/**
- * Messaggi di validazione in inglese
- */
-const VALIDATION_MESSAGES_EN: Record<string, string | ((error: any) => string)> = {
-  required: 'This field is required.',
-  minLength: 'Must be at least {{minimumLength}} characters long.',
-  maxLength: 'Must be at most {{maximumLength}} characters long.',
-  pattern: 'Invalid format.',
-  format: 'Invalid format. Required: {{requiredFormat}}.',
-  minimum: 'Value must be at least {{minimumValue}}.',
-  exclusiveMinimum: 'Value must be greater than {{exclusiveMinimumValue}}.',
-  maximum: 'Value must be at most {{maximumValue}}.',
-  exclusiveMaximum: 'Value must be less than {{exclusiveMaximumValue}}.',
-  multipleOf: (error: any) => {
-    if ((1 / error.multipleOfValue) % 10 === 0) {
-      const decimals = Math.log10(1 / error.multipleOfValue);
-      return `Must have ${decimals} or fewer decimal places.`;
-    }
-    return `Must be a multiple of ${error.multipleOfValue}.`;
-  },
-  minProperties: 'Must have at least {{minimumProperties}} properties.',
-  maxProperties: 'Must have at most {{maximumProperties}} properties.',
-  minItems: 'Must contain at least {{minimumItems}} items.',
-  maxItems: 'Must contain at most {{maximumItems}} items.',
-  uniqueItems: 'Items must be unique.',
-  type: 'Invalid type. Required: {{requiredType}}.',
-  const: 'Value must be {{requiredValue}}.',
-  enum: 'Must be one of the allowed values.',
-  email: 'Please enter a valid email address.',
-  url: 'Please enter a valid URL.',
-  date: 'Please enter a valid date.',
-  'date-time': 'Please enter a valid date and time.',
-  time: 'Please enter a valid time.',
-  ipv4: 'Please enter a valid IPv4 address.',
-  ipv6: 'Please enter a valid IPv6 address.',
-};
-
-/**
- * Opzioni pre-costruite per evitare ricreazione ad ogni change detection
- */
-const FORM_OPTIONS_IT: Record<string, unknown> = {
-  addSubmit: false,
-  defaultWidgetOptions: {
-    validationMessages: VALIDATION_MESSAGES_IT
-  }
-};
-
-const FORM_OPTIONS_EN: Record<string, unknown> = {
-  addSubmit: false,
-  defaultWidgetOptions: {
-    validationMessages: VALIDATION_MESSAGES_EN
-  }
-};
+const V = 'Language.Validation';
 
 /**
  * Array vuoto condiviso per evitare ricreazione
@@ -215,6 +127,7 @@ export interface JsonSchemaFormDefinition {
 })
 export class JsonSchemaFormComponent implements OnChanges {
   private readonly dateAdapter = inject(DateAdapter);
+  private readonly translate = inject(TranslateService);
   /**
    * Definizione completa del form (contiene schema, layout, data)
    */
@@ -268,7 +181,7 @@ export class JsonSchemaFormComponent implements OnChanges {
   /**
    * Opzioni correnti (memorizzate per evitare ricreazione)
    */
-  currentOptions: Record<string, unknown> = FORM_OPTIONS_IT;
+  currentOptions: Record<string, unknown> = { addSubmit: false };
 
   ngOnChanges(changes: SimpleChanges): void {
     // Se viene passata una definition, estrai schema, layout e data
@@ -314,8 +227,46 @@ export class JsonSchemaFormComponent implements OnChanges {
     // Aggiorna locale Material DatePicker
     this.dateAdapter.setLocale(this.locale);
 
-    // Aggiorna opzioni
-    this.currentOptions = this.locale === 'en' ? FORM_OPTIONS_EN : FORM_OPTIONS_IT;
+    // Costruisce i messaggi di validazione dalla lingua corrente via i18n
+    const t = (key: string) => this.translate.instant(`${V}.${key}`);
+    this.currentOptions = {
+      addSubmit: false,
+      defaultWidgetOptions: {
+        validationMessages: {
+          required: t('Required'),
+          minLength: t('MinLength'),
+          maxLength: t('MaxLength'),
+          pattern: t('Pattern'),
+          format: t('Format'),
+          minimum: t('Minimum'),
+          exclusiveMinimum: t('ExclusiveMinimum'),
+          maximum: t('Maximum'),
+          exclusiveMaximum: t('ExclusiveMaximum'),
+          multipleOf: (error: any) => {
+            if ((1 / error.multipleOfValue) % 10 === 0) {
+              const decimals = Math.log10(1 / error.multipleOfValue);
+              return this.translate.instant(`${V}.MultipleOfDecimals`, { decimals });
+            }
+            return this.translate.instant(`${V}.MultipleOf`, { multipleOfValue: error.multipleOfValue });
+          },
+          minProperties: t('MinProperties'),
+          maxProperties: t('MaxProperties'),
+          minItems: t('MinItems'),
+          maxItems: t('MaxItems'),
+          uniqueItems: t('UniqueItems'),
+          type: t('Type'),
+          const: t('Const'),
+          enum: t('Enum'),
+          email: t('Email'),
+          url: t('Url'),
+          date: t('Date'),
+          'date-time': t('DateTime'),
+          time: t('Time'),
+          ipv4: t('Ipv4'),
+          ipv6: t('Ipv6'),
+        }
+      }
+    };
 
     // Aggiorna layout se abbiamo una definition
     if (this.definition) {

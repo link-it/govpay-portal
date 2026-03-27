@@ -285,6 +285,34 @@
         "in_ritardo": "In ritardo",
         "anomala": "Anomala"
       }
+    },
+    "Validation": {
+      "Required": "Campo obbligatorio.",
+      "MinLength": "Deve contenere almeno {{minimumLength}} caratteri.",
+      "MaxLength": "Deve contenere al massimo {{maximumLength}} caratteri.",
+      "Pattern": "Formato non valido.",
+      "Format": "Formato non valido. Richiesto: {{requiredFormat}}.",
+      "Minimum": "Il valore deve essere almeno {{minimumValue}}.",
+      "ExclusiveMinimum": "Il valore deve essere maggiore di {{exclusiveMinimumValue}}.",
+      "Maximum": "Il valore deve essere al massimo {{maximumValue}}.",
+      "ExclusiveMaximum": "Il valore deve essere minore di {{exclusiveMaximumValue}}.",
+      "MultipleOfDecimals": "Deve avere al massimo {{decimals}} decimali.",
+      "MultipleOf": "Deve essere un multiplo di {{multipleOfValue}}.",
+      "MinProperties": "Deve avere almeno {{minimumProperties}} proprietà.",
+      "MaxProperties": "Deve avere al massimo {{maximumProperties}} proprietà.",
+      "MinItems": "Deve contenere almeno {{minimumItems}} elementi.",
+      "MaxItems": "Deve contenere al massimo {{maximumItems}} elementi.",
+      "UniqueItems": "Gli elementi devono essere unici.",
+      "Type": "Tipo non valido. Richiesto: {{requiredType}}.",
+      "Const": "Il valore deve essere {{requiredValue}}.",
+      "Enum": "Deve essere uno dei valori consentiti.",
+      "Email": "Inserire un indirizzo email valido.",
+      "Url": "Inserire un URL valido.",
+      "Date": "Inserire una data valida.",
+      "DateTime": "Inserire una data e ora valide.",
+      "Time": "Inserire un'ora valida.",
+      "Ipv4": "Inserire un indirizzo IPv4 valido.",
+      "Ipv6": "Inserire un indirizzo IPv6 valido."
     }
   }
 }
