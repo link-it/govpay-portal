@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, Output, EventEmitter, forwardRef, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, forwardRef, signal, computed, ElementRef, HostListener, inject, ViewChild, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { NgIcon } from '@ng-icons/core';
@@ -31,7 +31,7 @@ export interface SelectOption {
 @Component({
   selector: 'app-floating-select',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgIcon],
+  imports: [CommonModule, NgIcon, FormsModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -41,58 +41,47 @@ export interface SelectOption {
   ],
   template: `
     <div class="relative mb-4">
-      <!-- Select field - Material style with bottom border only -->
-      <select
+      <!-- Trigger field - Material style with bottom border only -->
+      <button
+        type="button"
         [id]="selectId"
-        [name]="name"
         [disabled]="disabled"
-        class="peer w-full px-0 pt-5 pb-2 bg-transparent border-0 border-b-2 transition-colors appearance-none
+        class="peer w-full px-0 pt-5 pb-2 bg-transparent border-0 border-b-2 transition-colors text-left
               focus:outline-none focus:ring-0 cursor-pointer"
-        [class.border-gray-300]="!hasError && !borderColor"
-        [class.focus:border-primary-500]="!hasError && !borderColor"
+        [class.border-gray-300]="!hasError && !borderColor && !isOpen()"
+        [class.border-primary-500]="!hasError && !borderColor && isOpen()"
         [class.border-red-500]="hasError"
-        [class.focus:border-red-500]="hasError"
         [class.opacity-50]="disabled"
         [class.cursor-not-allowed]="disabled"
-        [class.text-gray-400]="!value && !textColor"
-        [class.text-gray-900]="value && !textColor"
         [style.color]="textColor || null"
         [style.border-color]="!hasError && borderColor ? borderColor : null"
-        [(ngModel)]="value"
-        (ngModelChange)="onValueChange($event)"
-        (blur)="onBlur()"
-        (focus)="onFocus()"
+        (click)="toggle()"
+        role="combobox"
+        [attr.aria-expanded]="isOpen()"
+        aria-haspopup="listbox"
       >
-        <!-- Placeholder option -->
-        @if (placeholder) {
-          <option value="" disabled [selected]="!value">{{ placeholder }}</option>
-        }
-
-        <!-- Options -->
-        @for (option of options; track option.value) {
-          <option
-            [value]="option.value"
-            [disabled]="option.disabled"
-          >
-            {{ option.label }}
-          </option>
-        }
-      </select>
+        <span
+          [class.text-gray-400]="!value && !textColor"
+          [class.text-gray-900]="value && !textColor"
+          [style.color]="textColor || null"
+        >
+          {{ selectedLabel || placeholder || '' }}
+        </span>
+      </button>
 
       <!-- Floating label - Material style -->
-      <!-- La label flotta in alto quando: ha valore, è focused, o c'è un placeholder -->
       <label
         [for]="selectId"
         class="absolute left-0 transition-all duration-200 pointer-events-none"
-        [class.top-0]="value || isFocused() || placeholder"
-        [class.text-xs]="value || isFocused() || placeholder"
-        [class.top-5]="!value && !isFocused() && !placeholder"
-        [class.text-base]="!value && !isFocused() && !placeholder"
-        [class.text-gray-500]="!hasError && !isFocused() && !textColor"
-        [class.text-primary-500]="!hasError && isFocused() && !textColor"
+        [class.top-0]="value || isOpen() || placeholder"
+        [class.text-xs]="value || isOpen() || placeholder"
+        [class.top-5]="!value && !isOpen() && !placeholder"
+        [class.text-base]="!value && !isOpen() && !placeholder"
+        [class.text-gray-500]="!hasError && !isOpen() && !textColor"
+        [class.text-primary-500]="!hasError && isOpen() && !textColor"
         [class.text-red-500]="hasError"
         [style.color]="!hasError && textColor ? textColor : null"
-        [style.opacity]="textColor && !isFocused() ? '0.7' : null"
+        [style.opacity]="textColor && !isOpen() ? '0.7' : null"
       >
         {{ label }}
         @if (required) {
@@ -102,12 +91,61 @@ export interface SelectOption {
 
       <!-- Dropdown arrow -->
       <div
-        class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
+        class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200"
+        [class.rotate-180]="isOpen()"
         [class.text-gray-400]="!textColor"
         [style.color]="textColor || null"
       >
         <ng-icon name="bootstrapChevronDown" class="text-sm"></ng-icon>
       </div>
+
+      <!-- Custom dropdown panel -->
+      @if (isOpen()) {
+        <div
+          class="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+          role="listbox"
+        >
+          <!-- Filtro ricerca -->
+          @if (options.length > filterThreshold) {
+            <div class="px-3 pt-3 pb-2">
+              <input
+                #filterInput
+                type="text"
+                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none filter-input"
+                [placeholder]="filterPlaceholder"
+                [ngModel]="filterText()"
+                (ngModelChange)="filterText.set($event)"
+                (mousedown)="$event.stopPropagation()"
+                [style.--focus-color]="focusColor || null"
+              />
+            </div>
+          }
+          <div class="py-1 max-h-60 overflow-y-auto">
+            @for (option of filteredOptions(); track option.value) {
+              <button
+                type="button"
+                [disabled]="option.disabled"
+                (mousedown)="selectOption(option)"
+                class="flex items-center w-full px-4 py-2.5 text-sm text-left transition-colors
+                      hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                [class.bg-primary-50]="value === option.value"
+                [class.font-medium]="value === option.value"
+                [class.text-gray-900]="value === option.value"
+                [class.text-gray-700]="value !== option.value"
+                role="option"
+                [attr.aria-selected]="value === option.value"
+              >
+                {{ option.label }}
+              </button>
+            }
+            @if (filteredOptions().length === 0) {
+              <div class="px-4 py-3 text-sm text-gray-400 text-center">
+                {{ noResultsText }}
+              </div>
+            }
+          </div>
+        </div>
+      }
 
       <!-- Error message -->
       @if (hasError && errorMessage) {
@@ -124,21 +162,14 @@ export interface SelectOption {
     </div>
   `,
   styles: [`
-    /* Hide default select arrow in all browsers */
-    select {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      background-image: none;
-    }
-
-    /* IE11 */
-    select::-ms-expand {
-      display: none;
+    .filter-input:focus {
+      border-color: var(--focus-color, #60a5fa);
     }
   `]
 })
-export class FloatingSelectComponent implements ControlValueAccessor {
+export class FloatingSelectComponent implements ControlValueAccessor, AfterViewChecked {
+  private readonly elementRef = inject(ElementRef);
+
   @Input() label = '';
   @Input() name = '';
   @Input() selectId = `select-${Math.random().toString(36).substring(2, 9)}`;
@@ -153,11 +184,41 @@ export class FloatingSelectComponent implements ControlValueAccessor {
   @Input() textColor = '';
   /** Colore bordo personalizzato */
   @Input() borderColor = '';
+  /** Colore bordo al focus (per input filtro e bordo trigger quando aperto) */
+  @Input() focusColor = '';
+  /** Numero minimo di opzioni per mostrare il campo filtro (default: 6) */
+  @Input() filterThreshold = 6;
+  /** Placeholder del campo filtro */
+  @Input() filterPlaceholder = 'Cerca...';
+  /** Testo quando nessun risultato */
+  @Input() noResultsText = 'Nessun risultato';
 
   @Output() selectionChange = new EventEmitter<string>();
 
+  @ViewChild('filterInput') filterInputRef?: ElementRef<HTMLInputElement>;
+
   protected value = '';
-  protected readonly isFocused = signal(false);
+  protected readonly isOpen = signal(false);
+  protected readonly filterText = signal('');
+  private needsFocusFilter = false;
+
+  protected readonly filteredOptions = computed(() => {
+    const text = this.filterText().toLowerCase().trim();
+    if (!text) return this.options;
+    return this.options.filter(o => o.label.toLowerCase().includes(text));
+  });
+
+  protected get selectedLabel(): string {
+    const option = this.options.find(o => o.value === this.value);
+    return option?.label || '';
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.needsFocusFilter && this.filterInputRef) {
+      this.filterInputRef.nativeElement.focus();
+      this.needsFocusFilter = false;
+    }
+  }
 
   // ControlValueAccessor implementation
   private onChange: (value: string) => void = () => {};
@@ -179,18 +240,38 @@ export class FloatingSelectComponent implements ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  protected onValueChange(value: string): void {
-    this.value = value;
-    this.onChange(value);
-    this.selectionChange.emit(value);
+  protected toggle(): void {
+    if (!this.disabled) {
+      const opening = !this.isOpen();
+      this.isOpen.set(opening);
+      if (opening) {
+        this.filterText.set('');
+        if (this.options.length > this.filterThreshold) {
+          this.needsFocusFilter = true;
+        }
+      }
+    }
   }
 
-  protected onFocus(): void {
-    this.isFocused.set(true);
+  protected selectOption(option: SelectOption): void {
+    if (!option.disabled) {
+      this.value = option.value;
+      this.onChange(option.value);
+      this.selectionChange.emit(option.value);
+      this.isOpen.set(false);
+    }
   }
 
-  protected onBlur(): void {
-    this.isFocused.set(false);
-    this.onTouched();
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.isOpen.set(false);
+      this.onTouched();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.isOpen.set(false);
   }
 }
