@@ -18,8 +18,9 @@
  */
 
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom, forkJoin } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom, forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { LoggerService } from '../services/logger.service';
 import {
   AppConfig,
@@ -308,43 +309,61 @@ export class ConfigService {
 
   constructor() {}
 
+  private static readonly SESSION_KEY = 'govpay_id_ec';
+
   /**
    * Carica la configurazione dai file JSON.
    * Deve essere chiamato via APP_INITIALIZER.
    *
-   * File caricati:
-   * - app-config.json: configurazione funzionale (app, api, auth, features, ui, routing, sorting)
-   * - theme.json: configurazione visuale (logo, colors, theme)
-   * - domini.json: lista enti creditori e lingue
+   * Flusso di caricamento:
+   * 1. Carica sempre i file base (app-config.json, theme.json, domini.json)
+   * 2. Se id_ec è presente, tenta il caricamento degli override parziali
+   * 3. Applica deep merge: override → base → defaults hardcoded
+   * 4. Se id_ec corrisponde a un dominio nella lista, lo auto-seleziona
    */
   async load(): Promise<void> {
     try {
       const tenant = this.detectTenant();
       this._tenant.set(tenant);
 
-      const configUrl = tenant
-        ? `./assets/config/${tenant}/app-config.json`
-        : CONFIG_URL;
-
-      const themeUrl = tenant
-        ? `./assets/config/${tenant}/theme.json`
-        : THEME_URL;
-
-      const dominiUrl = tenant
-        ? `./assets/config/${tenant}/domini.json`
-        : DOMINI_URL;
-
-      // Carica tutti i file in parallelo
-      const [config, theme, domini] = await firstValueFrom(
+      // 1. Carica sempre i file di configurazione base
+      const [baseConfig, baseTheme, baseDomini] = await firstValueFrom(
         forkJoin([
-          this.http.get<Partial<AppConfig>>(configUrl),
-          this.http.get<Partial<BrandingConfig>>(themeUrl),
-          this.http.get<Partial<DominiConfig>>(dominiUrl),
+          this.http.get<Partial<AppConfig>>(CONFIG_URL),
+          this.http.get<Partial<BrandingConfig>>(THEME_URL),
+          this.http.get<Partial<DominiConfig>>(DOMINI_URL),
         ])
       );
 
-      this._config.set(this.mergeWithDefaults(config, theme));
-      this._domini.set(this.mergeDominiWithDefaults(domini));
+      // 2. Se c'è un tenant, carica gli override (i file mancanti restituiscono null)
+      let overrideConfig: Partial<AppConfig> | null = null;
+      let overrideTheme: Partial<BrandingConfig> | null = null;
+      let overrideDomini: Partial<DominiConfig> | null = null;
+
+      if (tenant) {
+        const overrideBase = `./assets/config/overrides/${tenant}`;
+        [overrideConfig, overrideTheme, overrideDomini] = await firstValueFrom(
+          forkJoin([
+            this.loadOptionalJson<Partial<AppConfig>>(`${overrideBase}/app-config.json`),
+            this.loadOptionalJson<Partial<BrandingConfig>>(`${overrideBase}/theme.json`),
+            this.loadOptionalJson<Partial<DominiConfig>>(`${overrideBase}/domini.json`),
+          ])
+        );
+      }
+
+      // 3. Merge: override parziale → config base (il merge con defaults avviene in mergeWithDefaults)
+      const mergedConfig = overrideConfig
+        ? this.deepMerge(baseConfig, overrideConfig) as Partial<AppConfig>
+        : baseConfig;
+      const mergedTheme = overrideTheme
+        ? this.deepMerge(baseTheme, overrideTheme) as Partial<BrandingConfig>
+        : baseTheme;
+      const mergedDomini = overrideDomini
+        ? this.deepMerge(baseDomini, overrideDomini) as Partial<DominiConfig>
+        : baseDomini;
+
+      this._config.set(this.mergeWithDefaults(mergedConfig, mergedTheme));
+      this._domini.set(this.mergeDominiWithDefaults(mergedDomini));
       this._loaded.set(true);
       this._error.set(null);
 
@@ -353,7 +372,28 @@ export class ConfigService {
       );
 
       if (tenant) {
-        this.logger.log(`[ConfigService] Tenant rilevato: ${tenant}`);
+        const loaded = [
+          overrideConfig ? 'app-config' : null,
+          overrideTheme ? 'theme' : null,
+          overrideDomini ? 'domini' : null,
+        ].filter(Boolean);
+
+        if (loaded.length > 0) {
+          this.logger.log(`[ConfigService] Override ${tenant}: ${loaded.join(', ')}`);
+        } else {
+          this.logger.warn(`[ConfigService] Override ${tenant}: nessun file trovato, uso config base`);
+        }
+
+        // Debug: mostra il risultato del merge
+        this.logger.log('[ConfigService] Logo dopo merge:', this._config().branding.logo.full);
+        this.logger.log('[ConfigService] Header background dopo merge:', this._config().branding.theme?.header?.background);
+        this.logger.log('[ConfigService] Domini dopo merge:', this._domini().domini.map(d => d.label));
+      }
+
+      // 4. Auto-selezione dominio e branding da dominio
+      if (tenant) {
+        this.autoSelectDomainFromTenant(tenant);
+        this.applyDomainBranding(overrideTheme);
       }
     } catch (err) {
       console.warn('[ConfigService] Errore caricamento config, uso defaults:', err);
@@ -365,11 +405,136 @@ export class ConfigService {
   }
 
   /**
-   * Rileva il tenant dal query param id_ec
+   * Carica un file JSON opzionale. Restituisce null se il file non esiste (404).
+   */
+  private loadOptionalJson<T>(url: string) {
+    return this.http.get<T>(url).pipe(
+      catchError((err: HttpErrorResponse) => {
+        if (err.status === 404 || err.status === 0) {
+          return of(null);
+        }
+        throw err;
+      })
+    );
+  }
+
+  /**
+   * Se id_ec corrisponde al value di un dominio nella lista, lo imposta come dominio attivo.
+   */
+  private autoSelectDomainFromTenant(tenant: string): void {
+    const dominio = this._domini().domini.find(d => d.value === tenant);
+    if (dominio && !this._activeDominioId()) {
+      this._activeDominioId.set(tenant);
+      this.logger.log(`[ConfigService] Auto-selezione dominio da id_ec: ${dominio.label}`);
+    }
+  }
+
+  /**
+   * Quando un override è attivo e risulta in un singolo dominio, usa il logo e il label
+   * del dominio per il branding della topbar, a meno che l'override non abbia fornito
+   * esplicitamente un theme.json con logo personalizzato.
+   */
+  private applyDomainBranding(overrideTheme: Partial<BrandingConfig> | null): void {
+    const domini = this._domini().domini;
+    if (domini.length !== 1) return;
+
+    const dominio = domini[0];
+
+    // Se l'override ha fornito un logo esplicito nel theme, non sovrascrivere
+    if (overrideTheme?.logo?.full) return;
+
+    const config = this._config();
+    const logoPath = dominio.logo
+      ? `assets/images/domini/${dominio.logo}`
+      : '';
+
+    this._config.set({
+      ...config,
+      app: {
+        ...config.app,
+        subtitle: dominio.label,
+      },
+      branding: {
+        ...config.branding,
+        logo: {
+          ...config.branding.logo,
+          full: logoPath,
+          compact: logoPath,
+          // Se il dominio non ha logo, rimuovi anche il fallback per non mostrare nulla
+          ...(!logoPath ? { fallbackText: '' } : {}),
+        },
+      },
+    });
+
+    this.logger.log(`[ConfigService] Branding dominio applicato: ${dominio.label}`);
+  }
+
+  /**
+   * Rileva il tenant dal query param id_ec con persistenza in sessionStorage.
+   * Priorità: URL param → sessionStorage → null
    */
   private detectTenant(): string | null {
     const urlParams = new URLSearchParams(globalThis.location.search);
-    return urlParams.get('id_ec');
+    const fromUrl = urlParams.get('id_ec');
+
+    if (fromUrl) {
+      try {
+        sessionStorage.setItem(ConfigService.SESSION_KEY, fromUrl);
+      } catch { /* sessionStorage non disponibile */ }
+      return fromUrl;
+    }
+
+    try {
+      return sessionStorage.getItem(ConfigService.SESSION_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Deep merge ricorsivo di due oggetti.
+   * - Oggetti: merge ricorsivo (le proprietà del source sovrascrivono quelle del target)
+   * - Array: sostituzione completa (l'array del source rimpiazza quello del target)
+   * - Scalari: sostituzione semplice
+   * - null/undefined nel source: non sovrascrivono (proprietà target mantenuta)
+   */
+  private deepMerge<T extends Record<string, unknown>>(target: T, source: Partial<T>): T {
+    const result = { ...target };
+
+    for (const key of Object.keys(source) as Array<keyof T>) {
+      const sourceVal = source[key];
+      const targetVal = target[key];
+
+      // null/undefined nel source non sovrascrivono
+      if (sourceVal === null || sourceVal === undefined) {
+        continue;
+      }
+
+      // Array: sostituzione completa
+      if (Array.isArray(sourceVal)) {
+        (result as Record<string, unknown>)[key as string] = sourceVal;
+        continue;
+      }
+
+      // Oggetti: merge ricorsivo
+      if (
+        typeof sourceVal === 'object' &&
+        typeof targetVal === 'object' &&
+        targetVal !== null &&
+        !Array.isArray(targetVal)
+      ) {
+        (result as Record<string, unknown>)[key as string] = this.deepMerge(
+          targetVal as Record<string, unknown>,
+          sourceVal as Record<string, unknown>
+        );
+        continue;
+      }
+
+      // Scalari: sostituzione
+      (result as Record<string, unknown>)[key as string] = sourceVal;
+    }
+
+    return result;
   }
 
   /**
