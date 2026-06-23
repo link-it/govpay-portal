@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, computed, OnDestroy, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgIcon } from '@ng-icons/core';
 import { Subject, takeUntil, finalize } from 'rxjs';
@@ -301,11 +301,12 @@ type Html5Qrcode = any;
     </div>
   `
 })
-export class PagamentoBollettinoComponent implements OnDestroy, AfterViewInit {
+export class PagamentoBollettinoComponent implements OnInit, OnDestroy, AfterViewInit {
   protected readonly config = inject(ConfigService);
   protected readonly pay = inject(PayService);
   private readonly api = inject(GovPayApiProxyService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly translate = inject(TranslateService);
 
   @ViewChild('qrReader') qrReaderElement!: ElementRef;
@@ -340,6 +341,32 @@ export class PagamentoBollettinoComponent implements OnDestroy, AfterViewInit {
   // Configurazione visualizzazione QR code e barcode
   protected readonly showQrCode = computed(() => this.config.ui().bollettino?.showQrCode !== false);
   protected readonly showBarcode = computed(() => this.config.ui().bollettino?.showBarcode !== false);
+
+  ngOnInit(): void {
+    // Deep link: /bollettino?idDominio=<ente>&numeroAvviso=<18 cifre>
+    // idDominio è già gestito da MainLayoutComponent (setActiveDominio).
+    // Qui leggiamo il numero avviso e, se i dati sono validi, lanciamo la ricerca.
+    const params = this.route.snapshot.queryParamMap;
+    const numeroAvviso = (params.get('numeroAvviso') || '').replace(/\s/g, '');
+
+    if (numeroAvviso) {
+      this.noticeNumber = numeroAvviso;
+
+      // Se in multidominio è stato passato idDominio ma non è ancora attivo,
+      // allinea anche la select locale.
+      const idDominio = params.get('idDominio');
+      if (idDominio && !this.config.isSingleDomain() && !this.config.activeDominioId()) {
+        const dominio = this.config.domini().find(d => d.value === idDominio);
+        if (dominio) {
+          this.selectedDomain = idDominio;
+        }
+      }
+
+      if (this.canSearch()) {
+        this.onSearch();
+      }
+    }
+  }
 
   ngAfterViewInit(): void {
     // QR reader will be initialized when modal opens
