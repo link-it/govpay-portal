@@ -1,3 +1,71 @@
+2026-03-27  Link.it <govpay@link.it>
+
+  * GovPay Portal v5.1.0
+
+  Nuove funzionalità
+
+  - Supporto multidominio: pagina di landing per la selezione del dominio,
+    domain switcher nell'header, mapping gruppi servizi per dominio e
+    ripristino del dominio attivo dall'URL di ritorno dell'esito pagamento.
+  - Sistema di override della configurazione per ente creditore tramite
+    query string `id_ec` (es. `?id_ec=Name`), in sostituzione della
+    detection da subdomain.
+  - Pagina di manutenzione configurabile con supporto theming
+    (`maintenance.enabled` come flag, default `false`).
+  - Caricamento dinamico delle estensioni SurveyJS tramite manifest
+    configurabile.
+  - Login IAM con redirect e gestione del logout migliorata; il pulsante
+    "Accedi" è nascosto quando nessun provider di autenticazione è
+    configurato.
+  - Branding aggiornato: loghi Link.it e GovPay, riorganizzazione della
+    configurazione partner per header/footer, configurabilità della top bar
+    e flag di visibilità del titolo.
+  - Codice servizio mostrato nella visualizzazione dei servizi.
+  - Parametro `portalUrl` per configurare l'URL di redirect dell'esito
+    pagamento.
+
+  Miglioramenti UI/UX
+
+  - Sostituito il `<select>` nativo con un dropdown custom
+    (`FloatingSelectComponent`) con colori personalizzabili per rispettare
+    il tema nel domain selector.
+  - Theming del dropdown allineato ai colori del tema; variabile
+    `--theme-title-deco-bg` derivata automaticamente dal colore dell'header.
+  - Datepicker Material configurato con locale italiano.
+  - Aggiunta pagina di test per JSON Form.
+  - Cambiata dicitura da "Numero avviso" a "Codice avviso".
+
+  Bug fix
+
+  - Corretta validazione `multipleOf` per numeri decimali (floating point).
+  - Corretta chiamata preflight XSRF per utilizzare l'endpoint `/domini`
+    invece del `baseUrl` nudo.
+  - Corretto path degli asset per supporto base href dinamico.
+  - Corretta generazione del return URL di pagamento per supporto context
+    path.
+  - Corretto mapping dei gruppi servizi dalle API; aggiunto supporto
+    fixture mock.
+  - Rimosso header `Ocp-Apim-Subscription-Key` dal checkout PagoPA.
+
+  Sicurezza e dipendenze
+
+  - Aggiornamento Angular a 21.2.4 (fix vulnerabilità XSS
+    GHSA-g93w-mfhg-p222) e successivi allineamenti a 21.1.6/21.2.4.
+  - Risolte vulnerabilità transitive tramite override npm: `picomatch`,
+    `ajv`, `undici`.
+  - Spostato `@ngx-formly/schematics` in `devDependencies` per risolvere
+    audit CI.
+
+  Build e CI/CD
+
+  - Aggiunta pipeline di validazione e rilascio, incluso rilascio
+    dell'immagine Docker.
+  - Aggiunto task di validazione SonarQube; bump
+    `SonarSource/sonarqube-scan-action` da v5 a v6.
+  - Aggiunta licenza mancante nei file `.js`.
+  - Test aggiunti per estensioni SurveyJS, `portalBaseUrl` e mapping
+    taxonomy; corretti test `ConfigService` e `PagoPACheckoutService`.
+
 2026-02-06  Alfonso Tatarelli <alfonso.tatarelli@link.it>
 
   * Primo commit GovPay Portal v5.0.0
