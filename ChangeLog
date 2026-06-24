@@ -1,3 +1,35 @@
+2026-06-25  Link.it <govpay@link.it>
+
+  * GovPay Portal v5.2.0
+
+  Nuove funzionalità
+
+  - Deep link al bollettino: la pagina bollettino può essere aperta
+    direttamente con ricerca automatica passando `numeroAvviso` (e, in
+    multidominio, `idDominio`) via query string
+    (es. `/bollettino?idDominio=<ente>&numeroAvviso=<18 cifre>`).
+
+  Build e distribuzione
+
+  - Aggiunto Dockerfile multi-stage (`docker/Dockerfile`) che builda
+    l'applicazione Angular dai sorgenti e la serve tramite nginx.
+  - Entrypoint del container con reverse proxy opzionale per
+    `/govpay-api-portal` configurabile via `GOVPAY_API_BACKEND` (evita
+    problemi di CORS), porta configurabile via `SERVER_PORT`, compressione
+    gzip e validazione della configurazione nginx all'avvio.
+  - Aggiunti `docker-compose.yml`, `.dockerignore` e sezione Docker nel
+    README.
+
+  Bug fix
+
+  - Corretto unhandled error NG0205 nei test della sidebar (compatibilità
+    con Angular 21.2.17).
+
+  Sicurezza e dipendenze
+
+  - Aggiornamento Angular da 21.2.4 a 21.2.17 per risolvere vulnerabilità
+    di sicurezza.
+
 2026-03-27  Link.it <govpay@link.it>
 
   * GovPay Portal v5.1.0
