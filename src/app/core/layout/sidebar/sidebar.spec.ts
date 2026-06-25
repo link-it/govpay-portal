@@ -99,7 +99,7 @@ describe('SidebarComponent', () => {
       ],
       providers: [
         { provide: ConfigService, useValue: mockConfigService },
-        provideRouter([]),
+        provideRouter([{ path: '**', children: [] }]),
         provideIcons({
           bootstrapCreditCard2Front, bootstrapCart3, bootstrapListUl,
           bootstrapBoxArrowRight, bootstrapShieldCheck, bootstrapPerson
