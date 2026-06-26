@@ -12,6 +12,12 @@
 #   GOVPAY_API_BACKEND   Se valorizzata, nginx fa da reverse proxy per
 #                        /govpay-api-portal verso questo backend
 #                        (es: https://lab.link.it). Evita problemi di CORS.
+#   GOVPAY_API_BACKEND_PATH
+#                        Path upstream sul backend a cui mappare le chiamate
+#                        /govpay-api-portal/* (default: /govpay-api-portal).
+#                        Usare "/" se il backend serve gli endpoint alla radice
+#                        (es. /domini, /profilo): in tal caso il prefisso
+#                        /govpay-api-portal viene rimosso prima dell'inoltro.
 ##############################################################################
 
 set -e
@@ -35,15 +41,23 @@ SERVER_PORT=${SERVER_PORT:-80}
 # Blocco opzionale di reverse proxy verso il backend GovPay
 ##############################################################################
 
+# Path upstream sul backend (default: stesso prefisso, nessun rewrite)
+GOVPAY_API_BACKEND_PATH="${GOVPAY_API_BACKEND_PATH:-/govpay-api-portal}"
+
 API_PROXY_BLOCK=""
 if [ -n "${GOVPAY_API_BACKEND}" ]; then
     # Rimuove eventuale slash finale dal backend
     BACKEND="${GOVPAY_API_BACKEND%/}"
-    log_info "Reverse proxy /govpay-api-portal -> ${BACKEND}"
+    # Normalizza il path upstream: garantisce lo slash iniziale e rimuove
+    # quello finale. "/" o stringa vuota -> upstream sulla radice del backend
+    # (il prefisso /govpay-api-portal viene rimosso prima dell'inoltro).
+    UPSTREAM_PATH="/${GOVPAY_API_BACKEND_PATH#/}"
+    UPSTREAM_PATH="${UPSTREAM_PATH%/}"
+    log_info "Reverse proxy /govpay-api-portal/ -> ${BACKEND}${UPSTREAM_PATH}/"
     API_PROXY_BLOCK=$(cat <<EOF
 
-    location /govpay-api-portal {
-        proxy_pass ${BACKEND}/govpay-api-portal;
+    location /govpay-api-portal/ {
+        proxy_pass ${BACKEND}${UPSTREAM_PATH}/;
         proxy_set_header Host \$proxy_host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -90,6 +104,7 @@ log_info "Porta Server: ${SERVER_PORT}"
 log_info "Document Root: ${GOVPAY_PORTAL_HOME}"
 log_info "Log Directory: ${GOVPAY_PORTAL_LOGDIR}"
 log_info "Backend API: ${GOVPAY_API_BACKEND:-<nessuno>}"
+[ -n "${GOVPAY_API_BACKEND}" ] && log_info "Path upstream: ${UPSTREAM_PATH:-/}/"
 log_info "========================================"
 
 # Verifica della configurazione generata

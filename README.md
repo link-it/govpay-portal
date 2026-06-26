@@ -328,12 +328,23 @@ docker compose up --build
 |-----------|---------|-------------|
 | `SERVER_PORT` | `8080` | Porta su cui ascolta nginx nel container |
 | `GOVPAY_API_BACKEND` | _(vuota)_ | Se valorizzata, nginx fa da reverse proxy per `/govpay-api-portal` verso questo backend, evitando problemi di CORS |
+| `GOVPAY_API_BACKEND_PATH` | `/govpay-api-portal` | Path upstream sul backend a cui mappare `/govpay-api-portal/*`. Usare `/` se il backend serve gli endpoint alla radice (`/domini`, `/profilo`, …): il prefisso `/govpay-api-portal` viene rimosso prima dell'inoltro |
 
 Esempio con proxy verso un backend GovPay reale:
 
 ```bash
 docker run --rm -p 8080:8080 \
   -e GOVPAY_API_BACKEND=https://lab.link.it \
+  govpay-portal:local
+```
+
+Esempio con backend che espone gli endpoint alla radice (proxy same-origin,
+nessun CORS):
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e GOVPAY_API_BACKEND=http://govpay-portal-api:8080 \
+  -e GOVPAY_API_BACKEND_PATH=/ \
   govpay-portal:local
 ```
 
