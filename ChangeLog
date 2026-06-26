@@ -1,3 +1,23 @@
+2026-06-26  Link.it <govpay@link.it>
+
+  * GovPay Portal v5.2.1
+
+  Build e distribuzione
+
+  - Immagine Docker: path upstream del reverse proxy configurabile tramite
+    `GOVPAY_API_BACKEND_PATH` (default `/govpay-api-portal`). Impostandolo a
+    `/` il prefisso `/govpay-api-portal` viene rimosso prima dell'inoltro,
+    per backend che espongono gli endpoint alla radice (proxy same-origin,
+    senza CORS).
+
+  Bug fix e CI
+
+  - Pipeline di rilascio Docker: login allineato al meccanismo dei progetti
+    govpay-*-api (username da variabile, namespace `linkitaly`).
+  - Test: silenziati i log diagnostici per evitare l'errore di teardown di
+    Vitest (`onUserConsoleLog`) che faceva fallire la CI pur con tutti i
+    test verdi.
+
 2026-06-25  Link.it <govpay@link.it>
 
   * GovPay Portal v5.2.0
