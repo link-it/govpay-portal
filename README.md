@@ -300,6 +300,62 @@ Il `PayService` implementa le chiamate al backend GovPay:
 | `getPendenze()` | `GET /pendenze` | Lista pendenze utente |
 | `getArchivioPagamenti()` | `GET /rpp` | Storico pagamenti |
 
+## Docker
+
+Il progetto include `docker/Dockerfile`, un Dockerfile multi-stage che builda
+l'applicazione dai sorgenti (stage Node) e la serve come contenuto statico
+tramite nginx.
+
+### Build & run
+
+```bash
+# Build dell'immagine (eseguire dalla root del repo: il build context è la root)
+docker build -t govpay-portal:local -f docker/Dockerfile .
+
+# Avvio: l'app è servita su http://localhost:8080
+docker run --rm -p 8080:8080 govpay-portal:local
+```
+
+Oppure con docker compose:
+
+```bash
+docker compose up --build
+```
+
+### Configurazione runtime
+
+| Variabile | Default | Descrizione |
+|-----------|---------|-------------|
+| `SERVER_PORT` | `8080` | Porta su cui ascolta nginx nel container |
+| `GOVPAY_API_BACKEND` | _(vuota)_ | Se valorizzata, nginx fa da reverse proxy per `/govpay-api-portal` verso questo backend, evitando problemi di CORS |
+| `GOVPAY_API_BACKEND_PATH` | `/govpay-api-portal` | Path upstream sul backend a cui mappare `/govpay-api-portal/*`. Usare `/` se il backend serve gli endpoint alla radice (`/domini`, `/profilo`, …): il prefisso `/govpay-api-portal` viene rimosso prima dell'inoltro |
+
+Esempio con proxy verso un backend GovPay reale:
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e GOVPAY_API_BACKEND=https://lab.link.it \
+  govpay-portal:local
+```
+
+Esempio con backend che espone gli endpoint alla radice (proxy same-origin,
+nessun CORS):
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e GOVPAY_API_BACKEND=http://govpay-portal-api:8080 \
+  -e GOVPAY_API_BACKEND_PATH=/ \
+  govpay-portal:local
+```
+
+> La configurazione dell'app (titoli, endpoint, temi, ecc.) resta in
+> `assets/config/app-config.json` ed è servita staticamente: può essere
+> sovrascritta montando un volume su
+> `/usr/share/nginx/html/assets/config/app-config.json`.
+
+> Per le immagini "ufficiali" basate su release pubblicate (GitHub o build
+> locale già pronta) sono disponibili gli script in `docker/` (`build_image.sh`).
+
 ## License
 
 Questo progetto è distribuito sotto licenza EUPL 1.2.
