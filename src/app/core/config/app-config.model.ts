@@ -437,6 +437,36 @@ export interface MaintenanceConfig {
   iconColor?: string;
 }
 
+/**
+ * Watermark di ambiente: scritta diagonale sullo sfondo del layout principale,
+ * sempre presente, per distinguere le installazioni nei vari ambienti
+ * (es. sviluppo, test, collaudo).
+ *
+ * NOTA: è diverso dal watermark decorativo dell'header della sidebar
+ * (vedi ThemeSidebarConfig.headerWatermark), che è un'immagine locale all'header.
+ */
+export interface WatermarkConfig {
+  /** Abilita il watermark di ambiente (default: false) */
+  enabled: boolean;
+  /** Testo da mostrare (es. "AMBIENTE DI TEST"). Se vuoto, il watermark non viene mostrato */
+  text: string;
+  /** Opacità della scritta, da 0 a 1 (default: 0.08) */
+  opacity?: number;
+  /** Colore della scritta in formato CSS (default: #000000) */
+  color?: string;
+  /**
+   * Dimensione del font (default: 80px). Accetta:
+   * - un numero → interpretato come px (es. 80);
+   * - una stringa con unità CSS esplicita (es. "10rem", "18vw", "12vmin");
+   * - una stringa in percentuale (es. "20%") → interpretata come percentuale
+   *   della dimensione minore della viewport (vmin), così la scritta si adatta a
+   *   schermi di dimensioni e orientamenti diversi senza essere tagliata.
+   */
+  fontSize?: number | string;
+  /** Rotazione in gradi per la resa diagonale (default: -45) */
+  rotation?: number;
+}
+
 export interface AppConfig {
   app: AppInfo;
   branding: BrandingConfig;
@@ -450,6 +480,8 @@ export interface AppConfig {
   pagopa?: PagoPAConfig;
   /** Configurazione pagina di manutenzione */
   maintenance?: MaintenanceConfig;
+  /** Watermark di ambiente sullo sfondo del layout principale */
+  watermark?: WatermarkConfig;
 }
 
 /**

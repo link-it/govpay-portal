@@ -145,5 +145,13 @@
     "iconBackground": "",
     "iconColor": "",
     "estimatedEnd": ""
+  },
+  "watermark": {
+    "enabled": false,
+    "text": "SVILUPPO",
+    "opacity": 0.04,
+    "color": "#000000",
+    "fontSize": "20%",
+    "rotation": -45
   }
 }

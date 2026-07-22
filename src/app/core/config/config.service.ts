@@ -36,7 +36,8 @@ import {
   Creditore,
   Lingua,
   ThemeConfig,
-  PagoPAConfig
+  PagoPAConfig,
+  WatermarkConfig
 } from './app-config.model';
 
 const CONFIG_URL = './assets/config/app-config.json';
@@ -213,6 +214,14 @@ const DEFAULT_CONFIG: AppConfig = {
     items: { properties: ['name'], ascending: true },
   },
   filters: ['title'],
+  watermark: {
+    enabled: false,
+    text: '',
+    opacity: 0.08,
+    color: '#000000',
+    fontSize: 80,
+    rotation: -45,
+  },
 };
 
 const DEFAULT_DOMINI: DominiConfig = {
@@ -245,6 +254,7 @@ export class ConfigService {
   readonly sorting = computed<SortingConfig>(() => this._config().sorting);
   readonly filters = computed<string[]>(() => this._config().filters);
   readonly pagopa = computed<PagoPAConfig | undefined>(() => this._config().pagopa);
+  readonly watermark = computed<WatermarkConfig>(() => this._config().watermark ?? DEFAULT_CONFIG.watermark!);
 
   // Selettori computed per domini
   readonly domini = computed<Creditore[]>(() => this._domini().domini);
@@ -598,6 +608,7 @@ export class ConfigService {
       filters: config.filters ?? DEFAULT_CONFIG.filters,
       pagopa: config.pagopa,
       maintenance: config.maintenance,
+      watermark: { ...DEFAULT_CONFIG.watermark!, ...config.watermark },
     };
   }
 
