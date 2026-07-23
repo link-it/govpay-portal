@@ -178,8 +178,7 @@ export class PagoPACheckoutService {
   async startPayment(
     items: CartItem[],
     cartId: string,
-    returnBaseUrl: string,
-    emailNotice?: string
+    returnBaseUrl: string
   ): Promise<void> {
     // Valida carrello
     const errors = this.validateCart(items);
@@ -188,7 +187,7 @@ export class PagoPACheckoutService {
     }
 
     // Costruisci richiesta
-    const request = this.buildCartRequest(items, cartId, returnBaseUrl, emailNotice);
+    const request = this.buildCartRequest(items, cartId, returnBaseUrl);
 
     // Esegui checkout
     await this.executeCheckout(request);
@@ -200,8 +199,7 @@ export class PagoPACheckoutService {
   buildCartRequest(
     items: CartItem[],
     cartId: string,
-    returnBaseUrl: string,
-    emailNotice?: string
+    returnBaseUrl: string
   ): PagoPACartRequest {
     // Filtra items validi (con numero avviso) e limita a 5
     const validItems = items
@@ -226,8 +224,9 @@ export class PagoPACheckoutService {
       this.cartItemToPaymentNotice(item)
     );
 
+    // NOTA: l'email (emailNotice) non viene inviata dal portale.
+    // È l'utente a inserirla e confermarla direttamente sul checkout pagoPA.
     return {
-      emailNotice,
       paymentNotices,
       returnUrls,
       idCart: cartId,

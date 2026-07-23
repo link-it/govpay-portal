@@ -248,27 +248,6 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig, TitleDecoC
                 </div>
               </div>
 
-              <!-- Campo email per notifica (obbligatorio) -->
-              <div class="mb-6">
-                <label for="email-notice" class="block text-sm font-medium text-gray-700 mb-1">
-                  {{ 'Language.Cart.EmailNotifica' | translate }} *
-                </label>
-                <input
-                  type="email"
-                  id="email-notice"
-                  class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  [class.border-gray-300]="isEmailValid()"
-                  [class.border-red-300]="emailNotice() && !isEmailValid()"
-                  [value]="emailNotice()"
-                  (input)="emailNotice.set($any($event.target).value)"
-                  [placeholder]="'Language.Cart.EmailPlaceholder' | translate"
-                  required
-                />
-                <p class="mt-1 text-xs text-gray-500">
-                  {{ 'Language.Cart.EmailHint' | translate }}
-                </p>
-              </div>
-
               <!-- Buttons -->
               <div class="flex gap-3">
                 <button
@@ -282,7 +261,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig, TitleDecoC
                 <button
                   type="button"
                   class="btn-primary flex-1 px-4 py-3 font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                  [disabled]="isProcessing() || !isEmailValid()"
+                  [disabled]="isProcessing()"
                   (click)="proceedToPayment()"
                 >
                   @if (isProcessing()) {
@@ -336,7 +315,6 @@ export class CarrelloComponent implements OnDestroy {
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly showConfirmDialog = signal(false);
   protected readonly downloadingItemId = signal<string | null>(null);
-  protected readonly emailNotice = signal('');
 
   // Configurazione menu azioni per item
   getItemActionsConfig(item: CartItem): DropdownMenuConfig {
@@ -437,17 +415,6 @@ export class CarrelloComponent implements OnDestroy {
     this.pay.removeFromCart(id);
   }
 
-  /**
-   * Verifica se l'email inserita è valida
-   */
-  isEmailValid(): boolean {
-    const email = this.emailNotice();
-    if (!email) return false;
-    // Regex semplice per validazione email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
   clearCart(): void {
     this.pay.clearCart();
   }
@@ -495,15 +462,13 @@ export class CarrelloComponent implements OnDestroy {
     // Costruisci URL di ritorno (usa portalUrl da config, fallback su document.baseURI)
     const returnBaseUrl = `${this.config.portalBaseUrl()}esito-pagamento`;
 
-    // Email per notifica (inserita dall'utente nel dialog)
-    const emailNotice = this.emailNotice() || undefined;
-
     try {
       // Chiudi dialog
       this.showConfirmDialog.set(false);
 
-      // Avvia il pagamento (il servizio gestisce validazione e redirect)
-      await this.pagoPACheckout.startPayment(cart, cartId, returnBaseUrl, emailNotice);
+      // Avvia il pagamento (il servizio gestisce validazione e redirect).
+      // L'email non viene inviata: viene richiesta e confermata sul checkout pagoPA.
+      await this.pagoPACheckout.startPayment(cart, cartId, returnBaseUrl);
 
       // Se arriviamo qui senza redirect, c'è un problema
       // (normalmente il browser viene redirezionato prima)

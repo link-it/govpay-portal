@@ -60,7 +60,11 @@ export interface PagoPAReturnUrls {
  * Richiesta creazione carrello PagoPA
  */
 export interface PagoPACartRequest {
-  /** Email per notifiche (opzionale) */
+  /**
+   * Email per notifiche (opzionale). Campo supportato dall'API /carts di pagoPA
+   * ma NON valorizzato dal portale: l'email viene inserita e confermata
+   * direttamente dall'utente sul checkout pagoPA (Issue #137).
+   */
   emailNotice?: string;
 
   /** Lista avvisi di pagamento (1-5 elementi) */
