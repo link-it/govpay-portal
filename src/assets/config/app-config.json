@@ -4,7 +4,7 @@
     "title": "Gestione pagamenti",
     "subtitle": "Ente Creditore",
     "description": "Portale di pagamento per la Pubblica Amministrazione",
-    "version": "5.2.1"
+    "version": "5.2.2"
   },
   "api": {
     "baseUrl": "/govpay-portal-api",
