@@ -7,7 +7,7 @@
     "version": "5.2.1"
   },
   "api": {
-    "baseUrl": "/govpay-api-portal",
+    "baseUrl": "/govpay-portal-api",
     "portalUrl": "",
     "timeout": 30000,
     "retryAttempts": 3,
