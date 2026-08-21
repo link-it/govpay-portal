@@ -1,3 +1,60 @@
+2026-08-21  Link.it <govpay@link.it>
+
+  * GovPay Portal v5.2.2
+
+  Nuove funzionalità
+
+  - Watermark di ambiente configurabile (Issue #316): scritta diagonale
+    sullo sfondo del layout principale, per distinguere a vista le
+    installazioni dei vari ambienti (dev/test/collaudo). Testo, opacità,
+    colore, rotazione e dimensione del font si impostano da
+    `app-config.json` (sezione `watermark`). La dimensione accetta un
+    numero (px), una stringa con unità CSS oppure una percentuale, che
+    viene interpretata come `vmin` così la scritta si adatta allo
+    schermo senza essere tagliata. È un elemento distinto dal watermark
+    decorativo dell'header della sidebar.
+
+  Modifiche di comportamento
+
+  - Endpoint API rinominato da `/govpay-api-portal` a
+    `/govpay-portal-api`: aggiornati il `baseUrl` in `app-config.json` e
+    il path del proxy di sviluppo in `proxy.config.json`. Le
+    installazioni che valorizzano `GOVPAY_API_BACKEND_PATH` vanno
+    allineate al nuovo path.
+  - Rimossa la raccolta dell'email all'attivazione del pagamento
+    (Issue #137): l'indirizzo non viene più chiesto nel dialog di
+    conferma del carrello né inviato nella richiesta `/carts`, perché
+    viene inserito e confermato dall'utente direttamente sul checkout
+    pagoPA. Il campo `emailNotice` resta nell'interfaccia
+    `PagoPACartRequest` come campo opzionale dell'API pagoPA, ma non
+    viene più valorizzato.
+
+  Sicurezza e dipendenze
+
+  - Angular aggiornato alla 21.2.21 su tutti i pacchetti del framework,
+    inclusi `@angular/build` e `@angular/cli` che erano rimasti alla
+    21.2.2. I pacchetti Angular dichiarano peer dependency pinnate
+    esatte tra loro, quindi vanno aggiornati sempre in blocco: bumparne
+    uno solo (PR #143 su `@angular/common`) produce un conflitto di
+    risoluzione.
+  - Aggiornate le dipendenze transitive segnalate da Dependabot: postcss
+    8.5.26, hono 4.13.3, @hono/node-server 1.19.17, undici 7.29.0, tar
+    7.5.22, ip-address 10.5.0, immutable 5.1.9, fast-uri 3.1.5,
+    brace-expansion 5.0.7.
+
+  Build e CI/CD
+
+  - OWASP Dependency Check: aggiunto file di soppressione
+    (`.github/dependency-check-suppressions.xml`) per il falso positivo
+    CVE-2026-67214 su nanoid 3.3.x. La CVE è corretta in 3.3.16 sul
+    ramo 3.x, ma NVD pubblica un unico range "< 5.1.16" che per CPE
+    matching inghiotte tutta la linea 3.x, incluse le versioni che il
+    fix ce l'hanno già. La soppressione è limitata a questa CVE e alle
+    sole 3.3.16+, così che un downgrade sotto il fix torni a bloccare
+    la build.
+  - Porta del dev server spostata da 4200 a 4300, per evitare il
+    conflitto con la console.
+
 2026-06-26  Link.it <govpay@link.it>
 
   * GovPay Portal v5.2.1
