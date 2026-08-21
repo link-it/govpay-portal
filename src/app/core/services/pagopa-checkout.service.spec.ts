@@ -219,15 +219,14 @@ describe('PagoPACheckoutService', () => {
       expect(request.paymentNotices[0].amount).toBe(1050);
     });
 
-    it('should include email when provided', () => {
+    it('should not include email (confirmed on pagoPA checkout, Issue #137)', () => {
       const request = service.buildCartRequest(
         [validCartItem],
         'cart-123',
-        'https://example.com/esito',
-        'test@example.com'
+        'https://example.com/esito'
       );
 
-      expect(request.emailNotice).toBe('test@example.com');
+      expect(request.emailNotice).toBeUndefined();
     });
 
     it('should limit to 5 items', () => {

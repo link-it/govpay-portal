@@ -1,5 +1,5 @@
 {
-  "/govpay-api-portal": {
+  "/govpay-portal-api": {
     "target": "https://lab.link.it",
     "secure": true,
     "changeOrigin": true,

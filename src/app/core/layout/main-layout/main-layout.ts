@@ -25,6 +25,7 @@ import { HeaderBarComponent } from '../header-bar/header-bar';
 import { SidebarComponent } from '../sidebar/sidebar';
 import { DomainSelectorComponent } from '../domain-selector/domain-selector';
 import { MaintenanceComponent } from '../maintenance/maintenance';
+import { EnvironmentWatermarkComponent } from '../environment-watermark/environment-watermark';
 import { ScrollToTopComponent } from '@shared/components';
 import { ConfigService } from '../../config';
 import { PayService } from '../../pay';
@@ -33,7 +34,7 @@ import { HeaderStateService } from '../../services/header-state.service';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderBarComponent, SidebarComponent, DomainSelectorComponent, MaintenanceComponent, ScrollToTopComponent],
+  imports: [CommonModule, RouterOutlet, HeaderBarComponent, SidebarComponent, DomainSelectorComponent, MaintenanceComponent, EnvironmentWatermarkComponent, ScrollToTopComponent],
   template: `
     @if (config.isMaintenanceMode()) {
       <app-maintenance />
@@ -41,6 +42,9 @@ import { HeaderStateService } from '../../services/header-state.service';
       <app-domain-selector (domainSelected)="onDomainSelected($event)" />
     } @else {
       <div class="min-h-screen bg-gray-100 flex flex-col">
+        <!-- Watermark di ambiente (dev/test/collaudo), sempre presente sullo sfondo -->
+        <app-environment-watermark />
+
         <!-- Header -->
         <app-header-bar
           [title]="config.appName()"
