@@ -99,12 +99,107 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  # ── Immagine Docker di sviluppo (ogni push su master) ──────────────────
+  # Routing sul trigger, non sulla versione: push su master -> repo di sviluppo,
+  # push di un tag -> repo di produzione (job docker). package.json non viene
+  # toccato, quindi bump-version.js resta valido.
+  # Tag pubblicati: "master" (mobile, ultimo stato del branch) e "sha-<breve>"
+  # (immutabile, per riprodurre un test di integrazione fallito).
+  docker-dev:
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name == 'master' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build:prod
+
+      - name: Prepare Docker build context
+        working-directory: docker
+        run: |
+          rm -rf buildcontext
+          mkdir -p buildcontext/app
+          cp -fr commons buildcontext/
+          cp -rf ../dist/govpay-portal/browser/* buildcontext/app/
+
+      - name: Compute development version label
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          SHORT="$(git rev-parse --short HEAD)"
+          echo "fullversion=${VERSION}-${SHORT}" >> "$GITHUB_OUTPUT"
+          echo "Development version: ${VERSION}-${SHORT}"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ vars.DOCKERHUB_NAMESPACE || 'linkitaly' }}/govpay-portal-dev
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push development image
+        uses: docker/build-push-action@v6
+        with:
+          context: docker/buildcontext
+          file: docker/govpay-portal/Dockerfile.daFile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            govpay_portal_fullversion=${{ steps.version.outputs.fullversion }}
+
   docker:
     needs: build
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Con l'immagine di sviluppo pubblicata a ogni push sul branch, il tag resta
+      # l'unico ingresso al repo di produzione. Verifichiamo che coincida con la
+      # versione dichiarata in package.json e che non sia una prerelease: il tag
+      # da' il nome all'immagine e alimenta govpay_*_fullversion, quindi un
+      # disallineamento produrrebbe un'immagine etichettata male.
+      - name: Verify tag matches package.json version
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          TAG="${{ github.ref_name }}"
+          echo "package.json: $VERSION"
+          echo "tag         : $TAG"
+          case "$VERSION" in
+            *-*)
+              echo "::error::package.json e' alla versione $VERSION (prerelease). Allineare a una versione stabile e ricreare il tag prima di rilasciare."
+              exit 1
+              ;;
+          esac
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "::error::Il tag ($TAG) non coincide con la versione in package.json ($VERSION)."
+            exit 1
+          fi
+          echo "Versione e tag coincidono, procedo."
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
