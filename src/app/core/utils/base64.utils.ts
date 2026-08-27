@@ -141,6 +141,49 @@ export interface DecodedTipoPendenza {
  * @param tipoPendenza - TipoPendenza con form.definizione e form.impaginazione in Base64
  * @returns TipoPendenza con campi jsfDef e detail decodificati
  */
+/**
+ * Decodifica un singolo campo `form` (definizione o impaginazione).
+ *
+ * Il valore puo' arrivare dall'API come stringa Base64 oppure gia' deserializzato:
+ * nel primo caso viene decodificato e parsato, nel secondo usato cosi' com'e'.
+ *
+ * @param value - valore grezzo del campo
+ * @param label - etichetta usata nel log diagnostico
+ * @param idTipoPendenza - id del tipo pendenza, riportato nel log diagnostico
+ * @returns il valore decodificato, oppure `undefined` se assente o non parsabile
+ */
+function decodeFormField<R>(
+  value: string | Record<string, unknown> | undefined,
+  label: string,
+  idTipoPendenza: string
+): R | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    if (typeof value === 'string') {
+      const jsonString = decodeBase64(value);
+      return jsonString ? (JSON.parse(jsonString) as R) : undefined;
+    }
+    return value as R;
+  } catch (e) {
+    if (!environment.production) {
+      console.group(`[Base64Utils] JSON Parse Failed - ${label}`);
+      console.log('Pendenza:', idTipoPendenza);
+      console.log('Errore:', e);
+      console.groupEnd();
+    }
+    return undefined;
+  }
+}
+
+/**
+ * Decodifica un singolo tipo pendenza, estraendo jsfDef e detail.
+ *
+ * @param tipoPendenza - TipoPendenza con form.definizione e form.impaginazione in Base64
+ * @returns TipoPendenza con campi jsfDef e detail decodificati
+ */
 export function decodeTipoPendenza<T extends DecodedTipoPendenza>(
   tipoPendenza: T
 ): T {
@@ -148,57 +191,17 @@ export function decodeTipoPendenza<T extends DecodedTipoPendenza>(
     return tipoPendenza;
   }
 
-  // Decodifica definizione -> jsfDef
-  if (tipoPendenza.form.definizione) {
-    try {
-      let definizione = tipoPendenza.form.definizione;
+  tipoPendenza.jsfDef = decodeFormField<DecodedFormDefinition>(
+    tipoPendenza.form.definizione,
+    'Form Definizione',
+    tipoPendenza.idTipoPendenza
+  );
 
-      // Se è una stringa (Base64), decodifica
-      if (typeof definizione === 'string') {
-        const jsonString = decodeBase64(definizione);
-        if (jsonString) {
-          tipoPendenza.jsfDef = JSON.parse(jsonString);
-        }
-      } else if (typeof definizione === 'object') {
-        // Se è già un oggetto, usalo direttamente
-        tipoPendenza.jsfDef = definizione as DecodedFormDefinition;
-      }
-    } catch (e) {
-      if (!environment.production) {
-        console.group('[Base64Utils] JSON Parse Failed - Form Definizione');
-        console.log('Pendenza:', tipoPendenza.idTipoPendenza);
-        console.log('Errore:', e);
-        console.groupEnd();
-      }
-      tipoPendenza.jsfDef = undefined;
-    }
-  }
-
-  // Decodifica impaginazione -> detail
-  if (tipoPendenza.form.impaginazione) {
-    try {
-      let impaginazione = tipoPendenza.form.impaginazione;
-
-      // Se è una stringa (Base64), decodifica
-      if (typeof impaginazione === 'string') {
-        const jsonString = decodeBase64(impaginazione);
-        if (jsonString) {
-          tipoPendenza.detail = JSON.parse(jsonString);
-        }
-      } else if (typeof impaginazione === 'object') {
-        // Se è già un oggetto, usalo direttamente
-        tipoPendenza.detail = impaginazione as DecodedImpaginazione;
-      }
-    } catch (e) {
-      if (!environment.production) {
-        console.group('[Base64Utils] JSON Parse Failed - Form Impaginazione');
-        console.log('Pendenza:', tipoPendenza.idTipoPendenza);
-        console.log('Errore:', e);
-        console.groupEnd();
-      }
-      tipoPendenza.detail = undefined;
-    }
-  }
+  tipoPendenza.detail = decodeFormField<DecodedImpaginazione>(
+    tipoPendenza.form.impaginazione,
+    'Form Impaginazione',
+    tipoPendenza.idTipoPendenza
+  );
 
   return tipoPendenza;
 }

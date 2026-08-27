@@ -74,7 +74,7 @@ import { HeaderStateService } from '../../services/header-state.service';
             [menuItems]="menuItems"
             [user]="currentUser()"
             [isAuthenticated]="pay.isAuthenticated()"
-            (close)="closeSidebar()"
+            (closed)="closeSidebar()"
             (logout)="onLogout()"
           />
 
@@ -275,7 +275,7 @@ export class MainLayoutComponent implements OnInit {
     const landingPage = this.config.auth().logoutLandingPage;
     const target = this.config.auth().logoutLandingPageTarget || '_self';
 
-    if (landingPage && landingPage.startsWith('http')) {
+    if (landingPage?.startsWith('http')) {
       // URL esterno: apri in nuova finestra o nella stessa
       window.open(landingPage, target);
       if (target !== '_self') {

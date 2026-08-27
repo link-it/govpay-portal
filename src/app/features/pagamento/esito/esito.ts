@@ -278,7 +278,6 @@ export class EsitoPagamentoComponent implements OnInit, OnDestroy {
 
   private idSession: string | null = null;
   private pollCount = 0;
-  private readonly maxPolls = 10;
 
   ngOnInit(): void {
     // Get params from query string

@@ -240,7 +240,7 @@ describe('CarrelloComponent Types', () => {
           { label: 'Remove', value: 'remove', icon: 'bootstrapTrash' }
         ]
       };
-      expect(config.items.length).toBe(3);
+      expect(config.items).toHaveLength(3);
     });
 
     it('should support position property', () => {

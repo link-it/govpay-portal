@@ -194,7 +194,7 @@ describe('FloatingInputComponent', () => {
       fixture.detectChanges();
 
       const hints = fixture.nativeElement.querySelectorAll('p.text-gray-500');
-      expect(hints.length).toBe(0);
+      expect(hints).toHaveLength(0);
     });
   });
 
@@ -281,7 +281,7 @@ describe('FloatingInputComponent', () => {
       fixture.detectChanges();
 
       const buttons = fixture.nativeElement.querySelectorAll('button');
-      expect(buttons.length).toBe(1);
+      expect(buttons).toHaveLength(1);
     });
 
     it('should emit actionClick when action button is clicked', () => {

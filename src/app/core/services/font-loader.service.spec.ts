@@ -98,7 +98,7 @@ describe('FontLoaderService', () => {
       service.loadFonts(fonts);
 
       expect(mockDocument.createElement).toHaveBeenCalledWith('link');
-      expect(appendedElements.length).toBe(1);
+      expect(appendedElements).toHaveLength(1);
       expect(appendedElements[0].rel).toBe('stylesheet');
       expect(appendedElements[0].href).toContain('Open+Sans');
     });
@@ -117,7 +117,7 @@ describe('FontLoaderService', () => {
       service.loadFonts(fonts);
 
       expect(mockDocument.createElement).toHaveBeenCalledWith('style');
-      expect(appendedElements.length).toBe(1);
+      expect(appendedElements).toHaveLength(1);
       expect(appendedElements[0].textContent).toContain('@font-face');
       expect(appendedElements[0].textContent).toContain('Custom Font');
     });
@@ -137,7 +137,7 @@ describe('FontLoaderService', () => {
       service.loadFonts(fonts);
 
       expect(mockDocument.createElement).toHaveBeenCalledTimes(2);
-      expect(appendedElements.length).toBe(2);
+      expect(appendedElements).toHaveLength(2);
     });
 
     it('should not duplicate heading font if same as primary', () => {
@@ -154,7 +154,7 @@ describe('FontLoaderService', () => {
 
       service.loadFonts(fonts);
 
-      expect(appendedElements.length).toBe(1);
+      expect(appendedElements).toHaveLength(1);
     });
 
     it('should load mono font if configured', () => {
@@ -167,7 +167,7 @@ describe('FontLoaderService', () => {
 
       service.loadFonts(fonts);
 
-      expect(appendedElements.length).toBe(1);
+      expect(appendedElements).toHaveLength(1);
     });
 
     it('should not load same font twice', () => {
@@ -181,7 +181,7 @@ describe('FontLoaderService', () => {
       service.loadFonts(fonts);
       service.loadFonts(fonts);
 
-      expect(appendedElements.length).toBe(1);
+      expect(appendedElements).toHaveLength(1);
     });
   });
 

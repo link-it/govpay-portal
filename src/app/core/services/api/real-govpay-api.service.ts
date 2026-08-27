@@ -76,7 +76,6 @@ export class RealGovPayApiService extends GovPayApiService {
   private readonly logger = inject(LoggerService);
 
   private config: GovPayApiConfig = DEFAULT_CONFIG;
-  private _isAuthenticated = false;
 
   /**
    * Configura gli endpoint API.
@@ -128,21 +127,13 @@ export class RealGovPayApiService extends GovPayApiService {
   override getProfilo(): Observable<Profilo> {
     return this.http.get<Profilo>(`${this.apiUrl}/profilo`, {
       headers: this.getAuthHeaders()
-    }).pipe(
-      tap(() => this._isAuthenticated = true),
-      catchError(err => {
-        this._isAuthenticated = false;
-        throw err;
-      })
-    );
+    });
   }
 
   override logout(): Observable<void> {
     return this.http.get<void>(`${this.apiUrl}/logout`, {
       headers: this.getAuthHeaders()
-    }).pipe(
-      tap(() => this._isAuthenticated = false)
-    );
+    });
   }
 
   // ==========================================================================

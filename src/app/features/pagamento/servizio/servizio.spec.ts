@@ -304,7 +304,7 @@ describe('PagamentoServizioComponent', () => {
       const result = filteredTipologie();
 
       // Dovrebbe includere tipologie con servizi: tributi, servizi, sanzioni
-      expect(result.length).toBe(3);
+      expect(result).toHaveLength(3);
       expect(result.map(t => t.id)).toContain('tributi');
       expect(result.map(t => t.id)).toContain('servizi');
       expect(result.map(t => t.id)).toContain('sanzioni');
@@ -334,7 +334,7 @@ describe('PagamentoServizioComponent', () => {
 
       const result = filteredTipologie();
 
-      expect(result.length).toBe(1);
+      expect(result).toHaveLength(1);
       expect(result[0].id).toBe('tributi');
     });
 
@@ -360,7 +360,7 @@ describe('PagamentoServizioComponent', () => {
         return tipologieConServizi;
       };
 
-      expect(filteredTipologie().length).toBe(0);
+      expect(filteredTipologie()).toHaveLength(0);
     });
   });
 
@@ -390,7 +390,7 @@ describe('PagamentoServizioComponent', () => {
       const result = filteredAssessorati();
 
       // Dovrebbe includere assessorati con servizi: economia, ambiente, trasporti
-      expect(result.length).toBe(3);
+      expect(result).toHaveLength(3);
     });
 
     it('should filter assessorati by search text', () => {
@@ -417,7 +417,7 @@ describe('PagamentoServizioComponent', () => {
 
       const result = filteredAssessorati();
 
-      expect(result.length).toBe(1);
+      expect(result).toHaveLength(1);
       expect(result[0].id).toBe('ambiente');
     });
   });
@@ -486,8 +486,8 @@ describe('PagamentoServizioComponent', () => {
 
       const result = serviziRicercati();
 
-      expect(result.length).toBe(1);
-      expect(result[0].servizi.length).toBe(1);
+      expect(result).toHaveLength(1);
+      expect(result[0].servizi).toHaveLength(1);
       expect(result[0].servizi[0].nome).toBe('IMU 2024');
     });
 
@@ -559,9 +559,9 @@ describe('PagamentoServizioComponent', () => {
       const result = serviziRicercati();
 
       // Pass ZTL e Multa ZTL sono entrambi in assessorato trasporti
-      expect(result.length).toBe(1);
+      expect(result).toHaveLength(1);
       expect(result[0].assessorato.id).toBe('trasporti');
-      expect(result[0].servizi.length).toBe(2);
+      expect(result[0].servizi).toHaveLength(2);
     });
   });
 
@@ -624,7 +624,7 @@ describe('PagamentoServizioComponent', () => {
 
       expect(selectedCategory()).toBe(tipologiaTributi);
       expect(isTipologiaView()).toBe(true);
-      expect(serviziCategoria().length).toBe(2); // IMU e TARI
+      expect(serviziCategoria()).toHaveLength(2); // IMU e TARI
       expect(serviziCategoria().every(s => s.tipologiaId === 'tributi')).toBe(true);
     });
 
@@ -662,7 +662,7 @@ describe('PagamentoServizioComponent', () => {
 
       expect(selectedCategory()).toBe(assessoratoTrasporti);
       expect(isTipologiaView()).toBe(false);
-      expect(serviziCategoria().length).toBe(2); // Pass ZTL e Multa ZTL
+      expect(serviziCategoria()).toHaveLength(2); // Pass ZTL e Multa ZTL
       expect(serviziCategoria().every(s => s.assessoratoId === 'trasporti')).toBe(true);
     });
   });
@@ -722,7 +722,7 @@ describe('PagamentoServizioComponent', () => {
       const result = serviziRaggruppati();
 
       // IMU in economia, TARI in ambiente
-      expect(result.length).toBe(2);
+      expect(result).toHaveLength(2);
     });
 
     it('should filter grouped services by search', () => {
@@ -758,7 +758,7 @@ describe('PagamentoServizioComponent', () => {
 
       const result = serviziRaggruppati();
 
-      expect(result.length).toBe(1);
+      expect(result).toHaveLength(1);
       expect(result[0].servizi[0].nome).toBe('TARI 2024');
     });
   });
@@ -801,7 +801,7 @@ describe('PagamentoServizioComponent', () => {
 
       const result = buildServiziFromConfig(serviziConfig);
 
-      expect(result.length).toBe(2);
+      expect(result).toHaveLength(2);
       expect(result.every(s => s.attivo)).toBe(true);
     });
   });
@@ -833,7 +833,7 @@ describe('PagamentoServizioComponent', () => {
 
       const result = buildServiziFromApi(tipiPendenza);
 
-      expect(result.length).toBe(2);
+      expect(result).toHaveLength(2);
       expect(result[0].nome).toBe('Imposta Municipale');
       expect(result[0].hasForm).toBe(false);
       expect(result[1].hasForm).toBe(true);

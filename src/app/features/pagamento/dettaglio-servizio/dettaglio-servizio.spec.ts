@@ -811,7 +811,7 @@ describe('DettaglioServizioComponent', () => {
       expect(result.causale).toBe('IMU 2024');
       expect(result.importo).toBe(350.00);
       expect(result.stato).toBe('non_eseguita');
-      expect(result.voci!.length).toBe(1);
+      expect(result.voci!).toHaveLength(1);
     });
 
     it('should handle missing optional fields', () => {

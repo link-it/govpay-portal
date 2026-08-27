@@ -79,7 +79,7 @@ describe('SkeletonComponent', () => {
       fixture.detectChanges();
 
       const items = fixture.nativeElement.querySelectorAll('.animate-pulse');
-      expect(items.length).toBe(4);
+      expect(items).toHaveLength(4);
     });
 
     it('should show subtitle when enabled', () => {
@@ -101,7 +101,7 @@ describe('SkeletonComponent', () => {
       fixture.detectChanges();
 
       const items = fixture.nativeElement.querySelectorAll('.animate-pulse');
-      expect(items.length).toBe(3);
+      expect(items).toHaveLength(3);
     });
 
     it('should show avatar when enabled', () => {
@@ -124,7 +124,7 @@ describe('SkeletonComponent', () => {
       const element = fixture.nativeElement as HTMLElement;
       // Only shrink-0 with style should be the avatar
       const avatarsWithStyle = element.querySelectorAll('.shrink-0[style*="width"]');
-      expect(avatarsWithStyle.length).toBe(0);
+      expect(avatarsWithStyle).toHaveLength(0);
     });
 
     it('should apply custom avatar size', () => {
