@@ -18,7 +18,7 @@
  */
 
 import { Component, inject, signal, computed, OnInit, HostListener } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { HeaderBarComponent } from '../header-bar/header-bar';
@@ -175,8 +175,6 @@ export class MainLayoutComponent implements OnInit {
       this.closeSidebar();
     }
   }
-
-  private readonly route = inject(ActivatedRoute);
 
   ngOnInit(): void {
     // Ripristina dominio da query param (es. ritorno da pagoPA)
