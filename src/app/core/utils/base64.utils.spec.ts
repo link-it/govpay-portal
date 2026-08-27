@@ -37,7 +37,7 @@ describe('Base64Utils', () => {
       // Encode "Città" properly for UTF-8
       const text = 'Città';
       const encoded = btoa(encodeURIComponent(text).replace(/%([0-9A-F]{2})/g,
-        (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
+        (_, p1) => String.fromCodePoint(Number.parseInt(p1, 16))));
       expect(decodeBase64(encoded)).toBe(text);
     });
 
@@ -45,7 +45,7 @@ describe('Base64Utils', () => {
       const json = { name: 'Test', value: 123 };
       const jsonString = JSON.stringify(json);
       const encoded = btoa(encodeURIComponent(jsonString).replace(/%([0-9A-F]{2})/g,
-        (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
+        (_, p1) => String.fromCodePoint(Number.parseInt(p1, 16))));
 
       const decoded = decodeBase64(encoded);
       expect(JSON.parse(decoded)).toEqual(json);
@@ -77,7 +77,7 @@ describe('Base64Utils', () => {
     it('should decode form.definizione from Base64 to jsfDef', () => {
       const formDef = { schema: { type: 'object' }, uiSchema: {} };
       const encoded = btoa(encodeURIComponent(JSON.stringify(formDef)).replace(/%([0-9A-F]{2})/g,
-        (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
+        (_, p1) => String.fromCodePoint(Number.parseInt(p1, 16))));
 
       const tipoPendenza: DecodedTipoPendenza = {
         idTipoPendenza: 'test-001',
@@ -98,7 +98,7 @@ describe('Base64Utils', () => {
         eng: { name: 'Test Service', group: 'Taxes' }
       };
       const encoded = btoa(encodeURIComponent(JSON.stringify(impaginazione)).replace(/%([0-9A-F]{2})/g,
-        (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
+        (_, p1) => String.fromCodePoint(Number.parseInt(p1, 16))));
 
       const tipoPendenza: DecodedTipoPendenza = {
         idTipoPendenza: 'test-001',
@@ -180,7 +180,7 @@ describe('Base64Utils', () => {
       const formDef2 = { schema: { title: 'Form 2' } };
 
       const encode = (obj: unknown) => btoa(encodeURIComponent(JSON.stringify(obj)).replace(/%([0-9A-F]{2})/g,
-        (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
+        (_, p1) => String.fromCodePoint(Number.parseInt(p1, 16))));
 
       const tipiPendenza: DecodedTipoPendenza[] = [
         {
@@ -210,7 +210,7 @@ describe('Base64Utils', () => {
     it('should handle mixed array with and without forms', () => {
       const formDef = { schema: { title: 'Form' } };
       const encode = (obj: unknown) => btoa(encodeURIComponent(JSON.stringify(obj)).replace(/%([0-9A-F]{2})/g,
-        (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
+        (_, p1) => String.fromCodePoint(Number.parseInt(p1, 16))));
 
       const tipiPendenza: DecodedTipoPendenza[] = [
         {

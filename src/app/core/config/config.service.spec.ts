@@ -148,6 +148,155 @@ describe('ConfigService', () => {
     // by catching errors and using defaults (see config.service.ts:307-313)
   });
 
+  describe('load con tenant (id_ec)', () => {
+    const OVERRIDE_BASE = './assets/config/overrides/80012000827';
+
+    /** Il tenant viene letto da location.search e memorizzato in sessionStorage. */
+    function withTenant(idEc: string) {
+      vi.stubGlobal('location', { search: `?id_ec=${idEc}`, href: 'http://localhost/' });
+    }
+
+    /**
+     * Risponde ai tre file di override; `null` simula il 404 di un file assente.
+     *
+     * Le richieste di override partono solo dopo che il forkJoin dei file base
+     * si e' risolto, quindi bisogna cedere il controllo al loop degli eventi
+     * prima di poterle intercettare.
+     */
+    async function flushOverrides(
+      appConfig: object | null,
+      theme: object | null,
+      domini: object | null
+    ) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      const respond = (url: string, body: object | null) => {
+        const req = httpMock.expectOne(url);
+        if (body === null) {
+          req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+        } else {
+          req.flush(body);
+        }
+      };
+      respond(`${OVERRIDE_BASE}/app-config.json`, appConfig);
+      respond(`${OVERRIDE_BASE}/theme.json`, theme);
+      respond(`${OVERRIDE_BASE}/domini.json`, domini);
+    }
+
+    beforeEach(() => {
+      sessionStorage.clear();
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+      sessionStorage.clear();
+    });
+
+    it('applica gli override del tenant sopra la configurazione base', async () => {
+      withTenant('80012000827');
+      const loadPromise = service.load();
+
+      flushConfigRequests();
+      await flushOverrides(
+        { app: { name: 'Portale Comune Test' } },
+        { primaryColor: '#00ff00' },
+        null
+      );
+      await loadPromise;
+
+      expect(service.appName()).toBe('Portale Comune Test');
+      // i campi non sovrascritti restano quelli della config base
+      expect(service.appTitle()).toBe('Test Title');
+      expect(service.branding().primaryColor).toBe('#00ff00');
+      expect(service.loaded()).toBe(true);
+    });
+
+    it('usa la configurazione base quando nessun file di override esiste', async () => {
+      withTenant('80012000827');
+      const loadPromise = service.load();
+
+      flushConfigRequests();
+      await flushOverrides(null, null, null);
+      await loadPromise;
+
+      expect(service.appName()).toBe('Test Portal');
+      expect(service.loaded()).toBe(true);
+      expect(service.error()).toBeNull();
+    });
+
+    it('auto-seleziona il dominio quando id_ec corrisponde a un dominio in lista', async () => {
+      withTenant('80012000827');
+      const loadPromise = service.load();
+
+      flushConfigRequests();
+      await flushOverrides(null, null, null);
+      await loadPromise;
+
+      expect(service.activeDominioId()).toBe('80012000827');
+    });
+
+    it('non auto-seleziona nulla quando id_ec non corrisponde ad alcun dominio', async () => {
+      withTenant('99999999999');
+      const loadPromise = service.load();
+
+      flushConfigRequests();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      const base = './assets/config/overrides/99999999999';
+      httpMock.expectOne(`${base}/app-config.json`).flush('Not Found', { status: 404, statusText: 'Not Found' });
+      httpMock.expectOne(`${base}/theme.json`).flush('Not Found', { status: 404, statusText: 'Not Found' });
+      httpMock.expectOne(`${base}/domini.json`).flush('Not Found', { status: 404, statusText: 'Not Found' });
+      await loadPromise;
+
+      expect(service.activeDominioId()).toBeNull();
+    });
+
+    it('deriva il sottotitolo dal dominio quando la lista ne contiene uno solo', async () => {
+      withTenant('80012000827');
+      const loadPromise = service.load();
+
+      flushConfigRequests();
+      await flushOverrides(null, null, {
+        domini: [{ value: '80012000827', label: 'Comune Test', logo: '', altText: '', href: '' }],
+      });
+      await loadPromise;
+
+      expect(service.config().app.subtitle).toBe('Comune Test');
+    });
+
+    it('non tocca il logo se l override del theme ne ha fornito uno esplicito', async () => {
+      withTenant('80012000827');
+      const loadPromise = service.load();
+
+      flushConfigRequests();
+      await flushOverrides(
+        null,
+        { logo: { full: '/assets/logo-tenant.png', compact: '/assets/logo-tenant-sm.png' } },
+        { domini: [{ value: '80012000827', label: 'Comune Test', logo: 'comune.png', altText: '', href: '' }] }
+      );
+      await loadPromise;
+
+      expect(service.branding().logo.full).toBe('/assets/logo-tenant.png');
+    });
+  });
+
+  describe('load in errore', () => {
+    it('ripiega sui default e valorizza error() quando la config base non e raggiungibile', async () => {
+      const loadPromise = service.load();
+
+      // Il forkJoin cancella le richieste ancora in volo quando una fallisce: per
+      // evitare di dover gestire richieste cancellate, l'errore lo mettiamo
+      // sull'ultima, quando le altre due si sono gia' completate.
+      httpMock.expectOne('./assets/config/app-config.json').flush(mockAppConfig);
+      httpMock.expectOne('./assets/config/theme.json').flush(mockTheme);
+      httpMock.expectOne('./assets/config/domini.json')
+        .flush('Server Error', { status: 500, statusText: 'Server Error' });
+
+      await loadPromise;
+
+      expect(service.loaded()).toBe(true);
+      expect(service.error()).toBe('Errore caricamento configurazione');
+    });
+  });
+
   describe('computed selectors', () => {
     beforeEach(async () => {
       const loadPromise = service.load();

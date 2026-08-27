@@ -510,7 +510,7 @@ export class CarrelloComponent implements OnDestroy {
     const request = this.pay.preparePaymentRequest(returnUrl);
 
     // Invia la richiesta
-    this.pay.pagaPendenze(request, this.pay.isAuthenticated(), recaptchaQuery).pipe(
+    this.pay.pagaPendenze(request, recaptchaQuery).pipe(
       takeUntil(this.destroy$),
       finalize(() => {
         // Non resettiamo isProcessing qui perché stiamo per fare redirect

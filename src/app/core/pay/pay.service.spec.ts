@@ -477,7 +477,7 @@ describe('PayService', () => {
     it('should create pendenza with query string', () => {
       const body = { field1: 'value1' };
 
-      service.creaPendenza('80012000826', 'srv-001', body, false, 'gRecaptchaResponse=token123').subscribe(response => {
+      service.creaPendenza('80012000826', 'srv-001', body, 'gRecaptchaResponse=token123').subscribe(response => {
         expect(response.body?.idPendenza).toBe('new-pnd-001');
       });
 
@@ -511,7 +511,7 @@ describe('PayService', () => {
         urlRitorno: 'http://return.url',
       };
 
-      service.pagaPendenze(request, false, 'lang=it').subscribe();
+      service.pagaPendenze(request, 'lang=it').subscribe();
 
       const req = httpMock.expectOne('http://api.test/pagamenti?lang=it');
       expect(req.request.method).toBe('POST');
@@ -625,7 +625,7 @@ describe('PayService', () => {
     });
 
     it('should get services with query', () => {
-      service.getServizi('80012000826', false, 'assessorato=tributi').subscribe();
+      service.getServizi('80012000826', 'assessorato=tributi').subscribe();
 
       const req = httpMock.expectOne('http://api.test/domini/80012000826/tipiPendenza?assessorato=tributi');
       expect(req.request.method).toBe('GET');
@@ -634,7 +634,7 @@ describe('PayService', () => {
 
     it('should decode services with base64 form definition', () => {
       const base64Def = btoa(encodeURIComponent(JSON.stringify({ type: 'object' })).replace(/%([0-9A-F]{2})/g,
-        (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
+        (_, p1) => String.fromCodePoint(Number.parseInt(p1, 16))));
 
       service.getServizi('80012000826').subscribe(response => {
         expect(response.body?.risultati[0].jsfDef).toEqual({ type: 'object' });
@@ -719,7 +719,7 @@ describe('PayService', () => {
 
   describe('getAvviso', () => {
     it('should get avviso with query string', () => {
-      service.getAvviso('80012000826', '301000000000000001', false, 'lang=it').subscribe();
+      service.getAvviso('80012000826', '301000000000000001', 'lang=it').subscribe();
 
       const req = httpMock.expectOne('http://api.test/avvisi/80012000826/301000000000000001?lang=it');
       expect(req.request.method).toBe('GET');
