@@ -95,40 +95,14 @@ export class PagoPACheckoutService {
         mode: 'cors'
       });
 
-      // Se abbiamo seguito un redirect, response.url sarà l'URL del checkout
-      if (response.url && response.url !== url) {
-        globalThis.location.href = response.url;
+      const checkoutUrl = await this.resolveCheckoutUrl(response, url);
+      if (checkoutUrl) {
+        globalThis.location.href = checkoutUrl;
         return;
       }
 
-      // Se non c'è stato redirect ma la risposta contiene un URL nel body
-      if (response.ok) {
-        try {
-          const data = await response.json();
-          if (data.redirect || data.location || data.checkoutUrl) {
-            globalThis.location.href = data.redirect || data.location || data.checkoutUrl;
-            return;
-          }
-        } catch {
-          // Non era JSON, potrebbe essere HTML del checkout
-          // Se response.url è diverso, navighiamo lì
-          if (response.url) {
-            globalThis.location.href = response.url;
-            return;
-          }
-        }
-      }
-
-      // Gestisci errori
       if (!response.ok) {
-        let errorMessage = `Errore ${response.status}`;
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.detail || errorData.title || errorMessage;
-        } catch {
-          // Ignora errori di parsing
-        }
-        throw new Error(errorMessage);
+        throw new Error(await this.buildCheckoutError(response));
       }
 
       throw new Error('Impossibile ottenere URL di checkout');
@@ -141,6 +115,47 @@ export class PagoPACheckoutService {
         return;
       }
       throw error;
+    }
+  }
+
+  /**
+   * Ricava l'URL del checkout dalla risposta di /carts.
+   *
+   * Tre casi, nell'ordine: il browser ha seguito il redirect (response.url
+   * diverso da quello richiesto), il body JSON contiene l'URL, oppure il body
+   * non e' JSON (HTML del checkout) e si ripiega su response.url.
+   *
+   * @returns l'URL su cui navigare, o `null` se la risposta non ne contiene uno
+   */
+  private async resolveCheckoutUrl(response: Response, requestUrl: string): Promise<string | null> {
+    if (response.url && response.url !== requestUrl) {
+      return response.url;
+    }
+
+    if (!response.ok) {
+      return null;
+    }
+
+    try {
+      const data = await response.json();
+      return data.redirect || data.location || data.checkoutUrl || null;
+    } catch {
+      // Non era JSON, potrebbe essere l'HTML del checkout
+      return response.url || null;
+    }
+  }
+
+  /**
+   * Compone il messaggio di errore di una risposta non ok, usando i campi
+   * problem+json se il body e' parsabile.
+   */
+  private async buildCheckoutError(response: Response): Promise<string> {
+    const fallback = `Errore ${response.status}`;
+    try {
+      const errorData = await response.json();
+      return errorData.detail || errorData.title || fallback;
+    } catch {
+      return fallback;
     }
   }
 

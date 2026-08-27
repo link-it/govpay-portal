@@ -423,10 +423,9 @@ export class PayService {
    */
   getServizi(
     idDominio: string,
-    authenticated: boolean = false,
     query: string = ''
   ): Observable<HttpResponse<ElencoServiziResponse>> {
-    const baseUrl = authenticated ? this.apiUrl('') : this.apiUrl('');
+    const baseUrl = this.apiUrl('');
     let url = baseUrl + API_URLS.SERVIZI.replace('{idDominio}', idDominio);
 
     if (query) {
@@ -500,7 +499,7 @@ export class PayService {
       return decodeURIComponent(
         atob(str)
           .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .map(c => '%' + ('00' + c.codePointAt(0)!.toString(16)).slice(-2))
           .join('')
       );
     } catch (e) {
@@ -519,10 +518,9 @@ export class PayService {
   getAvviso(
     idDominio: string,
     numeroAvviso: string,
-    authenticated: boolean = false,
     query: string = ''
   ): Observable<HttpResponse<Avviso>> {
-    const baseUrl = authenticated ? this.apiUrl('') : this.apiUrl('');
+    const baseUrl = this.apiUrl('');
     let url = baseUrl + API_URLS.AVVISO
       .replace('{idDominio}', idDominio)
       .replace('{numeroAvviso}', numeroAvviso);
@@ -542,10 +540,9 @@ export class PayService {
   downloadAvvisoPdf(
     idDominio: string,
     numeroAvviso: string,
-    recaptchaToken: string = '',
-    authenticated: boolean = false
+    recaptchaToken: string = ''
   ): Observable<HttpResponse<Blob>> {
-    const baseUrl = authenticated ? this.apiUrl('') : this.apiUrl('');
+    const baseUrl = this.apiUrl('');
     let url = baseUrl + API_URLS.AVVISO
       .replace('{idDominio}', idDominio)
       .replace('{numeroAvviso}', numeroAvviso);
@@ -578,10 +575,9 @@ export class PayService {
     idDominio: string,
     idTipoPendenza: string,
     body: any,
-    authenticated: boolean = false,
     query: string = ''
   ): Observable<HttpResponse<Pendenza>> {
-    const baseUrl = authenticated ? this.apiUrl('') : this.apiUrl('');
+    const baseUrl = this.apiUrl('');
     let url = baseUrl + API_URLS.PENDENZA
       .replace('{idDominio}', idDominio)
       .replace('{idTipoPendenza}', encodeURIComponent(idTipoPendenza));
@@ -632,10 +628,9 @@ export class PayService {
    */
   pagaPendenze(
     body: RichiestaPagamento,
-    authenticated: boolean = false,
     query: string = ''
   ): Observable<HttpResponse<RispostaPagamento>> {
-    const baseUrl = authenticated ? this.apiUrl('') : this.apiUrl('');
+    const baseUrl = this.apiUrl('');
     let url = baseUrl + API_URLS.PAGAMENTI;
 
     if (query) {
@@ -651,10 +646,9 @@ export class PayService {
    * Verifica stato sessione pagamento
    */
   getSessionePagamento(
-    idSession: string,
-    authenticated: boolean = false
+    idSession: string
   ): Observable<HttpResponse<SessionePagamento>> {
-    const baseUrl = authenticated ? this.apiUrl('') : this.apiUrl('');
+    const baseUrl = this.apiUrl('');
     const url = baseUrl + API_URLS.SESSIONE_PAGAMENTO.replace('{idSession}', idSession);
 
     return this.http.get<SessionePagamento>(url, { observe: 'response' }).pipe(
@@ -715,10 +709,9 @@ export class PayService {
   downloadRicevuta(
     idDominio: string,
     iuv: string,
-    ccp: string,
-    authenticated: boolean = false
+    ccp: string
   ): Observable<HttpResponse<Blob>> {
-    const baseUrl = authenticated ? this.apiUrl('') : this.apiUrl('');
+    const baseUrl = this.apiUrl('');
     const url = `${baseUrl}${API_URLS.RPP}/${idDominio}/${iuv}/${ccp}/rt`;
 
     const headers = new HttpHeaders()
@@ -740,10 +733,9 @@ export class PayService {
    */
   sendReceiptByEmail(
     idSession: string,
-    email: string,
-    authenticated: boolean = false
+    email: string
   ): Observable<HttpResponse<any>> {
-    const baseUrl = authenticated ? this.apiUrl('') : this.apiUrl('');
+    const baseUrl = this.apiUrl('');
     const url = `${baseUrl}${API_URLS.SESSIONE_PAGAMENTO}/${idSession}/email`;
 
     return this.http.post(url, { email }, { observe: 'response' }).pipe(
@@ -821,7 +813,7 @@ export class PayService {
    */
   private encodeStorageData(data: string): string {
     return btoa(encodeURIComponent(data).replace(/%([0-9A-F]{2})/g,
-      (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
+      (_, p1) => String.fromCodePoint(Number.parseInt(p1, 16))));
   }
 
   /**
@@ -829,7 +821,7 @@ export class PayService {
    */
   private decodeStorageData(encoded: string): string {
     return decodeURIComponent(atob(encoded).split('').map(c =>
-      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      '%' + ('00' + c.codePointAt(0)!.toString(16)).slice(-2)).join(''));
   }
 
   /**

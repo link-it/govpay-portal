@@ -347,7 +347,7 @@ export class EsitoPagamentoComponent implements OnInit, OnDestroy {
       takeWhile(() => this.pollCount < maxTimeout),
       switchMap(() => {
         this.pollCount++;
-        return this.pay.getSessionePagamento(this.idSession!, this.pay.isAuthenticated());
+        return this.pay.getSessionePagamento(this.idSession!);
       })
     ).subscribe({
       next: (response) => {
