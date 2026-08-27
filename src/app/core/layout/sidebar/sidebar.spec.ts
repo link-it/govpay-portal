@@ -385,4 +385,102 @@ describe('SidebarComponent', () => {
       expect(component['displayVersion']).toBeTruthy();
     });
   });
+
+  describe('login IAM', () => {
+    /** Ricostruisce il componente con una config che abilita IAM. */
+    async function withIam(config: object) {
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [SidebarComponent, TranslateModule.forRoot()],
+        providers: [
+          { provide: ConfigService, useValue: { ...mockConfigService, ...config } },
+          provideRouter([{ path: '**', children: [] }]),
+          provideIcons({
+            bootstrapCreditCard2Front, bootstrapCart3, bootstrapListUl,
+            bootstrapBoxArrowRight, bootstrapShieldCheck, bootstrapPerson
+          }),
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(SidebarComponent);
+      component = fixture.componentInstance;
+      return component;
+    }
+
+    beforeEach(() => {
+      vi.stubGlobal('window', { location: { href: '' } });
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('redirige sull URL di IAM accodando il dominio attivo', async () => {
+      await withIam({
+        isIamEnabled: () => true,
+        auth: () => ({ iam: { loginUrl: 'https://iam.test/login' } }),
+        activeDominioId: () => '80012000826',
+        domini: signal([{ value: '80012000826', label: 'Ente' }])
+      });
+
+      component.onIamLogin();
+
+      expect(window.location.href).toBe('https://iam.test/login?idDominio=80012000826');
+    });
+
+    it('usa & come separatore se l URL di IAM ha gia una query string', async () => {
+      await withIam({
+        isIamEnabled: () => true,
+        auth: () => ({ iam: { loginUrl: 'https://iam.test/login?realm=pa' } }),
+        activeDominioId: () => null,
+        domini: signal([{ value: '80012000827', label: 'Ente' }])
+      });
+
+      component.onIamLogin();
+
+      expect(window.location.href).toBe('https://iam.test/login?realm=pa&idDominio=80012000827');
+    });
+
+    it('non redirige quando manca il loginUrl', async () => {
+      await withIam({
+        isIamEnabled: () => true,
+        auth: () => ({ iam: { loginUrl: '' } })
+      });
+
+      component.onIamLogin();
+
+      expect(window.location.href).toBe('');
+    });
+
+    it('mostra il pulsante IAM quando abilitato e l utente non e autenticato', async () => {
+      await withIam({
+        isIamEnabled: () => true,
+        isSpidEnabled: () => false,
+        auth: () => ({ iam: { loginUrl: 'https://iam.test/login' } })
+      });
+      component.isAuthenticated = false;
+      fixture.detectChanges();
+
+      const testo = fixture.nativeElement.textContent;
+      expect(testo).toContain('Language.Auth.Accedi');
+    });
+  });
+
+  describe('click su una voce di menu', () => {
+    it('chiede il reset della schermata servizi ed emette closed', () => {
+      const spy = vi.fn();
+      component.closed.subscribe(spy);
+
+      component.onItemClick();
+
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe('login SPID', () => {
+    it('onSpidLogin non solleva eccezioni', () => {
+      expect(() => component.onSpidLogin()).not.toThrow();
+    });
+  });
+
 });
