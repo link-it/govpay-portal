@@ -19,7 +19,6 @@
 
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Observable, timeout, map, catchError, of, forkJoin, delay } from 'rxjs';
 import { ConfigService } from '../config';
 import { LoggerService } from '../services/logger.service';
@@ -262,7 +261,6 @@ const MOCK_RPP: RPP[] = [
 })
 export class PayService {
   private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
   private readonly config = inject(ConfigService);
   private readonly logger = inject(LoggerService);
 
@@ -823,7 +821,7 @@ export class PayService {
    */
   private encodeStorageData(data: string): string {
     return btoa(encodeURIComponent(data).replace(/%([0-9A-F]{2})/g,
-      (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+      (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
   }
 
   /**

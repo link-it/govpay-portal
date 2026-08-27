@@ -18,7 +18,7 @@
  */
 
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser, DOCUMENT } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { ConfigService } from '@core/config';
 import { CartItem } from '@core/pay';
 import {
@@ -41,7 +41,6 @@ import {
 })
 export class PagoPACheckoutService {
   private readonly config = inject(ConfigService);
-  private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
 
   /**

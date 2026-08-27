@@ -634,7 +634,7 @@ describe('PayService', () => {
 
     it('should decode services with base64 form definition', () => {
       const base64Def = btoa(encodeURIComponent(JSON.stringify({ type: 'object' })).replace(/%([0-9A-F]{2})/g,
-        (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+        (_, p1) => String.fromCharCode(Number.parseInt(p1, 16))));
 
       service.getServizi('80012000826').subscribe(response => {
         expect(response.body?.risultati[0].jsfDef).toEqual({ type: 'object' });

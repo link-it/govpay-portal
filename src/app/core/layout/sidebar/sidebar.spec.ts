@@ -158,7 +158,7 @@ describe('SidebarComponent', () => {
       fixture.detectChanges();
 
       const menuLinks = fixture.nativeElement.querySelectorAll('nav a');
-      expect(menuLinks.length).toBe(2); // Only non-auth required items
+      expect(menuLinks).toHaveLength(2); // Only non-auth required items
     });
 
     it('should show all items when authenticated', () => {
@@ -167,7 +167,7 @@ describe('SidebarComponent', () => {
       fixture.detectChanges();
 
       const menuLinks = fixture.nativeElement.querySelectorAll('nav a');
-      expect(menuLinks.length).toBe(3);
+      expect(menuLinks).toHaveLength(3);
     });
 
     it('should show badge on menu item', () => {
@@ -180,7 +180,7 @@ describe('SidebarComponent', () => {
 
     it('should emit close when menu item is clicked', () => {
       const spy = vi.fn();
-      component.close.subscribe(spy);
+      component.closed.subscribe(spy);
       fixture.componentRef.setInput('menuItems', mockMenuItems);
       fixture.detectChanges();
 
@@ -196,14 +196,14 @@ describe('SidebarComponent', () => {
       component.menuItems = mockMenuItems;
       component.isAuthenticated = false;
 
-      expect(component.filteredMenuItems.length).toBe(2);
+      expect(component.filteredMenuItems).toHaveLength(2);
     });
 
     it('should include auth-required items when authenticated', () => {
       component.menuItems = mockMenuItems;
       component.isAuthenticated = true;
 
-      expect(component.filteredMenuItems.length).toBe(3);
+      expect(component.filteredMenuItems).toHaveLength(3);
     });
   });
 

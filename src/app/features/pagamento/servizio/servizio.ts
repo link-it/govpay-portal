@@ -145,13 +145,13 @@ interface ServizioConfig {
               [label]="'Language.Servizio.MostraTipologie' | translate"
               icon="bootstrapLightbulb"
               [active]="viewMode() === 'tipologie'"
-              (toggle)="setViewMode('tipologie')"
+              (toggled)="setViewMode('tipologie')"
             ></pay-toggle-button>
             <pay-toggle-button
               [label]="'Language.Servizio.MostraAssessorati' | translate"
               icon="bootstrapBuilding"
               [active]="viewMode() === 'assessorati'"
-              (toggle)="setViewMode('assessorati')"
+              (toggled)="setViewMode('assessorati')"
             ></pay-toggle-button>
           </div>
         }
@@ -169,13 +169,13 @@ interface ServizioConfig {
               [label]="'Language.Servizio.VistaSchede' | translate"
               icon="bootstrapGrid3x3Gap"
               [active]="flatDisplayMode() === 'card'"
-              (toggle)="flatDisplayMode.set('card')"
+              (toggled)="flatDisplayMode.set('card')"
             ></pay-toggle-button>
             <pay-toggle-button
               [label]="'Language.Servizio.VistaLista' | translate"
               icon="bootstrapListUl"
               [active]="flatDisplayMode() === 'list'"
-              (toggle)="flatDisplayMode.set('list')"
+              (toggled)="flatDisplayMode.set('list')"
             ></pay-toggle-button>
           </div>
           }

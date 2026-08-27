@@ -78,7 +78,7 @@ describe('ToggleButtonComponent', () => {
     it('should emit toggle when clicked', () => {
       fixture.detectChanges();
       const spy = vi.fn();
-      component.toggle.subscribe(spy);
+      component.toggled.subscribe(spy);
 
       const button = fixture.nativeElement.querySelector('button');
       button.click();
@@ -89,7 +89,7 @@ describe('ToggleButtonComponent', () => {
     it('should emit toggle multiple times', () => {
       fixture.detectChanges();
       const spy = vi.fn();
-      component.toggle.subscribe(spy);
+      component.toggled.subscribe(spy);
 
       const button = fixture.nativeElement.querySelector('button');
       button.click();

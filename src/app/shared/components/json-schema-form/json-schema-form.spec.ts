@@ -52,7 +52,7 @@ describe('JsonSchemaFormComponent Types', () => {
         }
       };
       expect(schema.properties).toBeTruthy();
-      expect(Object.keys(schema.properties!).length).toBe(2);
+      expect(Object.keys(schema.properties!)).toHaveLength(2);
     });
 
     it('should allow additional properties', () => {

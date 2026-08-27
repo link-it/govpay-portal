@@ -362,15 +362,9 @@ export class ConfigService {
       }
 
       // 3. Merge: override parziale → config base (il merge con defaults avviene in mergeWithDefaults)
-      const mergedConfig = overrideConfig
-        ? this.deepMerge(baseConfig, overrideConfig) as Partial<AppConfig>
-        : baseConfig;
-      const mergedTheme = overrideTheme
-        ? this.deepMerge(baseTheme, overrideTheme) as Partial<BrandingConfig>
-        : baseTheme;
-      const mergedDomini = overrideDomini
-        ? this.deepMerge(baseDomini, overrideDomini) as Partial<DominiConfig>
-        : baseDomini;
+      const mergedConfig = this.applyOverride(baseConfig, overrideConfig);
+      const mergedTheme = this.applyOverride(baseTheme, overrideTheme);
+      const mergedDomini = this.applyOverride(baseDomini, overrideDomini);
 
       this._config.set(this.mergeWithDefaults(mergedConfig, mergedTheme));
       this._domini.set(this.mergeDominiWithDefaults(mergedDomini));
@@ -382,26 +376,9 @@ export class ConfigService {
       );
 
       if (tenant) {
-        const loaded = [
-          overrideConfig ? 'app-config' : null,
-          overrideTheme ? 'theme' : null,
-          overrideDomini ? 'domini' : null,
-        ].filter(Boolean);
+        this.logTenantOverrides(tenant, { overrideConfig, overrideTheme, overrideDomini });
 
-        if (loaded.length > 0) {
-          this.logger.log(`[ConfigService] Override ${tenant}: ${loaded.join(', ')}`);
-        } else {
-          this.logger.warn(`[ConfigService] Override ${tenant}: nessun file trovato, uso config base`);
-        }
-
-        // Debug: mostra il risultato del merge
-        this.logger.log('[ConfigService] Logo dopo merge:', this._config().branding.logo.full);
-        this.logger.log('[ConfigService] Header background dopo merge:', this._config().branding.theme?.header?.background);
-        this.logger.log('[ConfigService] Domini dopo merge:', this._domini().domini.map(d => d.label));
-      }
-
-      // 4. Auto-selezione dominio e branding da dominio
-      if (tenant) {
+        // 4. Auto-selezione dominio e branding da dominio
         this.autoSelectDomainFromTenant(tenant);
         this.applyDomainBranding(overrideTheme);
       }
@@ -412,6 +389,42 @@ export class ConfigService {
       this._loaded.set(true);
       this._error.set('Errore caricamento configurazione');
     }
+  }
+
+  /**
+   * Applica un override parziale alla configurazione base, se presente.
+   */
+  private applyOverride<T extends Record<string, unknown>>(base: T, override: T | null): T {
+    return override ? this.deepMerge(base, override) : base;
+  }
+
+  /**
+   * Log diagnostico degli override applicati per il tenant corrente.
+   */
+  private logTenantOverrides(
+    tenant: string,
+    overrides: {
+      overrideConfig: Partial<AppConfig> | null;
+      overrideTheme: Partial<BrandingConfig> | null;
+      overrideDomini: Partial<DominiConfig> | null;
+    }
+  ): void {
+    const loaded = [
+      overrides.overrideConfig ? 'app-config' : null,
+      overrides.overrideTheme ? 'theme' : null,
+      overrides.overrideDomini ? 'domini' : null,
+    ].filter(Boolean);
+
+    if (loaded.length > 0) {
+      this.logger.log(`[ConfigService] Override ${tenant}: ${loaded.join(', ')}`);
+    } else {
+      this.logger.warn(`[ConfigService] Override ${tenant}: nessun file trovato, uso config base`);
+    }
+
+    // Debug: mostra il risultato del merge
+    this.logger.log('[ConfigService] Logo dopo merge:', this._config().branding.logo.full);
+    this.logger.log('[ConfigService] Header background dopo merge:', this._config().branding.theme?.header?.background);
+    this.logger.log('[ConfigService] Domini dopo merge:', this._domini().domini.map(d => d.label));
   }
 
   /**

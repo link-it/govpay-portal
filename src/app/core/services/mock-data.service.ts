@@ -19,7 +19,7 @@
 
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay, tap, map, forkJoin, catchError } from 'rxjs';
+import { Observable, of, delay, tap, map, catchError } from 'rxjs';
 
 // ============ INTERFACES ============
 
