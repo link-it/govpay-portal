@@ -99,6 +99,131 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  # ── SBOM CycloneDX ───────────────────────────────────────────────────
+  sbom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SBOM_CYCLONEDX_NPM_VERSION: '6.0.1'
+      SBOM_CYCLONEDX_SCHEMA_VERSION: '1.6'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # --omit dev esclude le dipendenze di sviluppo, equivalente a
+      # -DincludeTestScope=false usato dal job sbom dei componenti backend.
+      - name: Generate SBOM (CycloneDX json)
+        run: |
+          set -euo pipefail
+          mkdir -p sbom/cyclonedx
+          echo "Generazione SBOM CycloneDX ..."
+          npx --yes "@cyclonedx/cyclonedx-npm@${SBOM_CYCLONEDX_NPM_VERSION}" \
+            --output-format JSON \
+            --output-file sbom/cyclonedx/bom.cdx.json \
+            --spec-version "${SBOM_CYCLONEDX_SCHEMA_VERSION}" \
+            --omit dev
+          ls -la sbom/cyclonedx/
+
+      - name: Upload SBOM artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-report
+          path: sbom/
+          retention-days: 30
+
+  # ── Upload SBOM su Dependency-Track ──────────────────────────────────
+  # Traduzione del job GitLab dependency-track-upload.
+  # Esecuzione: sempre su tag e sui branch main/master/staging; forzabile
+  # con la variabile FORCE_DTRACK_UPLOAD_JOB; disattivabile del tutto con
+  # DISABLE_DTRACK_UPLOAD_JOB, che ha la precedenza su tutto il resto.
+  dependency-track-upload:
+    needs: [ sbom ]
+    if: >-
+      vars.DISABLE_DTRACK_UPLOAD_JOB != 'true' &&
+      (github.ref_type == 'tag' ||
+       github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'staging' ||
+       vars.FORCE_DTRACK_UPLOAD_JOB == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    # Come su GitLab, il fallimento blocca solo le esecuzioni su tag e sui
+    # branch protetti; le esecuzioni forzate sono tolleranti.
+    continue-on-error: ${{ github.ref_type != 'tag' && github.ref_name != 'main' && github.ref_name != 'master' && github.ref_name != 'staging' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom-report
+          path: sbom/
+
+      - name: Verifica prerequisiti
+        env:
+          DTRACK_API_KEY: ${{ secrets.GOVPAY_DTRACK_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${DTRACK_API_KEY}" ]; then
+            echo "ERRORE: secret GOVPAY_DTRACK_API_KEY non configurato."
+            exit 1
+          fi
+          if [ ! -f script/sbom/upload-sbom-parent-required.sh ]; then
+            echo "ERRORE: script script/sbom/upload-sbom-parent-required.sh non presente nel repository."
+            exit 1
+          fi
+          if [ ! -f "sbom/cyclonedx/bom.cdx.json" ]; then
+            echo "ERRORE: SBOM non trovato in sbom/cyclonedx/bom.cdx.json"
+            ls -R sbom/ || true
+            exit 1
+          fi
+          echo "SBOM: $(wc -c < sbom/cyclonedx/bom.cdx.json) byte"
+
+      # Versione e flag 'latest' seguono la stessa logica del job GitLab:
+      # su tag la versione e' il tag ed e' marcata come latest; sui branch
+      # protetti la versione e' il nome del branch; altrove 'dev'.
+      - name: Determina versione Dependency-Track
+        id: dtrack
+        run: |
+          set -euo pipefail
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "latest=true" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.ref_name }}" = "main" ] || [ "${{ github.ref_name }}" = "master" ] || [ "${{ github.ref_name }}" = "staging" ]; then
+            echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "latest=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=dev" >> "$GITHUB_OUTPUT"
+            echo "latest=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload SBOM su Dependency-Track
+        env:
+          DTRACK_API_KEY: ${{ secrets.GOVPAY_DTRACK_API_KEY }}
+          WORKSPACE: ${{ github.workspace }}
+          DTRACK_VERSION: ${{ steps.dtrack.outputs.version }}
+          DTRACK_LATEST: ${{ steps.dtrack.outputs.latest }}
+        run: |
+          set -euo pipefail
+          chmod +x script/sbom/upload-sbom-parent-required.sh
+          ./script/sbom/upload-sbom-parent-required.sh \
+            "${DTRACK_API_KEY}" \
+            "${WORKSPACE}/sbom/cyclonedx/bom.cdx.json" \
+            "GovPay-Frontend"
+
   # ── Immagine Docker di sviluppo (ogni push su master) ──────────────────
   # Routing sul trigger, non sulla versione: push su master -> repo di sviluppo,
   # push di un tag -> repo di produzione (job docker). package.json non viene
