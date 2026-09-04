@@ -30,6 +30,13 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
 
+      # La linea Node 22 porta npm 10.x (l'ultima, 22.23.2, ha npm 10.9.8) e
+      # actions/setup-node non ha un input per la versione di npm: va alzata a
+      # mano. Serve perche' npm 10 e npm 11 risolvono alberi diversi, e il
+      # lockfile e' generato con npm 11. Tenere allineato con packageManager.
+      - name: Aggiorna npm
+        run: npm install -g npm@11.19.0
+
       - name: Install dependencies
         run: npm ci
 
@@ -117,6 +124,13 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
+
+      # La linea Node 22 porta npm 10.x (l'ultima, 22.23.2, ha npm 10.9.8) e
+      # actions/setup-node non ha un input per la versione di npm: va alzata a
+      # mano. Serve perche' npm 10 e npm 11 risolvono alberi diversi, e il
+      # lockfile e' generato con npm 11. Tenere allineato con packageManager.
+      - name: Aggiorna npm
+        run: npm install -g npm@11.19.0
 
       - name: Install dependencies
         run: npm ci
@@ -243,6 +257,13 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
 
+      # La linea Node 22 porta npm 10.x (l'ultima, 22.23.2, ha npm 10.9.8) e
+      # actions/setup-node non ha un input per la versione di npm: va alzata a
+      # mano. Serve perche' npm 10 e npm 11 risolvono alberi diversi, e il
+      # lockfile e' generato con npm 11. Tenere allineato con packageManager.
+      - name: Aggiorna npm
+        run: npm install -g npm@11.19.0
+
       - name: Install dependencies
         run: npm ci
 
@@ -331,6 +352,13 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
+
+      # La linea Node 22 porta npm 10.x (l'ultima, 22.23.2, ha npm 10.9.8) e
+      # actions/setup-node non ha un input per la versione di npm: va alzata a
+      # mano. Serve perche' npm 10 e npm 11 risolvono alberi diversi, e il
+      # lockfile e' generato con npm 11. Tenere allineato con packageManager.
+      - name: Aggiorna npm
+        run: npm install -g npm@11.19.0
 
       - name: Install dependencies
         run: npm ci
