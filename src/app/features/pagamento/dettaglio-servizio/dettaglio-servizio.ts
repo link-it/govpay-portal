@@ -198,7 +198,7 @@ interface ServizioState {
                     @if (prop.icon) {
                       <ng-icon [name]="prop.icon" class="text-gray-400 text-lg shrink-0"></ng-icon>
                     }
-                    <span class="text-sm text-gray-500 w-28 shrink-0">{{ prop.label }}</span>
+                    <span class="text-sm text-gray-600 w-28 shrink-0">{{ prop.label }}</span>
                     @if (prop.url) {
                       <a
                         [href]="prop.url"

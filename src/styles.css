@@ -950,3 +950,12 @@ mat-error {
 .mat-mdc-option.mdc-list-item--selected {
   background-color: #e8e8e8 !important;
 }
+
+/* Contrasto label form field (WCAG AA 1.4.3): il grigio di default di Material
+   (~#707071) su fill chiaro #f3f4f6 rende 4.49:1, appena sotto 4.5:1. Scurito a
+   #5f6368 (~5.4:1). Escluso lo stato :focus-within, dove la label prende il colore
+   primario e non va sovrascritta. */
+.mat-mdc-form-field:not(:focus-within) .mdc-floating-label:not(.mdc-floating-label--float-above),
+.mat-mdc-form-field:not(:focus-within) .mdc-floating-label--float-above {
+  color: #5f6368 !important;
+}
