@@ -77,7 +77,7 @@ export interface SelectOption {
         [class.text-xs]="value || isOpen() || placeholder"
         [class.top-5]="!value && !isOpen() && !placeholder"
         [class.text-base]="!value && !isOpen() && !placeholder"
-        [class.text-gray-500]="!hasError && !isOpen() && !textColor"
+        [class.text-gray-600]="!hasError && !isOpen() && !textColor"
         [class.text-primary-500]="!hasError && isOpen() && !textColor"
         [class.text-red-500]="hasError"
         [style.color]="!hasError && textColor ? textColor : null"
