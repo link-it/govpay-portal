@@ -172,7 +172,7 @@ interface ServizioState {
                     <p class="text-sm text-gray-600">{{ servizio()!.dipartimento }}</p>
                   }
                   @if (tipologiaInfo()) {
-                    <p class="text-sm text-gray-500 mt-1">{{ tipologiaInfo()!.nome }}</p>
+                    <p class="text-sm text-gray-600 mt-1">{{ tipologiaInfo()!.nome }}</p>
                   }
                 </div>
               </div>

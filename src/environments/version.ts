@@ -3,7 +3,7 @@
  *
  * FILE AUTO-GENERATO - NON MODIFICARE MANUALMENTE
  * Generato da: scripts/generate-version.js
- * Data generazione: 2026-06-29T09:55:42.580Z
+ * Data generazione: 2026-09-10T11:39:15.171Z
  */
 
 export interface VersionInfo {
@@ -18,14 +18,14 @@ export interface VersionInfo {
 }
 
 export const VERSION: VersionInfo = {
-  version: '5.2.1',
-  gitHash: 'ed03dee',
-  gitHashFull: 'ed03dee2cd4423acb1d350042ac8670175c3e9cc',
-  gitBranch: 'master',
+  version: '5.2.3',
+  gitHash: '5c201a3',
+  gitHashFull: '5c201a35f85d4c31b1bddc64fe7c1a9994fedb5c',
+  gitBranch: '5.x.x',
   gitTag: '5.2.1',
   gitDirty: true,
-  buildDate: '2026-06-29T09:55:42.580Z',
-  buildTimestamp: 1782726942581
+  buildDate: '2026-09-10T11:39:15.171Z',
+  buildTimestamp: 1789040355172
 };
 
 /**

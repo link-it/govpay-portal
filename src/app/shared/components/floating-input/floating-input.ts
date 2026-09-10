@@ -69,7 +69,7 @@ import { NgIcon } from '@ng-icons/core';
               peer-placeholder-shown:top-5 peer-placeholder-shown:text-base
               peer-focus:top-0 peer-focus:text-xs
               peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-xs"
-        [class.text-gray-500]="!hasError && !isFocused()"
+        [class.text-gray-600]="!hasError && !isFocused()"
         [class.peer-focus:text-primary-500]="!hasError"
         [class.text-red-500]="hasError"
       >
@@ -85,6 +85,7 @@ import { NgIcon } from '@ng-icons/core';
           type="button"
           class="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
           (click)="togglePasswordVisibility()"
+          [attr.aria-label]="passwordToggleLabel"
           tabindex="-1"
         >
           <ng-icon [name]="showPassword() ? 'bootstrapEyeSlash' : 'bootstrapEye'" class="text-lg"></ng-icon>
@@ -98,6 +99,7 @@ import { NgIcon } from '@ng-icons/core';
           class="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-primary-500 transition-colors flex items-center justify-center"
           (click)="onActionClick()"
           [title]="actionTitle"
+          [attr.aria-label]="actionTitle || null"
           tabindex="-1"
         >
           <ng-icon [name]="actionIcon" class="text-xl"></ng-icon>
@@ -121,7 +123,7 @@ import { NgIcon } from '@ng-icons/core';
 
       <!-- Hint text -->
       @if (hint && !hasError) {
-        <p class="mt-1 text-sm text-gray-500">{{ hint }}</p>
+        <p class="mt-1 text-sm text-gray-600">{{ hint }}</p>
       }
     </div>
   `
@@ -144,6 +146,7 @@ export class FloatingInputComponent implements ControlValueAccessor {
   @Input() iconSuffix = '';
   @Input() actionIcon = '';
   @Input() actionTitle = '';
+  @Input() passwordToggleLabel = 'Mostra/nascondi password';
 
   @Output() actionClick = new EventEmitter<void>();
 
