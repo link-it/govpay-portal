@@ -278,7 +278,6 @@ export class EsitoPagamentoComponent implements OnInit, OnDestroy {
 
   private idSession: string | null = null;
   private pollCount = 0;
-  private readonly maxPolls = 10;
 
   ngOnInit(): void {
     // Get params from query string
@@ -348,7 +347,7 @@ export class EsitoPagamentoComponent implements OnInit, OnDestroy {
       takeWhile(() => this.pollCount < maxTimeout),
       switchMap(() => {
         this.pollCount++;
-        return this.pay.getSessionePagamento(this.idSession!, this.pay.isAuthenticated());
+        return this.pay.getSessionePagamento(this.idSession!);
       })
     ).subscribe({
       next: (response) => {

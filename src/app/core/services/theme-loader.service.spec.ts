@@ -210,7 +210,7 @@ describe('ThemeLoaderService', () => {
       const emptyTheme = {} as ThemeConfig;
 
       expect(() => service.applyTheme(emptyTheme)).not.toThrow();
-      expect(setPropertyCalls.length).toBe(0);
+      expect(setPropertyCalls).toHaveLength(0);
     });
   });
 });

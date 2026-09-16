@@ -91,7 +91,10 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "setupFiles": ["src/test-setup.ts"]
+            "setupFiles": ["src/test-setup.ts"],
+            "runnerConfig": "vitest.config.ts",
+            "coverageReporters": ["text-summary", "html", "lcovonly"],
+            "coverageExclude": ["src/assets/extensions/**", "**/*.spec.ts", "src/test-setup.ts", "src/app/features/test-jsonform/**", "src/app/features/test-survey/**"]
           }
         }
       }

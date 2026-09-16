@@ -123,7 +123,7 @@ describe('RealGovPayApiService', () => {
       } as ListaDomini;
 
       service.getDomini().subscribe(result => {
-        expect(result.risultati.length).toBe(1);
+        expect(result.risultati).toHaveLength(1);
         expect(result.risultati[0].idDominio).toBe('12345678901');
       });
 

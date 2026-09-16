@@ -29,7 +29,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, delay, throwError, map, catchError } from 'rxjs';
 import { GovPayApiService } from './govpay-api.service';
-import { decodeTipiPendenza, decodeTipoPendenza } from '../../utils/base64.utils';
+import { decodeTipiPendenza } from '../../utils/base64.utils';
 import {
   Profilo,
   ListaDomini,
@@ -40,7 +40,6 @@ import {
   Pendenza,
   Avviso,
   Ricevuta,
-  VoceRicevuta,
   GetPendenzeParams,
   GetTipiPendenzaParams,
   GetAvvisoParams,

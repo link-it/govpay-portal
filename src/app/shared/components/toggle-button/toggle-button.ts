@@ -34,7 +34,7 @@ import { NgIcon } from '@ng-icons/core';
       [style.border]="active ? 'none' : '1px solid ' + inactiveBorderColor"
       [style.transform]="isHovered() ? 'translateY(-1px)' : 'none'"
       [style.box-shadow]="isHovered() ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : 'none'"
-      (click)="toggle.emit()"
+      (click)="toggled.emit()"
       (mouseenter)="isHovered.set(true)"
       (mouseleave)="isHovered.set(false)"
     >
@@ -59,7 +59,7 @@ export class ToggleButtonComponent {
   @Input() hoverColor: string = '#e3f2fd';
   @Input() inactiveHoverColor: string = '#f3f4f6';
 
-  @Output() toggle = new EventEmitter<void>();
+  @Output() toggled = new EventEmitter<void>();
 
   protected readonly isHovered = signal(false);
 

@@ -62,7 +62,7 @@ describe('GovPayApiService', () => {
     it('should define all required abstract methods', () => {
       // In una classe astratta i metodi non sono nel prototype
       // ma sono definiti come abstract
-      expect(abstractMethods.length).toBe(16);
+      expect(abstractMethods).toHaveLength(16);
     });
 
     it('should have getProfilo method', () => {
@@ -133,42 +133,42 @@ describe('GovPayApiService', () => {
   describe('API categories', () => {
     it('should have profilo methods', () => {
       const profiloMethods = ['getProfilo', 'logout'];
-      expect(profiloMethods.length).toBe(2);
+      expect(profiloMethods).toHaveLength(2);
     });
 
     it('should have domini methods', () => {
       const dominiMethods = ['getDomini', 'getDominio', 'getLogo'];
-      expect(dominiMethods.length).toBe(3);
+      expect(dominiMethods).toHaveLength(3);
     });
 
     it('should have tipiPendenza methods', () => {
       const tipiPendenzaMethods = ['getTipiPendenza', 'getTipoPendenza'];
-      expect(tipiPendenzaMethods.length).toBe(2);
+      expect(tipiPendenzaMethods).toHaveLength(2);
     });
 
     it('should have pendenze methods', () => {
       const pendenzeMethods = ['getPendenze', 'getPendenza'];
-      expect(pendenzeMethods.length).toBe(2);
+      expect(pendenzeMethods).toHaveLength(2);
     });
 
     it('should have avviso methods', () => {
       const avvisoMethods = ['getAvviso', 'getAvvisoPdf'];
-      expect(avvisoMethods.length).toBe(2);
+      expect(avvisoMethods).toHaveLength(2);
     });
 
     it('should have creaPendenza method', () => {
       const creaPendenzaMethods = ['creaPendenza'];
-      expect(creaPendenzaMethods.length).toBe(1);
+      expect(creaPendenzaMethods).toHaveLength(1);
     });
 
     it('should have ricevuta methods', () => {
       const ricevutaMethods = ['getRicevuta', 'getRicevutaPdf'];
-      expect(ricevutaMethods.length).toBe(2);
+      expect(ricevutaMethods).toHaveLength(2);
     });
 
     it('should have authentication methods', () => {
       const authMethods = ['isAuthenticated', 'getSpidLoginUrl'];
-      expect(authMethods.length).toBe(2);
+      expect(authMethods).toHaveLength(2);
     });
   });
 });

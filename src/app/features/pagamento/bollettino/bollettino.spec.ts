@@ -98,11 +98,6 @@ describe('PagamentoBollettinoComponent Types', () => {
       const method: keyof PagamentoBollettinoComponent = 'ngOnDestroy';
       expect(method).toBe('ngOnDestroy');
     });
-
-    it('should have ngAfterViewInit method', () => {
-      const method: keyof PagamentoBollettinoComponent = 'ngAfterViewInit';
-      expect(method).toBe('ngAfterViewInit');
-    });
   });
 
   describe('component selector', () => {
@@ -171,11 +166,6 @@ describe('PagamentoBollettinoComponent Types', () => {
       const method: keyof PagamentoBollettinoComponent = 'ngOnDestroy';
       expect(method).toBe('ngOnDestroy');
     });
-
-    it('should implement AfterViewInit', () => {
-      const method: keyof PagamentoBollettinoComponent = 'ngAfterViewInit';
-      expect(method).toBe('ngAfterViewInit');
-    });
   });
 
   describe('avviso state handling', () => {
@@ -196,7 +186,7 @@ describe('PagamentoBollettinoComponent Types', () => {
       // Formato: PAGOPA|002|<numeroAvviso>|<idDominio>|<importo>
       const qrPagoPA = 'PAGOPA|002|123456789012345678|12345678901|15050';
       expect(qrPagoPA.startsWith('PAGOPA|')).toBe(true);
-      expect(qrPagoPA.split('|').length).toBe(5);
+      expect(qrPagoPA.split('|')).toHaveLength(5);
     });
 
     it('should support URL QR format', () => {
@@ -207,7 +197,7 @@ describe('PagamentoBollettinoComponent Types', () => {
 
     it('should support plain 18-digit notice number', () => {
       const plainNumber = '123456789012345678';
-      expect(plainNumber.length).toBe(18);
+      expect(plainNumber).toHaveLength(18);
       expect(/^\d{18}$/.test(plainNumber)).toBe(true);
     });
   });

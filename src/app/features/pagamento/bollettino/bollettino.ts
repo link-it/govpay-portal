@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, computed, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -301,7 +301,7 @@ type Html5Qrcode = any;
     </div>
   `
 })
-export class PagamentoBollettinoComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PagamentoBollettinoComponent implements OnInit, OnDestroy {
   protected readonly config = inject(ConfigService);
   protected readonly pay = inject(PayService);
   private readonly api = inject(GovPayApiProxyService);
@@ -356,8 +356,7 @@ export class PagamentoBollettinoComponent implements OnInit, OnDestroy, AfterVie
       // allinea anche la select locale.
       const idDominio = params.get('idDominio');
       if (idDominio && !this.config.isSingleDomain() && !this.config.activeDominioId()) {
-        const dominio = this.config.domini().find(d => d.value === idDominio);
-        if (dominio) {
+        if (this.config.domini().some(d => d.value === idDominio)) {
           this.selectedDomain = idDominio;
         }
       }
@@ -366,10 +365,6 @@ export class PagamentoBollettinoComponent implements OnInit, OnDestroy, AfterVie
         this.onSearch();
       }
     }
-  }
-
-  ngAfterViewInit(): void {
-    // QR reader will be initialized when modal opens
   }
 
   ngOnDestroy(): void {
@@ -569,8 +564,7 @@ export class PagamentoBollettinoComponent implements OnInit, OnDestroy, AfterVie
 
       // Se abbiamo il dominio dal QR, selezionalo
       if (idDominio && !this.config.isSingleDomain()) {
-        const dominio = this.config.domini().find(d => d.value === idDominio);
-        if (dominio) {
+        if (this.config.domini().some(d => d.value === idDominio)) {
           this.selectedDomain = idDominio;
         }
       }

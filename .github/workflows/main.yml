@@ -63,6 +63,7 @@ jobs:
             --failOnCVSS 0
             --nodeAuditSkipDevDependencies
             --nodePackageSkipDevDependencies
+            --suppression /github/workspace/.github/dependency-check-suppressions.xml
 
       - name: Upload OWASP report
         if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_OWASP_JOB == 'true') }}
@@ -98,12 +99,232 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  # ── SBOM CycloneDX ───────────────────────────────────────────────────
+  sbom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SBOM_CYCLONEDX_NPM_VERSION: '6.0.1'
+      SBOM_CYCLONEDX_SCHEMA_VERSION: '1.6'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # --omit dev esclude le dipendenze di sviluppo, equivalente a
+      # -DincludeTestScope=false usato dal job sbom dei componenti backend.
+      - name: Generate SBOM (CycloneDX json)
+        run: |
+          set -euo pipefail
+          mkdir -p sbom/cyclonedx
+          echo "Generazione SBOM CycloneDX ..."
+          npx --yes "@cyclonedx/cyclonedx-npm@${SBOM_CYCLONEDX_NPM_VERSION}" \
+            --output-format JSON \
+            --output-file sbom/cyclonedx/bom.cdx.json \
+            --spec-version "${SBOM_CYCLONEDX_SCHEMA_VERSION}" \
+            --omit dev
+          ls -la sbom/cyclonedx/
+
+      - name: Upload SBOM artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-report
+          path: sbom/
+          retention-days: 30
+
+  # ── Upload SBOM su Dependency-Track ──────────────────────────────────
+  # Traduzione del job GitLab dependency-track-upload.
+  # Esecuzione: sempre su tag e sui branch main/master/staging; forzabile
+  # con la variabile FORCE_DTRACK_UPLOAD_JOB; disattivabile del tutto con
+  # DISABLE_DTRACK_UPLOAD_JOB, che ha la precedenza su tutto il resto.
+  dependency-track-upload:
+    needs: [ sbom ]
+    if: >-
+      vars.DISABLE_DTRACK_UPLOAD_JOB != 'true' &&
+      (github.ref_type == 'tag' ||
+       github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'staging' ||
+       vars.FORCE_DTRACK_UPLOAD_JOB == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    # Come su GitLab, il fallimento blocca solo le esecuzioni su tag e sui
+    # branch protetti; le esecuzioni forzate sono tolleranti.
+    continue-on-error: ${{ github.ref_type != 'tag' && github.ref_name != 'main' && github.ref_name != 'master' && github.ref_name != 'staging' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom-report
+          path: sbom/
+
+      - name: Verifica prerequisiti
+        env:
+          DTRACK_API_KEY: ${{ secrets.GOVPAY_DTRACK_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${DTRACK_API_KEY}" ]; then
+            echo "ERRORE: secret GOVPAY_DTRACK_API_KEY non configurato."
+            exit 1
+          fi
+          if [ ! -f script/sbom/upload-sbom-parent-required.sh ]; then
+            echo "ERRORE: script script/sbom/upload-sbom-parent-required.sh non presente nel repository."
+            exit 1
+          fi
+          if [ ! -f "sbom/cyclonedx/bom.cdx.json" ]; then
+            echo "ERRORE: SBOM non trovato in sbom/cyclonedx/bom.cdx.json"
+            ls -R sbom/ || true
+            exit 1
+          fi
+          echo "SBOM: $(wc -c < sbom/cyclonedx/bom.cdx.json) byte"
+
+      # Versione e flag 'latest' seguono la stessa logica del job GitLab:
+      # su tag la versione e' il tag ed e' marcata come latest; sui branch
+      # protetti la versione e' il nome del branch; altrove 'dev'.
+      - name: Determina versione Dependency-Track
+        id: dtrack
+        run: |
+          set -euo pipefail
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "latest=true" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.ref_name }}" = "main" ] || [ "${{ github.ref_name }}" = "master" ] || [ "${{ github.ref_name }}" = "staging" ]; then
+            echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "latest=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=dev" >> "$GITHUB_OUTPUT"
+            echo "latest=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload SBOM su Dependency-Track
+        env:
+          DTRACK_API_KEY: ${{ secrets.GOVPAY_DTRACK_API_KEY }}
+          WORKSPACE: ${{ github.workspace }}
+          DTRACK_VERSION: ${{ steps.dtrack.outputs.version }}
+          DTRACK_LATEST: ${{ steps.dtrack.outputs.latest }}
+        run: |
+          set -euo pipefail
+          chmod +x script/sbom/upload-sbom-parent-required.sh
+          ./script/sbom/upload-sbom-parent-required.sh \
+            "${DTRACK_API_KEY}" \
+            "${WORKSPACE}/sbom/cyclonedx/bom.cdx.json" \
+            "GovPay-Frontend"
+
+  # ── Immagine Docker di sviluppo (ogni push su master) ──────────────────
+  # Routing sul trigger, non sulla versione: push su master -> repo di sviluppo,
+  # push di un tag -> repo di produzione (job docker). package.json non viene
+  # toccato, quindi bump-version.js resta valido.
+  # Tag pubblicati: "master" (mobile, ultimo stato del branch) e "sha-<breve>"
+  # (immutabile, per riprodurre un test di integrazione fallito).
+  docker-dev:
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name == 'master' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npm run build:prod
+
+      - name: Prepare Docker build context
+        working-directory: docker
+        run: |
+          rm -rf buildcontext
+          mkdir -p buildcontext/app
+          cp -fr commons buildcontext/
+          cp -rf ../dist/govpay-portal/browser/* buildcontext/app/
+
+      - name: Compute development version label
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          SHORT="$(git rev-parse --short HEAD)"
+          echo "fullversion=${VERSION}-${SHORT}" >> "$GITHUB_OUTPUT"
+          echo "Development version: ${VERSION}-${SHORT}"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ vars.DOCKERHUB_NAMESPACE || 'linkitaly' }}/govpay-portal-dev
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push development image
+        uses: docker/build-push-action@v6
+        with:
+          context: docker/buildcontext
+          file: docker/govpay-portal/Dockerfile.daFile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            govpay_portal_fullversion=${{ steps.version.outputs.fullversion }}
+
   docker:
     needs: build
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Con l'immagine di sviluppo pubblicata a ogni push sul branch, il tag resta
+      # l'unico ingresso al repo di produzione. Verifichiamo che coincida con la
+      # versione dichiarata in package.json e che non sia una prerelease: il tag
+      # da' il nome all'immagine e alimenta govpay_*_fullversion, quindi un
+      # disallineamento produrrebbe un'immagine etichettata male.
+      - name: Verify tag matches package.json version
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          TAG="${{ github.ref_name }}"
+          echo "package.json: $VERSION"
+          echo "tag         : $TAG"
+          case "$VERSION" in
+            *-*)
+              echo "::error::package.json e' alla versione $VERSION (prerelease). Allineare a una versione stabile e ricreare il tag prima di rilasciare."
+              exit 1
+              ;;
+          esac
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "::error::Il tag ($TAG) non coincide con la versione in package.json ($VERSION)."
+            exit 1
+          fi
+          echo "Versione e tag coincidono, procedo."
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

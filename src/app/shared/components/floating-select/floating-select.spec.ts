@@ -100,7 +100,7 @@ describe('FloatingSelectComponent', () => {
       fixture.detectChanges();
 
       const buttons = fixture.nativeElement.querySelectorAll('[role="option"]');
-      expect(buttons.length).toBe(3);
+      expect(buttons).toHaveLength(3);
     });
 
     it('should show placeholder text when no value selected', () => {
@@ -119,7 +119,7 @@ describe('FloatingSelectComponent', () => {
       fixture.detectChanges();
 
       const disabledButtons = fixture.nativeElement.querySelectorAll('[role="option"][disabled]');
-      expect(disabledButtons.length).toBe(1);
+      expect(disabledButtons).toHaveLength(1);
     });
   });
 

@@ -260,7 +260,7 @@ describe('GovPayApiProxyService', () => {
       const domini = await new Promise<ListaDomini>(resolve => {
         service.getDomini().subscribe(d => resolve(d));
       });
-      expect(domini.risultati.length).toBe(1);
+      expect(domini.risultati).toHaveLength(1);
       expect(domini.risultati[0].idDominio).toBe('12345678901');
     });
   });

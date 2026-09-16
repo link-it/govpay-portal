@@ -312,7 +312,7 @@ export class SidebarComponent {
   @Input() user: UserInfo | null = null;
   @Input() isAuthenticated = false;
 
-  @Output() close = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
   @Output() logout = new EventEmitter<void>();
 
   get filteredMenuItems(): MenuItem[] {
@@ -326,7 +326,7 @@ export class SidebarComponent {
 
   onItemClick() {
     this.navigationState.requestServizioReset();
-    this.close.emit();
+    this.closed.emit();
   }
 
   onSpidLogin() {

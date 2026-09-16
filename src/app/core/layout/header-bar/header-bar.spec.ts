@@ -18,207 +18,223 @@
  */
 
 /**
- * Test per HeaderBarComponent
+ * Test per HeaderBarComponent.
  *
- * Nota: Il componente importa da @shared/components che include
- * JsonSchemaFormComponent con dipendenza @ng-formworks/material.
- * Per evitare problemi di import lodash, si testano solo le interfacce e logica.
+ * Questo file testava solo i tipi, con questa motivazione: "il componente
+ * importa da @shared/components che include JsonSchemaFormComponent con
+ * dipendenza @ng-formworks/material; per evitare problemi di import lodash si
+ * testano solo le interfacce". Il vincolo non c'e' piu': l'alias in
+ * vitest.config.ts risolve i sottopercorsi di lodash, quindi il componente e'
+ * importabile e la logica si puo' verificare davvero.
+ *
+ * Come per main-layout si usa `runInInjectionContext` invece di
+ * `TestBed.createComponent`: il template monta dropdown e selettori che qui non
+ * servono, mentre tutto cio' che va verificato sta nella classe.
  */
 
+import { TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
+import { DateAdapter } from '@angular/material/core';
+import { TranslateService } from '@ngx-translate/core';
+
+import { HeaderBarComponent } from './header-bar';
+import { ConfigService } from '../../config';
+import { NavigationStateService } from '../../services/navigation-state.service';
+
 describe('HeaderBarComponent', () => {
-  describe('component interface', () => {
-    it('should define expected inputs', () => {
-      // Verifica che i tipi di input siano corretti
-      const expectedInputs = [
-        'title',
-        'version',
-        'showMenuButton',
-        'cartCount',
-        'isAuthenticated',
-        'userName',
-        'detailMode',
-        'detailTitle'
+  let component: HeaderBarComponent;
+
+  let config: any;
+  let translate: any;
+  let dateAdapter: any;
+  let navigationState: any;
+
+  const temaBase = {
+    header: { background: '#ffffff' },
+    buttons: { primaryBackground: '#0066cc' }
+  };
+
+  function build(overrides: { config?: object; translate?: object } = {}) {
+    config = {
+      theme: signal(temaBase),
+      ui: signal({ showLanguageSelector: true }),
+      lingue: signal([
+        { language: 'Italiano', alpha2Code: 'it', alpha3Code: 'ita' },
+        { language: 'English', alpha2Code: 'en', alpha3Code: 'eng' }
+      ]),
+      branding: signal({ header: { partners: [], partnerLogoHeight: 32 } }),
+      ...overrides.config
+    };
+
+    translate = {
+      getCurrentLang: () => 'it',
+      use: vi.fn(),
+      ...overrides.translate
+    };
+
+    dateAdapter = { setLocale: vi.fn() };
+    navigationState = { requestServizioReset: vi.fn() };
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: ConfigService, useValue: config },
+        { provide: TranslateService, useValue: translate },
+        { provide: DateAdapter, useValue: dateAdapter },
+        { provide: NavigationStateService, useValue: navigationState }
+      ]
+    });
+
+    component = TestBed.runInInjectionContext(() => new HeaderBarComponent());
+    return component;
+  }
+
+  beforeEach(() => build());
+
+  it('viene creato', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('lingua corrente', () => {
+    it('parte dalla lingua attiva di TranslateService', () => {
+      expect(component['currentLang']()).toBe('it');
+    });
+
+    it('ripiega su it quando TranslateService non ne ha una', () => {
+      build({ translate: { getCurrentLang: () => null } });
+
+      expect(component['currentLang']()).toBe('it');
+    });
+
+    it('cambiando lingua aggiorna traduzioni e locale delle date', () => {
+      component['onLanguageSelected']({ label: 'English', value: 'en' });
+
+      expect(component['currentLang']()).toBe('en');
+      expect(translate.use).toHaveBeenCalledWith('en');
+      expect(dateAdapter.setLocale).toHaveBeenCalledWith('en');
+    });
+  });
+
+  describe('colore di hover dei pulsanti', () => {
+    it('usa il bianco trasparente su header scuro', () => {
+      build({ config: { theme: signal({ ...temaBase, header: { background: '#101820' } }) } });
+
+      expect(component['headerBtnHover']()).toBe('rgba(255,255,255,0.12)');
+    });
+
+    it('usa il nero trasparente su header chiaro', () => {
+      expect(component['headerBtnHover']()).toBe('rgba(0,0,0,0.05)');
+    });
+
+    it('tratta come chiaro un colore in forma abbreviata', () => {
+      build({ config: { theme: signal({ ...temaBase, header: { background: '#fff' } }) } });
+
+      expect(component['headerBtnHover']()).toBe('rgba(0,0,0,0.05)');
+    });
+  });
+
+  describe('selettore di lingua', () => {
+    it('e mostrato con piu lingue disponibili', () => {
+      expect(component['showLanguageSelector']()).toBe(true);
+    });
+
+    it('e nascosto quando la config lo disabilita', () => {
+      build({ config: { ui: signal({ showLanguageSelector: false }) } });
+
+      expect(component['showLanguageSelector']()).toBe(false);
+    });
+
+    it('e nascosto quando esiste una sola lingua', () => {
+      build({ config: { lingue: signal([{ language: 'Italiano', alpha2Code: 'it', alpha3Code: 'ita' }]) } });
+
+      expect(component['showLanguageSelector']()).toBe(false);
+    });
+
+    it('elenca le lingue configurate e segna quella attiva', () => {
+      const dropdown = component['languageDropdownConfig']();
+
+      expect(dropdown.items).toEqual([
+        { label: 'Italiano', value: 'it' },
+        { label: 'English', value: 'en' }
+      ]);
+      expect(dropdown.selectedValue).toBe('it');
+      expect(dropdown.position).toBe('right');
+    });
+  });
+
+  describe('loghi partner in header', () => {
+    it('restituisce lista vuota e altezza di default quando non configurati', () => {
+      build({ config: { branding: signal({}) } });
+
+      expect(component['headerPartners']()).toEqual([]);
+      expect(component['headerPartnerLogoHeight']()).toBe(32);
+    });
+
+    it('restituisce i partner e l altezza configurati', () => {
+      const partners = [{ logo: 'ente.png', alt: 'Ente' }];
+      build({ config: { branding: signal({ header: { partners, partnerLogoHeight: 48 } }) } });
+
+      expect(component['headerPartners']()).toEqual(partners);
+      expect(component['headerPartnerLogoHeight']()).toBe(48);
+    });
+  });
+
+  describe('selettore di dominio', () => {
+    it('costruisce le voci dai domini e segna quello attivo', () => {
+      component.domini = [
+        { value: '80012000826', label: 'Ente Dimostrativo' } as any,
+        { value: '80012000827', label: 'Comune Test' } as any
       ];
+      component.activeDominio = { value: '80012000827', label: 'Comune Test' } as any;
 
-      expect(expectedInputs).toContain('title');
-      expect(expectedInputs).toContain('cartCount');
-      expect(expectedInputs).toContain('isAuthenticated');
-      expect(expectedInputs).toContain('detailMode');
+      const dropdown = component['domainDropdownConfig'];
+
+      expect(dropdown.items).toEqual([
+        { label: 'Ente Dimostrativo', value: '80012000826' },
+        { label: 'Comune Test', value: '80012000827' }
+      ]);
+      expect(dropdown.selectedValue).toBe('80012000827');
+      expect(dropdown.position).toBe('left');
     });
 
-    it('should define expected outputs', () => {
-      const expectedOutputs = [
-        'menuClick',
-        'cartClick',
-        'loginClick',
-        'logoutClick',
-        'navigateTo',
-        'backClick'
-      ];
+    it('emette domainChange sulla scelta', () => {
+      const spy = vi.fn();
+      component.domainChange.subscribe(spy);
 
-      expect(expectedOutputs).toContain('menuClick');
-      expect(expectedOutputs).toContain('cartClick');
-      expect(expectedOutputs).toContain('loginClick');
-      expect(expectedOutputs).toContain('logoutClick');
+      component['onDomainSelected']({ label: 'Comune Test', value: '80012000827' });
+
+      expect(spy).toHaveBeenCalledWith('80012000827');
     });
   });
 
-  describe('default values', () => {
-    it('should have empty string as default title', () => {
-      const defaultTitle = '';
-      expect(defaultTitle).toBe('');
+  describe('menu utente', () => {
+    it('emette logoutClick sulla voce di logout', () => {
+      const logout = vi.fn();
+      const navigate = vi.fn();
+      component.logoutClick.subscribe(logout);
+      component.navigateTo.subscribe(navigate);
+
+      component['onUserMenuSelected']({ label: 'Esci', value: 'logout' });
+
+      expect(logout).toHaveBeenCalled();
+      expect(navigate).not.toHaveBeenCalled();
     });
 
-    it('should show menu button by default', () => {
-      const defaultShowMenuButton = true;
-      expect(defaultShowMenuButton).toBe(true);
-    });
+    it('naviga sulla rotta corrispondente per le altre voci', () => {
+      const navigate = vi.fn();
+      component.navigateTo.subscribe(navigate);
 
-    it('should have cartCount 0 by default', () => {
-      const defaultCartCount = 0;
-      expect(defaultCartCount).toBe(0);
-    });
+      component['onUserMenuSelected']({ label: 'Riepilogo', value: 'riepilogo' });
 
-    it('should not be authenticated by default', () => {
-      const defaultIsAuthenticated = false;
-      expect(defaultIsAuthenticated).toBe(false);
-    });
-
-    it('should not be in detailMode by default', () => {
-      const defaultDetailMode = false;
-      expect(defaultDetailMode).toBe(false);
+      expect(navigate).toHaveBeenCalledWith('/riepilogo');
     });
   });
 
-  describe('cart badge logic', () => {
-    it('should not show badge when cartCount is 0', () => {
-      const cartCount = 0;
-      const showBadge = cartCount > 0;
-      expect(showBadge).toBe(false);
-    });
+  describe('click su una tab', () => {
+    it('chiede il reset della schermata servizi', () => {
+      component['onTabClick']();
 
-    it('should show badge when cartCount > 0', () => {
-      const cartCount = 5;
-      const showBadge = cartCount > 0;
-      expect(showBadge).toBe(true);
-    });
-
-    it('should show 9+ when cartCount > 9', () => {
-      const cartCount = 15;
-      const displayCount = cartCount > 9 ? '9+' : cartCount.toString();
-      expect(displayCount).toBe('9+');
-    });
-
-    it('should show exact count when cartCount <= 9', () => {
-      const cartCount = 7;
-      const displayCount = cartCount > 9 ? '9+' : cartCount.toString();
-      expect(displayCount).toBe('7');
-    });
-  });
-
-  describe('login button visibility', () => {
-    it('should show login button when not authenticated', () => {
-      const isAuthenticated = false;
-      const showLoginButton = !isAuthenticated;
-      expect(showLoginButton).toBe(true);
-    });
-
-    it('should hide login button when authenticated', () => {
-      const isAuthenticated = true;
-      const showLoginButton = !isAuthenticated;
-      expect(showLoginButton).toBe(false);
-    });
-  });
-
-  describe('user menu visibility', () => {
-    it('should show user menu when authenticated with userName', () => {
-      const isAuthenticated = true;
-      const userName = 'John Doe';
-      const showUserMenu = isAuthenticated && !!userName;
-      expect(showUserMenu).toBe(true);
-    });
-
-    it('should not show user menu when not authenticated', () => {
-      const isAuthenticated = false;
-      const userName = 'John Doe';
-      const showUserMenu = isAuthenticated && !!userName;
-      expect(showUserMenu).toBe(false);
-    });
-
-    it('should not show user menu when userName is null', () => {
-      const isAuthenticated = true;
-      const userName: string | null = null;
-      const showUserMenu = isAuthenticated && !!userName;
-      expect(showUserMenu).toBe(false);
-    });
-  });
-
-  describe('user initial', () => {
-    it('should get first character as initial', () => {
-      const userName = 'John Doe';
-      const initial = userName.charAt(0).toUpperCase();
-      expect(initial).toBe('J');
-    });
-
-    it('should uppercase the initial', () => {
-      const userName = 'mario rossi';
-      const initial = userName.charAt(0).toUpperCase();
-      expect(initial).toBe('M');
-    });
-  });
-
-  describe('detail mode', () => {
-    it('should show back button in detail mode', () => {
-      const detailMode = true;
-      // In detail mode, si mostra X button invece di hamburger menu
-      expect(detailMode).toBe(true);
-    });
-
-    it('should hide navigation tabs in detail mode', () => {
-      const detailMode = true;
-      const showTabs = !detailMode;
-      expect(showTabs).toBe(false);
-    });
-
-    it('should show navigation tabs when not in detail mode', () => {
-      const detailMode = false;
-      const showTabs = !detailMode;
-      expect(showTabs).toBe(true);
-    });
-  });
-
-  describe('language selector', () => {
-    it('should be visible when showLanguageSelector is true', () => {
-      const showLanguageSelector = true;
-      expect(showLanguageSelector).toBe(true);
-    });
-
-    it('should be hidden when showLanguageSelector is false', () => {
-      const showLanguageSelector = false;
-      expect(showLanguageSelector).toBe(false);
-    });
-
-    it('should default to showing language selector', () => {
-      const uiConfig = { showLanguageSelector: undefined };
-      const showLanguageSelector = uiConfig.showLanguageSelector !== false;
-      expect(showLanguageSelector).toBe(true);
-    });
-  });
-
-  describe('user menu handling', () => {
-    it('should emit logout for logout action', () => {
-      const itemValue: string = 'logout';
-      const shouldLogout = itemValue === 'logout';
-      expect(shouldLogout).toBe(true);
-    });
-
-    it('should navigate for other actions', () => {
-      const itemValue: string = 'riepilogo';
-      const shouldLogout = itemValue === 'logout';
-      const navigatePath = '/' + itemValue;
-
-      expect(shouldLogout).toBe(false);
-      expect(navigatePath).toBe('/riepilogo');
+      expect(navigationState.requestServizioReset).toHaveBeenCalled();
     });
   });
 });

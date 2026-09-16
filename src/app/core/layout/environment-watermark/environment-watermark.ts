@@ -104,7 +104,7 @@ export class EnvironmentWatermarkComponent {
     }
     const trimmed = size.trim();
     if (trimmed.endsWith('%')) {
-      const value = parseFloat(trimmed);
+      const value = Number.parseFloat(trimmed);
       return Number.isFinite(value) ? `${value}vmin` : '80px';
     }
     return trimmed;

@@ -113,7 +113,7 @@ describe('DropdownMenuComponent', () => {
       fixture.detectChanges();
 
       const buttons = fixture.nativeElement.querySelectorAll('button[role="menuitem"]');
-      expect(buttons.length).toBe(3); // 3 items (divider is not a button)
+      expect(buttons).toHaveLength(3); // 3 items (divider is not a button)
     });
 
     it('should render divider', () => {

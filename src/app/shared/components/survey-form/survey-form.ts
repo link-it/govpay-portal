@@ -28,7 +28,6 @@ import {
   inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
 import { Model, SurveyModel, surveyLocalization } from 'survey-core';
 import { SurveyModule } from 'survey-angular-ui';
 // Importa locale italiano (side effect - registra automaticamente il locale)
@@ -61,7 +60,6 @@ export interface SurveyDefinition {
   templateUrl: './survey-form.html'
 })
 export class SurveyFormComponent implements OnDestroy {
-  private readonly translate = inject(TranslateService);
   private readonly surveyExtensions = inject(SurveyExtensionsService);
 
   // Inputs

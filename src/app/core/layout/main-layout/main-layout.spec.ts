@@ -18,277 +18,373 @@
  */
 
 /**
- * Test per MainLayoutComponent
+ * Test per MainLayoutComponent.
  *
- * Nota: Il componente importa da @shared/components che include
- * JsonSchemaFormComponent con dipendenza @ng-formworks/material.
- * Per evitare problemi di import lodash, si testano solo le interfacce e logica.
+ * Il componente e' istanziato con `runInInjectionContext` invece che con
+ * `TestBed.createComponent`: il suo template monta sei componenti figli
+ * (header-bar, sidebar, domain-selector, maintenance, watermark, scroll-to-top)
+ * che qui non servono, mentre tutta la logica da verificare sta nella classe.
  */
 
+import { TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
+import { of, throwError } from 'rxjs';
+
+import { MainLayoutComponent } from './main-layout';
+import { ConfigService } from '../../config';
+import { PayService } from '../../pay';
+import { HeaderStateService } from '../../services/header-state.service';
+
 describe('MainLayoutComponent', () => {
-  describe('component interface', () => {
-    it('should define required service injections', () => {
-      const expectedServices = [
-        'ConfigService',
-        'PayService',
-        'HeaderStateService',
-        'Router',
-        'Location',
-        'TranslateService'
-      ];
+  let component: MainLayoutComponent;
 
-      expect(expectedServices).toContain('ConfigService');
-      expect(expectedServices).toContain('PayService');
-      expect(expectedServices).toContain('HeaderStateService');
-      expect(expectedServices).toContain('Router');
-      expect(expectedServices).toContain('Location');
+  let config: any;
+  let pay: any;
+  let headerState: any;
+  let router: any;
+  let location: any;
+
+  const utente = {
+    anagrafica: { anagrafica: 'Mario Rossi', email: 'mario.rossi@example.it' }
+  };
+
+  /**
+   * Costruisce il componente con i doppi correnti.
+   * Le sovrascritture permettono a ogni test di variare solo cio' che gli serve.
+   */
+  function build(overrides: { config?: object; pay?: object } = {}) {
+    config = {
+      isSingleDomain: signal(false),
+      ui: signal({ domainSelector: { showInHeader: true } }),
+      hasAuthentication: () => false,
+      isSpidEnabled: () => false,
+      isIamEnabled: () => false,
+      activeDominioId: signal<string | null>(null),
+      setActiveDominio: vi.fn(),
+      domini: signal([{ value: '80012000826', label: 'Ente Dimostrativo' }]),
+      auth: signal({
+        iam: { loginUrl: '' },
+        logoutLandingPage: '',
+        logoutLandingPageTarget: ''
+      }),
+      routing: signal({ publicExit: 'pagamento-servizio' }),
+      ...overrides.config
+    };
+
+    pay = {
+      user: signal<typeof utente | null>(null),
+      cartCount: signal(0),
+      checkSession: vi.fn().mockReturnValue(of(true)),
+      logout: vi.fn().mockReturnValue(of(null)),
+      mockLogin: vi.fn(),
+      mockLogout: vi.fn(),
+      ...overrides.pay
+    };
+
+    headerState = { clearDetailMode: vi.fn() };
+    router = { navigate: vi.fn() };
+    location = { back: vi.fn() };
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: ConfigService, useValue: config },
+        { provide: PayService, useValue: pay },
+        { provide: HeaderStateService, useValue: headerState },
+        { provide: Router, useValue: router },
+        { provide: Location, useValue: location },
+        { provide: TranslateService, useValue: { instant: (k: string) => k } }
+      ]
     });
 
-    it('should import required components', () => {
-      const importedComponents = [
-        'CommonModule',
-        'RouterOutlet',
-        'HeaderBarComponent',
-        'SidebarComponent',
-        'ScrollToTopComponent'
-      ];
+    component = TestBed.runInInjectionContext(() => new MainLayoutComponent());
+    return component;
+  }
 
-      expect(importedComponents).toContain('HeaderBarComponent');
-      expect(importedComponents).toContain('SidebarComponent');
-      expect(importedComponents).toContain('ScrollToTopComponent');
-    });
+  beforeEach(() => {
+    vi.stubGlobal('location', { search: '', href: '' });
+    vi.stubGlobal('window', { location: { href: '' }, open: vi.fn() });
+    build();
   });
 
-  describe('sidebar state', () => {
-    it('should be closed by default', () => {
-      const sidebarOpen = false;
-      expect(sidebarOpen).toBe(false);
-    });
-
-    it('should toggle sidebar state', () => {
-      let sidebarOpen = false;
-      // toggle
-      sidebarOpen = !sidebarOpen;
-      expect(sidebarOpen).toBe(true);
-      // toggle again
-      sidebarOpen = !sidebarOpen;
-      expect(sidebarOpen).toBe(false);
-    });
-
-    it('should close sidebar', () => {
-      let sidebarOpen = true;
-      sidebarOpen = false;
-      expect(sidebarOpen).toBe(false);
-    });
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
-  describe('currentUser computed', () => {
-    function mapUser(user: { anagrafica: { anagrafica: string; email?: string } } | null) {
-      if (!user) return null;
-      return {
-        name: user.anagrafica.anagrafica,
-        email: user.anagrafica.email
-      };
-    }
+  it('viene creato', () => {
+    expect(component).toBeTruthy();
+  });
 
-    it('should return null when user is null', () => {
-      const currentUser = mapUser(null);
-      expect(currentUser).toBeNull();
+  describe('utente corrente', () => {
+    it('espone null quando nessuno e autenticato', () => {
+      expect(component['currentUser']()).toBeNull();
+      expect(component['currentUserName']()).toBeNull();
     });
 
-    it('should map user data correctly', () => {
-      const user = {
-        anagrafica: {
-          anagrafica: 'Mario Rossi',
-          email: 'mario@example.com'
-        }
-      };
+    it('espone nome ed email dell utente autenticato', () => {
+      pay.user.set(utente);
 
-      const currentUser = mapUser(user);
-      expect(currentUser).toEqual({
+      expect(component['currentUser']()).toEqual({
         name: 'Mario Rossi',
-        email: 'mario@example.com'
+        email: 'mario.rossi@example.it'
       });
+      expect(component['currentUserName']()).toBe('Mario Rossi');
     });
   });
 
-  describe('currentUserName computed', () => {
-    function getUserName(user: { anagrafica: { anagrafica: string } } | null): string | null {
-      return user?.anagrafica?.anagrafica || null;
-    }
-
-    it('should return null when user is null', () => {
-      const userName = getUserName(null);
-      expect(userName).toBeNull();
+  describe('selettore di dominio in header', () => {
+    it('e mostrato in multidominio quando la config non lo disabilita', () => {
+      expect(component['showDomainSwitcher']()).toBe(true);
     });
 
-    it('should return user name when available', () => {
-      const user = {
-        anagrafica: {
-          anagrafica: 'Mario Rossi'
-        }
-      };
-      const userName = getUserName(user);
-      expect(userName).toBe('Mario Rossi');
+    it('e nascosto quando il portale ha un solo dominio', () => {
+      build({ config: { isSingleDomain: signal(true) } });
+
+      expect(component['showDomainSwitcher']()).toBe(false);
+    });
+
+    it('e nascosto quando la config lo disabilita esplicitamente', () => {
+      build({ config: { ui: signal({ domainSelector: { showInHeader: false } }) } });
+
+      expect(component['showDomainSwitcher']()).toBe(false);
     });
   });
 
-  describe('menuItems computed', () => {
-    it('should include Pagamenti menu item', () => {
-      const menuItems = [
-        { label: 'Pagamenti', icon: 'bootstrapCreditCard2Front', link: '/pagamento-servizio', requiresAuth: false },
-        { label: 'Carrello', icon: 'bootstrapCart3', link: '/carrello', requiresAuth: false, badge: 0 },
-        { label: 'Posizione Debitoria', icon: 'bootstrapListUl', link: '/riepilogo', requiresAuth: true }
-      ];
+  describe('voci di menu', () => {
+    it('espone le tre voci, con il riepilogo riservato agli autenticati', () => {
+      const voci = component['menuItems'];
 
-      const pagamentiItem = menuItems.find(item => item.link === '/pagamento-servizio');
-      expect(pagamentiItem).toBeTruthy();
-      expect(pagamentiItem?.requiresAuth).toBe(false);
+      expect(voci).toHaveLength(3);
+      expect(voci.map(v => v.link)).toEqual(['/pagamento-servizio', '/carrello', '/riepilogo']);
+      expect(voci[2].requiresAuth).toBe(true);
     });
 
-    it('should include Carrello menu item with badge', () => {
-      const cartCount = 3;
-      const menuItems = [
-        { label: 'Carrello', icon: 'bootstrapCart3', link: '/carrello', requiresAuth: false, badge: cartCount }
-      ];
+    it('riporta sul carrello il numero di articoli', () => {
+      pay.cartCount.set(3);
 
-      const carrelloItem = menuItems.find(item => item.label === 'Carrello');
-      expect(carrelloItem?.badge).toBe(3);
-    });
-
-    it('should include Posizione Debitoria requiring auth', () => {
-      const menuItems = [
-        { label: 'Posizione Debitoria', icon: 'bootstrapListUl', link: '/riepilogo', requiresAuth: true }
-      ];
-
-      const posizioneItem = menuItems.find(item => item.link === '/riepilogo');
-      expect(posizioneItem?.requiresAuth).toBe(true);
+      expect(component['menuItems'][1].badge).toBe(3);
     });
   });
 
-  describe('onLoginClick behavior', () => {
-    it('should call mockLogin when no auth methods enabled', () => {
-      const isSpidEnabled = false;
-      const isIamEnabled = false;
-      const shouldMockLogin = !isSpidEnabled && !isIamEnabled;
+  describe('sidebar', () => {
+    it('apre e chiude alternando toggleSidebar', () => {
+      expect(component['sidebarOpen']()).toBe(false);
 
-      expect(shouldMockLogin).toBe(true);
+      component.toggleSidebar();
+      expect(component['sidebarOpen']()).toBe(true);
+
+      component.toggleSidebar();
+      expect(component['sidebarOpen']()).toBe(false);
     });
 
-    it('should open sidebar when auth methods are available', () => {
-      const isSpidEnabled = true;
-      const isIamEnabled = false;
-      const shouldOpenSidebar = isSpidEnabled || isIamEnabled;
+    it('closeSidebar la chiude anche se era gia chiusa', () => {
+      component.closeSidebar();
 
-      expect(shouldOpenSidebar).toBe(true);
-    });
-  });
-
-  describe('onLogout behavior', () => {
-    it('should close sidebar on logout', () => {
-      let sidebarOpen = true;
-      // onLogout closes sidebar
-      sidebarOpen = false;
-      expect(sidebarOpen).toBe(false);
+      expect(component['sidebarOpen']()).toBe(false);
     });
 
-    it('should redirect to pagamento-servizio after logout', () => {
-      const expectedRedirect = '/pagamento-servizio';
-      expect(expectedRedirect).toBe('/pagamento-servizio');
-    });
-  });
+    it('Esc la chiude quando e aperta', () => {
+      component.toggleSidebar();
 
-  describe('onCartClick', () => {
-    it('should navigate to carrello', () => {
-      const expectedRoute = '/carrello';
-      expect(expectedRoute).toBe('/carrello');
-    });
-  });
+      component.onEscapeKey();
 
-  describe('onNavigateTo', () => {
-    it('should navigate to specified path', () => {
-      const path = '/riepilogo';
-      expect(path).toBe('/riepilogo');
-    });
-  });
-
-  describe('onBackClick', () => {
-    it('should clear detail mode', () => {
-      // Simulates headerState.clearDetailMode()
-      let detailMode = true;
-      let detailTitle = 'Some title';
-
-      // clearDetailMode
-      detailMode = false;
-      detailTitle = '';
-
-      expect(detailMode).toBe(false);
-      expect(detailTitle).toBe('');
-    });
-  });
-
-  describe('ESC key handling', () => {
-    it('should close sidebar when open and ESC pressed', () => {
-      let sidebarOpen = true;
-      // onEscapeKey
-      if (sidebarOpen) {
-        sidebarOpen = false;
-      }
-      expect(sidebarOpen).toBe(false);
+      expect(component['sidebarOpen']()).toBe(false);
     });
 
-    it('should do nothing when sidebar closed and ESC pressed', () => {
-      let sidebarOpen = false;
-      // onEscapeKey
-      if (sidebarOpen) {
-        sidebarOpen = false;
-      }
-      expect(sidebarOpen).toBe(false);
+    it('Esc non fa nulla quando e gia chiusa', () => {
+      component.onEscapeKey();
+
+      expect(component['sidebarOpen']()).toBe(false);
     });
   });
 
   describe('ngOnInit', () => {
-    it('should check session when authentication is enabled', () => {
-      const hasAuthentication = true;
-      let sessionChecked = false;
+    it('ripristina il dominio passato in query string', () => {
+      vi.stubGlobal('location', { search: '?idDominio=80012000826' });
+      build();
 
-      if (hasAuthentication) {
-        sessionChecked = true; // checkSession()
-      }
+      component.ngOnInit();
 
-      expect(sessionChecked).toBe(true);
+      expect(config.setActiveDominio).toHaveBeenCalledWith('80012000826');
     });
 
-    it('should not check session when no authentication configured', () => {
-      const hasAuthentication = false;
-      let sessionChecked = false;
+    it('non sovrascrive un dominio gia attivo', () => {
+      vi.stubGlobal('location', { search: '?idDominio=80012000826' });
+      build({ config: { activeDominioId: signal('80012000827') } });
 
-      if (hasAuthentication) {
-        sessionChecked = true;
-      }
+      component.ngOnInit();
 
-      expect(sessionChecked).toBe(false);
+      expect(config.setActiveDominio).not.toHaveBeenCalled();
+    });
+
+    it('non tocca il dominio quando la query string non lo contiene', () => {
+      component.ngOnInit();
+
+      expect(config.setActiveDominio).not.toHaveBeenCalled();
+    });
+
+    it('verifica la sessione solo se il portale ha autenticazione', () => {
+      component.ngOnInit();
+      expect(pay.checkSession).not.toHaveBeenCalled();
+
+      build({ config: { hasAuthentication: () => true } });
+      component.ngOnInit();
+      expect(pay.checkSession).toHaveBeenCalled();
     });
   });
 
-  describe('overlay behavior', () => {
-    it('should show overlay when sidebar is open', () => {
-      const sidebarOpen = true;
-      const showOverlay = sidebarOpen;
-      expect(showOverlay).toBe(true);
+  describe('navigazione', () => {
+    it('onCartClick porta al carrello', () => {
+      component.onCartClick();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/carrello']);
     });
 
-    it('should hide overlay when sidebar is closed', () => {
-      const sidebarOpen = false;
-      const showOverlay = sidebarOpen;
-      expect(showOverlay).toBe(false);
+    it('onNavigateTo porta al path richiesto', () => {
+      component.onNavigateTo('/riepilogo');
+
+      expect(router.navigate).toHaveBeenCalledWith(['/riepilogo']);
     });
 
-    it('should close sidebar when overlay is clicked', () => {
-      let sidebarOpen = true;
-      // click on overlay
-      sidebarOpen = false;
-      expect(sidebarOpen).toBe(false);
+    it('onBackClick esce dalla modalita dettaglio e torna indietro', () => {
+      component.onBackClick();
+
+      expect(headerState.clearDetailMode).toHaveBeenCalled();
+      expect(location.back).toHaveBeenCalled();
+    });
+
+    it('onDomainSelected propaga la scelta alla config', () => {
+      component.onDomainSelected('80012000827');
+
+      expect(config.setActiveDominio).toHaveBeenCalledWith('80012000827');
+    });
+  });
+
+  describe('login', () => {
+    it('usa il login fittizio quando ne SPID ne IAM sono attivi', () => {
+      component.onLoginClick();
+
+      expect(pay.mockLogin).toHaveBeenCalled();
+      expect(component['sidebarOpen']()).toBe(false);
+    });
+
+    it('redirige a IAM quando e l unico meccanismo attivo', () => {
+      build({
+        config: {
+          isIamEnabled: () => true,
+          auth: signal({ iam: { loginUrl: 'https://iam.test/login' }, logoutLandingPage: '', logoutLandingPageTarget: '' })
+        }
+      });
+
+      component.onLoginClick();
+
+      expect(window.location.href).toBe('https://iam.test/login?idDominio=80012000826');
+    });
+
+    it('accoda idDominio con & se l URL di IAM ha gia una query string', () => {
+      build({
+        config: {
+          isIamEnabled: () => true,
+          activeDominioId: signal('80012000827'),
+          auth: signal({ iam: { loginUrl: 'https://iam.test/login?realm=pa' }, logoutLandingPage: '', logoutLandingPageTarget: '' })
+        }
+      });
+
+      component.onLoginClick();
+
+      expect(window.location.href).toBe('https://iam.test/login?realm=pa&idDominio=80012000827');
+    });
+
+    it('non redirige se IAM non ha un loginUrl configurato', () => {
+      build({ config: { isIamEnabled: () => true } });
+
+      component.onLoginClick();
+
+      expect(window.location.href).toBe('');
+    });
+
+    it('apre la sidebar quando SPID e attivo', () => {
+      build({ config: { isSpidEnabled: () => true } });
+
+      component.onLoginClick();
+
+      expect(component['sidebarOpen']()).toBe(true);
+      expect(pay.mockLogin).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logout', () => {
+    it('usa il logout fittizio quando ne SPID ne IAM sono attivi', () => {
+      component.onLogout();
+
+      expect(pay.mockLogout).toHaveBeenCalled();
+      expect(pay.logout).not.toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['/pagamento-servizio']);
+    });
+
+    it('chiude la sidebar e redirige sulla uscita pubblica di default', () => {
+      build({ config: { isSpidEnabled: () => true } });
+      component.toggleSidebar();
+
+      component.onLogout();
+
+      expect(component['sidebarOpen']()).toBe(false);
+      expect(router.navigate).toHaveBeenCalledWith(['/pagamento-servizio']);
+    });
+
+    it('redirige comunque se la chiamata di logout fallisce', () => {
+      build({
+        config: { isSpidEnabled: () => true },
+        pay: { logout: vi.fn().mockReturnValue(throwError(() => new Error('boom'))) }
+      });
+
+      component.onLogout();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/pagamento-servizio']);
+    });
+
+    it('naviga sul path interno configurato come landing page', () => {
+      build({
+        config: {
+          isSpidEnabled: () => true,
+          auth: signal({ iam: { loginUrl: '' }, logoutLandingPage: '/arrivederci', logoutLandingPageTarget: '' })
+        }
+      });
+
+      component.onLogout();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/arrivederci']);
+    });
+
+    it('apre la landing page esterna nella stessa finestra con target _self', () => {
+      build({
+        config: {
+          isSpidEnabled: () => true,
+          auth: signal({ iam: { loginUrl: '' }, logoutLandingPage: 'https://ente.it/uscita', logoutLandingPageTarget: '_self' })
+        }
+      });
+
+      component.onLogout();
+
+      expect(window.open).toHaveBeenCalledWith('https://ente.it/uscita', '_self');
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('con target diverso da _self apre la landing e riporta il portale sulla uscita pubblica', () => {
+      build({
+        config: {
+          isSpidEnabled: () => true,
+          auth: signal({ iam: { loginUrl: '' }, logoutLandingPage: 'https://ente.it/uscita', logoutLandingPageTarget: '_blank' })
+        }
+      });
+
+      component.onLogout();
+
+      expect(window.open).toHaveBeenCalledWith('https://ente.it/uscita', '_blank');
+      expect(router.navigate).toHaveBeenCalledWith(['/pagamento-servizio']);
     });
   });
 });

@@ -18,7 +18,7 @@
  */
 
 import { Component, inject, signal, computed, OnInit, HostListener } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { HeaderBarComponent } from '../header-bar/header-bar';
@@ -74,7 +74,7 @@ import { HeaderStateService } from '../../services/header-state.service';
             [menuItems]="menuItems"
             [user]="currentUser()"
             [isAuthenticated]="pay.isAuthenticated()"
-            (close)="closeSidebar()"
+            (closed)="closeSidebar()"
             (logout)="onLogout()"
           />
 
@@ -176,8 +176,6 @@ export class MainLayoutComponent implements OnInit {
     }
   }
 
-  private readonly route = inject(ActivatedRoute);
-
   ngOnInit(): void {
     // Ripristina dominio da query param (es. ritorno da pagoPA)
     this.restoreDomainFromUrl();
@@ -275,7 +273,7 @@ export class MainLayoutComponent implements OnInit {
     const landingPage = this.config.auth().logoutLandingPage;
     const target = this.config.auth().logoutLandingPageTarget || '_self';
 
-    if (landingPage && landingPage.startsWith('http')) {
+    if (landingPage?.startsWith('http')) {
       // URL esterno: apri in nuova finestra o nella stessa
       window.open(landingPage, target);
       if (target !== '_self') {

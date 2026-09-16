@@ -218,7 +218,7 @@ describe('ArchivioComponent', () => {
 
       const result = mapPendenzeToItems(mockPendenze);
 
-      expect(result.length).toBe(3);
+      expect(result).toHaveLength(3);
       expect(result[0].id).toBe('80012000826-301000000000123456-PEND-001');
       expect(result[0].causale).toBe('IMU 2024 - Saldo');
       expect(result[0].importo).toBe(350.00);
@@ -306,7 +306,7 @@ describe('ArchivioComponent', () => {
 
       const result = mapRPPToItems([mockRPP]);
 
-      expect(result.length).toBe(1);
+      expect(result).toHaveLength(1);
       expect(result[0].id).toBe('80012000826-000000000123456-CCP001');
       expect(result[0].causale).toBe('IMU 2024 - Saldo');
       expect(result[0].importo).toBe(350.00);
@@ -512,7 +512,7 @@ describe('ArchivioComponent', () => {
 
       const itemsWithReceipt = items.filter(i => i.hasRicevuta);
 
-      expect(itemsWithReceipt.length).toBe(2);
+      expect(itemsWithReceipt).toHaveLength(2);
     });
 
     it('should not start download when no items have receipts', () => {

@@ -172,7 +172,7 @@ describe('RecaptchaService', () => {
 
       await service.preload();
 
-      expect((mockDocument.createElement as any).mock.calls.length).toBe(createCallCount);
+      expect((mockDocument.createElement as any).mock.calls).toHaveLength(createCallCount);
     });
 
     it('should reject on script error', async () => {

@@ -158,7 +158,7 @@ describe('PosizioneDebitoriaComponent', () => {
         { value: 'ANOMALA', label: 'Language.Stati.Pendenza.anomala' }
       ];
 
-      expect(statiDisponibili.length).toBe(7);
+      expect(statiDisponibili).toHaveLength(7);
       expect(statiDisponibili[0].value).toBe('');
       expect(statiDisponibili[1].value).toBe('NON_ESEGUITA');
     });
@@ -177,7 +177,7 @@ describe('PosizioneDebitoriaComponent', () => {
 
       const result = pendenzeDaPagare();
 
-      expect(result.length).toBe(3); // non_eseguita, scaduta, in_ritardo
+      expect(result).toHaveLength(3); // non_eseguita, scaduta, in_ritardo
       expect(result.some(p => p.stato === 'eseguita')).toBe(false);
     });
   });
@@ -334,7 +334,7 @@ describe('PosizioneDebitoriaComponent', () => {
         return pendenze().slice(start, end);
       };
 
-      expect(paginatedPendenze().length).toBe(2);
+      expect(paginatedPendenze()).toHaveLength(2);
       expect(paginatedPendenze()[0].idPendenza).toBe('PEND-001');
       expect(paginatedPendenze()[1].idPendenza).toBe('PEND-002');
     });
@@ -523,7 +523,7 @@ describe('PosizioneDebitoriaComponent', () => {
 
       addToCart(mockPendenze[0]);
 
-      expect(addedItems.length).toBe(1);
+      expect(addedItems).toHaveLength(1);
       expect(addedItems[0].importo).toBe(350.00);
     });
 
@@ -550,7 +550,7 @@ describe('PosizioneDebitoriaComponent', () => {
 
       addSelectedToCart();
 
-      expect(addedItems.length).toBe(2);
+      expect(addedItems).toHaveLength(2);
       expect(selectedIds().size).toBe(0);
       expect(navigatedTo).toBe('/carrello');
     });
@@ -582,7 +582,7 @@ describe('PosizioneDebitoriaComponent', () => {
 
       addAllToCart();
 
-      expect(addedIds.length).toBe(3);
+      expect(addedIds).toHaveLength(3);
       expect(navigatedTo).toBe('/carrello');
     });
 
