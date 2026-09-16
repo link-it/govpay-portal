@@ -135,6 +135,7 @@ interface ServizioConfig {
           [ngModel]="searchText()"
           (ngModelChange)="onSearchChange($event)"
           [actionIcon]="searchText() ? 'bootstrapXLg' : 'bootstrapSearch'"
+          [actionTitle]="(searchText() ? 'Language.Servizio.AzzeraRicerca' : 'Language.Servizio.CercaServizio') | translate"
           (actionClick)="searchText() ? clearSearch() : null"
         ></app-floating-input>
 
@@ -206,7 +207,7 @@ interface ServizioConfig {
                       <ng-icon name="bootstrapFileEarmarkText" class="text-sm"></ng-icon>
                     </div>
                     @if (servizio.gruppo) {
-                      <span class="text-sm opacity-60 truncate">{{ servizio.gruppo }}</span>
+                      <span class="text-sm opacity-70 truncate">{{ servizio.gruppo }}</span>
                     }
                   </div>
                   <!-- Spacer per spingere il contenuto in basso -->
@@ -332,12 +333,12 @@ interface ServizioConfig {
                       @if (viewMode() === 'tipologie') {
                         <!-- Raggruppiamo per tipologia, mostra assessorato come metadata -->
                         @if (getAssessoratoNome(servizio.assessoratoId)) {
-                          <p class="text-base opacity-60 mt-1">{{ getAssessoratoNome(servizio.assessoratoId) }}</p>
+                          <p class="text-base opacity-70 mt-1">{{ getAssessoratoNome(servizio.assessoratoId) }}</p>
                         }
                       } @else {
                         <!-- Raggruppiamo per assessorato, mostra tipologia come metadata -->
                         @if (getTipologiaNome(servizio.tipologiaId)) {
-                          <p class="text-base opacity-60 mt-1">{{ getTipologiaNome(servizio.tipologiaId) }}</p>
+                          <p class="text-base opacity-70 mt-1">{{ getTipologiaNome(servizio.tipologiaId) }}</p>
                         }
                       }
                     </div>
@@ -424,6 +425,7 @@ interface ServizioConfig {
           <button
             type="button"
             class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            [attr.aria-label]="'Language.Common.Indietro' | translate"
             (click)="closeDetailView()"
           >
             <ng-icon name="bootstrapArrowLeft" class="text-2xl text-gray-600"></ng-icon>
@@ -440,6 +442,7 @@ interface ServizioConfig {
           [ngModel]="serviceSearchText()"
           (ngModelChange)="onServiceSearchChange($event)"
           [actionIcon]="serviceSearchText() ? 'bootstrapXLg' : 'bootstrapSearch'"
+          [actionTitle]="(serviceSearchText() ? 'Language.Servizio.AzzeraRicerca' : 'Language.Servizio.CercaServizio') | translate"
           (actionClick)="serviceSearchText() ? clearServiceSearch() : null"
         ></app-floating-input>
 
@@ -498,12 +501,12 @@ interface ServizioConfig {
                     @if (isTipologiaView()) {
                       <!-- Abbiamo selezionato tipologia, raggruppiamo per assessorato, mostra tipologia come metadata -->
                       @if (getTipologiaNome(servizio.tipologiaId)) {
-                        <p class="text-base opacity-60 mt-1">{{ getTipologiaNome(servizio.tipologiaId) }}</p>
+                        <p class="text-base opacity-70 mt-1">{{ getTipologiaNome(servizio.tipologiaId) }}</p>
                       }
                     } @else {
                       <!-- Abbiamo selezionato assessorato, raggruppiamo per tipologia, mostra assessorato come metadata -->
                       @if (getAssessoratoNome(servizio.assessoratoId)) {
-                        <p class="text-base opacity-60 mt-1">{{ getAssessoratoNome(servizio.assessoratoId) }}</p>
+                        <p class="text-base opacity-70 mt-1">{{ getAssessoratoNome(servizio.assessoratoId) }}</p>
                       }
                     }
                   </div>
