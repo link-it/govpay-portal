@@ -1,0 +1,145 @@
+{
+  "base": "http://localhost:4300",
+  "app": "GovPay Portal",
+  "generatedFrom": "gov-a11y",
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa"
+  ],
+  "failOn": "serious",
+  "failOnNameless": true,
+  "minScore": null,
+  "screenReader": true,
+  "lighthouseEnabled": true,
+  "coverage": {
+    "automated": "L'automazione (axe-core + accessibility tree + virtual screen reader) copre solo una parte dei criteri WCAG 2.1 AA (indicativamente ~30–40%): es. contrasto colore, testi alternativi e label mancanti, attributo lang, ruoli/nomi ARIA, ordine degli heading, struttura dell'albero di accessibilità.",
+    "manualRequired": [
+      "Navigazione da tastiera e ordine di focus reale.",
+      "Test con screen reader reale (fedeltà d'uso, verbosità, senso degli annunci).",
+      "Qualità del testo alternativo e delle label (l'automazione vede se mancano, non se hanno senso)."
+    ],
+    "note": "Questo report è EVIDENZA a supporto della dichiarazione di accessibilità AgID, NON una certificazione di conformità: un esito automatico pulito non implica conformità WCAG."
+  },
+  "pages": [
+    {
+      "target": "govpay-portal",
+      "name": "pagamento-servizio",
+      "url": "http://localhost:4300/pagamento-servizio",
+      "counts": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0,
+        "minor": 0
+      },
+      "incomplete": 0,
+      "lhScore": 1,
+      "namelessInteractive": 0,
+      "srStops": 62,
+      "srRoleOnly": 0,
+      "ariaTree": "aria-tree/govpayportal-001-pagamento-servizio.yaml"
+    },
+    {
+      "target": "govpay-portal",
+      "name": "bollettino",
+      "url": "http://localhost:4300/bollettino",
+      "counts": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0,
+        "minor": 0
+      },
+      "incomplete": 0,
+      "lhScore": 1,
+      "namelessInteractive": 0,
+      "srStops": 62,
+      "srRoleOnly": 0,
+      "ariaTree": "aria-tree/govpayportal-002-bollettino.yaml"
+    },
+    {
+      "target": "govpay-portal",
+      "name": "carrello",
+      "url": "http://localhost:4300/carrello",
+      "counts": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0,
+        "minor": 0
+      },
+      "incomplete": 0,
+      "lhScore": 1,
+      "namelessInteractive": 0,
+      "srStops": 64,
+      "srRoleOnly": 0,
+      "ariaTree": "aria-tree/govpayportal-003-carrello.yaml"
+    },
+    {
+      "target": "govpay-portal",
+      "name": "flow:servizio-tipologia-dettaglio/tipologia-servizi",
+      "url": "http://localhost:4300/pagamento-servizio",
+      "counts": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0,
+        "minor": 0
+      },
+      "incomplete": 0,
+      "lhScore": 1,
+      "namelessInteractive": 0,
+      "srStops": 67,
+      "srRoleOnly": 0,
+      "ariaTree": "aria-tree/govpayportal-004-flow-servizio-tipologia-dettaglio-tipolo.yaml"
+    },
+    {
+      "target": "govpay-portal",
+      "name": "flow:servizio-tipologia-dettaglio/servizio-dettaglio",
+      "url": "http://localhost:4300/dettaglio-servizio/CONC-1001",
+      "counts": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0,
+        "minor": 0
+      },
+      "incomplete": 6,
+      "lhScore": 1,
+      "namelessInteractive": 0,
+      "srStops": 89,
+      "srRoleOnly": 0,
+      "ariaTree": "aria-tree/govpayportal-005-flow-servizio-tipologia-dettaglio-serviz.yaml"
+    }
+  ],
+  "totals": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "namelessTotal": 0,
+  "incompleteTotal": 6,
+  "falsePositivesTotal": 0,
+  "falsePositives": [],
+  "srRoleOnlyTotal": 0,
+  "lighthouse": [
+    {
+      "url": "http://localhost:4300/pagamento-servizio",
+      "score": 1
+    },
+    {
+      "url": "http://localhost:4300/bollettino",
+      "score": 1
+    },
+    {
+      "url": "http://localhost:4300/carrello",
+      "score": 1
+    },
+    {
+      "url": "http://localhost:4300/pagamento-servizio",
+      "score": 1
+    },
+    {
+      "url": "http://localhost:4300/dettaglio-servizio/CONC-1001",
+      "score": 1
+    }
+  ]
+}

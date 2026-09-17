@@ -1,0 +1,432 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><title>GovPay Portal — Accessibility Report</title>
+<style>body{font-family:system-ui,sans-serif;margin:2rem;color:#222;max-width:1200px}
+table{border-collapse:collapse;width:100%;margin-bottom:1.5rem}
+th,td{border:1px solid #ddd;padding:6px 10px;text-align:left;font-size:14px;vertical-align:top}th{background:#f4f4f4}
+.crit{color:#b00;font-weight:700}.ser{color:#d60;font-weight:700}.mod{color:#a80;font-weight:600}.min{color:#666}
+caption{text-align:left;font-weight:700;margin-bottom:.5rem}
+details{margin:.3rem 0;border-left:3px solid #ddd;padding:.2rem .6rem;background:#fafafa}
+summary{cursor:pointer}ul.nodes{margin:.4rem 0}li{margin:.5rem 0}
+code.sel{background:#eef;padding:1px 4px}pre{background:#f6f6f6;padding:.4rem;overflow-x:auto;font-size:12px;margin:.2rem 0;white-space:pre-wrap}
+.fs{font-size:12px;color:#555;white-space:pre-wrap}h3{margin-top:1.5rem;border-bottom:1px solid #eee}
+.disclaimer{border:1px solid #d9a441;background:#fff8e8;border-left:5px solid #d9a441;padding:.8rem 1rem;margin:1rem 0;border-radius:4px}
+.disclaimer h2{margin:.2rem 0 .5rem;font-size:1.05rem;border:0}.disclaimer ul{margin:.3rem 0 .3rem 1.1rem}.disclaimer .note{font-weight:600;margin-top:.5rem}
+ul.axtree{list-style:none;margin:.1rem 0;padding-left:1.1rem;border-left:1px dotted #ccc}
+ul.axtree li{margin:.05rem 0}.axtree details{border:0;background:none;padding:0;margin:0}.axtree summary{cursor:pointer}
+.axtree span{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.ax-land{color:#0a7;font-weight:600}.ax-head{color:#06c;font-weight:700}.ax-nameless{color:#b00;font-weight:700}.ax-muted{color:#999}</style></head>
+<body><h1>GovPay Portal — Report Accessibilita' WCAG 2.1 AA</h1>
+<p>Base: <code>http://localhost:4300</code> — tag: <code>wcag2a, wcag2aa, wcag21a, wcag21aa</code> — gate: <code>fail-on=serious</code></p>
+<p>Totali occorrenze axe: <span class="crit">critical 0</span>, <span class="ser">serious 0</span>, moderate 0, minor 0
+ — <span class="mod">da verificare (incomplete): 6</span> — <span class="ser">a11y-tree: 0 elementi interattivi senza nome accessibile</span> (verifica screen-reader-oriented) — <span class="ser">screen reader: 0 annunci solo-ruolo</span></p>
+
+
+
+<div class="disclaimer">
+<h2>⚠️ Copertura e limiti dell'automazione</h2>
+<p>L'automazione (axe-core + accessibility tree + virtual screen reader) copre solo una parte dei criteri WCAG 2.1 AA (indicativamente ~30–40%): es. contrasto colore, testi alternativi e label mancanti, attributo lang, ruoli/nomi ARIA, ordine degli heading, struttura dell'albero di accessibilità.</p>
+<p>Restano <b>necessari test manuali/assistiti</b> non delegabili all'automazione:</p>
+<ul><li>Navigazione da tastiera e ordine di focus reale.</li><li>Test con screen reader reale (fedeltà d'uso, verbosità, senso degli annunci).</li><li>Qualità del testo alternativo e delle label (l'automazione vede se mancano, non se hanno senso).</li></ul>
+<p class="note">Questo report è EVIDENZA a supporto della dichiarazione di accessibilità AgID, NON una certificazione di conformità: un esito automatico pulito non implica conformità WCAG.</p>
+</div>
+
+<table><caption>Riepilogo per pagina (clicca la pagina per il dettaglio)</caption>
+<tr><th>Console</th><th>Pagina</th><th>URL</th><th>Crit</th><th>Serious</th><th>Moderate</th><th>Minor</th><th>LH a11y</th><th>Da verificare<br><small>(incomplete)</small></th><th>Senza nome<br><small>(a11y-tree)</small></th></tr>
+<tr><td>govpay-portal</td><td><a href="#pg0">pagamento-servizio</a></td><td><a href="http://localhost:4300/pagamento-servizio">http://localhost:4300/pagamento-servizio</a></td>
+      <td class="crit">0</td><td class="ser">0</td><td>0</td><td>0</td>
+      <td>100%</td>
+      <td class="">-</td>
+      <td class="">-</td></tr>
+<tr><td>govpay-portal</td><td><a href="#pg1">bollettino</a></td><td><a href="http://localhost:4300/bollettino">http://localhost:4300/bollettino</a></td>
+      <td class="crit">0</td><td class="ser">0</td><td>0</td><td>0</td>
+      <td>100%</td>
+      <td class="">-</td>
+      <td class="">-</td></tr>
+<tr><td>govpay-portal</td><td><a href="#pg2">carrello</a></td><td><a href="http://localhost:4300/carrello">http://localhost:4300/carrello</a></td>
+      <td class="crit">0</td><td class="ser">0</td><td>0</td><td>0</td>
+      <td>100%</td>
+      <td class="">-</td>
+      <td class="">-</td></tr>
+<tr><td>govpay-portal</td><td><a href="#pg3">flow:servizio-tipologia-dettaglio/tipologia-servizi</a></td><td><a href="http://localhost:4300/pagamento-servizio">http://localhost:4300/pagamento-servizio</a></td>
+      <td class="crit">0</td><td class="ser">0</td><td>0</td><td>0</td>
+      <td>100%</td>
+      <td class="">-</td>
+      <td class="">-</td></tr>
+<tr><td>govpay-portal</td><td><a href="#pg4">flow:servizio-tipologia-dettaglio/servizio-dettaglio</a></td><td><a href="http://localhost:4300/dettaglio-servizio/CONC-1001">http://localhost:4300/dettaglio-servizio/CONC-1001</a></td>
+      <td class="crit">0</td><td class="ser">0</td><td>0</td><td>0</td>
+      <td>100%</td>
+      <td class="mod">6</td>
+      <td class="">-</td></tr>
+</table>
+
+<table><caption>Riepilogo per regola WCAG — cosa correggere (ordinato per gravita' e diffusione)</caption>
+<tr><th>Regola axe</th><th>Gravita'</th><th>Descrizione</th><th>Occorrenze</th><th>Pagine</th><th>WCAG</th><th>Rif.</th></tr>
+
+</table>
+
+<h2>Dettaglio violazioni per pagina</h2>
+<h3 id="pg0">pagamento-servizio <small>— <a href="http://localhost:4300/pagamento-servizio">http://localhost:4300/pagamento-servizio</a> — <a href="aria-tree/govpayportal-001-pagamento-servizio.yaml" download>scarica YAML ↗</a></small></h3><details class="axtree-wrap"><summary><span class="mod">albero ARIA</span> 50 nodi <small>— struttura letta dallo screen reader (clic per espandere)</small></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Ente Creditore Ente Creditore Gestione pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /</span></li><li><span class="">img &quot;Ente Creditore&quot;</span></li><li><span class="ax-muted">text: Ente Creditore Gestione pagamenti</span></li></ul></details></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><details><summary><span class="ax-land">banner</span></summary><ul class="axtree"><li><span class="">button &quot;Apri menu&quot;</span></li><li><span class="ax-muted">text: Pagamenti online</span></li><li><span class="">button &quot;it&quot;</span></li><li><span class="">button &quot;Accedi&quot;</span></li><li><span class="">button &quot;Carrello&quot;</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;PAGA UN SERVIZIO&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li><li><details><summary><span class="">link &quot;PAGA UN AVVISO&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /bollettino</span></li></ul></details></li></ul></details></li></ul></details></li><li><details><summary><span class="ax-land">complementary</span></summary><ul class="axtree"><li><span class="">img &quot;Comune Dimostrativo&quot;</span></li><li><span class="ax-muted">text: Comune Dimostrativo Gestione pagamenti</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">list</span></summary><ul class="axtree"><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li></ul></details></li><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Carrello&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /carrello</span></li></ul></details></li></ul></details></li></ul></details></li></ul></details></li><li><span class="">button &quot;Accedi&quot;</span></li><li><details><summary><span class="">link &quot;Progetto GovPay&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://github.com/link-it/govpay</span></li><li><span class="">img &quot;Progetto GovPay&quot;</span></li></ul></details></li><li><details><summary><span class="">link &quot;pagoPA&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://www.pagopa.gov.it/</span></li><li><span class="">img &quot;pagoPA&quot;</span></li></ul></details></li><li><span class="ax-muted">text: Link.it srl Via San Martino n. 51 - Pisa (PI) P.IVA 01313050500</span></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><span class="ax-muted">text: • v5.2.3-5c201a3*</span></li></ul></details></li><li><details><summary><span class="ax-land">main</span></summary><ul class="axtree"><li><span class="ax-muted">text: Sono presenti 6 servizi in 1 tipologie</span></li><li><span class="">textbox &quot;Cerca un servizio&quot;</span></li><li><span class="ax-muted">text: Cerca un servizio</span></li><li><span class="">button &quot;Cerca un servizio&quot;</span></li><li><span class="">button &quot;Mostra Tipologie&quot;</span></li><li><span class="">button &quot;Mostra Assessorati&quot;</span></li><li><details><summary><span class="">button &quot;Tasse sulle Concessioni Regionali&quot;</span></summary><ul class="axtree"><li><span class="">paragraph: Tasse sulle Concessioni Regionali</span></li></ul></details></li></ul></details></li></ul></details><details><summary><span class="mod">screen reader</span> 62 annunci del virtual screen reader (trascrizione)</summary><ol class="nodes"><li class="">link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">image, Ente Creditore</li>
+<li class="">Ente Creditore</li>
+<li class="">Gestione pagamenti</li>
+<li class="">end of link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">banner</li>
+<li class="">button, Apri menu</li>
+<li class="">Pagamenti online</li>
+<li class="">button, it</li>
+<li class="">button, Accedi</li>
+<li class="">button, Carrello</li>
+<li class="">navigation</li>
+<li class="">link, PAGA UN SERVIZIO</li>
+<li class="">link, PAGA UN AVVISO</li>
+<li class="">end of navigation</li>
+<li class="">end of banner</li>
+<li class="">complementary</li>
+<li class="">image, Comune Dimostrativo</li>
+<li class="">Comune Dimostrativo</li>
+<li class="">Gestione pagamenti</li>
+<li class="">navigation</li>
+<li class="">list</li>
+<li class="">link, Pagamenti</li>
+<li class="">Pagamenti</li>
+<li class="">end of link, Pagamenti</li>
+<li class="">link, Carrello</li>
+<li class="">Carrello</li>
+<li class="">end of link, Carrello</li>
+<li class="">end of list</li>
+<li class="">end of navigation</li>
+<li class="">button, Accedi</li>
+<li class="">link, Progetto GovPay</li>
+<li class="">image, Progetto GovPay</li>
+<li class="">end of link, Progetto GovPay</li>
+<li class="">link, pagoPA</li>
+<li class="">image, pagoPA</li>
+<li class="">end of link, pagoPA</li>
+<li class="">Link.it srl</li>
+<li class="">Via San Martino n. 51 - Pisa (PI)</li>
+<li class="">P.IVA 01313050500</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">•</li>
+<li class="">Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">v5.2.3-5c201a3*</li>
+<li class="">end, Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">end of complementary</li>
+<li class="">main</li>
+<li class="">Sono presenti 6 servizi in 1 tipologie</li>
+<li class="">textbox, Cerca un servizio, placeholder Cerca un servizio</li>
+<li class="">Cerca un servizio</li>
+<li class="">button, Cerca un servizio</li>
+<li class="">button, Mostra Tipologie</li>
+<li class="">button, Mostra Assessorati</li>
+<li class="">button, Tasse sulle Concessioni Regionali</li>
+<li class="">paragraph, Tasse sulle Concessioni Regionali</li>
+<li class="">end of button, Tasse sulle Concessioni Regionali</li>
+<li class="">end of main</li></ol></details>
+<h3 id="pg1">bollettino <small>— <a href="http://localhost:4300/bollettino">http://localhost:4300/bollettino</a> — <a href="aria-tree/govpayportal-002-bollettino.yaml" download>scarica YAML ↗</a></small></h3><details class="axtree-wrap"><summary><span class="mod">albero ARIA</span> 49 nodi <small>— struttura letta dallo screen reader (clic per espandere)</small></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Ente Creditore Ente Creditore Gestione pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /</span></li><li><span class="">img &quot;Ente Creditore&quot;</span></li><li><span class="ax-muted">text: Ente Creditore Gestione pagamenti</span></li></ul></details></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><details><summary><span class="ax-land">banner</span></summary><ul class="axtree"><li><span class="">button &quot;Apri menu&quot;</span></li><li><span class="ax-muted">text: Pagamenti online</span></li><li><span class="">button &quot;it&quot;</span></li><li><span class="">button &quot;Accedi&quot;</span></li><li><span class="">button &quot;Carrello&quot;</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;PAGA UN SERVIZIO&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li><li><details><summary><span class="">link &quot;PAGA UN AVVISO&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /bollettino</span></li></ul></details></li></ul></details></li></ul></details></li><li><details><summary><span class="ax-land">complementary</span></summary><ul class="axtree"><li><span class="">img &quot;Comune Dimostrativo&quot;</span></li><li><span class="ax-muted">text: Comune Dimostrativo Gestione pagamenti</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">list</span></summary><ul class="axtree"><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li></ul></details></li><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Carrello&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /carrello</span></li></ul></details></li></ul></details></li></ul></details></li></ul></details></li><li><span class="">button &quot;Accedi&quot;</span></li><li><details><summary><span class="">link &quot;Progetto GovPay&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://github.com/link-it/govpay</span></li><li><span class="">img &quot;Progetto GovPay&quot;</span></li></ul></details></li><li><details><summary><span class="">link &quot;pagoPA&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://www.pagopa.gov.it/</span></li><li><span class="">img &quot;pagoPA&quot;</span></li></ul></details></li><li><span class="ax-muted">text: Link.it srl Via San Martino n. 51 - Pisa (PI) P.IVA 01313050500</span></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><span class="ax-muted">text: • v5.2.3-5c201a3*</span></li></ul></details></li><li><details><summary><span class="ax-land">main</span></summary><ul class="axtree"><li><span class="ax-muted">text: Paga un avviso</span></li><li><details><summary><span class="">textbox &quot;Codice dell'avviso *&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/placeholder: Codice dell'avviso</span></li></ul></details></li><li><span class="ax-muted">text: Codice dell'avviso *</span></li><li><span class="">button &quot;Scansiona QR Code&quot;</span></li><li><span class="">paragraph: Inserisci le 18 cifre del codice avviso</span></li><li><span class="">button &quot;Aggiungi al carrello&quot; [disabled]</span></li></ul></details></li></ul></details><details><summary><span class="mod">screen reader</span> 62 annunci del virtual screen reader (trascrizione)</summary><ol class="nodes"><li class="">link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">image, Ente Creditore</li>
+<li class="">Ente Creditore</li>
+<li class="">Gestione pagamenti</li>
+<li class="">end of link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">banner</li>
+<li class="">button, Apri menu</li>
+<li class="">Pagamenti online</li>
+<li class="">button, it</li>
+<li class="">button, Accedi</li>
+<li class="">button, Carrello</li>
+<li class="">navigation</li>
+<li class="">link, PAGA UN SERVIZIO</li>
+<li class="">link, PAGA UN AVVISO</li>
+<li class="">end of navigation</li>
+<li class="">end of banner</li>
+<li class="">complementary</li>
+<li class="">image, Comune Dimostrativo</li>
+<li class="">Comune Dimostrativo</li>
+<li class="">Gestione pagamenti</li>
+<li class="">navigation</li>
+<li class="">list</li>
+<li class="">link, Pagamenti</li>
+<li class="">Pagamenti</li>
+<li class="">end of link, Pagamenti</li>
+<li class="">link, Carrello</li>
+<li class="">Carrello</li>
+<li class="">end of link, Carrello</li>
+<li class="">end of list</li>
+<li class="">end of navigation</li>
+<li class="">button, Accedi</li>
+<li class="">link, Progetto GovPay</li>
+<li class="">image, Progetto GovPay</li>
+<li class="">end of link, Progetto GovPay</li>
+<li class="">link, pagoPA</li>
+<li class="">image, pagoPA</li>
+<li class="">end of link, pagoPA</li>
+<li class="">Link.it srl</li>
+<li class="">Via San Martino n. 51 - Pisa (PI)</li>
+<li class="">P.IVA 01313050500</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">•</li>
+<li class="">Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">v5.2.3-5c201a3*</li>
+<li class="">end, Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">end of complementary</li>
+<li class="">main</li>
+<li class="">Paga un avviso</li>
+<li class="">textbox, Codice dell'avviso *, placeholder Codice dell'avviso</li>
+<li class="">Codice dell'avviso</li>
+<li class="">*</li>
+<li class="">button, Scansiona QR Code</li>
+<li class="">paragraph</li>
+<li class="">Inserisci le 18 cifre del codice avviso</li>
+<li class="">end of paragraph</li>
+<li class="">button, Aggiungi al carrello, disabled</li>
+<li class="">end of main</li></ol></details>
+<h3 id="pg2">carrello <small>— <a href="http://localhost:4300/carrello">http://localhost:4300/carrello</a> — <a href="aria-tree/govpayportal-003-carrello.yaml" download>scarica YAML ↗</a></small></h3><details class="axtree-wrap"><summary><span class="mod">albero ARIA</span> 49 nodi <small>— struttura letta dallo screen reader (clic per espandere)</small></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Ente Creditore Ente Creditore Gestione pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /</span></li><li><span class="">img &quot;Ente Creditore&quot;</span></li><li><span class="ax-muted">text: Ente Creditore Gestione pagamenti</span></li></ul></details></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><details><summary><span class="ax-land">banner</span></summary><ul class="axtree"><li><span class="">button &quot;Apri menu&quot;</span></li><li><span class="ax-muted">text: Pagamenti online</span></li><li><span class="">button &quot;it&quot;</span></li><li><span class="">button &quot;Accedi&quot;</span></li><li><span class="">button &quot;Carrello&quot;</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;PAGA UN SERVIZIO&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li><li><details><summary><span class="">link &quot;PAGA UN AVVISO&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /bollettino</span></li></ul></details></li></ul></details></li></ul></details></li><li><details><summary><span class="ax-land">complementary</span></summary><ul class="axtree"><li><span class="">img &quot;Comune Dimostrativo&quot;</span></li><li><span class="ax-muted">text: Comune Dimostrativo Gestione pagamenti</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">list</span></summary><ul class="axtree"><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li></ul></details></li><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Carrello&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /carrello</span></li></ul></details></li></ul></details></li></ul></details></li></ul></details></li><li><span class="">button &quot;Accedi&quot;</span></li><li><details><summary><span class="">link &quot;Progetto GovPay&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://github.com/link-it/govpay</span></li><li><span class="">img &quot;Progetto GovPay&quot;</span></li></ul></details></li><li><details><summary><span class="">link &quot;pagoPA&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://www.pagopa.gov.it/</span></li><li><span class="">img &quot;pagoPA&quot;</span></li></ul></details></li><li><span class="ax-muted">text: Link.it srl Via San Martino n. 51 - Pisa (PI) P.IVA 01313050500</span></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><span class="ax-muted">text: • v5.2.3-5c201a3*</span></li></ul></details></li><li><details><summary><span class="ax-land">main</span></summary><ul class="axtree"><li><span class="ax-muted">text: Carrello</span></li><li><span class="ax-head">heading &quot;Il carrello è vuoto&quot; [level=2]</span></li><li><span class="">paragraph: Aggiungi pagamenti al carrello per procedere</span></li><li><details><summary><span class="">link &quot;Vai ai pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li><li><details><summary><span class="">link &quot;Paga un avviso&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /bollettino</span></li></ul></details></li></ul></details></li></ul></details><details><summary><span class="mod">screen reader</span> 64 annunci del virtual screen reader (trascrizione)</summary><ol class="nodes"><li class="">link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">image, Ente Creditore</li>
+<li class="">Ente Creditore</li>
+<li class="">Gestione pagamenti</li>
+<li class="">end of link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">banner</li>
+<li class="">button, Apri menu</li>
+<li class="">Pagamenti online</li>
+<li class="">button, it</li>
+<li class="">button, Accedi</li>
+<li class="">button, Carrello</li>
+<li class="">navigation</li>
+<li class="">link, PAGA UN SERVIZIO</li>
+<li class="">link, PAGA UN AVVISO</li>
+<li class="">end of navigation</li>
+<li class="">end of banner</li>
+<li class="">complementary</li>
+<li class="">image, Comune Dimostrativo</li>
+<li class="">Comune Dimostrativo</li>
+<li class="">Gestione pagamenti</li>
+<li class="">navigation</li>
+<li class="">list</li>
+<li class="">link, Pagamenti</li>
+<li class="">Pagamenti</li>
+<li class="">end of link, Pagamenti</li>
+<li class="">link, Carrello</li>
+<li class="">Carrello</li>
+<li class="">end of link, Carrello</li>
+<li class="">end of list</li>
+<li class="">end of navigation</li>
+<li class="">button, Accedi</li>
+<li class="">link, Progetto GovPay</li>
+<li class="">image, Progetto GovPay</li>
+<li class="">end of link, Progetto GovPay</li>
+<li class="">link, pagoPA</li>
+<li class="">image, pagoPA</li>
+<li class="">end of link, pagoPA</li>
+<li class="">Link.it srl</li>
+<li class="">Via San Martino n. 51 - Pisa (PI)</li>
+<li class="">P.IVA 01313050500</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">•</li>
+<li class="">Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">v5.2.3-5c201a3*</li>
+<li class="">end, Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">end of complementary</li>
+<li class="">main</li>
+<li class="">Carrello</li>
+<li class="">heading, Il carrello è vuoto, level 2</li>
+<li class="">paragraph</li>
+<li class="">Aggiungi pagamenti al carrello per procedere</li>
+<li class="">end of paragraph</li>
+<li class="">link, Vai ai pagamenti</li>
+<li class="">Vai ai pagamenti</li>
+<li class="">end of link, Vai ai pagamenti</li>
+<li class="">link, Paga un avviso</li>
+<li class="">Paga un avviso</li>
+<li class="">end of link, Paga un avviso</li>
+<li class="">end of main</li></ol></details>
+<h3 id="pg3">flow:servizio-tipologia-dettaglio/tipologia-servizi <small>— <a href="http://localhost:4300/pagamento-servizio">http://localhost:4300/pagamento-servizio</a> — <a href="aria-tree/govpayportal-004-flow-servizio-tipologia-dettaglio-tipolo.yaml" download>scarica YAML ↗</a></small></h3><details class="axtree-wrap"><summary><span class="mod">albero ARIA</span> 52 nodi <small>— struttura letta dallo screen reader (clic per espandere)</small></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Ente Creditore Ente Creditore Gestione pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /</span></li><li><span class="">img &quot;Ente Creditore&quot;</span></li><li><span class="ax-muted">text: Ente Creditore Gestione pagamenti</span></li></ul></details></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><details><summary><span class="ax-land">banner</span></summary><ul class="axtree"><li><span class="">button &quot;Apri menu&quot;</span></li><li><span class="ax-muted">text: Pagamenti online</span></li><li><span class="">button &quot;it&quot;</span></li><li><span class="">button &quot;Accedi&quot;</span></li><li><span class="">button &quot;Carrello&quot;</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;PAGA UN SERVIZIO&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li><li><details><summary><span class="">link &quot;PAGA UN AVVISO&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /bollettino</span></li></ul></details></li></ul></details></li></ul></details></li><li><details><summary><span class="ax-land">complementary</span></summary><ul class="axtree"><li><span class="">img &quot;Comune Dimostrativo&quot;</span></li><li><span class="ax-muted">text: Comune Dimostrativo Gestione pagamenti</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">list</span></summary><ul class="axtree"><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li></ul></details></li><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Carrello&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /carrello</span></li></ul></details></li></ul></details></li></ul></details></li></ul></details></li><li><span class="">button &quot;Accedi&quot;</span></li><li><details><summary><span class="">link &quot;Progetto GovPay&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://github.com/link-it/govpay</span></li><li><span class="">img &quot;Progetto GovPay&quot;</span></li></ul></details></li><li><details><summary><span class="">link &quot;pagoPA&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://www.pagopa.gov.it/</span></li><li><span class="">img &quot;pagoPA&quot;</span></li></ul></details></li><li><span class="ax-muted">text: Link.it srl Via San Martino n. 51 - Pisa (PI) P.IVA 01313050500</span></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><span class="ax-muted">text: • v5.2.3-5c201a3*</span></li></ul></details></li><li><details><summary><span class="ax-land">main</span></summary><ul class="axtree"><li><span class="">button &quot;Indietro&quot;</span></li><li><span class="ax-head">heading &quot;Tasse sulle Concessioni Regionali&quot; [level=1]</span></li><li><span class="ax-muted">text: Sono presenti 2 servizi</span></li><li><span class="">textbox &quot;Cerca un servizio&quot;</span></li><li><span class="ax-muted">text: Cerca un servizio</span></li><li><span class="">button &quot;Cerca un servizio&quot;</span></li><li><span class="ax-muted">text: Assessorato della salute</span></li><li><span class="ax-head">heading &quot;CONCESSIONE FARMACIE&quot; [level=4]</span></li><li><span class="">paragraph: Concessione per l’apertura e l’esercizio di farmacie</span></li><li><span class="">paragraph: Tasse sulle Concessioni Regionali</span></li></ul></details></li></ul></details><details><summary><span class="mod">screen reader</span> 67 annunci del virtual screen reader (trascrizione)</summary><ol class="nodes"><li class="">link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">image, Ente Creditore</li>
+<li class="">Ente Creditore</li>
+<li class="">Gestione pagamenti</li>
+<li class="">end of link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">banner</li>
+<li class="">button, Apri menu</li>
+<li class="">Pagamenti online</li>
+<li class="">button, it</li>
+<li class="">button, Accedi</li>
+<li class="">button, Carrello</li>
+<li class="">navigation</li>
+<li class="">link, PAGA UN SERVIZIO</li>
+<li class="">link, PAGA UN AVVISO</li>
+<li class="">end of navigation</li>
+<li class="">end of banner</li>
+<li class="">complementary</li>
+<li class="">image, Comune Dimostrativo</li>
+<li class="">Comune Dimostrativo</li>
+<li class="">Gestione pagamenti</li>
+<li class="">navigation</li>
+<li class="">list</li>
+<li class="">link, Pagamenti</li>
+<li class="">Pagamenti</li>
+<li class="">end of link, Pagamenti</li>
+<li class="">link, Carrello</li>
+<li class="">Carrello</li>
+<li class="">end of link, Carrello</li>
+<li class="">end of list</li>
+<li class="">end of navigation</li>
+<li class="">button, Accedi</li>
+<li class="">link, Progetto GovPay</li>
+<li class="">image, Progetto GovPay</li>
+<li class="">end of link, Progetto GovPay</li>
+<li class="">link, pagoPA</li>
+<li class="">image, pagoPA</li>
+<li class="">end of link, pagoPA</li>
+<li class="">Link.it srl</li>
+<li class="">Via San Martino n. 51 - Pisa (PI)</li>
+<li class="">P.IVA 01313050500</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">•</li>
+<li class="">Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">v5.2.3-5c201a3*</li>
+<li class="">end, Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">end of complementary</li>
+<li class="">main</li>
+<li class="">button, Indietro</li>
+<li class="">heading, Tasse sulle Concessioni Regionali, level 1</li>
+<li class="">Sono presenti 2 servizi</li>
+<li class="">textbox, Cerca un servizio, placeholder Cerca un servizio</li>
+<li class="">Cerca un servizio</li>
+<li class="">button, Cerca un servizio</li>
+<li class="">Assessorato della salute</li>
+<li class="">heading, CONCESSIONE FARMACIE, level 4</li>
+<li class="">paragraph</li>
+<li class="">Concessione per l’apertura e l’esercizio di farmacie</li>
+<li class="">end of paragraph</li>
+<li class="">paragraph</li>
+<li class="">Tasse sulle Concessioni Regionali</li>
+<li class="">end of paragraph</li>
+<li class="">end of main</li></ol></details>
+<h3 id="pg4">flow:servizio-tipologia-dettaglio/servizio-dettaglio <small>— <a href="http://localhost:4300/dettaglio-servizio/CONC-1001">http://localhost:4300/dettaglio-servizio/CONC-1001</a> — <a href="aria-tree/govpayportal-005-flow-servizio-tipologia-dettaglio-serviz.yaml" download>scarica YAML ↗</a></small></h3><details class="axtree-wrap"><summary><span class="mod">albero ARIA</span> 62 nodi <small>— struttura letta dallo screen reader (clic per espandere)</small></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Ente Creditore Ente Creditore Gestione pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /</span></li><li><span class="">img &quot;Ente Creditore&quot;</span></li><li><span class="ax-muted">text: Ente Creditore Gestione pagamenti</span></li></ul></details></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><details><summary><span class="ax-land">banner</span></summary><ul class="axtree"><li><span class="">button &quot;Chiudi&quot;</span></li><li><span class="ax-muted">text: CONC-1001 - Concessione farmacie</span></li><li><span class="">button &quot;it&quot;</span></li><li><span class="">button &quot;Accedi&quot;</span></li><li><span class="">button &quot;Carrello&quot;</span></li></ul></details></li><li><details><summary><span class="ax-land">complementary</span></summary><ul class="axtree"><li><span class="">img &quot;Comune Dimostrativo&quot;</span></li><li><span class="ax-muted">text: Comune Dimostrativo Gestione pagamenti</span></li><li><details><summary><span class="ax-land">navigation</span></summary><ul class="axtree"><li><details><summary><span class="">list</span></summary><ul class="axtree"><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Pagamenti&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /pagamento-servizio</span></li></ul></details></li></ul></details></li><li><details><summary><span class="">listitem</span></summary><ul class="axtree"><li><details><summary><span class="">link &quot;Carrello&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: /carrello</span></li></ul></details></li></ul></details></li></ul></details></li></ul></details></li><li><span class="">button &quot;Accedi&quot;</span></li><li><details><summary><span class="">link &quot;Progetto GovPay&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://github.com/link-it/govpay</span></li><li><span class="">img &quot;Progetto GovPay&quot;</span></li></ul></details></li><li><details><summary><span class="">link &quot;pagoPA&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://www.pagopa.gov.it/</span></li><li><span class="">img &quot;pagoPA&quot;</span></li></ul></details></li><li><span class="ax-muted">text: Link.it srl Via San Martino n. 51 - Pisa (PI) P.IVA 01313050500</span></li><li><details><summary><span class="">link &quot;Link.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://link.it</span></li><li><span class="">img &quot;Link.it&quot;</span></li></ul></details></li><li><span class="ax-muted">text: • v5.2.3-5c201a3*</span></li></ul></details></li><li><details><summary><span class="ax-land">main</span></summary><ul class="axtree"><li><span class="ax-muted">text: Informazioni sul servizio</span></li><li><span class="">paragraph: Assessorato della salute</span></li><li><span class="">paragraph: Concessione per l’apertura e l’esercizio di farmacie</span></li><li><span class="">paragraph: Tasse sulle Concessioni Regionali</span></li><li><span class="ax-muted">text: La tassa è riferita non soltanto alle concessioni per l’apertura e l’esercizio di nuove farmacie, ma anche alle concessioni per l’esercizio di farmacie già istituite e conferite ad altri titolari. La concessione per l’apertura e l’esercizio di una farmacia è valevole solo per la sede indicata nella concessione stessa e pertanto la tassa è dovuta, anche nel caso in cui venga concesso il trasferimento da una sede ad un’altra dello stesso Comune. La tassa non è dovuta nel caso di trasferimento di farmacia entro i limiti della stessa sede. Mail</span></li><li><details><summary><span class="">link &quot;info@comune.it&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: mailto:info@comune.it</span></li></ul></details></li><li><span class="ax-muted">text: Documentazione</span></li><li><details><summary><span class="">link &quot;Regolamento&quot;</span></summary><ul class="axtree"><li><span class="ax-muted">/url: https://www.empoli.gov.it/sites/default/files/2018-06/trasporto-scolastico.pdf</span></li></ul></details></li><li><span class="ax-muted">text: Telefono xxx-xxx.xxxx Dati necessari al pagamento Numero di concessione</span></li><li><span class="">textbox &quot;Numero di concessione&quot;</span></li><li><span class="ax-muted">text: Intestatario</span></li><li><span class="">textbox &quot;Intestatario&quot;</span></li><li><span class="ax-muted">text: Nome e cognome o ragione sociale Codice fiscale o partita iva</span></li><li><span class="">textbox &quot;Codice fiscale o partita iva&quot;</span></li><li><span class="ax-muted">text: Tipo di tassa</span></li><li><span class="">combobox &quot;Tipo di tassa&quot;</span></li><li><span class="ax-muted">text: Numero abitanti del comune</span></li><li><span class="">combobox &quot;Numero abitanti del comune&quot;</span></li><li><span class="">checkbox &quot;Farmacia rurale&quot;</span></li><li><span class="ax-muted">text: Farmacia rurale</span></li><li><span class="">checkbox &quot;Farmacia succursale&quot;</span></li><li><span class="ax-muted">text: Farmacia succursale</span></li><li><span class="">button &quot;Verifica&quot; [disabled]</span></li></ul></details></li></ul></details><details><summary><span class="mod">da verificare</span> 6 elementi che axe non ha deciso (sfondi calcolati/gradienti): NON sono un pass, verifica manuale</summary><ul class="nodes"><li><code>aria-valid-attr-value</code> — ARIA attributes must conform to valid values <b>(4)</b></li>
+<li><code>color-contrast</code> — Elements must meet minimum color contrast ratio thresholds <b>(2)</b></li></ul></details><details><summary><span class="mod">screen reader</span> 89 annunci del virtual screen reader (trascrizione)</summary><ol class="nodes"><li class="">link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">image, Ente Creditore</li>
+<li class="">Ente Creditore</li>
+<li class="">Gestione pagamenti</li>
+<li class="">end of link, Ente Creditore Ente Creditore Gestione pagamenti</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">banner</li>
+<li class="">button, Chiudi</li>
+<li class="">CONC-1001 - Concessione farmacie</li>
+<li class="">button, it</li>
+<li class="">button, Accedi</li>
+<li class="">button, Carrello</li>
+<li class="">end of banner</li>
+<li class="">complementary</li>
+<li class="">image, Comune Dimostrativo</li>
+<li class="">Comune Dimostrativo</li>
+<li class="">Gestione pagamenti</li>
+<li class="">navigation</li>
+<li class="">list</li>
+<li class="">link, Pagamenti</li>
+<li class="">Pagamenti</li>
+<li class="">end of link, Pagamenti</li>
+<li class="">link, Carrello</li>
+<li class="">Carrello</li>
+<li class="">end of link, Carrello</li>
+<li class="">end of list</li>
+<li class="">end of navigation</li>
+<li class="">button, Accedi</li>
+<li class="">link, Progetto GovPay</li>
+<li class="">image, Progetto GovPay</li>
+<li class="">end of link, Progetto GovPay</li>
+<li class="">link, pagoPA</li>
+<li class="">image, pagoPA</li>
+<li class="">end of link, pagoPA</li>
+<li class="">Link.it srl</li>
+<li class="">Via San Martino n. 51 - Pisa (PI)</li>
+<li class="">P.IVA 01313050500</li>
+<li class="">link, Link.it</li>
+<li class="">image, Link.it</li>
+<li class="">end of link, Link.it</li>
+<li class="">•</li>
+<li class="">Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">v5.2.3-5c201a3*</li>
+<li class="">end, Branch: 5.x.x
+Commit: 5c201a3
+Build: 10/09/2026, 13:39:15</li>
+<li class="">end of complementary</li>
+<li class="">main</li>
+<li class="">Informazioni sul servizio</li>
+<li class="">paragraph</li>
+<li class="">Assessorato della salute</li>
+<li class="">end of paragraph</li>
+<li class="">paragraph</li>
+<li class="">Concessione per l’apertura e l’esercizio di farmacie</li>
+<li class="">end of paragraph</li>
+<li class="">paragraph</li>
+<li class="">Tasse sulle Concessioni Regionali</li>
+<li class="">end of paragraph</li>
+<li class="">La tassa è riferita non soltanto alle concessioni per l’apertura e l’esercizio di nuove farmacie, ma anche alle concessioni per l’esercizio di farmacie già istituite e conferite ad altri titolari. La concessione per l’apertura e l’esercizio di una farmacia è valevole solo per la sede indicata nella concessione stessa e pertanto la tassa è dovuta, anche nel caso in cui venga concesso il trasferimento da una sede ad un’altra dello stesso Comune. La tassa non è dovuta nel caso di trasferimento di farmacia entro i limiti della stessa sede.</li>
+<li class="">Mail</li>
+<li class="">link, info@comune.it</li>
+<li class="">Documentazione</li>
+<li class="">link, Regolamento</li>
+<li class="">Telefono</li>
+<li class="">xxx-xxx.xxxx</li>
+<li class="">Dati necessari al pagamento</li>
+<li class="">form</li>
+<li class="">Numero di concessione</li>
+<li class="">combobox, Numero di concessione, required, not expanded, has popup listbox</li>
+<li class="">Intestatario</li>
+<li class="">combobox, Intestatario, Nome e cognome o ragione sociale, required, not expanded, has popup listbox</li>
+<li class="">Nome e cognome o ragione sociale</li>
+<li class="">Codice fiscale o partita iva</li>
+<li class="">combobox, Codice fiscale o partita iva, required, not expanded, has popup listbox</li>
+<li class="">Tipo di tassa</li>
+<li class="">combobox, Tipo di tassa, not invalid, required, not expanded, has popup listbox, not disabled</li>
+<li class="">Tipo di tassa</li>
+<li class="">end of combobox, Tipo di tassa, not invalid, required, not expanded, has popup listbox, not disabled</li>
+<li class="">Numero abitanti del comune</li>
+<li class="">combobox, Numero abitanti del comune, not invalid, required, not expanded, has popup listbox, not disabled</li>
+<li class="">Numero abitanti del comune</li>
+<li class="">end of combobox, Numero abitanti del comune, not invalid, required, not expanded, has popup listbox, not disabled</li>
+<li class="">checkbox, Farmacia rurale, not checked</li>
+<li class="">Farmacia rurale</li>
+<li class="">checkbox, Farmacia succursale, not checked</li>
+<li class="">Farmacia succursale</li>
+<li class="">end of form</li>
+<li class="">button, Verifica, disabled</li>
+<li class="">end of main</li></ol></details>
+</body></html>
