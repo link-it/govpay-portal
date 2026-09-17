@@ -182,8 +182,8 @@ describe('FloatingInputComponent', () => {
       component.hasError = false;
       fixture.detectChanges();
 
-      // Use p.text-gray-500 to target the hint paragraph, not the label
-      const hint = fixture.nativeElement.querySelector('p.text-gray-500');
+      // Use p.text-gray-600 to target the hint paragraph, not the label
+      const hint = fixture.nativeElement.querySelector('p.text-gray-600');
       expect(hint?.textContent).toContain('Enter your email');
     });
 
@@ -193,7 +193,7 @@ describe('FloatingInputComponent', () => {
       component.errorMessage = 'Invalid email';
       fixture.detectChanges();
 
-      const hints = fixture.nativeElement.querySelectorAll('p.text-gray-500');
+      const hints = fixture.nativeElement.querySelectorAll('p.text-gray-600');
       expect(hints).toHaveLength(0);
     });
   });
