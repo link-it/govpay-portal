@@ -34,8 +34,6 @@ Nessun elemento interattivo privo di nome accessibile (`--fail-on-nameless`).
 
 ### Rilievi dagli alberi ARIA
 
-Dettaglio, riferimenti puntuali e interventi proposti: [`SEGNALAZIONI.md`](SEGNALAZIONI.md).
-
 Non intercettati da axe — formalmente il markup è corretto — ma visibili leggendo la struttura
 esposta alle tecnologie assistive. Presenti su tutte e 5 le viste, perché stanno nel layout
 condiviso.
