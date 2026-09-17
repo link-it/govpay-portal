@@ -25,11 +25,36 @@ Nessun elemento interattivo privo di nome accessibile (`--fail-on-nameless`).
 ### Da verificare (axe "incomplete")
 
 - **`aria-valid-attr-value`** (4 nodi, dettaglio servizio) — `aria-describedby` che punta a ID
-  inesistenti (`control8Status` e simili). Generati da `survey-core`, che referenzia il contenitore
-  d'errore anche quando non è renderizzato. Origine upstream, non nel codice del portale.
+  inesistenti (`control8Status` e simili). Generati da `survey-core` (`survey-form.ts`), che
+  referenzia il contenitore d'errore anche quando non è renderizzato. Origine upstream, non nel
+  codice del portale.
 - **`color-contrast`** (2 nodi) — placeholder di `mat-select`: axe non riesce a calcolare il
   background perché l'elemento è sovrapposto. Limite noto dello strumento sugli overlay Material,
   da verificare manualmente.
+
+### Rilievi dagli alberi ARIA
+
+Non intercettati da axe — formalmente il markup è corretto — ma visibili leggendo la struttura
+esposta alle tecnologie assistive. Presenti su tutte e 5 le viste, perché stanno nel layout
+condiviso.
+
+- **Nome accessibile duplicato sul logo di testata** — `core/layout/header-bar/header-bar.ts:83`.
+  L'`alt` dell'immagine vale `appSubtitle() || appName()`, ma lo stesso `appSubtitle()` è già reso
+  come testo visibile dentro il medesimo `<a routerLink="/">` (righe 100 e 107). Il nome accessibile
+  del link è la concatenazione: `"Ente Creditore Ente Creditore Gestione pagamenti"`. Trattandosi di
+  immagine accompagnata da testo che già nomina il link, l'`alt` dovrebbe essere vuoto
+  (decorativa) — come già si fa per il watermark in `sidebar.ts:67`.
+- **Stessa duplicazione nella sidebar** — `core/layout/sidebar/sidebar.ts:80`: `[alt]="getEnteLabel()"`
+  accanto al testo che ripete la stessa etichetta.
+- **Nessun landmark `contentinfo`** — `core/layout/main-layout/main-layout.ts:90` dichiara `<main>`
+  ma non esiste alcun `<footer>`. I contenuti da piè di pagina (indirizzo, loghi partner pagoPA e
+  GovPay, versione) vivono dentro l'`<aside>` della sidebar, esposto come `complementary`. Chi
+  naviga per landmark — modo standard di spostarsi con uno screen reader — non trova il piè di
+  pagina.
+
+> Nota per chi interviene: `src/app/app.html` contiene un layout alternativo **con** un `<footer>`,
+> ma è codice morto — `app.ts:27` usa un template inline (`<router-outlet />`) e nessuno referenzia
+> quel file. Il layout reso è `core/layout/main-layout`.
 
 ## Copertura
 
@@ -59,7 +84,4 @@ node a11y-scan.mjs \
   --fail-on-nameless
 ```
 
-Poi copiare `report.html` e `summary.json` in questa cartella.
-
-Nota: i link a `aria-tree/*.yaml` dentro `report.html` non risolvono qui — quegli allegati non sono
-versionati e restano nella cartella di output della scansione.
+Poi copiare `report.html`, `summary.json` e `aria-tree/` in questa cartella.

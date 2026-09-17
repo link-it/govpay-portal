@@ -1,0 +1,68 @@
+# Albero ARIA (accessibility tree) — evidenza per revisione manuale
+# target: govpay-portal  |  vista: flow:servizio-tipologia-dettaglio/servizio-dettaglio
+# url: http://localhost:4300/dettaglio-servizio/CONC-1001
+# Fonte: Playwright ariaSnapshot (motore a11y di Chromium). Righe '- <ruolo>' senza
+# nome quotato = elemento senza nome accessibile.
+
+- link "Ente Creditore Ente Creditore Gestione pagamenti":
+  - /url: /
+  - img "Ente Creditore"
+  - text: Ente Creditore Gestione pagamenti
+- link "Link.it":
+  - /url: https://link.it
+  - img "Link.it"
+- banner:
+  - button "Chiudi"
+  - text: CONC-1001 - Concessione farmacie
+  - button "it"
+  - button "Accedi"
+  - button "Carrello"
+- complementary:
+  - img "Comune Dimostrativo"
+  - text: Comune Dimostrativo Gestione pagamenti
+  - navigation:
+    - list:
+      - listitem:
+        - link "Pagamenti":
+          - /url: /pagamento-servizio
+      - listitem:
+        - link "Carrello":
+          - /url: /carrello
+  - button "Accedi"
+  - link "Progetto GovPay":
+    - /url: https://github.com/link-it/govpay
+    - img "Progetto GovPay"
+  - link "pagoPA":
+    - /url: https://www.pagopa.gov.it/
+    - img "pagoPA"
+  - text: Link.it srl Via San Martino n. 51 - Pisa (PI) P.IVA 01313050500
+  - link "Link.it":
+    - /url: https://link.it
+    - img "Link.it"
+  - text: • v5.2.3-5c201a3*
+- main:
+  - text: Informazioni sul servizio
+  - paragraph: Assessorato della salute
+  - paragraph: Concessione per l’apertura e l’esercizio di farmacie
+  - paragraph: Tasse sulle Concessioni Regionali
+  - text: La tassa è riferita non soltanto alle concessioni per l’apertura e l’esercizio di nuove farmacie, ma anche alle concessioni per l’esercizio di farmacie già istituite e conferite ad altri titolari. La concessione per l’apertura e l’esercizio di una farmacia è valevole solo per la sede indicata nella concessione stessa e pertanto la tassa è dovuta, anche nel caso in cui venga concesso il trasferimento da una sede ad un’altra dello stesso Comune. La tassa non è dovuta nel caso di trasferimento di farmacia entro i limiti della stessa sede. Mail
+  - link "info@comune.it":
+    - /url: mailto:info@comune.it
+  - text: Documentazione
+  - link "Regolamento":
+    - /url: https://www.empoli.gov.it/sites/default/files/2018-06/trasporto-scolastico.pdf
+  - text: Telefono xxx-xxx.xxxx Dati necessari al pagamento Numero di concessione
+  - textbox "Numero di concessione"
+  - text: Intestatario
+  - textbox "Intestatario"
+  - text: Nome e cognome o ragione sociale Codice fiscale o partita iva
+  - textbox "Codice fiscale o partita iva"
+  - text: Tipo di tassa
+  - combobox "Tipo di tassa"
+  - text: Numero abitanti del comune
+  - combobox "Numero abitanti del comune"
+  - checkbox "Farmacia rurale"
+  - text: Farmacia rurale
+  - checkbox "Farmacia succursale"
+  - text: Farmacia succursale
+  - button "Verifica" [disabled]

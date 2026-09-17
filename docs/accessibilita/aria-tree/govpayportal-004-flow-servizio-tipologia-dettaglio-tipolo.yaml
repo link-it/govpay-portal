@@ -1,0 +1,58 @@
+# Albero ARIA (accessibility tree) — evidenza per revisione manuale
+# target: govpay-portal  |  vista: flow:servizio-tipologia-dettaglio/tipologia-servizi
+# url: http://localhost:4300/pagamento-servizio
+# Fonte: Playwright ariaSnapshot (motore a11y di Chromium). Righe '- <ruolo>' senza
+# nome quotato = elemento senza nome accessibile.
+
+- link "Ente Creditore Ente Creditore Gestione pagamenti":
+  - /url: /
+  - img "Ente Creditore"
+  - text: Ente Creditore Gestione pagamenti
+- link "Link.it":
+  - /url: https://link.it
+  - img "Link.it"
+- banner:
+  - button "Apri menu"
+  - text: Pagamenti online
+  - button "it"
+  - button "Accedi"
+  - button "Carrello"
+  - navigation:
+    - link "PAGA UN SERVIZIO":
+      - /url: /pagamento-servizio
+    - link "PAGA UN AVVISO":
+      - /url: /bollettino
+- complementary:
+  - img "Comune Dimostrativo"
+  - text: Comune Dimostrativo Gestione pagamenti
+  - navigation:
+    - list:
+      - listitem:
+        - link "Pagamenti":
+          - /url: /pagamento-servizio
+      - listitem:
+        - link "Carrello":
+          - /url: /carrello
+  - button "Accedi"
+  - link "Progetto GovPay":
+    - /url: https://github.com/link-it/govpay
+    - img "Progetto GovPay"
+  - link "pagoPA":
+    - /url: https://www.pagopa.gov.it/
+    - img "pagoPA"
+  - text: Link.it srl Via San Martino n. 51 - Pisa (PI) P.IVA 01313050500
+  - link "Link.it":
+    - /url: https://link.it
+    - img "Link.it"
+  - text: • v5.2.3-5c201a3*
+- main:
+  - button "Indietro"
+  - heading "Tasse sulle Concessioni Regionali" [level=1]
+  - text: Sono presenti 2 servizi
+  - textbox "Cerca un servizio"
+  - text: Cerca un servizio
+  - button "Cerca un servizio"
+  - text: Assessorato della salute
+  - heading "CONCESSIONE FARMACIE" [level=4]
+  - paragraph: Concessione per l’apertura e l’esercizio di farmacie
+  - paragraph: Tasse sulle Concessioni Regionali

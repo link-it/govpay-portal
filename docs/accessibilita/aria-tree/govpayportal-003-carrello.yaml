@@ -1,0 +1,55 @@
+# Albero ARIA (accessibility tree) — evidenza per revisione manuale
+# target: govpay-portal  |  vista: carrello
+# url: http://localhost:4300/carrello
+# Fonte: Playwright ariaSnapshot (motore a11y di Chromium). Righe '- <ruolo>' senza
+# nome quotato = elemento senza nome accessibile.
+
+- link "Ente Creditore Ente Creditore Gestione pagamenti":
+  - /url: /
+  - img "Ente Creditore"
+  - text: Ente Creditore Gestione pagamenti
+- link "Link.it":
+  - /url: https://link.it
+  - img "Link.it"
+- banner:
+  - button "Apri menu"
+  - text: Pagamenti online
+  - button "it"
+  - button "Accedi"
+  - button "Carrello"
+  - navigation:
+    - link "PAGA UN SERVIZIO":
+      - /url: /pagamento-servizio
+    - link "PAGA UN AVVISO":
+      - /url: /bollettino
+- complementary:
+  - img "Comune Dimostrativo"
+  - text: Comune Dimostrativo Gestione pagamenti
+  - navigation:
+    - list:
+      - listitem:
+        - link "Pagamenti":
+          - /url: /pagamento-servizio
+      - listitem:
+        - link "Carrello":
+          - /url: /carrello
+  - button "Accedi"
+  - link "Progetto GovPay":
+    - /url: https://github.com/link-it/govpay
+    - img "Progetto GovPay"
+  - link "pagoPA":
+    - /url: https://www.pagopa.gov.it/
+    - img "pagoPA"
+  - text: Link.it srl Via San Martino n. 51 - Pisa (PI) P.IVA 01313050500
+  - link "Link.it":
+    - /url: https://link.it
+    - img "Link.it"
+  - text: • v5.2.3-5c201a3*
+- main:
+  - text: Carrello
+  - heading "Il carrello è vuoto" [level=2]
+  - paragraph: Aggiungi pagamenti al carrello per procedere
+  - link "Vai ai pagamenti":
+    - /url: /pagamento-servizio
+  - link "Paga un avviso":
+    - /url: /bollettino
