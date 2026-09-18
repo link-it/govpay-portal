@@ -77,7 +77,7 @@ export interface UserInfo {
             @if (getEnteLogo()) {
               <img
                 [src]="getEnteLogo()"
-                [alt]="getEnteLabel()"
+                [alt]="config.theme().sidebar.headerLogo ? getEnteLabel() : ''"
                 class="h-12 w-auto shrink-0"
               />
             } @else {
@@ -209,6 +209,7 @@ export interface UserInfo {
 
       <!-- Footer con loghi partner -->
       <div
+        role="contentinfo"
         class="px-4 py-4 border-t"
         [style.background-color]="config.theme().sidebar.footerBackground"
         [style.border-color]="config.theme().sidebar.footerBorder"

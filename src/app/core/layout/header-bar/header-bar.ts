@@ -76,11 +76,11 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
             </app-dropdown-menu>
           } @else {
             <!-- Singolo dominio: logo statico -->
-            <a routerLink="/" class="flex items-center gap-3">
+            <a routerLink="/" class="flex items-center gap-3" [attr.aria-label]="config.appSubtitle() || config.appName()">
               @if (config.logo().full) {
                 <img
                   [src]="config.logo().full"
-                  [alt]="config.appSubtitle() || config.appName()"
+                  alt=""
                   [style.height]="config.theme().topBar.logoHeight || '2.5rem'"
                 />
               } @else if (config.logo().fallbackText) {
