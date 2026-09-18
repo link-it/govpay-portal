@@ -58,8 +58,8 @@
     "lodash": "^4.18.1",
     "qrcode": "^1.5.4",
     "rxjs": "~7.8.0",
-    "survey-angular-ui": "^2.5.4",
-    "survey-core": "^2.5.4",
+    "survey-angular-ui": "^2.5.30",
+    "survey-core": "^2.5.30",
     "tailwindcss": "^4.1.18",
     "tslib": "^2.3.0"
   },
