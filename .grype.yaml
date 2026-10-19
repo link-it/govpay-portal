@@ -1,0 +1,24 @@
+# Eccezioni per il report di Grype (docker/scan_image.sh), da tenere allineate
+# a quelle di .trivyignore.yaml, dove stanno motivo e scadenza: Grype produce
+# solo un report e non ha un gate, quindi qui basta l'elenco.
+#
+# Le segnalazioni che Grype da' e Trivy no (tipicamente associazioni per CPE
+# NVD su pacchetti del sistema operativo) stanno solo qui, con il motivo in
+# reason e il riferimento alla issue. upstream-name copre anche i sottopacchetti.
+#
+# Esempio, da link-it/govpay-gde-api:
+#   ignore:
+#     - vulnerability: CVE-2025-60876
+#       reason: "wget di busybox usato solo su URL fisso dell'healthcheck. link-it/govpay-gde-api#36"
+#       package:
+#         upstream-name: busybox
+
+ignore:
+  # busybox fornisce /bin/sh nella base nginx:alpine; il suo wget non e' usato
+  # dall'entrypoint (che usa solo cat, sed e nginx) ne' da healthcheck, e la CVE
+  # richiede un URL controllato dall'attaccante. Nessuna correzione in Alpine;
+  # Grype la associa per CPE NVD. Copre anche busybox-binsh e ssl_client.
+  - vulnerability: CVE-2025-60876
+    reason: "wget di busybox non usato dall'immagine. link-it/govpay-portal#180"
+    package:
+      upstream-name: busybox
