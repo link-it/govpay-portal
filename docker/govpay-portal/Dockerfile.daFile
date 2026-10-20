@@ -16,7 +16,10 @@ TZ=Europe/Rome
 RUN set -eux; \
 apk update; \
 apk upgrade; \
-apk add --no-cache bash curl tar unzip tzdata; \
+# Solo cio' che serve a runtime: bash per l'entrypoint (che usa cat, sed e
+# nginx) e tzdata per il fuso orario. tar e unzip non servono; curl fa parte
+# della base nginx:alpine.
+apk add --no-cache bash tzdata; \
 rm -rf /var/cache/apk/*; \
 echo "${TZ}" > /etc/timezone; \
 mkdir -p ${GOVPAY_PORTAL_LOGDIR}

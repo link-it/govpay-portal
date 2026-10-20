@@ -230,10 +230,17 @@ jobs:
   # toccato, quindi bump-version.js resta valido.
   # Tag pubblicati: "master" (mobile, ultimo stato del branch) e "sha-<breve>"
   # (immutabile, per riprodurre un test di integrazione fallito).
+  # Sulle pull request l'immagine viene costruita e scansionata ma non
+  # pubblicata: il gate si vede gia' in revisione, prima del merge.
   docker-dev:
     needs: build
-    if: ${{ github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name == 'master' }}
+    if: ${{ (github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name == 'master') || github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
+    # security-events: report SARIF della scansione dell'immagine.
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
 
@@ -279,26 +286,55 @@ jobs:
             type=sha,format=short
 
       - name: Login to Docker Hub
+        if: ${{ github.event_name == 'push' }}
         uses: docker/login-action@v4
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push development image
+      # L'immagine viene costruita senza pubblicarla, scansionata, e pubblicata
+      # solo se supera il gate (vedi .github/actions/image-scan).
+      - name: Build development image
         uses: docker/build-push-action@v6
         with:
           context: docker/buildcontext
           file: docker/govpay-portal/Dockerfile.daFile
-          push: true
+          push: false
+          load: true
+          pull: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             govpay_portal_fullversion=${{ steps.version.outputs.fullversion }}
 
+      # Tutti i tag puntano alla stessa immagine: se ne scansiona il primo.
+      - name: Scan image
+        uses: ./.github/actions/image-scan
+        with:
+          image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          gate: ${{ vars.IMAGE_SCAN_GATE || 'block' }}
+          report-name: image-scan-report-dev
+
+      - name: Push image
+        if: ${{ github.event_name == 'push' }}
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          set -euo pipefail
+          # Un tag per riga; con un if, una riga vuota finale non fa fallire il passo.
+          while read -r tag; do
+            if [ -n "${tag}" ]; then docker push "${tag}"; fi
+          done <<< "${TAGS}"
+
   docker:
     needs: build
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
+    # security-events: report SARIF della scansione dell'immagine.
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
 
@@ -364,13 +400,58 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      # L'immagine viene costruita senza pubblicarla, scansionata, e pubblicata
+      # solo se supera il gate (vedi .github/actions/image-scan).
+      - name: Build image
         uses: docker/build-push-action@v6
         with:
           context: docker/buildcontext
           file: docker/govpay-portal/Dockerfile.daFile
-          push: true
+          push: false
+          load: true
+          pull: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             govpay_portal_fullversion=${{ github.ref_name }}
+
+      # Tutti i tag puntano alla stessa immagine: se ne scansiona il primo.
+      - name: Scan image
+        uses: ./.github/actions/image-scan
+        with:
+          image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          gate: ${{ vars.IMAGE_SCAN_GATE || 'block' }}
+          report-name: image-scan-report
+
+      - name: Push image
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          set -euo pipefail
+          # Un tag per riga; con un if, una riga vuota finale non fa fallire il passo.
+          while read -r tag; do
+            if [ -n "${tag}" ]; then docker push "${tag}"; fi
+          done <<< "${TAGS}"
+
+      # SBOM dell'immagine (sistema operativo, nginx e applicazione) su
+      # Dependency-Track, accanto a quello npm caricato dal job
+      # dependency-track-upload. Non blocca: l'immagine e' gia' pubblicata.
+      - name: Upload SBOM dell'immagine su Dependency-Track
+        if: ${{ vars.DISABLE_DTRACK_UPLOAD_JOB != 'true' }}
+        continue-on-error: true
+        env:
+          DTRACK_API_KEY: ${{ secrets.GOVPAY_DTRACK_API_KEY }}
+          DTRACK_PROJECT_NAME: govpay-portal-image
+          DTRACK_VERSION: ${{ github.ref_name }}
+          DTRACK_LATEST: 'true'
+        run: |
+          set -euo pipefail
+          if [ -z "${DTRACK_API_KEY}" ]; then
+            echo "::warning::secret GOVPAY_DTRACK_API_KEY non configurato: SBOM dell'immagine non caricato."
+            exit 0
+          fi
+          chmod +x script/sbom/upload-sbom-parent-required.sh
+          ./script/sbom/upload-sbom-parent-required.sh \
+            "${DTRACK_API_KEY}" \
+            image-scan-report/sbom-image.cdx.json \
+            "GovPay-Frontend"

@@ -55,3 +55,6 @@ docker/buildcontext/
 # System Files
 .DS_Store
 Thumbs.db
+
+# Report di docker/scan_image.sh
+image-scan-report/
