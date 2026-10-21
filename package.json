@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@angular/build": "~21.2.24",
-    "@angular/cli": "~21.2.26",
+    "@angular/cli": "~22.2.3",
     "@angular/compiler-cli": "~21.2.24",
     "@ngx-formly/schematics": "^7.0.1",
     "@types/qrcode": "^1.5.6",
