@@ -9,8 +9,8 @@ echo "Options
 -h             : Mostra questa pagina di aiuto
 
 Sorgente:
--v <VERSIONE>  : Imposta la versione della release da utilizzare per il build (default: ${LATEST_GOVPAY_PORTAL_RELEASE})
--l <DIR>       : Usa una directory locale contenente i file della build Angular (contenuto di dist/govpay-portal/browser)
+-v <VERSIONE>  : Versione con cui etichettare l'immagine (default: local)
+-l <DIR>       : Directory locale con i file della build Angular (obbligatoria) (contenuto di dist/govpay-portal/browser)
 
 Personalizzazioni:
 -e <PATH>      : Imposta il path interno utilizzato per i file dell'applicazione
@@ -35,8 +35,6 @@ LOCALDIR=
 REGISTRY_PREFIX=linkitaly
 #REGISTRY_PREFIX=localhost
 
-LATEST_LINK="$(curl -qw '%{redirect_url}\n' https://github.com/link-it/govpay-portal/releases/latest 2> /dev/null)"
-LATEST_GOVPAY_PORTAL_RELEASE="${LATEST_LINK##*/}"
 
 while getopts "ht:v:l:e:f:" opt; do
   case $opt in
@@ -64,18 +62,22 @@ mkdir -p buildcontext/
 cp -fr commons buildcontext/
 
 DOCKERBUILD_OPT=()
-DOCKERBUILD_OPTS=(${DOCKERBUILD_OPTS[@]} '--build-arg' "govpay_portal_fullversion=${VER:-${LATEST_GOVPAY_PORTAL_RELEASE}}")
+DOCKERBUILD_OPTS=(${DOCKERBUILD_OPTS[@]} '--build-arg' "govpay_portal_fullversion=${VER:-local}")
 [ -n "${CUSTOM_GOVPAY_HOME}" ] && DOCKERBUILD_OPTS=(${DOCKERBUILD_OPTS[@]} '--build-arg' "govpay_portal_home=${CUSTOM_GOVPAY_HOME}")
 [ -n "${CUSTOM_GOVPAY_LOG}" ] && DOCKERBUILD_OPTS=(${DOCKERBUILD_OPTS[@]} '--build-arg' "govpay_portal_log=${CUSTOM_GOVPAY_LOG}")
 
 # Build immagine
-if [ -n "${LOCALDIR}" ]
+# L'immagine si costruisce solo dalla build Angular locale: Dockerfile.github,
+# che scaricava un tar.gz dalla release, e' stato rimosso perche' il repository
+# non pubblica quell'asset (link-it/govpay-portal#180).
+if [ -z "${LOCALDIR}" ]
 then
-  DOCKERFILE="govpay-portal/Dockerfile.daFile"
-  cp -rf "${LOCALDIR}"/* buildcontext/app/
-else
-  DOCKERFILE="govpay-portal/Dockerfile.github"
+  echo "Indicare con -l la directory della build Angular (es. dist/govpay-portal/browser)."
+  exit 3
 fi
+DOCKERFILE="govpay-portal/Dockerfile.daFile"
+mkdir -p buildcontext/app
+cp -rf "${LOCALDIR}"/* buildcontext/app/
 
 
 # Build imagine govpay-portal
@@ -83,7 +85,7 @@ fi
 if [ -z "$TAG" ]
 then
     REPO=${REGISTRY_PREFIX}/govpay-portal
-  TAGNAME=${VER:-${LATEST_GOVPAY_PORTAL_RELEASE}}
+  TAGNAME=${VER:-local}
   TAG="${REPO}:${TAGNAME}"
 fi
 
