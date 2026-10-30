@@ -361,4 +361,4 @@ src/
 
 ## Licenza
 
-GovPay Portal è distribuito con licenza GNU General Public License v3.0 (GPL-3.0-or-later), Link.it srl.
+GovPay Portal è distribuito con licenza [GNU General Public License v3.0](LICENSE) (GPL-3.0-or-later), Link.it srl.
