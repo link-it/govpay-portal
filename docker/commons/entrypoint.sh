@@ -172,7 +172,7 @@ log_info "Document Root: ${GOVPAY_PORTAL_HOME}"
 log_info "Base path: ${BASE_PATH}"
 log_info "Log Directory: ${GOVPAY_PORTAL_LOGDIR}"
 log_info "Backend API: ${GOVPAY_API_BACKEND:-<nessuno>}"
-[ -n "${GOVPAY_API_BACKEND}" ] && log_info "Path upstream: ${UPSTREAM_PATH:-/}/"
+[ -n "${GOVPAY_API_BACKEND}" ] && log_info "Path upstream: ${UPSTREAM_PATH}/"
 log_info "========================================"
 
 # Verifica della configurazione generata
