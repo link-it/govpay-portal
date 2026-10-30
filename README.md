@@ -38,7 +38,7 @@ Il portale può servire un solo Ente Creditore o più Enti: con più Enti all'av
 | `/esito-pagamento` | Esito del pagamento al ritorno dal checkout |
 | `/riepilogo` | Posizione debitoria (utente autenticato) |
 | `/archivio` | Archivio dei pagamenti (utente autenticato) |
-| `/test-survey`, `/test-jsonform` | Pagine di prova dei form dinamici, per lo sviluppo |
+| `/test-survey`, `/test-jsonform` | Pagine di prova dei form dinamici, solo nelle build di sviluppo (`npm start`, `npm run watch`) |
 
 ## Integrazione con GovPay
 
