@@ -145,6 +145,11 @@ server {
     root ${GOVPAY_PORTAL_HOME};
     index index.html;
 
+    # Header di sicurezza, anche sulle risposte di errore e su quelle del proxy
+    server_tokens off;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
     # Compressione asset statici
     gzip on;
     gzip_types text/plain text/css application/javascript application/json image/svg+xml;

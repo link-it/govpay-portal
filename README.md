@@ -278,6 +278,8 @@ Variabili d'ambiente lette dall'entrypoint (`docker/commons/entrypoint.sh`), che
 
 Le altre variabili usate nell'entrypoint (`API_PROXY_BLOCK`, `BASE_LOCATION_BLOCK`, `BASE_PATH`, `BACKEND`, `INDEX_HTML`, `NGINX_CONF`, `UPSTREAM_PATH`) sono interne allo script e non vanno impostate.
 
+nginx non dichiara la propria versione (`server_tokens off`) e aggiunge a tutte le risposte, comprese quelle del proxy, gli header `X-Content-Type-Options: nosniff` e `Referrer-Policy: strict-origin-when-cross-origin`.
+
 Il proxy inoltra al backend gli header `Host` (quello del backend), `X-Real-IP`, `X-Forwarded-For` e `X-Forwarded-Proto`. Gli header `X-SPID-*` devono essere aggiunti dal proxy di autenticazione davanti al container, non dal browser: govpay-portal-api li considera affidabili.
 
 Esempio di installazione servita su un base path diverso dalla radice:
