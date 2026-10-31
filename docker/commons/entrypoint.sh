@@ -145,6 +145,11 @@ server {
     root ${GOVPAY_PORTAL_HOME};
     index index.html;
 
+    # Header di sicurezza, anche sulle risposte di errore e su quelle del proxy
+    server_tokens off;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
     # Compressione asset statici
     gzip on;
     gzip_types text/plain text/css application/javascript application/json image/svg+xml;
@@ -167,7 +172,7 @@ log_info "Document Root: ${GOVPAY_PORTAL_HOME}"
 log_info "Base path: ${BASE_PATH}"
 log_info "Log Directory: ${GOVPAY_PORTAL_LOGDIR}"
 log_info "Backend API: ${GOVPAY_API_BACKEND:-<nessuno>}"
-[ -n "${GOVPAY_API_BACKEND}" ] && log_info "Path upstream: ${UPSTREAM_PATH:-/}/"
+[ -n "${GOVPAY_API_BACKEND}" ] && log_info "Path upstream: ${UPSTREAM_PATH}/"
 log_info "========================================"
 
 # Verifica della configurazione generata
