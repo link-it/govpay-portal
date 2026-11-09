@@ -1,3 +1,9 @@
+2026-11-09  Giuliano Pintori <pintori@link.it>
+
+  * [Release] Ramo 3.11.x: versione 5.3.0
+    Gli sviluppi di GovPay 3.10 e 3.11 non sono compatibili e proseguono su
+    rami separati: 3.10.x resta a 5.2.3, 3.11.x passa a 5.3.0.
+
 2026-09-08  Link.it <govpay@link.it>
 
   * GovPay Portal v5.2.2
