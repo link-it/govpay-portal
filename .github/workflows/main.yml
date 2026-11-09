@@ -6,7 +6,7 @@ on:
     tags:
       - '*'
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "3.10.x", "3.11.x" ]
 
 permissions:
   contents: write
@@ -35,7 +35,7 @@ jobs:
 
       - name: Test with coverage
         run: npm run test:coverage
-        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' && github.ref_name != '3.10.x' && github.ref_name != '3.11.x' }}
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -48,12 +48,12 @@ jobs:
 
       - name: Audit dependencies
         run: npx audit-ci --config audit-ci.json
-        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' && github.ref_name != '3.10.x' && github.ref_name != '3.11.x' }}
 
       - name: OWASP Dependency Check
-        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_OWASP_JOB == 'true') }}
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == '3.10.x' || github.ref_name == '3.11.x' || vars.FORCE_OWASP_JOB == 'true') }}
         uses: dependency-check/Dependency-Check_Action@main
-        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' && github.ref_name != '3.10.x' && github.ref_name != '3.11.x' }}
         with:
           project: ${{ github.repository }}
           path: '.'
@@ -66,24 +66,24 @@ jobs:
             --suppression /github/workspace/.github/dependency-check-suppressions.xml
 
       - name: Upload OWASP report
-        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_OWASP_JOB == 'true') }}
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == '3.10.x' || github.ref_name == '3.11.x' || vars.FORCE_OWASP_JOB == 'true') }}
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
           path: reports
 
       - name: License Analysis
-        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_LICENSE_JOB == 'true') }}
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == '3.10.x' || github.ref_name == '3.11.x' || vars.FORCE_LICENSE_JOB == 'true') }}
         run: |
           set -euo pipefail
           echo "Analyzing NPM licenses..."
           npm config set cache .npm --location=project
           npm ci --production
           python3 .github/workflows/scripts/analyze_npm_licenses.py --exceptions .github/workflows/scripts/npm-license-exceptions.json
-        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' && github.ref_name != '3.10.x' && github.ref_name != '3.11.x' }}
 
       - name: Upload license report
-        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_LICENSE_JOB == 'true') }}
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == '3.10.x' || github.ref_name == '3.11.x' || vars.FORCE_LICENSE_JOB == 'true') }}
         uses: actions/upload-artifact@v4
         with:
           name: third-party-licenses
@@ -91,10 +91,10 @@ jobs:
 
       - name: Check license headers
         run: npm run license:check
-        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' }}
+        continue-on-error: ${{ github.ref_type == 'branch' && github.ref_name != 'master' && github.ref_name != '3.10.x' && github.ref_name != '3.11.x' }}
 
       - name: SonarCloud Scan
-        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || vars.FORCE_SONAR_JOB == 'true') }}
+        if: ${{ github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == '3.10.x' || github.ref_name == '3.11.x' || vars.FORCE_SONAR_JOB == 'true') }}
         uses: SonarSource/sonarqube-scan-action@v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -153,7 +153,7 @@ jobs:
     if: >-
       vars.DISABLE_DTRACK_UPLOAD_JOB != 'true' &&
       (github.ref_type == 'tag' ||
-       github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'staging' ||
+       github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == '3.10.x' || github.ref_name == '3.11.x' || github.ref_name == 'staging' ||
        vars.FORCE_DTRACK_UPLOAD_JOB == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -161,7 +161,7 @@ jobs:
       contents: read
     # Come su GitLab, il fallimento blocca solo le esecuzioni su tag e sui
     # branch protetti; le esecuzioni forzate sono tolleranti.
-    continue-on-error: ${{ github.ref_type != 'tag' && github.ref_name != 'main' && github.ref_name != 'master' && github.ref_name != 'staging' }}
+    continue-on-error: ${{ github.ref_type != 'tag' && github.ref_name != 'main' && github.ref_name != 'master' && github.ref_name != '3.10.x' && github.ref_name != '3.11.x' && github.ref_name != 'staging' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -202,7 +202,7 @@ jobs:
           if [ "${{ github.ref_type }}" = "tag" ]; then
             echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
             echo "latest=true" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.ref_name }}" = "main" ] || [ "${{ github.ref_name }}" = "master" ] || [ "${{ github.ref_name }}" = "staging" ]; then
+          elif [ "${{ github.ref_name }}" = "main" ] || [ "${{ github.ref_name }}" = "master" ] || [ "${{ github.ref_name }}" = "3.10.x" ] || [ "${{ github.ref_name }}" = "3.11.x" ] || [ "${{ github.ref_name }}" = "staging" ]; then
             echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
             echo "latest=false" >> "$GITHUB_OUTPUT"
           else
@@ -224,7 +224,7 @@ jobs:
             "${WORKSPACE}/sbom/cyclonedx/bom.cdx.json" \
             "GovPay-Frontend"
 
-  # ── Immagine Docker di sviluppo (ogni push su master) ──────────────────
+  # ── Immagine Docker di sviluppo (ogni push su master e sui rami di linea) ──────────────────
   # Routing sul trigger, non sulla versione: push su master -> repo di sviluppo,
   # push di un tag -> repo di produzione (job docker). package.json non viene
   # toccato, quindi bump-version.js resta valido.
@@ -234,7 +234,7 @@ jobs:
   # pubblicata: il gate si vede gia' in revisione, prima del merge.
   docker-dev:
     needs: build
-    if: ${{ (github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name == 'master') || github.event_name == 'pull_request' }}
+    if: ${{ (github.event_name == 'push' && github.ref_type == 'branch' && (github.ref_name == 'master' || github.ref_name == '3.10.x' || github.ref_name == '3.11.x')) || github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     # security-events: report SARIF della scansione dell'immagine.
     permissions:
