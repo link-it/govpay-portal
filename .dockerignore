@@ -1,0 +1,14 @@
+# Build context di docker/Dockerfile (radice del repository): solo i sorgenti.
+# node_modules va escluso soprattutto perche' COPY . . lo copierebbe sopra
+# quello installato da npm ci nell'immagine Alpine, con binari nativi
+# (esbuild, rollup) compilati per l'host.
+node_modules
+dist
+.angular
+coverage
+reports
+third-party-licenses
+image-scan-report
+.npm
+.git
+docker/buildcontext

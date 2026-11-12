@@ -43,7 +43,7 @@ RUN npm run build:prod
 # ---------------------------------------------------------------------------
 FROM nginx:alpine
 
-ARG govpay_portal_fullversion=5.1.0
+ARG govpay_portal_fullversion=local
 ARG govpay_portal_home=/usr/share/nginx/html
 ARG govpay_portal_log=/var/log/govpay-portal
 

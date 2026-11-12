@@ -20,6 +20,27 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from '@core/layout/main-layout/main-layout';
 import { authGuard } from '@core/auth/guards';
+import { environment } from '@environments';
+
+// Pagine di prova dei form dinamici: registrate solo nelle build di sviluppo,
+// in production le rotte non vengono registrate e /test-survey e /test-jsonform
+// ricadono sulla rotta di default.
+const devRoutes: Routes = environment.production ? [] : [
+  {
+    path: 'test-survey',
+    loadComponent: () =>
+      import('@feature/test-survey/test-survey').then(
+        m => m.TestSurveyComponent
+      )
+  },
+  {
+    path: 'test-jsonform',
+    loadComponent: () =>
+      import('@feature/test-jsonform/test-jsonform').then(
+        m => m.TestJsonFormComponent
+      )
+  }
+];
 
 export const routes: Routes = [
   {
@@ -84,20 +105,7 @@ export const routes: Routes = [
         canActivate: [authGuard]
       },
       // Route di test (solo sviluppo)
-      {
-        path: 'test-survey',
-        loadComponent: () =>
-          import('@feature/test-survey/test-survey').then(
-            m => m.TestSurveyComponent
-          )
-      },
-      {
-        path: 'test-jsonform',
-        loadComponent: () =>
-          import('@feature/test-jsonform/test-jsonform').then(
-            m => m.TestJsonFormComponent
-          )
-      }
+      ...devRoutes
     ]
   },
   {
