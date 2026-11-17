@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, signal, computed, HostListener, inject } from '@angular/core';
+import { Component, signal, computed, HostListener, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
 import { ConfigService } from '@core/config';
@@ -49,6 +49,7 @@ import { ConfigService } from '@core/config';
       </button>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     :host {
       display: contents;

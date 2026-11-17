@@ -13,7 +13,7 @@ Portale dei pagamenti per il cittadino: permette di pagare avvisi pagoPA e servi
 
 ## Sommario
 
-Applicazione a pagina singola: la build produce solo file statici, serviti da nginx nell'immagine Docker o da qualsiasi web server. Stack: **Angular 21** standalone, **Signals**, **TailwindCSS 4**, form dinamici con **SurveyJS**, **Formly** e **ng-formworks** (JSON Schema).
+Applicazione a pagina singola: la build produce solo file statici, serviti da nginx nell'immagine Docker o da qualsiasi web server. Stack: **Angular 22** standalone, **Signals**, **TailwindCSS 4**, form dinamici con **SurveyJS**, **Formly** e **@ajsf** (JSON Schema, formato angular2-json-schema-form).
 
 Funzioni disponibili senza autenticazione:
 
@@ -55,7 +55,7 @@ Con `pagopa.checkout.enabled` a `false` il carrello è inviato al backend con `P
 
 ## Compilazione
 
-Requisiti: Node.js 22 (versione in [.nvmrc](.nvmrc), oggi `22.12.0`; è la stessa usata dalla pipeline e dall'immagine `node:22.12.0-alpine` di `docker/Dockerfile`) e npm 10 (`packageManager` in `package.json`: `npm@10.9.0`).
+Requisiti: Node.js 24 (versione in [.nvmrc](.nvmrc), oggi `24.22.2`; è la stessa usata dalla pipeline e dall'immagine `node:24.22.2-alpine` di `docker/Dockerfile`) e npm 11 (`packageManager` in `package.json`: `npm@11.19.1`). Angular 22 richiede Node `^22.22.3` o `^24.15`.
 
 ```bash
 nvm use                # usa la versione di Node indicata in .nvmrc

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgIcon } from '@ng-icons/core';
@@ -27,6 +27,7 @@ import { ConfigService } from '../../config';
   selector: 'app-maintenance',
   standalone: true,
   imports: [CommonModule, TranslateModule, NgIcon],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div
       class="min-h-screen flex flex-col"

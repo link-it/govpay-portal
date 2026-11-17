@@ -1,0 +1,50 @@
+/*
+ * GovPay - Porta di Accesso al Nodo dei Pagamenti SPC
+ * http://www.gov4j.it/govpay
+ *
+ * Copyright (c) 2014-2026 Link.it srl (http://www.link.it).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * Tema Angular Material dei form JSON Schema (@ajsf/material).
+ *
+ * ng-formworks portava con sé un foglio di temi (material-design-themes.scss) e
+ * applicava il tema scelto con una classe sul contenitore del form; @ajsf non ha
+ * né il foglio né l'input "theme". Qui si definisce solo il tema usato dal portale,
+ * "indigo-pink", con le stesse palette di ng-formworks, e lo applica il wrapper
+ * JsonSchemaFormComponent con la stessa classe: l'aspetto dei form non cambia.
+ */
+
+@use '@angular/material' as mat;
+
+@include mat.elevation-classes();
+@include mat.app-background();
+
+$indigo-pink-theme: mat.m2-define-light-theme((
+  color: (
+    primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500),
+    accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400),
+    warn: mat.m2-define-palette(mat.$m2-red-palette),
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+.indigo-pink {
+  @include mat.elevation-classes();
+  @include mat.app-background();
+  @include mat.all-component-themes($indigo-pink-theme);
+  @include mat.button-color($indigo-pink-theme);
+}

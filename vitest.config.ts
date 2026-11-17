@@ -20,37 +20,26 @@
 /**
  * Configurazione Vitest per il target test di angular.json.
  *
- * Serve a un solo scopo: @ng-formworks/core e @ng-formworks/material importano
- * lodash con sottopercorsi senza estensione (`from 'lodash/cloneDeep'`). lodash
- * non dichiara un campo "exports", quindi quel percorso e' risolvibile da
- * require() ma non dal resolver ESM di Node, che pretende l'estensione.
- *
- * In fase di build non si nota, perche' esbuild inferisce l'estensione. Sotto
- * Vitest i due pacchetti vengono invece esternalizzati e caricati da Node, e
- * l'import fallisce con "Cannot find module .../lodash/cloneDeep".
+ * Serve a un solo scopo: @ajsf/core importa il meta-schema JSON di ajv
+ * (`ajv/dist/refs/json-schema-draft-06.json`) senza l'attributo
+ * `with { type: 'json' }`. In fase di build non si nota, perché esbuild gestisce
+ * i JSON da sé. Sotto Vitest il pacchetto verrebbe invece esternalizzato e
+ * caricato da Node, che rifiuta l'import ("needs an import attribute of
+ * type: json").
  *
  * Conseguenza pratica: qualunque test che importi un componente che passa da
  * `@shared/components` (il barrel riesporta JsonSchemaFormComponent, che tira
- * dentro ng-formworks) non riusciva nemmeno a caricare il modulo. E' il motivo
- * per cui gli spec dei componenti feature erano scritti solo sui tipi.
+ * dentro @ajsf) non riuscirebbe nemmeno a caricare il modulo.
  *
- * L'alias rimappa i sottopercorsi di lodash sul file con estensione.
+ * Con `inline` il pacchetto passa dalla pipeline di Vite, che importa il JSON.
  */
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  resolve: {
-    alias: [
-      { find: /^lodash\/([a-zA-Z][a-zA-Z0-9]*)$/, replacement: 'lodash/$1.js' }
-    ]
-  },
   test: {
     server: {
       deps: {
-        // Senza inline i due pacchetti sono esternalizzati e caricati da Node,
-        // che non passa dal resolver di Vite: l'alias qui sopra non verrebbe
-        // nemmeno consultato.
-        inline: [/@ng-formworks/]
+        inline: [/@ajsf/]
       }
     }
   }
