@@ -47,13 +47,17 @@ La pipeline Jenkins di GovPay esegue la baseline di [OWASP ZAP](https://www.zapr
 | 10054 Cookie without SameSite Attribute (`XSRF-TOKEN`) | Da risolvere in govpay-portal-api, che emette il cookie |
 | 10010 Cookie No HttpOnly Flag (`XSRF-TOKEN`) | Falso positivo accettato, vedi sotto |
 | 10096 Timestamp Disclosure - Unix (`1831565813`) | Falso positivo accettato, vedi sotto |
-| 120000 Information in Browser localStorage (`govpay_cart`) | Da correggere, vedi sotto |
+| 120000 Information in Browser localStorage (`govpay_cart`) | Corretto il contenuto; l'alert resta come informazione accettata, vedi sotto |
 
 **Falsi positivi accettati**
 
 - **10010, cookie `XSRF-TOKEN` senza `HttpOnly`.** È voluto: è il cookie della protezione CSRF di govpay-portal-api e Angular deve leggerlo per rimandarne il valore nell'header `X-XSRF-TOKEN`. Con `HttpOnly` la protezione smetterebbe di funzionare. Il cookie non contiene dati di sessione.
 - **10096, "timestamp" `1831565813`.** È `0x6D2B79F5`, la costante del generatore pseudocasuale Mulberry32 usato da SurveyJS (`survey-core`), finita nel bundle JavaScript: non è una data né un'informazione sul server.
 
-**Da correggere: `govpay_cart` in localStorage**
+**`govpay_cart` in localStorage**
 
-Non è solo un'informazione. Il carrello salva in localStorage, codificato in Base64 (non cifrato), ogni elemento con il campo `rawData`: la pendenza o l'avviso completo, compreso il soggetto pagatore (codice fiscale e anagrafica del debitore). localStorage sopravvive alla chiusura del browser, quindi su un PC condiviso quei dati restano disponibili a chi lo usa dopo. Va salvato solo ciò che serve a ricostruire il carrello (riferimenti all'avviso, importo, causale), oppure va usato sessionStorage. Da trattare in una issue dedicata.
+Il carrello è salvato in localStorage, per ritrovarlo anche dopo aver chiuso il browser. Fino alla versione 5.2.3 ogni elemento conteneva anche il campo `rawData`, con la pendenza o l'avviso completi, compreso il soggetto pagatore (codice fiscale e anagrafica del debitore), codificati in Base64 e quindi leggibili da chiunque usasse lo stesso browser.
+
+Ora si salvano solo i campi che servono a mostrare e pagare il carrello: identificativi della pendenza e dell'avviso, dominio, causale, importo, creditore e date (`CART_ITEM_FIELDS` in `src/app/core/pay/pay.service.ts`). Un carrello salvato da una versione precedente viene ripulito al primo caricamento del portale, senza perdere gli elementi. Il carrello viene svuotato anche al logout.
+
+ZAP continua a segnalare l'alert 120000, che è solo informativo e scatta per qualunque dato in localStorage: lo si accetta, perché il contenuto non comprende più dati personali del debitore.
