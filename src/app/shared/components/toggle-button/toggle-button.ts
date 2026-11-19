@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
 
@@ -25,6 +25,7 @@ import { NgIcon } from '@ng-icons/core';
   selector: 'pay-toggle-button',
   standalone: true,
   imports: [CommonModule, NgIcon],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <button
       type="button"

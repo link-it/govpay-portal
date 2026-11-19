@@ -23,9 +23,9 @@
  * Questo file testava solo i tipi, con questa motivazione: "il componente
  * importa da @shared/components che include JsonSchemaFormComponent con
  * dipendenza @ng-formworks/material; per evitare problemi di import lodash si
- * testano solo le interfacce". Il vincolo non c'e' piu': l'alias in
- * vitest.config.ts risolve i sottopercorsi di lodash, quindi il componente e'
- * importabile e la logica si puo' verificare davvero.
+ * testano solo le interfacce". Il vincolo non c'è più: ng-formworks è stato
+ * sostituito da @ajsf, che vitest.config.ts fa elaborare a Vite, quindi il
+ * componente è importabile e la logica si può verificare davvero.
  *
  * Come per main-layout si usa `runInInjectionContext` invece di
  * `TestBed.createComponent`: il template monta dropdown e selettori che qui non

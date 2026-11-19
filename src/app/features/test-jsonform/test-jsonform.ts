@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -34,13 +34,14 @@ import {
   selector: 'app-test-jsonform',
   standalone: true,
   imports: [CommonModule, RouterLink, NgIcon, JsonSchemaFormComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="max-w-4xl mx-auto space-y-6">
       <!-- Header -->
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-2xl font-bold text-gray-900">Test JSON Schema Form</h1>
-          <p class="text-gray-600 mt-1">Pagina di test per le form dinamiche ng-formworks Material</p>
+          <p class="text-gray-600 mt-1">Pagina di test per le form dinamiche JSON Schema (@ajsf Material)</p>
         </div>
         <a
           routerLink="/pagamento-servizio"

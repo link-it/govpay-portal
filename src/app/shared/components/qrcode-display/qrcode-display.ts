@@ -27,7 +27,8 @@ import {
   AfterViewInit,
   inject,
   PLATFORM_ID,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import QRCode from 'qrcode';
@@ -57,6 +58,7 @@ import QRCode from 'qrcode';
       }
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .qrcode-container {
       display: inline-block;

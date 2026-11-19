@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, computed, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormGroup } from '@angular/forms';
@@ -117,6 +117,7 @@ interface ServizioState {
     SkeletonComponent,
     JsonSchemaFormComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="space-y-6">
       @if (isLoadingService()) {

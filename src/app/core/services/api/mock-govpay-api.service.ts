@@ -27,7 +27,7 @@
  */
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay, throwError, map, catchError } from 'rxjs';
+import { Observable, of, delay, throwError, map, catchError, switchMap } from 'rxjs';
 import { GovPayApiService } from './govpay-api.service';
 import { decodeTipiPendenza } from '../../utils/base64.utils';
 import {
@@ -390,12 +390,22 @@ export class MockGovPayApiService extends GovPayApiService {
   // TIPI PENDENZA
   // ==========================================================================
 
+  /**
+   * Tipi pendenza della fixture (dati reali esportati con Base64), già decodificati.
+   * Va in errore se il file non esiste.
+   */
+  private loadTipiPendenzaFixture(): Observable<TipoPendenza[]> {
+    return this.http.get<ListaTipiPendenza>(MOCK_TIPI_PENDENZA_FIXTURE).pipe(
+      // Decodifica Base64 (definizione e impaginazione)
+      map(data => decodeTipiPendenza(data.risultati || []))
+    );
+  }
+
   override getTipiPendenza(idDominio: string, params?: GetTipiPendenzaParams): Observable<ListaTipiPendenza> {
     // Prova a caricare fixture da file JSON (dati reali esportati con Base64)
-    return this.http.get<ListaTipiPendenza>(MOCK_TIPI_PENDENZA_FIXTURE).pipe(
-      map(data => {
-        // Decodifica Base64 (definizione e impaginazione)
-        let risultati = decodeTipiPendenza(data.risultati || []);
+    return this.loadTipiPendenzaFixture().pipe(
+      map(fixture => {
+        let risultati = fixture;
         if (params?.descrizione) {
           const desc = params.descrizione.toLowerCase();
           risultati = risultati.filter(t => t.descrizione.toLowerCase().includes(desc));
@@ -415,11 +425,20 @@ export class MockGovPayApiService extends GovPayApiService {
   }
 
   override getTipoPendenza(idDominio: string, idTipoPendenza: string): Observable<TipoPendenza> {
-    const tipo = MOCK_TIPI_PENDENZA.find(t => t.idTipoPendenza === idTipoPendenza);
-    if (!tipo) {
-      return this.notFoundError('Tipo pendenza non trovato');
-    }
-    return of(tipo).pipe(delay(300));
+    // Cerca prima nella fixture, la stessa da cui getTipiPendenza prende l'elenco dei
+    // servizi: altrimenti la scheda di un servizio della fixture non lo troverebbe.
+    // Se il file non esiste o il tipo non c'è, ricade sui dati hardcoded.
+    return this.loadTipiPendenzaFixture().pipe(
+      map(fixture => fixture.find(t => t.idTipoPendenza === idTipoPendenza)),
+      catchError(() => of(undefined)),
+      switchMap((daFixture): Observable<TipoPendenza> => {
+        const tipo = daFixture || MOCK_TIPI_PENDENZA.find(t => t.idTipoPendenza === idTipoPendenza);
+        if (!tipo) {
+          return this.notFoundError<TipoPendenza>('Tipo pendenza non trovato');
+        }
+        return of(tipo).pipe(delay(300));
+      })
+    );
   }
 
   // ==========================================================================
