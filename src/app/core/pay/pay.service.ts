@@ -43,6 +43,30 @@ import {
 const CART_STORAGE_KEY = 'govpay_cart';
 
 /**
+ * Campi di un CartItem salvati in localStorage. Si salva solo questo elenco, non
+ * l'oggetto intero, perché nessun dato personale del debitore finisca nel browser
+ * anche se in futuro un CartItem ne portasse con sé. Le versioni precedenti
+ * salvavano anche "rawData", la pendenza o l'avviso completi.
+ */
+const CART_ITEM_FIELDS: readonly (keyof CartItem)[] = [
+  'id', 'idPendenza', 'idDominio', 'idTipoPendenza', 'numeroAvviso', 'causale',
+  'importo', 'tipo', 'dataScadenza', 'dataValidita', 'creditore', 'editable'
+];
+
+/**
+ * Copia di un CartItem con i soli campi di CART_ITEM_FIELDS
+ */
+function toStoredCartItem(item: CartItem): CartItem {
+  const stored: Partial<CartItem> = {};
+  for (const field of CART_ITEM_FIELDS) {
+    if (item[field] !== undefined) {
+      (stored as Record<string, unknown>)[field] = item[field];
+    }
+  }
+  return stored as CartItem;
+}
+
+/**
  * URL dei servizi API
  */
 const API_URLS = {
@@ -755,8 +779,14 @@ export class PayService {
       const stored = localStorage.getItem(CART_STORAGE_KEY);
       if (stored) {
         const cart: PersistedCart = JSON.parse(this.decodeStorageData(stored));
+        const items = (cart.items || []).map(toStoredCartItem);
         this._cartId.set(cart.id);
-        this._cart.set(cart.items || []);
+        this._cart.set(items);
+        // Un carrello salvato da una versione precedente può contenere "rawData",
+        // con i dati del debitore: lo si riscrive subito con i soli campi ammessi
+        if (JSON.stringify(items) !== JSON.stringify(cart.items || [])) {
+          this.saveCartToStorage();
+        }
       } else {
         // Inizializza nuovo carrello con UUID
         this.initializeNewCart();
@@ -784,7 +814,7 @@ export class PayService {
     try {
       const cart: PersistedCart = {
         id: this._cartId(),
-        items: this._cart(),
+        items: this._cart().map(toStoredCartItem),
         createdAt: this.getStoredCart()?.createdAt || new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -897,8 +927,7 @@ export class PayService {
       dataScadenza: pendenza.dataScadenza,
       dataValidita: pendenza.dataValidita,
       creditore,
-      editable: pendenza.tipo === 'spontaneo',
-      rawData: pendenza
+      editable: pendenza.tipo === 'spontaneo'
     };
   }
 
@@ -915,8 +944,7 @@ export class PayService {
       dataScadenza: avviso.dataScadenza,
       dataValidita: avviso.dataValidita,
       creditore,
-      editable: false,
-      rawData: avviso
+      editable: false
     };
   }
 

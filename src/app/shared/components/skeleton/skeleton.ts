@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type SkeletonType = 'grid' | 'list' | 'form';
@@ -26,6 +26,7 @@ export type SkeletonType = 'grid' | 'list' | 'form';
   selector: 'app-skeleton',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @switch (type) {
       @case ('grid') {

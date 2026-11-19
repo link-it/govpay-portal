@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, Output, EventEmitter, forwardRef, signal, computed, ElementRef, HostListener, inject, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, Input, Output, EventEmitter, forwardRef, signal, computed, ElementRef, HostListener, inject, ViewChild, AfterViewChecked, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { NgIcon } from '@ng-icons/core';
@@ -165,6 +165,7 @@ export interface SelectOption {
       }
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .filter-input:focus {
       border-color: var(--focus-color, #60a5fa);

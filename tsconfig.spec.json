@@ -7,14 +7,13 @@
     "types": [
       "vitest/globals"
     ],
-    "baseUrl": "./",
     "paths": {
-      "@core/*": ["src/app/core/*"],
-      "@shared/*": ["src/app/shared/*"],
-      "@feature/*": ["src/app/features/*"],
-      "@environment": ["src/environments/environment"],
-      "@environments": ["src/environments"],
-      "@assets/*": ["src/assets/*"]
+      "@core/*": ["./src/app/core/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@feature/*": ["./src/app/features/*"],
+      "@environment": ["./src/environments/environment"],
+      "@environments": ["./src/environments"],
+      "@assets/*": ["./src/assets/*"]
     }
   },
   "include": [

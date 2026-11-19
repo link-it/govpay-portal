@@ -49,7 +49,6 @@ describe('PagoPACheckoutService', () => {
     creditore: 'Test Creditore',
     id: 'test-1',
     editable: false,
-    rawData: {}
   };
 
   beforeEach(() => {

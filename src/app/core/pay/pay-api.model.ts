@@ -196,7 +196,12 @@ export interface Avviso {
 }
 
 /**
- * Item nel carrello
+ * Item nel carrello.
+ *
+ * Il carrello è salvato in localStorage e sopravvive alla chiusura del browser:
+ * contiene solo ciò che serve a mostrarlo e a pagarlo, mai i dati del debitore
+ * (codice fiscale, anagrafica) della pendenza o dell'avviso da cui nasce.
+ * I campi salvati sono quelli di CART_ITEM_FIELDS (pay.service.ts).
  */
 export interface CartItem {
   id: string;
@@ -211,7 +216,6 @@ export interface CartItem {
   dataValidita?: string;
   creditore?: string;
   editable: boolean;
-  rawData: Pendenza | Avviso | any;
 }
 
 /**

@@ -25,7 +25,8 @@ import {
   signal,
   OnDestroy,
   CUSTOM_ELEMENTS_SCHEMA,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Model, SurveyModel, surveyLocalization } from 'survey-core';
@@ -57,6 +58,7 @@ export interface SurveyDefinition {
   standalone: true,
   imports: [CommonModule, SurveyModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './survey-form.html'
 })
 export class SurveyFormComponent implements OnDestroy {

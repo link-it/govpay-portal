@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -34,6 +34,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig, TitleDecoC
   selector: 'app-carrello',
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule, NgIcon, DropdownMenuComponent, TitleDecoComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="max-w-3xl mx-auto space-y-6">
       <!-- Page header -->

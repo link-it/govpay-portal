@@ -139,7 +139,6 @@ describe('CarrelloComponent Types', () => {
         causale: 'Test',
         creditore: 'Test',
         editable: false,
-        rawData: {}
       };
       const params: IsExpiredParams = [mockItem];
       expect(params[0].id).toBe('item-1');
@@ -183,7 +182,8 @@ describe('CarrelloComponent Types', () => {
       expect(prop).toBe('editable');
     });
 
-    it('should have required rawData property', () => {
+    it('non porta con sé la pendenza o l\'avviso completi (rawData)', () => {
+      // @ts-expect-error rawData non fa più parte di CartItem: conteneva i dati del debitore
       const prop: keyof CartItem = 'rawData';
       expect(prop).toBe('rawData');
     });
@@ -196,7 +196,6 @@ describe('CarrelloComponent Types', () => {
         causale: 'Test',
         creditore: 'Test',
         editable: false,
-        rawData: {},
         numeroAvviso: '123456789012345678'
       };
       expect(item.numeroAvviso).toBe('123456789012345678');
@@ -210,7 +209,6 @@ describe('CarrelloComponent Types', () => {
         causale: 'Test',
         creditore: 'Test',
         editable: false,
-        rawData: {},
         dataScadenza: '2026-12-31'
       };
       expect(item.dataScadenza).toBe('2026-12-31');
@@ -224,7 +222,6 @@ describe('CarrelloComponent Types', () => {
         causale: 'Test',
         creditore: 'Test',
         editable: true,
-        rawData: {},
         idTipoPendenza: 'TARI'
       };
       expect(item.idTipoPendenza).toBe('TARI');
