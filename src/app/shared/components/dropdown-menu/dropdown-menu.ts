@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, Output, EventEmitter, ElementRef, HostListener, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, HostListener, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
 
@@ -114,6 +114,7 @@ export interface DropdownMenuConfig {
       background-color: var(--dropdown-hover-bg) !important;
     }
   `],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'inline-flex items-center' }
 })
 export class DropdownMenuComponent {

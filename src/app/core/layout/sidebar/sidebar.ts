@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, Output, EventEmitter, inject, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
@@ -77,7 +77,7 @@ export interface UserInfo {
             @if (getEnteLogo()) {
               <img
                 [src]="getEnteLogo()"
-                [alt]="getEnteLabel()"
+                [alt]="config.theme().sidebar.headerLogo ? getEnteLabel() : ''"
                 class="h-12 w-auto shrink-0"
               />
             } @else {
@@ -209,6 +209,7 @@ export interface UserInfo {
 
       <!-- Footer con loghi partner -->
       <div
+        role="contentinfo"
         class="px-4 py-4 border-t"
         [style.background-color]="config.theme().sidebar.footerBackground"
         [style.border-color]="config.theme().sidebar.footerBorder"
@@ -283,6 +284,7 @@ export interface UserInfo {
       </div>
     </aside>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     :host {
       display: block;

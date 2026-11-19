@@ -120,7 +120,6 @@ describe('PayService', () => {
       causale: 'Test payment',
       importo: 100.50,
       editable: false,
-      rawData: {},
     };
 
     it('should add item to cart', () => {
@@ -203,6 +202,38 @@ describe('PayService', () => {
 
       const stored = localStorage.getItem('govpay_cart');
       expect(stored).toBeTruthy();
+    });
+
+    it('non salva in localStorage campi diversi da quelli del carrello', () => {
+      service.addToCart({ ...mockCartItem, soggettoPagatore: { identificativo: 'RSSMRA80A01H501Z' } } as CartItem);
+
+      const stored = atob(localStorage.getItem('govpay_cart')!);
+      expect(stored).not.toContain('RSSMRA80A01H501Z');
+      expect(stored).not.toContain('soggettoPagatore');
+      expect(stored).toContain('item-001');
+    });
+
+    it('ripulisce un carrello salvato da una versione precedente con rawData', () => {
+      const vecchio = {
+        id: 'cart-vecchio',
+        items: [{
+          ...mockCartItem,
+          rawData: { soggettoPagatore: { identificativo: 'RSSMRA80A01H501Z', anagrafica: 'Mario Rossi' } }
+        }],
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z'
+      };
+      localStorage.setItem('govpay_cart', btoa(JSON.stringify(vecchio)));
+
+      // Nuova istanza, come al caricamento della pagina (TestBed.inject restituirebbe la stessa)
+      const ricaricato = TestBed.runInInjectionContext(() => new PayService());
+
+      expect(ricaricato.cartId()).toBe('cart-vecchio');
+      expect(ricaricato.cart()).toEqual([mockCartItem]);
+      const stored = atob(localStorage.getItem('govpay_cart')!);
+      expect(stored).not.toContain('rawData');
+      expect(stored).not.toContain('RSSMRA80A01H501Z');
+      expect(stored).not.toContain('Mario Rossi');
     });
 
     it('should restore cart from localStorage', () => {
@@ -294,7 +325,6 @@ describe('PayService', () => {
         causale: 'Test 1',
         importo: 100,
         editable: false,
-        rawData: {},
       };
 
       const item2: CartItem = {
@@ -304,7 +334,6 @@ describe('PayService', () => {
         causale: 'Test 2',
         importo: 50,
         editable: false,
-        rawData: {},
       };
 
       service.addToCart(item1);
@@ -430,7 +459,6 @@ describe('PayService', () => {
         causale: 'Test',
         importo: 100,
         editable: false,
-        rawData: {},
       });
 
       service.mockLogout();
@@ -704,7 +732,6 @@ describe('PayService', () => {
         causale: 'Test',
         importo: 100,
         editable: false,
-        rawData: {},
       });
 
       service.logout().subscribe(() => {

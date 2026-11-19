@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Output, EventEmitter, inject, computed } from '@angular/core';
+import { Component, Output, EventEmitter, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfigService } from '../../config';
@@ -28,6 +28,7 @@ import type { SelectOption } from '@shared/components';
   selector: 'app-domain-selector',
   standalone: true,
   imports: [CommonModule, TranslateModule, FloatingSelectComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="min-h-screen flex flex-col" [style.background-color]="dsConfig().background || config.theme().header.background">
       <!-- Header con immagine -->

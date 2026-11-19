@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -34,6 +34,7 @@ import { SkeletonComponent, TitleDecoComponent } from '@shared/components';
   selector: 'app-posizione-debitoria',
   standalone: true,
   imports: [CommonModule, TranslateModule, NgIcon, SkeletonComponent, TitleDecoComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="space-y-6">
       <!-- Header -->

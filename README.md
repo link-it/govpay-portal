@@ -13,7 +13,7 @@ Portale dei pagamenti per il cittadino: permette di pagare avvisi pagoPA e servi
 
 ## Sommario
 
-Applicazione a pagina singola: la build produce solo file statici, serviti da nginx nell'immagine Docker o da qualsiasi web server. Stack: **Angular 21** standalone, **Signals**, **TailwindCSS 4**, form dinamici con **SurveyJS**, **Formly** e **ng-formworks** (JSON Schema).
+Applicazione a pagina singola: la build produce solo file statici, serviti da nginx nell'immagine Docker o da qualsiasi web server. Stack: **Angular 22** standalone, **Signals**, **TailwindCSS 4**, form dinamici con **SurveyJS**, **Formly** e **@ajsf** (JSON Schema, formato angular2-json-schema-form).
 
 Funzioni disponibili senza autenticazione:
 
@@ -55,7 +55,7 @@ Con `pagopa.checkout.enabled` a `false` il carrello è inviato al backend con `P
 
 ## Compilazione
 
-Requisiti: Node.js 22 (versione in [.nvmrc](.nvmrc), oggi `22.12.0`; è la stessa usata dalla pipeline e dall'immagine `node:22.12.0-alpine` di `docker/Dockerfile`) e npm 10 (`packageManager` in `package.json`: `npm@10.9.0`).
+Requisiti: Node.js 24 (versione in [.nvmrc](.nvmrc), oggi `24.22.2`; è la stessa usata dalla pipeline e dall'immagine `node:24.22.2-alpine` di `docker/Dockerfile`) e npm 11 (`packageManager` in `package.json`: `npm@11.19.1`). Angular 22 richiede Node `^22.22.3` o `^24.15`.
 
 ```bash
 nvm use                # usa la versione di Node indicata in .nvmrc
@@ -273,12 +273,14 @@ Variabili d'ambiente lette dall'entrypoint (`docker/commons/entrypoint.sh`), che
 | `GOVPAY_API_BACKEND_PATH` | no | `/govpay-api-portal` | Path upstream sul backend a cui mappare `/govpay-portal-api/*`. govpay-portal-api risponde alla radice: se il proxy punta direttamente al servizio va usato `/`, e il prefisso viene rimosso prima dell'inoltro |
 | `GOVPAY_PORTAL_HOME` | no | `/usr/share/nginx/html` | Directory dei file statici; si cambia alla costruzione dell'immagine (`build_image.sh -e`), non a runtime |
 | `GOVPAY_PORTAL_LOGDIR` | no | `/var/log/govpay-portal` | Directory dei log di nginx (`access.log`, `error.log`); si cambia alla costruzione dell'immagine (`build_image.sh -f`) |
+| `GOVPAY_PORTAL_CSP_MODE` | no | `report-only` | Content-Security-Policy: `report-only` (le violazioni compaiono nella console del browser ma non sono bloccate), `enforce` (policy applicata) oppure `off`. Vedi [Header di sicurezza](#header-di-sicurezza) |
+| `GOVPAY_PORTAL_CSP_ORIGINS` | no | - | Origini esterne, separate da spazi, aggiunte a `connect-src` e `form-action` oltre a quelle ricavate da `app-config.json` e al checkout pagoPA (es. `https://api.platform.pagopa.it`) |
+| `GOVPAY_PORTAL_CSP` | no | policy predefinita | Sostituisce l'intera policy; `{SCRIPT_HASHES}` e `{ORIGINS}` vengono sostituiti con i valori calcolati dall'entrypoint. Non può contenere virgolette doppie, `$`, `\` o a capo |
+| `GOVPAY_PORTAL_FRAME_OPTIONS` | no | `DENY` | Header `X-Frame-Options`: `DENY`, `SAMEORIGIN` oppure `off` (per le installazioni che incorporano il portale in un frame) |
 | `GOVPAY_PORTAL_FULLVERSION` | no | versione dell'immagine | Solo informativa, impostata alla costruzione |
 | `TZ` | no | `Europe/Rome` | Fuso orario del container |
 
-Le altre variabili usate nell'entrypoint (`API_PROXY_BLOCK`, `BASE_LOCATION_BLOCK`, `BASE_PATH`, `BACKEND`, `INDEX_HTML`, `NGINX_CONF`, `UPSTREAM_PATH`) sono interne allo script e non vanno impostate.
-
-nginx non dichiara la propria versione (`server_tokens off`) e aggiunge a tutte le risposte, comprese quelle del proxy, gli header `X-Content-Type-Options: nosniff` e `Referrer-Policy: strict-origin-when-cross-origin`.
+Le altre variabili usate nell'entrypoint (`API_PROXY_BLOCK`, `APP_CONFIG`, `BASE_LOCATION_BLOCK`, `BASE_PATH`, `BACKEND`, `CONFIG_ORIGINS`, `CSP`, `CSP_HEADER`, `CSP_MODE`, `CSP_ORIGINS`, `DEFAULT_CSP`, `FRAME_OPTIONS`, `INDEX_HTML`, `NGINX_CONF`, `PAGOPA_CHECKOUT_ORIGINS`, `SCRIPT_HASHES`, `SECURITY_HEADERS`, `UPSTREAM_PATH`) sono interne allo script e non vanno impostate.
 
 Il proxy inoltra al backend gli header `Host` (quello del backend), `X-Real-IP`, `X-Forwarded-For` e `X-Forwarded-Proto`. Gli header `X-SPID-*` devono essere aggiunti dal proxy di autenticazione davanti al container, non dal browser: govpay-portal-api li considera affidabili.
 
@@ -289,6 +291,48 @@ docker run --rm -p 8080:80 \
   -e GOVPAY_PORTAL_BASE_PATH=/portale \
   linkitaly/govpay-portal
 ```
+
+### Header di sicurezza
+
+nginx non dichiara la propria versione (`server_tokens off`) e aggiunge a tutte le risposte, comprese quelle di errore e del proxy, gli header `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options` (default `DENY`) e la Content-Security-Policy.
+
+La CSP è generata dall'entrypoint a ogni avvio. La policy predefinita è:
+
+```
+default-src 'self';
+script-src 'self' 'unsafe-eval' {SCRIPT_HASHES};
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+img-src 'self' data: blob:;
+font-src 'self' data: https://fonts.gstatic.com;
+connect-src 'self' {ORIGINS};
+form-action 'self' {ORIGINS};
+object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+```
+
+- `{SCRIPT_HASHES}`: hash SHA-256 degli script inline di `index.html` (oggi quello con cui Angular attiva il CSS caricato in differita), calcolati sul file servito, quindi sempre allineati alla build.
+- `{ORIGINS}`: origini delle chiavi `baseUrl` assolute di `app-config.json` (`api.baseUrl`, se non è relativo, e `pagopa.checkout.baseUrl`), le pagine del checkout pagoPA (`https://checkout.pagopa.it`, `https://uat.checkout.pagopa.it`) e quelle di `GOVPAY_PORTAL_CSP_ORIGINS`. Servono sia a `connect-src` sia a `form-action`: il pagamento diretto fa una `fetch` POST verso il checkout, che lo redirige alla pagina di pagamento, e se la `fetch` fallisce ripiega su un form POST.
+- `'unsafe-eval'`: necessario ai form dei tipi pendenza `angular2-json-schema-form`, che compilano gli schemi con ajv e le condizioni del layout con `new Function`.
+- `style-src 'unsafe-inline'`: stili dei componenti Angular, di Angular Material e di SurveyJS.
+- `fonts.googleapis.com` e `fonts.gstatic.com`: il CSS di SurveyJS dichiara il font Open Sans su Google Fonts e i form JSON Schema caricano Roboto e Material Icons.
+- `frame-ancestors 'none'` e `X-Frame-Options: DENY`: il portale non può essere incluso in un frame (clickjacking). `X-Frame-Options` vale anche in `report-only`, dove `frame-ancestors` non ha effetto.
+
+L'immagine parte in `report-only`: il browser segnala le violazioni nella console senza bloccare nulla. Dopo aver verificato un pagamento completo (servizio, bollettino, carrello) senza violazioni, si imposta `GOVPAY_PORTAL_CSP_MODE=enforce`.
+
+Le installazioni con risorse esterne diverse completano o sostituiscono la policy. Esempi:
+
+```bash
+# checkout pagoPA su un'origine non presente in app-config.json
+-e GOVPAY_PORTAL_CSP_ORIGINS="https://api.platform.pagopa.it"
+
+# reCAPTCHA attivo (features.recaptcha.siteKey valorizzata): script e frame di Google
+-e GOVPAY_PORTAL_CSP="default-src 'self'; script-src 'self' 'unsafe-eval' {SCRIPT_HASHES} https://www.google.com https://www.gstatic.com; frame-src https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' {ORIGINS}; form-action 'self' {ORIGINS}; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+
+# portale incorporato in un frame di un sito dell'ente
+-e GOVPAY_PORTAL_FRAME_OPTIONS=off \
+-e GOVPAY_PORTAL_CSP="... frame-ancestors https://www.ente.it"
+```
+
+La policy effettiva è scritta nel log all'avvio del container. Le segnalazioni della scansione dinamica (OWASP ZAP) e i falsi positivi accettati sono descritti in [docker/SCANSIONE.md](docker/SCANSIONE.md#scansione-dinamica-owasp-zap).
 
 ### Nota sul base path
 

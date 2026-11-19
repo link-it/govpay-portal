@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, computed, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,6 +38,7 @@ type Html5Qrcode = any;
   selector: 'app-pagamento-bollettino',
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, NgIcon, TitleDecoComponent, FloatingInputComponent, FloatingSelectComponent, QrcodeDisplayComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="max-w-2xl mx-auto space-y-6">
       <!-- Page header con title-deco -->
@@ -111,8 +112,8 @@ type Html5Qrcode = any;
                   </p>
                 </div>
               </div>
-              <span [class]="getStatusClass(avviso()?.stato)">
-                {{ getStatusLabel(avviso()?.stato) | translate }}
+              <span [class]="getStatusClass($safeNavigationMigration(avviso()?.stato))">
+                {{ getStatusLabel($safeNavigationMigration(avviso()?.stato)) | translate }}
               </span>
             </div>
           </div>
@@ -140,7 +141,7 @@ type Html5Qrcode = any;
               <div class="flex justify-between items-center">
                 <span class="text-gray-600">{{ 'Language.Common.Scadenza' | translate }}</span>
                 <span class="font-medium" [class.text-red-600]="isScaduto()" [class.text-gray-900]="!isScaduto()">
-                  {{ formatDate(avviso()?.dataScadenza!) }}
+                  {{ formatDate($safeNavigationMigration(avviso()?.dataScadenza)!) }}
                   @if (isScaduto()) {
                     <span class="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
                       {{ 'Language.Bollettino.Scaduto' | translate }}
@@ -185,7 +186,7 @@ type Html5Qrcode = any;
             <div class="flex justify-between items-center pt-4 border-t border-gray-100">
               <span class="text-lg text-gray-700">{{ 'Language.Common.Importo' | translate }}</span>
               <span class="text-2xl font-bold text-primary-600">
-                {{ avviso()?.importo | currency:'EUR' }}
+                {{ $safeNavigationMigration(avviso()?.importo) | currency:'EUR' }}
               </span>
             </div>
           </div>

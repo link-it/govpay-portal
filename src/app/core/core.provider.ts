@@ -23,7 +23,7 @@ import {
   makeEnvironmentProviders,
   provideAppInitializer,
 } from '@angular/core';
-import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { firstValueFrom, of, catchError } from 'rxjs';
 import { ConfigService } from './config';
 import { LoggerService } from './services/logger.service';
@@ -43,7 +43,7 @@ import { spidHeadersInterceptor } from './interceptors';
  */
 export function provideCore(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    provideHttpClient(
+    provideHttpClient(withXhr(), 
       withInterceptors([
         spidHeadersInterceptor,
       ])

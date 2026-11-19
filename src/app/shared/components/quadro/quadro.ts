@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, Output, EventEmitter, inject, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
 import { ConfigService } from '@core/config';
@@ -73,6 +73,7 @@ import { ConfigService } from '@core/config';
       </div>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .quadro-card.hover-border:hover {
       border-color: var(--hover-border) !important;

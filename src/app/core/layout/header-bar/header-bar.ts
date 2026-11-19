@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, Output, EventEmitter, inject, computed, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
@@ -76,11 +76,11 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
             </app-dropdown-menu>
           } @else {
             <!-- Singolo dominio: logo statico -->
-            <a routerLink="/" class="flex items-center gap-3">
+            <a routerLink="/" class="flex items-center gap-3" [attr.aria-label]="config.appSubtitle() || config.appName()">
               @if (config.logo().full) {
                 <img
                   [src]="config.logo().full"
-                  [alt]="config.appSubtitle() || config.appName()"
+                  alt=""
                   [style.height]="config.theme().topBar.logoHeight || '2.5rem'"
                 />
               } @else if (config.logo().fallbackText) {
@@ -317,6 +317,7 @@ import { DropdownMenuComponent, DropdownMenuItem, DropdownMenuConfig } from '@sh
     <!-- Spacer per compensare l'header fisso -->
     <div [class]="detailMode ? 'h-30' : 'h-39'"></div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     :host {
       display: block;
