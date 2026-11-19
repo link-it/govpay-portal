@@ -20,7 +20,6 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
-              "lodash",
               "qrcode",
               "ajv",
               "ajv-formats"
@@ -38,7 +37,7 @@
             ],
             "styles": [
               "node_modules/survey-core/survey-core.min.css",
-              "node_modules/@ng-formworks/material/assets/material-design-themes.scss",
+              "src/json-schema-form-theme.scss",
               "src/styles.css"
             ]
           },

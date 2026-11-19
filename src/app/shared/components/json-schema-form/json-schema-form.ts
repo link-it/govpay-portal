@@ -20,8 +20,9 @@
 /**
  * JSON Schema Form Component
  *
- * Wrapper per ng-formworks che renderizza form dinamici
- * basati su JSON Schema (formato angular2-json-schema-form).
+ * Wrapper per @ajsf (Angular JSON Schema Form) che renderizza form dinamici
+ * basati su JSON Schema (formato angular2-json-schema-form, di cui @ajsf è il
+ * proseguimento: le definizioni dei tipi pendenza esistenti restano valide).
  *
  * Usato per i tipi pendenza con form.tipo = 'angular2-json-schema-form'
  */
@@ -32,19 +33,29 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-  inject
+  inject,
+  ChangeDetectionStrategy,
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DateAdapter } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
-import { MaterialDesignFrameworkModule } from '@ng-formworks/material';
-import { JsonValidators, isNumber, hasValue, isEmpty, xor } from '@ng-formworks/core';
+import { MaterialDesignFrameworkModule } from '@ajsf/material';
+import {
+  JsonSchemaFormComponent as AjsfFormComponent,
+  JsonValidators,
+  isNumber,
+  hasValue,
+  isEmpty,
+  xor
+} from '@ajsf/core';
 
 /**
- * Patch: fix floating point per validatore multipleOf di ng-formworks.
- * Il validatore originale usa `currentValue % multipleOfValue === 0`
- * che fallisce con decimali (es. 29.40 % 0.01 !== 0 per floating point).
- * Questa versione usa un confronto con epsilon.
+ * Patch: fix floating point per validatore multipleOf di @ajsf.
+ * Il validatore originale verifica che `currentValue / multipleOfValue` sia
+ * intero, e fallisce con i decimali (es. 29.40 / 0.01 = 2939.9999999999995).
+ * Questa versione usa un confronto con epsilon. @ajsf risolve i validatori
+ * per nome al momento dell'uso, quindi la sostituzione vale per tutti i form.
  */
 (JsonValidators as any).multipleOf = (multipleOfValue: number) => {
   if (!hasValue(multipleOfValue)) {
@@ -69,6 +80,107 @@ const V = 'Language.Validation';
  * Array vuoto condiviso per evitare ricreazione
  */
 const EMPTY_LAYOUT: unknown[] = [];
+
+/**
+ * Condizioni di visibilità del layout ({ "condition": { "functionBody": "..." } }).
+ *
+ * Le definizioni dei tipi pendenza contengono corpi di funzione JavaScript, per
+ * esempio `try { return model.tipo && model.tipo === 'Annuale' } catch(e){ return false; }`.
+ * angular2-json-schema-form e ng-formworks li eseguivano con
+ * `new Function('model', 'arrayIndices', functionBody)`. @ajsf 22 non lo fa più:
+ * accetta solo un confronto semplice (`return model.x === "valore"`) e per ogni altra
+ * espressione mostra sempre il campo. Accetta però una condizione già compilata come
+ * funzione: qui si converte ogni functionBody in una funzione che si comporta come
+ * in ng-formworks, così le definizioni esistenti restano valide senza modifiche.
+ *
+ * Come ng-formworks:
+ * - "functionBody" viene riscritto con l'accesso sicuro (`model.a.b` -> `model?.a?.b`),
+ *   perché un dato non ancora valorizzato non faccia fallire la condizione;
+ *   "functionBodyRaw" si esegue com'è;
+ * - se la condizione va in errore il campo resta visibile.
+ * Limite: @ajsf passa alla funzione solo il modello, quindi `arrayIndices` è
+ * undefined (nessuna definizione nota usa condizioni dentro gli array).
+ */
+const conditionCache = new Map<string, (model: unknown) => boolean>();
+
+export function compileCondition(functionBody: string, raw = false): (model: unknown) => boolean {
+  const body = raw ? functionBody : functionBody
+    .replace(/\[/g, '.[').split('.').join('?.')
+    .replace(/\?\?\./g, '?')
+    .replace(/(\?)(\.\[)/g, '[');
+  const key = (raw ? 'raw:' : '') + functionBody;
+  let fn = conditionCache.get(key);
+  if (!fn) {
+    let compiled: ((model: unknown, arrayIndices: unknown) => unknown) | null = null;
+    try {
+      compiled = new Function('model', 'arrayIndices', body) as (model: unknown, arrayIndices: unknown) => unknown;
+    } catch (e) {
+      console.error('condition functionBody non valida: ' + functionBody, e);
+    }
+    fn = (model: unknown) => {
+      if (!compiled) return true;
+      try {
+        return !!compiled(model, undefined);
+      } catch (e) {
+        console.error('condition functionBody errored out on evaluation: ' + functionBody, e);
+        return true;
+      }
+    };
+    conditionCache.set(key, fn);
+  }
+  return fn;
+}
+
+/**
+ * Restituisce una copia del layout con le condizioni functionBody/functionBodyRaw
+ * convertite in funzioni (vedi compileCondition). Il layout originale non cambia.
+ */
+export function compileLayoutConditions<T>(node: T): T {
+  if (Array.isArray(node)) {
+    return node.map(item => compileLayoutConditions(item)) as T;
+  }
+  if (node === null || typeof node !== 'object') {
+    return node;
+  }
+  const copy: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
+    if (key === 'condition' && value && typeof value === 'object' && !Array.isArray(value)) {
+      const c = value as { functionBody?: unknown; functionBodyRaw?: unknown };
+      if (typeof c.functionBodyRaw === 'string') {
+        copy[key] = compileCondition(c.functionBodyRaw, true);
+        continue;
+      }
+      if (typeof c.functionBody === 'string') {
+        copy[key] = compileCondition(c.functionBody);
+        continue;
+      }
+    }
+    copy[key] = compileLayoutConditions(value);
+  }
+  return copy as T;
+}
+
+/**
+ * Campi del layout con una condizione di visibilità già compilata in funzione:
+ * la chiave del dato ("key") e la condizione.
+ */
+export function collectConditionalFields(node: unknown): { key: string; condition: (model: unknown) => boolean }[] {
+  const result: { key: string; condition: (model: unknown) => boolean }[] = [];
+  const visit = (n: unknown) => {
+    if (Array.isArray(n)) {
+      n.forEach(visit);
+      return;
+    }
+    if (n === null || typeof n !== 'object') return;
+    const obj = n as Record<string, unknown>;
+    if (typeof obj['key'] === 'string' && typeof obj['condition'] === 'function') {
+      result.push({ key: obj['key'], condition: obj['condition'] as (model: unknown) => boolean });
+    }
+    Object.values(obj).forEach(visit);
+  };
+  visit(node);
+  return result;
+}
 
 /**
  * Struttura dello schema JSON Schema per il form
@@ -105,19 +217,22 @@ export interface JsonSchemaFormDefinition {
     CommonModule,
     MaterialDesignFrameworkModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (schema) {
-      <json-schema-form
-        [schema]="schema"
-        [layout]="currentLayout"
-        [data]="data"
-        [options]="currentOptions"
-        framework="material-design"
-        [theme]="theme"
-        (onSubmit)="onFormSubmit($event)"
-        (onChanges)="onFormChange($any($event))"
-        (isValid)="onValidChange($event)"
-      ></json-schema-form>
+      <!-- Il tema Material si applica con una classe (src/json-schema-form-theme.scss) -->
+      <div [class]="theme">
+        <json-schema-form
+          [schema]="schema"
+          [layout]="currentLayout"
+          [data]="data"
+          [options]="currentOptions"
+          framework="material-design"
+          (onSubmit)="onFormSubmit($event)"
+          (onChanges)="onFormChange($any($event))"
+          (isValid)="onValidChange($event)"
+        ></json-schema-form>
+      </div>
     } @else {
       <div class="text-center py-8 text-gray-500">
         <p>Schema del form non disponibile</p>
@@ -183,6 +298,53 @@ export class JsonSchemaFormComponent implements OnChanges {
    */
   currentOptions: Record<string, unknown> = { addSubmit: false };
 
+  /**
+   * Form interno di @ajsf, per svuotare i campi nascosti da una condizione
+   */
+  @ViewChild(AjsfFormComponent) private ajsfForm?: AjsfFormComponent;
+
+  /**
+   * Campi con condizione di visibilità e ultima visibilità calcolata
+   */
+  private conditionalFields: { key: string; condition: (model: unknown) => boolean }[] = [];
+  private visibility = new Map<string, boolean>();
+
+  /**
+   * Imposta il layout corrente, con le condizioni compilate in funzioni
+   */
+  private setLayout(layout: JsonSchemaFormLayout | undefined): void {
+    this.currentLayout = layout ? compileLayoutConditions(layout) : EMPTY_LAYOUT;
+    this.conditionalFields = collectConditionalFields(this.currentLayout);
+    this.visibility = new Map();
+  }
+
+  /**
+   * Svuota i campi che una condizione ha appena nascosto (visibili prima, nascosti
+   * ora), come faceva ng-formworks: il loro valore non resta nei dati inviati e, se
+   * il campo ricompare, è vuoto. Un campo nascosto fin dall'inizio conserva il suo
+   * eventuale default, come in ng-formworks. @ajsf da solo conserverebbe il valore.
+   *
+   * Restituisce true se ha svuotato qualcosa: il cambio di valore genera un nuovo
+   * evento di modifica, con i dati già puliti.
+   */
+  private clearHiddenFields(data: Record<string, unknown>): boolean {
+    const formGroup = this.ajsfForm?.jsf?.formGroup;
+    let cleared = false;
+    for (const { key, condition } of this.conditionalFields) {
+      const visible = condition(data);
+      const before = this.visibility.get(key);
+      this.visibility.set(key, visible);
+      if (before === true && !visible) {
+        const control = formGroup?.get(key);
+        if (control && hasValue(control.value)) {
+          control.setValue(null);
+          cleared = true;
+        }
+      }
+    }
+    return cleared;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     // Se viene passata una definition, estrai schema, layout e data
     if (changes['definition'] && this.definition) {
@@ -196,7 +358,7 @@ export class JsonSchemaFormComponent implements OnChanges {
 
     // Se cambia il layout direttamente
     if (changes['layout']) {
-      this.currentLayout = this.layout || EMPTY_LAYOUT;
+      this.setLayout(this.layout);
     }
   }
 
@@ -229,9 +391,15 @@ export class JsonSchemaFormComponent implements OnChanges {
 
     // Costruisce i messaggi di validazione dalla lingua corrente via i18n
     const t = (key: string) => this.translate.instant(`${V}.${key}`);
+    // In @ajsf le opzioni predefinite dei widget si passano come "defaultOptions"
+    // (ng-formworks usava "defaultWidgetOptions", che @ajsf ignorerebbe)
     this.currentOptions = {
       addSubmit: false,
-      defaultWidgetOptions: {
+      // Valori "default": come ng-formworks, usato finora dal portale v2, si applicano
+      // quelli dello schema e non quelli del layout. Applicare anche questi
+      // cambierebbe i dati inviati rispetto a oggi.
+      setLayoutDefaults: false,
+      defaultOptions: {
         validationMessages: {
           required: t('Required'),
           minLength: t('MinLength'),
@@ -271,12 +439,12 @@ export class JsonSchemaFormComponent implements OnChanges {
     // Aggiorna layout se abbiamo una definition
     if (this.definition) {
       const langCode = this.locale === 'en' ? 'eng' : 'ita';
-      this.currentLayout =
+      const layout =
         this.definition['layout_' + langCode] as JsonSchemaFormLayout ||
-        this.definition.layout ||
-        EMPTY_LAYOUT;
+        this.definition.layout;
+      this.setLayout(layout);
     } else {
-      this.currentLayout = this.layout || EMPTY_LAYOUT;
+      this.setLayout(this.layout);
     }
   }
 
@@ -291,6 +459,7 @@ export class JsonSchemaFormComponent implements OnChanges {
    * Handler per cambio valori
    */
   onFormChange(data: Record<string, unknown>): void {
+    if (this.clearHiddenFields(data)) return;
     this.formChange.emit(data);
   }
 

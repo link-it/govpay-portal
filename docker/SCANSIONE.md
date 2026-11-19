@@ -33,3 +33,31 @@ I report finiscono in `./image-scan-report` (`SCAN_OUT_DIR` per cambiarla): `rie
 ## Immagini fuori scansione
 
 `docker/Dockerfile` (build multi-stage con Node) serve allo sviluppo locale con `docker-compose.yml` e non produce immagini distribuite: non e' scansionato. Le immagini pubblicate nascono tutte da `Dockerfile.daFile`.
+
+## Scansione dinamica (OWASP ZAP)
+
+Riferimento: link-it/govpay-portal#189.
+
+La pipeline Jenkins di GovPay esegue la baseline di [OWASP ZAP](https://www.zaproxy.org) sul portale in esecuzione (report `target/zap/portale.html` della build). Diversamente da Trivy e Grype, che guardano il contenuto dell'immagine, ZAP guarda le risposte HTTP: header, cookie e contenuto delle pagine.
+
+| Alert ZAP | Stato |
+|---|---|
+| 10038 Content Security Policy (CSP) Header Not Set | Risolto: CSP generata dall'entrypoint (vedi [Header di sicurezza](../README.md#header-di-sicurezza)). In `report-only`, il default dell'immagine, ZAP può continuare a segnalarlo: l'alert sparisce con `GOVPAY_PORTAL_CSP_MODE=enforce` |
+| 10020 Missing Anti-clickjacking Header | Risolto: `X-Frame-Options: DENY` e `frame-ancestors 'none'` |
+| 10054 Cookie without SameSite Attribute (`XSRF-TOKEN`) | Da risolvere in govpay-portal-api, che emette il cookie |
+| 10010 Cookie No HttpOnly Flag (`XSRF-TOKEN`) | Falso positivo accettato, vedi sotto |
+| 10096 Timestamp Disclosure - Unix (`1831565813`) | Falso positivo accettato, vedi sotto |
+| 120000 Information in Browser localStorage (`govpay_cart`) | Corretto il contenuto; l'alert resta come informazione accettata, vedi sotto |
+
+**Falsi positivi accettati**
+
+- **10010, cookie `XSRF-TOKEN` senza `HttpOnly`.** È voluto: è il cookie della protezione CSRF di govpay-portal-api e Angular deve leggerlo per rimandarne il valore nell'header `X-XSRF-TOKEN`. Con `HttpOnly` la protezione smetterebbe di funzionare. Il cookie non contiene dati di sessione.
+- **10096, "timestamp" `1831565813`.** È `0x6D2B79F5`, la costante del generatore pseudocasuale Mulberry32 usato da SurveyJS (`survey-core`), finita nel bundle JavaScript: non è una data né un'informazione sul server.
+
+**`govpay_cart` in localStorage**
+
+Il carrello è salvato in localStorage, per ritrovarlo anche dopo aver chiuso il browser. Fino alla versione 5.2.3 ogni elemento conteneva anche il campo `rawData`, con la pendenza o l'avviso completi, compreso il soggetto pagatore (codice fiscale e anagrafica del debitore), codificati in Base64 e quindi leggibili da chiunque usasse lo stesso browser.
+
+Ora si salvano solo i campi che servono a mostrare e pagare il carrello: identificativi della pendenza e dell'avviso, dominio, causale, importo, creditore e date (`CART_ITEM_FIELDS` in `src/app/core/pay/pay.service.ts`). Un carrello salvato da una versione precedente viene ripulito al primo caricamento del portale, senza perdere gli elementi. Il carrello viene svuotato anche al logout.
+
+ZAP continua a segnalare l'alert 120000, che è solo informativo e scatta per qualunque dato in localStorage: lo si accetta, perché il contenuto non comprende più dati personali del debitore.

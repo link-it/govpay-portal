@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, Output, EventEmitter, forwardRef, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, forwardRef, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { NgIcon } from '@ng-icons/core';
@@ -33,6 +33,7 @@ import { NgIcon } from '@ng-icons/core';
       multi: true
     }
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="relative mb-4">
       <!-- Input field - Material style with bottom border only -->

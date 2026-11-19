@@ -20,11 +20,17 @@
 /**
  * Test per JsonSchemaFormComponent
  *
- * Nota: Questo componente dipende da @ng-formworks/material che ha problemi
- * di compatibilità con l'ambiente di test Vitest (import lodash).
+ * Nota: i test verificano i tipi e la logica interna. Il componente dipende
+ * da @ajsf/material (prima da @ng-formworks/material, che con Vitest aveva
+ * problemi di import di lodash).
  * I test verificano la logica interna senza istanziare il componente completo.
  */
-import { JsonSchemaFormDefinition, JsonSchemaFormSchema } from './json-schema-form';
+import {
+  JsonSchemaFormDefinition,
+  JsonSchemaFormSchema,
+  compileCondition,
+  compileLayoutConditions
+} from './json-schema-form';
 
 describe('JsonSchemaFormComponent Types', () => {
   describe('JsonSchemaFormSchema interface', () => {
@@ -216,5 +222,61 @@ describe('Locale Layout Selection Logic', () => {
 
     expect(getLayout(definition, 'it')).toEqual([{ key: 'nome' }]);
     expect(getLayout(definition, 'en')).toEqual([{ key: 'name' }]);
+  });
+});
+
+describe('Condizioni functionBody del layout (compatibilità con ng-formworks)', () => {
+  const corpo = "try { return model.tipo && model.tipo === 'Annuale' } catch(e){ return false; }";
+
+  it('esegue un corpo con try/catch, apici singoli e &&', () => {
+    const fn = compileCondition(corpo);
+    expect(fn({ tipo: 'Annuale' })).toBe(true);
+    expect(fn({ tipo: 'Rilascio' })).toBe(false);
+    expect(fn({})).toBe(false);
+  });
+
+  it('supporta || e == come le definizioni esistenti', () => {
+    const fn = compileCondition(
+      "try { return model.tipo && model.tipo === 'Tassa Annuale Ispezione' || model.tipo === 'Annuale' } catch(e){ return false; }"
+    );
+    expect(fn({ tipo: 'Annuale' })).toBe(true);
+    expect(fn({ tipo: 'Tassa Annuale Ispezione' })).toBe(true);
+    expect(fn({ tipo: 'Rilascio' })).toBe(false);
+    expect(compileCondition("return model.rilasciatada == 'presidente-giunta'")({ rilasciatada: 'presidente-giunta' })).toBe(true);
+  });
+
+  it('riscrive gli accessi con ?. e non fallisce sui dati assenti', () => {
+    const fn = compileCondition("return model.a.b === 'x'");
+    expect(fn({})).toBe(false);
+    expect(fn({ a: { b: 'x' } })).toBe(true);
+  });
+
+  it('functionBodyRaw si esegue senza riscrittura: un errore mostra il campo', () => {
+    const fn = compileCondition("return model.a.b === 'x'", true);
+    expect(fn({})).toBe(true);
+    expect(fn({ a: { b: 'y' } })).toBe(false);
+  });
+
+  it('un corpo non valido mostra il campo', () => {
+    expect(compileCondition('return (')({})).toBe(true);
+  });
+
+  it('converte le condizioni a ogni livello del layout senza modificare l\'originale', () => {
+    const layout = [
+      { key: 'tipo' },
+      { key: 'concessione', condition: { functionBody: corpo } },
+      { type: 'section', items: [{ key: 'nota', condition: { functionBodyRaw: 'return !!model.tipo' } }] },
+      { key: 'altro', condition: 'model.tipo' }
+    ];
+    const copia = JSON.parse(JSON.stringify(layout));
+    const compilato = compileLayoutConditions(layout) as any[];
+
+    expect(layout).toEqual(copia);
+    expect(typeof compilato[1].condition).toBe('function');
+    expect(compilato[1].condition({ tipo: 'Annuale' })).toBe(true);
+    expect(typeof compilato[2].items[0].condition).toBe('function');
+    expect(compilato[2].items[0].condition({})).toBe(false);
+    expect(compilato[3].condition).toBe('model.tipo');
+    expect(compilato[0]).toEqual({ key: 'tipo' });
   });
 });

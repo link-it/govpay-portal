@@ -128,7 +128,6 @@ describe('EsitoPagamentoComponent Types', () => {
         causale: 'Test',
         creditore: 'Test',
         editable: false,
-        rawData: {}
       };
       const params: DownloadParams = [mockItem];
       expect(params[0].id).toBe('item-1');
@@ -283,7 +282,6 @@ describe('EsitoPagamentoComponent Types', () => {
         causale: 'Test',
         creditore: 'Test',
         editable: false,
-        rawData: {}
       };
       expect(item.numeroAvviso).toBeDefined();
     });
@@ -297,7 +295,6 @@ describe('EsitoPagamentoComponent Types', () => {
         causale: 'Test',
         creditore: 'Test',
         editable: false,
-        rawData: {}
       };
       expect(item.idDominio).toBeDefined();
     });

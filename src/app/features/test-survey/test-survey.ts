@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, signal, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -29,6 +29,7 @@ import { SurveyFormComponent, SurveyDefinition } from '@shared/components/survey
   selector: 'app-test-survey',
   standalone: true,
   imports: [CommonModule, RouterLink, NgIcon, SurveyFormComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="max-w-4xl mx-auto space-y-6">
       <!-- Header -->

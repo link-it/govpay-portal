@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -33,6 +33,7 @@ type PaymentStatus = 'loading' | 'success' | 'error' | 'pending' | 'timeout' | '
   selector: 'app-esito-pagamento',
   standalone: true,
   imports: [CommonModule, TranslateModule, NgIcon],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="max-w-2xl mx-auto">
       <div class="bg-white rounded-lg shadow p-8 text-center">
@@ -72,7 +73,7 @@ type PaymentStatus = 'loading' | 'success' | 'error' | 'pending' | 'timeout' | '
                   @if (sessionData()?.importo) {
                     <div class="flex justify-between">
                       <span class="text-gray-600">{{ 'Language.Common.Importo' | translate }}:</span>
-                      <span class="font-semibold text-gray-900">{{ sessionData()?.importo | currency:'EUR' }}</span>
+                      <span class="font-semibold text-gray-900">{{ $safeNavigationMigration(sessionData()?.importo) | currency:'EUR' }}</span>
                     </div>
                   }
                 </div>
