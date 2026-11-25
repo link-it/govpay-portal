@@ -42,7 +42,8 @@ La pipeline Jenkins di GovPay esegue la baseline di [OWASP ZAP](https://www.zapr
 
 | Alert ZAP | Stato |
 |---|---|
-| 10038 Content Security Policy (CSP) Header Not Set | Risolto: CSP generata dall'entrypoint (vedi [Header di sicurezza](../README.md#header-di-sicurezza)). In `report-only`, il default dell'immagine, ZAP può continuare a segnalarlo: l'alert sparisce con `GOVPAY_PORTAL_CSP_MODE=enforce` |
+| 10038 Content Security Policy (CSP) Header Not Set | Risolto: CSP generata dall'entrypoint e applicata di default (vedi [Header di sicurezza](../README.md#header-di-sicurezza)). Con `GOVPAY_PORTAL_CSP_MODE=report-only` ZAP torna a segnalarlo |
+| 10055 CSP: script-src unsafe-eval, style-src unsafe-inline | Accettato: `'unsafe-eval'` serve ai form `angular2-json-schema-form` (ajv e `new Function`), `'unsafe-inline'` agli stili di Angular, Angular Material e SurveyJS. Resta visibile nel report |
 | 10020 Missing Anti-clickjacking Header | Risolto: `X-Frame-Options: DENY` e `frame-ancestors 'none'` |
 | 10054 Cookie without SameSite Attribute (`XSRF-TOKEN`) | Da risolvere in govpay-portal-api, che emette il cookie |
 | 10010 Cookie No HttpOnly Flag (`XSRF-TOKEN`) | Falso positivo accettato, vedi sotto |

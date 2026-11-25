@@ -28,14 +28,15 @@
 #                        dalla build sono relativi, quindi asset, router e
 #                        return URL di pagoPA si allineano di conseguenza.
 #   GOVPAY_PORTAL_CSP_MODE
-#                        Content-Security-Policy: report-only (default),
-#                        enforce oppure off.
+#                        Content-Security-Policy: enforce (default),
+#                        report-only oppure off.
 #   GOVPAY_PORTAL_CSP_ORIGINS
 #                        Origini esterne aggiunte a connect-src e form-action,
 #                        separate da spazi, oltre a quelle ricavate dalle chiavi
 #                        "baseUrl" di app-config.json e al checkout pagoPA.
-#   GOVPAY_PORTAL_CSP    Sostituisce l'intera policy; {SCRIPT_HASHES} e {ORIGINS}
-#                        vengono sostituiti con i valori calcolati.
+#   GOVPAY_PORTAL_CSP    Sostituisce l'intera policy; {SCRIPT_HASHES}, {ORIGINS},
+#                        {RECAPTCHA_SCRIPT} e {RECAPTCHA_FRAME} vengono sostituiti
+#                        con i valori calcolati.
 #   GOVPAY_PORTAL_FRAME_OPTIONS
 #                        X-Frame-Options: DENY (default), SAMEORIGIN oppure off.
 ##############################################################################
@@ -164,6 +165,19 @@ CSP_ORIGINS=$(printf '%s\n' ${CONFIG_ORIGINS} ${PAGOPA_CHECKOUT_ORIGINS} ${GOVPA
 set +f
 CSP_ORIGINS="${CSP_ORIGINS% }"
 
+# reCAPTCHA v3: se app-config.json, o l'override di un ente, ha una siteKey, il
+# portale carica lo script da www.google.com, che a sua volta carica script da
+# www.gstatic.com e apre un frame di Google. Sono le origini indicate da Google
+# per la CSP; senza siteKey reCAPTCHA non viene caricato e la policy resta stretta.
+RECAPTCHA_SCRIPT=""
+RECAPTCHA_FRAME=""
+if grep -rqE '"siteKey"[[:space:]]*:[[:space:]]*"[^"]+"' \
+        "${APP_CONFIG}" "${GOVPAY_PORTAL_HOME}/assets/config/overrides" 2>/dev/null; then
+    RECAPTCHA_SCRIPT="https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/"
+    RECAPTCHA_FRAME="frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;"
+    log_info "reCAPTCHA configurato: origini di Google aggiunte alla Content-Security-Policy"
+fi
+
 # Policy predefinita:
 # - 'unsafe-eval': i form dei tipi pendenza "angular2-json-schema-form" compilano gli
 #   schemi con ajv e le condizioni del layout con new Function;
@@ -172,9 +186,10 @@ CSP_ORIGINS="${CSP_ORIGINS% }"
 # - fonts.googleapis.com e fonts.gstatic.com: il CSS di SurveyJS dichiara Open Sans
 #   su fonts.gstatic.com e i form JSON Schema (@ajsf/material) caricano i fogli di
 #   Roboto e Material Icons da fonts.googleapis.com.
-# GOVPAY_PORTAL_CSP la sostituisce per intero; vi si possono usare {SCRIPT_HASHES}
-# e {ORIGINS}, sostituiti con i valori calcolati qui sopra.
-DEFAULT_CSP="default-src 'self'; script-src 'self' 'unsafe-eval' {SCRIPT_HASHES}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' {ORIGINS}; form-action 'self' {ORIGINS}; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+# GOVPAY_PORTAL_CSP la sostituisce per intero; vi si possono usare {SCRIPT_HASHES},
+# {ORIGINS}, {RECAPTCHA_SCRIPT} e {RECAPTCHA_FRAME}, sostituiti con i valori
+# calcolati qui sopra (i due di reCAPTCHA sono vuoti se non c'e' una siteKey).
+DEFAULT_CSP="default-src 'self'; script-src 'self' 'unsafe-eval' {SCRIPT_HASHES} {RECAPTCHA_SCRIPT}; {RECAPTCHA_FRAME} style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' {ORIGINS}; form-action 'self' {ORIGINS}; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
 CSP="${GOVPAY_PORTAL_CSP:-${DEFAULT_CSP}}"
 
 # La policy finisce fra virgolette nella configurazione nginx: niente virgolette
@@ -185,11 +200,13 @@ if [[ "${CSP}" == *'"'* || "${CSP}" == *'$'* || "${CSP}" == *'\'* || "${CSP}" ==
 fi
 CSP="${CSP//\{SCRIPT_HASHES\}/${SCRIPT_HASHES}}"
 CSP="${CSP//\{ORIGINS\}/${CSP_ORIGINS}}"
+CSP="${CSP//\{RECAPTCHA_SCRIPT\}/${RECAPTCHA_SCRIPT}}"
+CSP="${CSP//\{RECAPTCHA_FRAME\}/${RECAPTCHA_FRAME}}"
 CSP=$(echo "${CSP}" | tr -s ' ' | sed 's/ ;/;/g')
 
-# report-only (default): il browser segnala le violazioni in console senza bloccare.
-# enforce: la policy e' applicata. off: nessun header.
-CSP_MODE="${GOVPAY_PORTAL_CSP_MODE:-report-only}"
+# enforce (default): la policy e' applicata. report-only: il browser segnala le
+# violazioni in console senza bloccare. off: nessun header.
+CSP_MODE="${GOVPAY_PORTAL_CSP_MODE:-enforce}"
 case "${CSP_MODE}" in
     enforce)     CSP_HEADER="Content-Security-Policy" ;;
     report-only) CSP_HEADER="Content-Security-Policy-Report-Only" ;;
